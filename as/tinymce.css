@@ -1,0 +1,50 @@
+img {
+	border: 0px;
+}
+
+blockquote{
+    background-color: #FCFCFC;
+    border-left: 3px solid #CCCCCC;
+    margin: 10px;
+    padding: 10px;
+}
+ul,ol{
+	margin:20px 0px 10px 20px;
+}
+ul li, ol li {
+    line-height: 1.6em;
+}
+table{
+	width:100%;
+}
+table td{
+	padding:5px;
+}
+
+h1 {
+	font-size: 16px;margin:0px 0px 15px 0px;
+}
+h2,h3,h4,{	font-size:15px;margin:0px 0px 15px 0px;}
+h5,h6{
+	font-size: 13px;
+	margin:0px 0px 15px 0px;
+}
+p{
+ font-size: 13px;
+	line-height: 1.6em;
+	margin-bottom: 16px;
+	margin-top: 16px;
+}
+a:link{
+	color: #707b85;
+	text-decoration: none;
+	font-weight: bold;
+}
+a:visited{
+	color: #707b85;
+	text-decoration: none;
+}
+a:hover{
+	color: #000000;
+	text-decoration: underline;
+}

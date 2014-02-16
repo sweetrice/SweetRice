@@ -1,0 +1,78 @@
+<?php
+/**
+ * Dashboard center.
+ *
+ * @package SweetRice
+ * @Dashboard core
+ * @since 0.5.4
+ */
+	define('DASHABOARD',true);
+	include("../inc/init.php");
+	include("lib/function.php");
+	$_POST = do_data($_POST,'privacy');
+	$_GET = do_data($_GET,'privacy');
+	$type = $_GET["type"];
+	if(!defined('INSTALLED')){
+		include("lib/install.php");
+		exit();
+	}
+	if(!$global_setting['lang']){
+		$global_setting['lang'] = dashboardLang();
+	}
+	include("lang/".$global_setting['lang']);
+	$inc = null;
+	switch($type){
+		case 'signin':
+			dashboardSignin();
+		break;
+		case 'signout':
+			dashboard_signout();
+			exit();
+		break;
+		case 'password':
+			include("lib/do_password.php");
+		break;
+		default:
+			if(!dashboard_signin()){
+				include("lib/auth_form.php");	
+				exit();
+			}
+			$actions = dashboard_actions();
+			if($actions[$type]['file'] && file_exists('lib/'.$actions[$type]['file'])){
+				switch($type){
+					case 'plugin':
+						if(!dashboard_role('dashboard/'.$_GET["plugin"])){
+							alert('page not found',SITE_URL.DASHBOARD_DIR);
+						}
+					break;
+					default:
+						if(!dashboard_role($type,$actions[$type]['mustBase'])){
+							alert('page not found',SITE_URL.DASHBOARD_DIR);
+						}
+				}
+				include('lib/'.$actions[$type]['file']);
+			}else{
+				include('lib/do_main.php');
+			}
+	}
+	include("lib/head.php");
+	$bgnav[$type] = 'class="currency_nav"';
+?>
+<div id="div_center">
+<div id="admin_left"><?php dashboard_menu($type,$bgnav);?></div>
+<div id="admin_right">
+<?php 
+if($inc && file_exists('lib/'.$inc)){
+	include('lib/'.$inc);
+}elseif(count($plugin_page)){
+	foreach($plugin_page as $val){
+		if($val && file_exists($val)){
+			include($val);
+		}
+	}
+}
+?>
+</div>
+<div class="div_clear"></div>
+</div>
+<?php include("lib/foot.php");?>

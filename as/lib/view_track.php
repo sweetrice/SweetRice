@@ -1,0 +1,295 @@
+<?php
+/**
+ * Template Name:User track template.
+ *
+ * @package SweetRice
+ * @Dashboard core
+ * @since 0.5.4
+ */
+ defined('VALID_INCLUDE') or die();
+	$dbname = SITE_HOME.'inc/user_track.db';
+	if(!file_exists($dbname)){
+		$new_track = true;
+	}
+	$y = $_GET["y"];
+	if($y==''){
+		$y = date('Y');
+	}
+	$m = $_GET["m"];
+	if($m==''){
+		$m = date('n');
+	}
+?>
+<fieldset><legend><?php echo TRACK.' - '.CHART.' - '.TIP_VIEWTRACK;?></legend>
+<select class="dy">
+<?php
+	for($i=2009; $i<=intval(date('Y')); $i++){
+?>
+<option value="<?php echo $i;?>" <?php echo $i == $y?'selected':'';?>><?php echo $i;?></option>
+<?php
+	}
+?>
+</select>
+<select class="dm">
+<?php
+		for($j=1; $j<=12; $j++){
+?>
+<option value="<?php echo $j;?>" <?php echo $j == $m?'selected':'';?>><?php echo $j;?></option>
+<?php
+	}
+?>
+</select>
+<input type="button" value="<?php echo SEARCH;?>" class="dlist">
+<script type="text/javascript">
+<!--
+	_().ready(function(){
+		_('.dlist').bind('click',function(){
+			location.href = './?type=track&y='+_('.dy').val()+'&m='+_('.dm').val();
+		});
+	});
+//-->
+</script>
+</fieldset>
+<?php
+	$d = date('t',mktime(0,0,0,$m,1,$y));
+	if($y == date('Y') && $m <= date('n') || $y < date('Y')){
+		$today_start = mktime(0,0,1,date('n'),date('j'),date('Y'));
+		$month_start = mktime(0,0,0,$m,1,$y);
+		$month_end = mktime(23,59,59,$m,$d,$y);
+		$browsers = init_browsers(1);
+		$bg_browsers = init_browsers(2);
+		$db_track = sqlite_dbhandle($dbname);
+		if($new_track){
+			sqlite_dbquery($db_track,"CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
+			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
+		}
+		$month_table = sqlite_dbtotal($db_track,"SELECT COUNT(*) FROM sqlite_master WHERE name='agent_month'");
+		if(!$month_table){
+			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
+		}
+		sqlite_dbquery($db_track,"DELETE FROM user_agent WHERE time < '".(time()-5184000)."'");
+		sqlite_dbquery($db_track,"vacuum user_agent");
+		$max_month = array();
+		for($i=1; $i<=$d; $i++){
+			$day_start = mktime(0,0,1,$m,$i,$y);
+			$day_end = mktime(23,59,59,$m,$i,$y);
+			foreach($browsers as $key=>$val){
+				$this_date = $y.'-'.str_pad($m,2,0,STR_PAD_LEFT).'-'.str_pad($i,2,0,STR_PAD_LEFT);
+				$row = sqlite_dbarray($db_track,"SELECT `id`,`total` FROM agent_month WHERE record_date = '$this_date' AND user_browser = '$val'",false);
+				if(!$row['id']&&$day_end<$today_start)
+				{
+					$total = sqlite_dbtotal($db_track,"SELECT COUNT(*) FROM user_agent WHERE time >= '$day_start' and time <= '$day_end' AND user_browser = '$val'",false);
+					sqlite_dbquery($db_track,"INSERT INTO agent_month(id,user_browser,record_date,total)VALUES(null,'$val','$this_date','$total')");
+					$row['total'] = $total;
+				}
+				$total_browser[$key][$i] = $row['total'];
+				$total_all[$key] += $row['total'];
+				$max_month[$i] += $row['total'];
+			}
+		}
+	}
+	$all_sum = array_sum($max_month);
+	if($all_sum){
+		foreach($browsers as $key=>$val){
+			$v[$key] = number_format($total_all[$key]*100/$all_sum ,2,'.',' ').'%';
+			$rb .= '\''.number_format($total_all[$key]*100/$all_sum ,2,'.',' ').'%\',';
+			$tb .= '\''.$total_all[$key].'\',';
+			$db = '';
+			for($i=1; $i<=$d; $i++){
+				$db .= intval($total_browser[$key][$i]).',';
+				if(!$wms){
+					$wm .= '\''.substr(date('l',mktime(0,0,0,$m,$i,$y)),0,2).'\',';
+				}
+			}
+			$dba .= '\''.rtrim($db,',').'\',';
+			$bs .= '\''.$val.'\',';
+			$bgs .= '\''.($bg_browsers[$key]?$bg_browsers[$key]:'#555555').'\',';
+			if(!$wms){
+				$wms = rtrim($wm,',');
+			}
+		}
+		$max_y = max($max_month);
+		$vv = $max_y/300;
+		$x = 18;
+		$padding_left = 30;
+		$width = 6;
+		$l_x = $x*$d+$padding_left+20;
+		$doCanvas = 1;
+		$top_pages = sqlite_dbarrays($db_track,"SELECT this_page,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page ORDER by total DESC LIMIT 0,10;");
+		$total_pages = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page )");
+		$top_froms = sqlite_dbarrays($db_track,"SELECT user_from,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from ORDER by total DESC LIMIT 0,10;");
+		$total_froms = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from )");
+		$total_ips = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip )");
+		$top_ips = sqlite_dbarrays($db_track,"SELECT ip,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip ORDER by total DESC LIMIT 0,10;");
+	}else{
+		$doCanvas = 0;
+	}
+?>
+<script type="text/javascript" src="../js/excanvas.compiled.js"></script>
+<script type="text/javascript">
+<!--
+function getTotalByD(b,d,r){
+	var dTotal = r[b].split(',');
+	return parseInt(dTotal[d-1]);
+}
+function getLastTotalByD(b,d,r){
+	var dTotal = r[b].split(',');
+	return parseInt(dTotal[d-2]);
+}
+	function drawCanvas(){
+		var doCanvas = <?php echo $doCanvas;?>;
+		if(!doCanvas){
+			var canvas = _('#myCanvas').items();
+			var context = canvas.getContext("2d");
+			context.beginPath();
+			context.rect(200, 100, 400, 100);
+			context.fillStyle = "#808080";
+			context.fill();
+			context.stroke();
+			context.font = "12pt Verdana";
+			context.fillStyle = "#fff";
+			context.fillText("No data,please enable User track or visit later.", 210, 140);
+			context.stroke();
+			context.beginPath();
+			context.font = "7pt Verdana";
+			context.fillStyle = "#336600";
+			context.fillText("Powered by SweetRice", 600, 300);
+			context.stroke();
+		}else{
+			var browsers = [<?php echo rtrim($bs,',');?>];
+			var browserBgs = [<?php echo rtrim($bgs,',');?>];
+			var browserRates = [<?php echo rtrim($rb,',');?>];
+			browserTotal = [<?php echo rtrim($tb,',');?>];
+			var dailybrowser = [<?php echo rtrim($dba,',');?>];
+			var weekMonth = [<?php echo $wms;?>];
+			var vv = <?php echo floatval($vv);?>;
+			var x = <?php echo intval($x);?>;
+			var d = <?php echo $d;?>;
+			var padding_left = 30;
+			var width = 6;
+			var line_width = 2;
+			var l_x = <?php echo intval($l_x);?>;
+			var s_line = 310;
+			var canvas = _('#myCanvas').items();
+			var context = canvas.getContext("2d");
+			context.beginPath();
+			context.font = "7pt Verdana";
+			context.fillStyle = "#336600";
+			context.fillText("Powered by SweetRice", l_x, 310);
+			context.stroke();
+			context.font = "9pt Verdana";
+			var _rtop = 50;
+			for(i in browsers){
+				context.beginPath();
+				context.font = "9pt Verdana";
+				context.fillStyle = browserBgs[i];
+				context.fillText(browsers[i]+':'+browserRates[i], l_x, _rtop);
+				context.stroke();
+				_rtop += 15;
+			}
+			context.beginPath();
+			context.font = "9pt Verdana";
+			context.fillStyle = '#000';
+			context.fillText('Daily:100%', l_x, _rtop);
+			context.stroke();
+			context.fillStyle = '#000000';
+			context.fillText('<?php echo $y.'-'.$m;?>', l_x, 30);
+			context.font = "7pt Arial";
+			var no = 0;
+			for(i=0; i<8; i++){
+				context.beginPath();
+				context.moveTo(padding_left+x-width, s_line);
+				context.lineTo(x*d+padding_left+width, s_line);
+				context.lineWidth=1;
+				context.strokeStyle='#ccc';
+				context.fillText((no*50*vv).toFixed(0), 0, s_line+10);
+				context.stroke();
+				s_line -= 50;
+				no += 1;
+			}
+			for(i=1; i<=d; i++){
+				context.beginPath();
+				context.lineWidth=1;
+				context.moveTo(i*x+padding_left, 310);
+				context.lineTo(i*x+padding_left, 315);
+				context.strokeStyle = "#ccc";
+				context.fillText(i, i*x+padding_left, 326);
+				context.fillText(weekMonth[i-1], i*x+padding_left, 337);
+				context.stroke();
+				if(i>1){
+					var tmp_total = last_total = day_total = lastday_total = 0;
+					for(j in browsers){
+						tmp_total = getTotalByD(j,i,dailybrowser);
+						last_total = getLastTotalByD(j,i,dailybrowser);
+						context.beginPath();
+						context.moveTo((i-1)*x+padding_left, 310-last_total/vv);
+						context.lineTo(i*x+padding_left, 310-tmp_total/vv);
+						context.lineWidth = line_width;
+						context.strokeStyle = browserBgs[j];
+						context.stroke();
+						day_total += tmp_total;
+						lastday_total += last_total;
+					}
+					context.beginPath();
+					context.moveTo((i-1)*x+padding_left, 310-lastday_total/vv);
+					context.lineTo(i*x+padding_left, 310-day_total/vv);
+					context.lineWidth = line_width;
+					context.strokeStyle = '#000';
+					context.stroke();					
+				}
+			}
+		}
+	}
+	window.onload = function(){drawCanvas();};
+	</script>
+<h1><?php echo $y.' - '.$m;?></h1>
+<canvas id="myCanvas" width="720" height="340"><img src="./?type=chart&y=<?php echo $y;?>&m=<?php echo $m;?>" id="chart"></canvas>
+<div id="view_chart">
+<?php
+if(count($top_pages)){
+?>
+<p><?php echo str_replace('%total_pages%',$total_pages,TOP_VISITED_PAGE);?></p>
+<dl>
+<dt class="head"><?php echo VISITED_PAGE;?></dt><dd class="head"><?php echo TOTAL;?></dd>
+<?php
+	foreach($top_pages as $top_page){
+?>
+<dt><?php echo $top_page['this_page'];?></dt><dd><?php echo $top_page['total'];?></dd>
+<?php
+	}
+?>
+</dl>
+<?php
+}
+if(count($top_froms)){
+?>
+<p><?php echo str_replace('%total_froms%',$total_froms,TOP_REFERRER_PAGE);?></p>
+<dl>
+<dt class="head"><?php echo REFERRER_PAGE;?></dt><dd class="head"><?php echo TOTAL;?></dd>
+<?php
+	foreach($top_froms as $top_from){
+?>
+<dt><?php echo $top_from['user_from'];?></dt><dd><?php echo $top_from['total'];?></dd>
+<?php
+	}
+?>
+</dl>
+<?php
+}
+if(count($top_ips)){
+?>
+<p><?php echo str_replace('%total_ips%',$total_ips,TOP_IP);?></p>
+<dl>
+<dt class="head"><?php echo IP;?></dt><dd class="head"><?php echo TOTAL;?></dd>
+<?php
+	foreach($top_ips as $top_ip){
+?>
+<dt><?php echo $top_ip['ip'];?></dt><dd><?php echo $top_ip['total'];?></dd>
+<?php
+	}
+?>
+</dl>
+<?php
+}
+?>
+</div>
