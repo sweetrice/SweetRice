@@ -1,0 +1,4 @@
+SweetRice
+=========
+
+Simple website management
