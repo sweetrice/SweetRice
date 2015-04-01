@@ -25,7 +25,9 @@
 	$cflist = array();
 	foreach($cf_rows as $val){
 		$no += 1;
-		$cflist[$val['name']] = true;
+		if($cfdata[$val['name']]){
+			$cflist[$val['name']] = true;
+		}
 ?>
 <li id="cf_<?php echo $no;?>">
 <fieldset><legend><?php _e('Name');?> <input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text">

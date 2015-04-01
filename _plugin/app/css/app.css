@@ -1,0 +1,7 @@
+.app_nav{padding:5px 0px;}
+.app_nav a{margin:0px 5px;text-decoration: none;}
+.app_nav .nav_line{height:2px;background-color:#e5e5e5;position:relative;margin-top:5px;}
+.app_nav .nav_line .curr_line{position:absolute;top:0px;height:2px;background-color:#c90;}
+.app_nav .child{display:none;position:absolute;}
+.curr_child{position:relative;}
+.curr_child .child{display:block !important;position:absolute;}
