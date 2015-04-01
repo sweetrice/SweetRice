@@ -7,22 +7,22 @@
  * @since 0.7.0
  */
  	defined('VALID_INCLUDE') or die();
-	$cat = $_GET["c"];
+	$cat = $_GET['c'];
 	if(empty($cat)){
 		_404('category');
 	}
 	$cat_id = intval($categoriesByLink[strtolower($cat)]);
-	if($cat_id==0){
+	if($cat_id == 0){
 		_404('category');
 	}
 	$post_output = $page_theme['post_output'] && file_exists(THEME_DIR.$page_theme['post_output'])?THEME_DIR.$page_theme['post_output']:false;
 	$total = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_posts` AS ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ps.`id` = ip.`item_id` WHERE ps.`category` = '".$cat_id."' AND ps.`in_blog` = '1' AND ip.`item_type` = 'post' ");
 	$page_limit = $global_setting['nums_setting']['postCategory'];
-	$m = $_GET["m"];
-	if($m=='pins'){
+	$m = $_GET['m'];
+	if($m == 'pins'){
 		$pins_num = $global_setting['nums_setting']['postPins'];
-		$p = max(1,intval($_GET["p"]));
-		$moreNum = max(1,intval($_GET["moreNum"]));
+		$p = max(1,intval($_GET['p']));
+		$moreNum = max(1,intval($_GET['moreNum']));
 		$page_start = $p * $page_limit + ($moreNum-1)*$pins_num;
 		if($page_start + $pins_num >= $total){
 			$plist['isMax'] = 1;
@@ -30,13 +30,13 @@
 			$plist['isMax'] = 0;
 		}
 		$plist['body'] = '';
-		$data = db_fetch(array(
-		'table' => "`".DB_LEFT."_posts` AS ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ps.`id` = ip.`item_id`",
-		'field' => "ps.`id`,ps.`sys_name`,ps.`category`,ps.`name`,ps.`body`,ps.`views`,ps.`date`,ps.`tags`,ip.`plugin`",
-		'where' => "ps.`category` = '".$cat_id."' AND ps.`in_blog` = '1' AND ip.`item_type` = 'post'",
-		'order' => "ps.`id` DESC",
-		'limit' => array($page_start,$pins_num)
-		));
+		$data = getPosts(array(
+			'table' => " `".DB_LEFT."_posts` as ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ip.`item_id` = ps.`id`",
+			'field' => "ps.*",
+			'where' => " ip.`plugin` = '' AND ip.`item_type` = 'post' ",
+			'category_ids'=>$cat_id,
+			'limit' => array($page_start,$pins_num),'post_type'=>'show')
+		);
 		foreach($data['rows'] as $val){
 			$plist['body'] .= _posts($val,$post_output);
 		}
@@ -46,12 +46,13 @@
 		$canonical = BASE_URL.show_link_cat($categories[$cat_id]['link'],'');
 	}
 	$row_cat = db_array("SELECT `parent_id` FROM `".DB_LEFT."_category` WHERE `id` = '".$cat_id."'");
-	$data = db_fetch(array(
-		'table' => "`".DB_LEFT."_posts` AS ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ps.`id` = ip.`item_id`",
-		'field' => "ps.`id`,ps.`sys_name`,ps.`category`,ps.`name`,ps.`body`,ps.`views`,ps.`date`,ps.`tags`,ip.`plugin`",
-		'where' => "ps.`category` = '$cat_id' AND ps.`in_blog` = '1' AND ip.`item_type` = 'post'",
-		'order' => "ps.`id` DESC",
-		'pager' => array('p_link'=>show_link_cat($categories[$cat_id]['link']),'page_limit'=>$page_limit)
+	$data = getPosts(array(
+		'table' => " `".DB_LEFT."_posts` as ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ip.`item_id` = ps.`id`",
+		'field' => "ps.*",
+		'where' => " ip.`plugin` = '' AND ip.`item_type` = 'post' ",
+		'category_ids'=>$cat_id,
+		'pager' => array('p_link'=>show_link_cat($categories[$cat_id]['link']),'page_limit'=>$page_limit),
+		'post_type'=>'show'
 	));
 	if($data['pager']['outPage']){
 		_404('category');

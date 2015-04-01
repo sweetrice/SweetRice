@@ -12,12 +12,12 @@
 <span id="action_tip"></span>
 <p><?php echo $str;?></p>
 <?php
-	if($step==1||($step==2&&$copyfailed)){
+	if($step == 1 || ($step == 2 && $copyfailed)){
 ?>
 <form method="post" action="./?type=update&mode=manually">
-<fieldset><legend><?php echo UPDATE_FILES_TIP;?></legend>
+<fieldset><legend><?php _e('These files/directory will be updated');?></legend>
 <ul>
-<li><input type="checkbox" id="checkall" name="checkall" onclick="checkboxAll(this);" checked/> <?php echo CHECK;?> <?php echo ALL;?></li>
+<li><input type="checkbox" id="checkall" name="checkall" onclick="checkboxAll(this);" checked/> <?php _e('Check');?> <?php _e('All');?></li>
 <?php
 		$sweetrice_files = sweetrice_files(ROOT_DIR.$upgrade_dir.'/');
 		foreach($sweetrice_files as $val){
@@ -34,9 +34,9 @@
 					$old_size = filesize($target_entry);
 				}elseif(!is_file($target_entry)){
 					$tmp = true;
-					$old_size = '0(does not exists)';
+					$old_size = _e('0(does not exists)');
 				}
-				$str_size = 'File size : '.$old_size.' => '.$new_size;
+				$str_size = _t('File size : ').$old_size.' => '.$new_size;
 			}else{
 				if(!is_dir($target_entry)){
 					$tmp = true;
@@ -49,42 +49,42 @@
 			}
 		}
 ?>
-</ul><input type="submit" name="submit" value="<?php echo UPDATE.' '.FILES;?>"/></form>
+</ul><input type="submit" name="submit" value="<?php echo _t('Update').' '._t('Files');?>"/></form>
 </fieldset>
 <?php
-	}elseif($step==2&&file_exists('../upgrade_db.php')){
+	}elseif($step == 2 && file_exists('../upgrade_db.php')){
 ?>
-<input type="button" id="submit_button" value="<?php echo NEXT_STEP;?>" onclick="upgrade_db();">
+<input type="button" id="submit_button" value="<?php _e('Next Step');?>" onclick="upgrade_db();" class="updb">
 <script type="text/javascript">
 <!--
-function upgrade_db(){
-	$('action_tip').innerHTML = '<img src="../images/ajax-loader.gif">';
-	$('submit_button').disabled = true;
-	var query = new Object();
-	ajaxd_get(
-		query,
-		'../upgrade_db.php',
-		function(result){
-			$('submit_button').disabled = false;
-			switch (result){
-				case 'Successfully':
-					location.href = './?type=update&mode=manually';
-				break;
-				default:
-					$('action_tip').innerHTML = 'Sorry,some error happen when upgrade db,please upgrade SweetRice manually.!';
+_().ready(function(){
+	_('.updb').bind('click',function(){
+		var updialog = _.dialog({content:'<img src="../images/ajax-loader.gif">'});
+		var query = new Object();
+		ajaxd_get(
+			query,
+			'../upgrade_db.php',
+			function(result){
+				switch (result){
+					case 'Successfully':
+						location.href = './?type=update&mode=manually';
+					break;
+					default:
+						updialog.find('.SweetRice_dialog_content').html('<?php echo UPGRADE_SR_FAILED;?>');
+				}
 			}
-		}
-	);
-}
+		);
+	});
+});
 //-->
 </script>
 <?php
 	}elseif($nextstep){
 ?>
-<input type="button" value="<?php echo NEXT_STEP;?>" onclick="location='./?type=update&mode=manually';">
+<input type="button" value="<?php echo NEXT_STEP;?>" url="./?type=update&mode=manually" class="back">
 <?php
 	}
- }elseif($mode=='automatically'){
+ }elseif($mode == 'automatically'){
 ?>
 <p><?php echo $str;?></p>
 <?php
@@ -92,16 +92,14 @@ function upgrade_db(){
 ?>
 <h1><?php echo $str;?></h1>
 <?php
-	if($update&&(extension_loaded("zlib")||extension_loaded("ZZIPlib"))){
+	if($update&&(extension_loaded('zlib')||extension_loaded('ZZIPlib'))){
 ?>
-<p><?php echo TIPS_UPDATE;?></p>
-<input type="button" value="<?php echo AUTOMATICALLY;?>" onclick="location.href='./?type=update&mode=automatically';">
-<input type="button" value="<?php echo MANUALLY;?>" onclick="location.href='./?type=update&mode=manually';">
+<p><?php _e('Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.');?></p>
+<input type="button" value="<?php _e('Automatically');?>" url="./?type=update&mode=automatically" class="back">
+<input type="button" value="<?php _e('Manually');?>" url="./?type=update&mode=manually" class="back">
 <?php
 	}elseif($update){
-?>
-Your server does not support zlib or ZZIPlib extension,please <a href="http://www.basic-cms.org/download.html">download SweetRice</a> and upgrade manually.
-<?php
+		_e('Your server does not support zlib or ZZIPlib extension,please <a href="http://www.basic-cms.org/download.html">download SweetRice</a> and upgrade manually.');
 	}
  }
 ?>

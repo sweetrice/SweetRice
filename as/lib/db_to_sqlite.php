@@ -7,19 +7,19 @@
  * @since 0.5.5
  */
  defined('VALID_INCLUDE') or die();
-	$to_db_name = $_POST["to_db_name"];
-	$to_db_left = $_POST["to_db_left"];
+	$to_db_name = $_POST['to_db_name'];
+	$to_db_left = $_POST['to_db_left'];
 	if(DATABASE_TYPE == 'sqlite' && $to_db_name == $db_name && $to_db_left == DB_LEFT){
-		alert(DATABASE_CONVERT_SUCCESSFULLY,'./');
+		alert(_t('Database convert successfully!'),'./');
 	}
-	$tablelist = $_POST["tablelist"];
+	$tablelist = $_POST['tablelist'];
 	if($to_db_name&&$to_db_left&&$tablelist){
 			$plugin_sql = array();
 			$plugin_list = pluginList();
 			foreach($plugin_list AS $plugin_config){
-				if(file_exists(SITE_HOME."_plugin/".$plugin_config['directory'].'/plugin_config.php') && $plugin_config['installed']){
+				if(file_exists(SITE_HOME.'_plugin/'.$plugin_config['directory'].'/plugin_config.php') && $plugin_config['installed']){
 					if($plugin_config['install_sqlite']){
-						$plugin_sql[$plugin_config['name']] = SITE_HOME."_plugin/".$plugin_config['directory']."/".$plugin_config['install_sqlite'];
+						$plugin_sql[$plugin_config['name']] = SITE_HOME.'_plugin/'.$plugin_config['directory'].'/'.$plugin_config['install_sqlite'];
 					}
 				}
 			}
@@ -42,7 +42,8 @@
 					if(trim($val)){
 						$error = sqlite_dbquery($to_db,$val);
 						if($error){
-							$message .= $error.'<br>';
+							$message .= $val.' : '.$error.'<br>';
+							break;
 						}
 					}
 				}	
@@ -54,7 +55,8 @@
 							if(trim($val)){
 								$error = sqlite_dbquery($to_db,$val);
 								if($error){
-									$message .= $error.'<br>';
+									$message .= $val.' : '.$error.'<br>';
+									break;
 								}
 							}
 						}	
@@ -84,7 +86,8 @@
 								$tabledump .= ");";
 								$error = sqlite_dbquery($to_db,$tabledump);
 								if($error){
-									$db_error .= $error.'<br>';
+									$db_error .= $tabledump.' : '.$error.'<br>';
+									break;
 								}
 							}
 						}
@@ -114,7 +117,8 @@
 								$tabledump .= ");";
 								$error = sqlite_dbquery($to_db,$tabledump);
 								if($error){
-									$db_error .= $error.'<br>';
+									$db_error .= $tabledump.' : '.$error.'<br>';
+									break;
 								}
 							}
 						}
@@ -144,7 +148,8 @@
 								$tabledump .= ");";
 								$error = sqlite_dbquery($to_db,$tabledump);
 								if($error){
-									$db_error .= $error.'<br>';
+									$db_error .= $tabledump.' : '.$error.'<br>';
+									break;
 								}
 							}
 						}
@@ -168,9 +173,9 @@
 				$db = null;
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
-			alert(DATABASE_CONVERT_SUCCESSFULLY,'./');
+			alert(_t('Database convert successfully!'),'./');
 		}	
 	}else{
-		$message = NEED_FORM_DATA;
+		$message = _t('Please fill out form below.');
 	}
 ?>

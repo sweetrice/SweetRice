@@ -16,4 +16,4 @@ preg_match("/\<lang=\"".str_replace('.php','',$lang)."\"\>([\s\S]+?)\<\/lang\>/u
 ?>
 </div>
 <p>
-<input type="button" class="input_submit" value="<?php echo ACCEPT;?>" onclick='location.href="./?action=install";'> <input type="button" value="<?php echo NOTACCEPT;?>" onclick='location.href="./";'></p>
+<input type="button" class="input_submit back" value="<?php _e('Accept');?>" url="./?action=install"> <input type="button" value="<?php _e('Do not accept');?>" url="./" class="back"></p>

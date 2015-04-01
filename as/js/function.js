@@ -51,11 +51,14 @@ function deleteAction(c,v,no){
 			ajax_dlg.remove();
 			if (typeof(result) == 'object'){
 				if (result['status']==1){
-					_('#tr_'+result['no']).fadeOut(500,function(){
-						_('#tr_'+result['no']).css('display','none');
+					_('#tr_'+result['no']+',#li_'+result['no']).fadeOut(500,function(){
+						_('#tr_'+result['no']+',#li_'+result['no']).remove();
 					});
 				}
-				_.ajax_untip(result['status_code']);
+				if (result['status_code'])
+				{
+					_.ajax_untip(result['status_code']);
+				}
 			}
 		}
 	});
@@ -71,42 +74,4 @@ function bind_checkall(me,selector){
 			_(selector).prop('checked',cked);
 		});
 }
-
-function showMedia(event){
-	event = event||window.event;
-	_('#ImagePreview').show(function(){
-		_('#media').css({'left':parseInt((_.pageSize().pageWidth-800)/2)+'px','top':_.scrollSize().top+'px'}).fadeIn();
-	});
-	
-	_('#ImagePreview').refillscreen();
-	mouse_bind(_('#media'),'#menuBar');
-	_(window).bind('resize', function(){
-		_('#media').css({'left':parseInt((_.pageSize().pageWidth-800)/2)+'px','top':(scrollSize.top+(_.pageSize().windowHeight-480)/2)+'px'+'px'});
-		_('#ImagePreview').refillscreen();
-	});
-}
-
-
-function replaceAtt(no,event){
-	currentNo = no;
-	 _.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':800,'height':500,'layer':true});
-}
-function closeMedia(){
-	_('#SweetRice_dialog_media').remove();
-	_('#SweetRice_layer_dialog').remove();
-}
-function addfile(event){
-	attNo += 1;
-	currentNo = attNo;
-	_('#no').val(attNo);
-	var new_file = document.createElement('div');
-	_(new_file).attr('id','f_'+attNo).html('<div class="att_list">New <input type="text" name="att_'+attNo+'" id="att_'+attNo+'" class="input_text"/><span id="attname_'+attNo+'"></span> <input type="button" value="'+REMOVE_FILE+'" onclick="delfile('+attNo+',event);"> <input type="button" value="'+REPLACE_TIP+'" onclick="replaceAtt('+attNo+',event);" ></div>');
-	_('#muti_files').append(new_file);
-	_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','name':'media','width':800,'height':500,'layer':true});
-}
-function delfile(f_no){
-	_('#f_'+f_no).remove();
-	closeMedia();
-}
-
 //-->

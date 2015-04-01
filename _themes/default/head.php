@@ -18,6 +18,7 @@
 <link rel="alternate" type="application/rss+xml" title="<?php echo $global_setting['name'];?>" href="<?php echo show_link_rssfeed();?>" />
 <?php echo $rssfeed;?>
 <meta name="generator" content="SweetRice <?php echo SR_VERSION;?>" />
+<meta id="base_dir" content="<?php echo BASE_DIR;?>" />
 <meta name="copyright" content="<?php echo $global_setting['name'];?>" />
 <link href="<?php echo THEME_URL.$page_theme['css'];?>" rel="stylesheet" type="text/css" media="screen" />
 <?php echo $canonical?'<link rel="canonical" href="'.$canonical.'" />':'';?>
@@ -28,7 +29,7 @@
 <body>
 <div id="div_top">
 <div id="top_image">
-<a href="<?php echo BASE_URL;?>"><img src="<?php echo $global_setting['logo']?ATTACHMENT_DIR.$global_setting['logo']:'images/sweetrice.jpg';?>" alt="<?php echo $global_setting['name'];?>"/></a>
+<a href="<?php echo BASE_URL;?>"><img src="<?php echo $global_setting['logo']?ATTACHMENT_DIR.$global_setting['logo']:'images/logo.png';?>" alt="<?php echo $global_setting['name'];?>"/></a>
 </div>
 <div id="top_word"><?php echo $top_word?$top_word:$global_setting['name'];?></div>
 <div class="div_clear"></div>

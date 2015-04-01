@@ -10,16 +10,17 @@
 ?>
 <form method="get" action="./">
 <input type="hidden" name="type" value="category"/>
-	<input type="text" name="search" value="<?php echo $search;?>"/> <input type="submit" value="<?php echo SEARCH;?>" class="input_submit"/>
+	<input type="text" name="search" value="<?php echo escape_string($_GET['search']);?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
+<?php echo $data['pager']['list_put'];?>
 <form method="post" id="bulk_form" action="./?type=category&mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><td align="left"><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php echo CAT_NAME;?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="slug"><?php echo SLUG;?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="parent"><?php echo PARENT;?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="title"><?php echo TITLE;?></a></td><td class="td_admin"><?php echo ADMIN;?></td></tr></thead>
+<thead><tr><td align="left"><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="slug"><?php _e('Slug');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="parent"><?php echo _e('Parent');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="title"><?php _e('Title');?></a></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
 <tbody>
 <?php
 $no = 0;
-foreach($subCategory as $row){
+foreach($data['rows'] as $row){
 		$no +=1;
 		if($classname=='tr_sigle'){
 			$classname = 'tr_double';
@@ -27,15 +28,10 @@ foreach($subCategory as $row){
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/> 
-<?php
-for($i=0; $i<$row['level']; $i++){
-	echo '-- ';
-}	
-?><a href="<?php echo BASE_URL.show_link_cat($categories[$row['id']]['link'],'');?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $categories[$row['id']]['name'];?></span></a></td><td><span id="slug_<?php echo $no;?>"><?php echo $categories[$row['id']]['link'];?></span></td><td><span id="parent_<?php echo $no;?>"><?php echo $categories[$row['id']]['parent_id']?$categories[$categories[$row['id']]['parent_id']]['name']:'Main';?></span></td><td><span id="title_<?php echo $no;?>"><?php echo $categories[$row['id']]['name'];?></span></td><td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/> <a href="<?php echo BASE_URL.show_link_cat($row['link'],'');?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td><span id="slug_<?php echo $no;?>"><?php echo $row['link'];?></span></td><td><span id="parent_<?php echo $no;?>"><a href="./?type=category&parent=<?php echo intval($row['parent_id']);?>"><?php echo $row['parent_id']?$categories[$row['parent_id']]['name']:_t('Main');?></a></span></td><td><span id="title_<?php echo $no;?>"><?php echo $row['title'];?></span></td><td>
 <span id="action_<?php echo $no;?>"></span>
-<a title="<?php echo DELETE_TIP;?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php echo DELETE_TIP;?></a> 
-<a title="<?php echo MODIFY;?>" class="action_modify" href="./?type=category&mode=modify&id=<?php echo $row['id'];?>"><?php echo MODIFY;?></a> 
+<a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
+<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=category&mode=modify&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
 	}
@@ -43,7 +39,8 @@ for($i=0; $i<$row['level']; $i++){
 </tbody>
 </table>
 </div>
-<input type="submit" value="<?php echo BULK.' '.DELETE_TIP;?>"> <input type="button" value="<?php echo CREATE;?>" onclick="location.href='./?type=category&mode=insert';"> </form>
+<input type="submit" value="<?php _e('Bulk Delete');?>"> <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=category&mode=insert"> <input type="button" value="<?php _e('Back');?>" class="back" url="./?type=category"></form>
+<?php echo $data['pager']['list_put'];?>
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
@@ -53,7 +50,7 @@ for($i=0; $i<$row['level']; $i++){
 			sortBy(this,'#tbl');
 		});
 		_('.action_delete').bind('click',function(){
-			if(!confirm("<?php echo(DELETE_CONFIRM);?>")) return; deleteAction("category",_(this).attr('data'),_(this).attr('no'));
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('category',_(this).attr('data'),_(this).attr('no'));
 		});
 		_('#bulk_form').bind('submit',function(event){
 		var no = 0;   
@@ -63,11 +60,11 @@ for($i=0; $i<$row['level']; $i++){
 			}
 		});
 		if(no > 0){
-			if(!confirm("<?php echo(DELETE_CONFIRM);?>")){
+			if(!confirm('<?php _e('Are you sure delete it?');?>')){
 				_().stopevent(event);
 			}
 		}else{
-			alert("<?php echo NO_RECORD_SELECTED;?>.");
+			alert('<?php _e('No Record Selected');?>');
 			_().stopevent(event);
 		}
 		});

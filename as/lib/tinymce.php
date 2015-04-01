@@ -16,7 +16,7 @@
 var editor = [];
 _().ready(function(){
 	_('.editor_toggle').bind('click',function(){
-		_('.editor_toggle').removeClass('current_label');
+		_(this).parent().find('.editor_toggle').removeClass('current_label');
 		_(this).addClass('current_label');
 		if (_(this).attr('data') == 'visual')
 		{
@@ -38,17 +38,17 @@ _().ready(function(){
 function editorEnable(id){
 	tinyMCE.init({
         // General options
-	mode : "exact",
+	mode : 'exact',
 	convert_urls : false ,
 	elements : id,
 	plugins: [
-					"advlist autolink autosave link image lists charmap preview hr anchor autoresize",
-					"searchreplace code fullscreen insertdatetime media",
-					"table contextmenu directionality textcolor"
+					'advlist autolink autosave link image lists charmap preview hr anchor autoresize',
+					'searchreplace code fullscreen insertdatetime media',
+					'table contextmenu directionality textcolor'
 	],
 
-	toolbar1: "undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontselect fontsizeselect | table",
-	toolbar2: "bullist numlist | searchreplace | outdent indent rtl blockquote | link unlink anchor | image media inserttime hr | removeformat forecolor backcolor | code preview fullscreen",
+	toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontselect fontsizeselect | table',
+	toolbar2: 'bullist numlist | searchreplace | outdent indent rtl blockquote | link unlink anchor | image media inserttime hr | removeformat forecolor backcolor | code preview fullscreen',
 
 
 	menubar: false,
@@ -67,7 +67,7 @@ function editorEnable(id){
 	endswitch;
 ?>
 	// Example content CSS (should be your site CSS)
-	content_css : "tinymce.css"
+	content_css : 'tinymce.css'
 });
 }
 

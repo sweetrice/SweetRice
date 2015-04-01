@@ -7,16 +7,16 @@
  * @since 0.7.0
  */
  	defined('VALID_INCLUDE') or die();
-	$type = $_GET["type"];
-	if($type=='entry'){
-		$post = $_GET["post"];
-		$sql = "WHERE `in_blog` = '1' ";
+	$type = $_GET['type'];
+	if($type == 'entry'){
+		$post = db_escape($_GET['post']);
+		$where = " 1=1 ";
 		if($post){
-			$sql .= " AND `sys_name` = '$post'";
+			$where .= "  AND UPPER(ps.`sys_name`) = UPPER('$post')";
 		}else{
 			_404('entry');
 		}
-		$row = db_array("SELECT `id`,`sys_name`,`category`,`name`,`keyword`,`description`,`body`,`views`,`date`,`tags`,`allow_comment` FROM `".DB_LEFT."_posts` ".$sql);
+		$row = getPosts(array('field'=>'ps.*','where'=>$where,'custom_field'=>true,'post_type'=>'show','fetch_one'=>true));
 		if(!$row['id']){
 			_404('entry');
 		}
@@ -24,25 +24,36 @@
 			$comments = db_arrays("SELECT `name` ,`website`, `info` ,`date` FROM `".DB_LEFT."_comment` WHERE `post_id` = '".$row['id']."'");
 		}
 		outputHeader($row['date']);
-		include("inc/rssfeed_entry.php");
-	}elseif($type=='category'){
-		$cat = $_GET["c"];
+		include('inc/rssfeed_entry.php');
+	}elseif($type == 'category'){
+		$cat = $_GET['c'];
 		if(empty($cat)){
 			_404('category');
 		}
 		$cat_id = intval($categoriesByLink[$cat]);
-		if($cat_id==0){
+		if($cat_id == 0){
 			_404('category');
 		}		
-		$rows = db_arrays("SELECT `sys_name`,`category`,`name`,`body`,`date` FROM `".DB_LEFT."_posts` WHERE `category` = '$cat_id' AND `in_blog` = '1' ORDER BY `id` DESC ".get_limit_sql(0,$global_setting['nums_setting']['postRssfeed']));
+		$data = getPosts(array(
+			'category_ids'=>$cat_id,
+			'order'=>"ps.`id` DESC",
+			'post_type'=>'show',
+			'limit' => array(0,$global_setting['nums_setting']['postRssfeed'])
+		));
+		$rows = $data['rows'];
 		$last_modify = pushDate(array($rows));
 		outputHeader($last_modify);
-		include("inc/rssfeed_category.php");
+		include('inc/rssfeed_category.php');
 	}else{
-		$rows = db_arrays("SELECT `name`,`sys_name`,`category`,`body`,`date` FROM `".DB_LEFT."_posts`  WHERE `in_blog` = '1' ORDER by `id` DESC ".get_limit_sql(0,$global_setting['nums_setting']['postRssfeed']));
+		$data = getPosts(array(
+			'order'=>"ps.`id` DESC",
+			'post_type'=>'show',
+			'limit' => array(0,$global_setting['nums_setting']['postRssfeed'])
+		));
+		$rows = $data['rows'];
 		$last_modify = pushDate(array($rows));
 		outputHeader($last_modify);
-		include("inc/rssfeed.php");	
+		include('inc/rssfeed.php');	
 	}
 	exit();		
 ?>

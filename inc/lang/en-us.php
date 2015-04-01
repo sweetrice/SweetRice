@@ -7,62 +7,586 @@
  * @since 1.3.0
  */
 	defined('VALID_INCLUDE') or die();
-	define('_404_TITLE','HTTP 404 - File not found');
-	define('_404_H1','HTTP 404 - File not found');
-	define('_404_BODY','%s You can Visit <a href="%s">%s</a> Home page <div id="div_foot">Powered by <a href="http://www.basic-cms.org">Basic-CMS.ORG</a> SweetRice.</div>');
-	define('_404TIP_CATEGORY','Sorry ,the category does not exists.');
-	define('_404TIP_ENTRY','Sorry ,the entry does not exists.');
-	define('_404TIP_ATTACHMENT','Sorry ,the attachment does not exists.');
-	define('_404TIP_TAGS','Sorry ,the tag does not exists.');
-	define('_404TIP_PLUGIN','Sorry ,the plugin does not exists.');
-	define('_404TIP_HOME','Invalid request,please check your url.');
-	define('HOME','Home');
-	define('PARENT','Parent');
-	define('VIEWS','views');
-	define('READ_MORE','Read More...');
-	define('TAGS','Tags:');
-	define('YOUR_NAME','Your name');
-	define('REMEMBER_ME','Remember Me');
-	define('YOUR_EMAIL','Your email');
-	define('VERIFICATION_CODE','Verification code');
-	define('YOUR_WEBSITE','Your website');
-	define('COMMENT','Comment');
-	define('CATEGORY_RSSFEED','Category Rssfeed');
-	define('ENTRY_RSSFEED','Entry Rssfeed');
-	define('SITEMAP','Sitemap');
-	define('TAG_DESCRIPTION','%s posts ,include %s etc - %s');
-	define('ENTRY_RSSFEED','RSSFeed of %s');
-	define('POST_DETAIL','Post detail');
-	define('CATEGORY','Category');
-	define('LAST_UPDATE','Last update:');
-	define('PERMALINK','Permalink:');
-	define('USER_COMMENTS','User Comments');
-	define('VIEW_ALL_COMMENTS','View all comments');
-	define('TOTAL','Total');
-	define('RELATED_ENTRY','Related entry');
-	define('COPYRIGHT','Copyright');
-	define('RSSFEED','RSSFeed');
-	define('HOME_H1','Hello world! Welcome to %s Website.');
-	define('COMMENTS_OFF','Comments Off');
-	define('LINKS','Links');
-	define('UNCATEGORY','Uncategory');
-	define('TAG','Tag');
-	define('LEAVE_COMMENT','Leave comment');
-	define('CMT_TIP_ENTER_NAME','Please enter your name!');
-	define('CMT_TIP_ENTER_EMAIL','Please enter a valid email!');
-	define('CMT_TIP_ENTER_CODE','Please enter verification code!');
-	define('CMT_TIP_ENTER_COMMENT','Please enter your comment!');
-	define('CMT_TIP_MAXWORD','Word too large,do not more then 800 chars.');
-	define('CMT_TIP_RESPONSE_ERROR','Please Check Verification Code,Email and comment and try again!');
-	define('CMT_TIP_RESPONSE_SUCCESS','Submit successfully,thank you!');
-	define('CMT_TIP_NORESPONSE','Sorry,connect error,please try later!');
-	define('NO_ENTRY','No entry in this category!');
-	define('POST_DATE_FORMAT','F,jS Y');
-	define('NAVIGATION','Navigation');
-	define('LANGUAGE','Language');
-	define('THEME','Theme');
-	define('DEFAULT_TIP','Default');
+	return array(
+		'Dashboard' => 'Dashboard',
+		'Category' => 'Category',
+		'Post' => 'Post',
+		'List' => 'List',
+		'Create' => 'Create',
+		'Comment' => 'Comment',
+		'Setting' => 'Setting',
+		'Ads' => 'Ads',
+		'Links' => 'Links',
+		'Link' => 'Link',
+		'Track' => 'Track',
+		'Click the date to show chart.' => 'Click the date to show chart.',
+		'Theme' => 'Theme',
+		'Data Backup' => 'Data Backup',
+		'Data Import' => 'Data Import',
+		'Are you sure replace your database to this data version?' => 'Are you sure replace your database to this data version?',
+		'Data' => 'Data',
+		'Data Converter' => 'Data Converter',
+		'Data Optimizer' => 'Data Optimizer',
+		'Database convert successfully!' => 'Database convert successfully!',
+		'Please fill out form below.' => 'Please fill out form below.',
+		' has been import into your database ,any message maybe here:' => ' has been import into your database ,any message maybe here:',
+		'Please select backup file to import or save.' => 'Please select backup file to import or save.',
+		'Your database has been backup successfully!' => 'Your database has been backup successfully!',
+		'Your database save in Sqlite,do not need import!' => 'Your database save in Sqlite,do not need import!',
+		'Please select table to backup,current database is' => 'Please select table to backup,current database is',
+		'Please select table to converter,current database is' => 'Please select table to converter,current database is',
+		'Please select table to optimizer,current database is' => 'Please select table to optimizer,current database is',
+		'Home' => 'Home',
+		'Logout' => 'Logout',
+		'Account' => 'Account',
+		'Please login' => 'Please login',
+		'Password' => 'Password',
+		'Login' => 'Login',
+		'Name' => 'Name',
+		'Category name' => 'Category name',
+		'Keywords' => 'Keywords',
+		'Keywords of page' => 'Keywords of page',
+		'Description' => 'Description',
+		'Description of page' => 'Description of page',
+		'Slug' => 'Slug',
+		'Only a-z,A-Z,0-9,-,_' => 'Only a-z,A-Z,0-9,-,_',
+		'Title' => 'Title',
+		'Title of page' => 'Title of Page',
+		'Top word' => 'Top word',
+		'At top right of page' => 'At top right of page',
+		'Done' => 'Done',
+		'Back' => 'Back',
+		'No.' => 'No.',
+		'Admin' => 'Admin',
+		'Body' => 'Body',
+		'Time' => 'Time',
+		'Delete' => 'Delete',
+		'Are you sure delete it?' => 'Are you sure delete it?',
+		'Reply' => 'Reply',
+		'<span>%s</span> System Information' => '<span>%s</span> System Information',
+		'Website status : %s' => 'Website status : %s',
+		'Database <span>%s</span> <span>%s</span> <span>%s</span>' => 'Database <span>%s</span> <span>%s</span> <span>%s</span>',
+		'Connected' => 'Connected',
+		'does not connected' => 'does not connected',
+		'SQLite driver ' => 'SQLite driver ',
+		'Total' => 'Total',
+		'URL rewrite' => 'URL rewrite',
+		'Running' => 'Running',
+		'Close' => 'Close',
+		' You can through <a href="./?type=setting">Setting</a> to change it.' => ' You can through <a href="./?type=setting">Setting</a> to change it.',
+		'Click <a href="./?type=category&mode=insert">here</a> to create category.' => 'Click <a href="./?type=category&mode=insert">here</a> to create category.',
+		'Click <a href="./?type=post&mode=insert">here</a> to create post.' => 'Click <a href="./?type=post&mode=insert">here</a> to create post.',
+		'Default' => 'Default',
+		'You can through <a href="./?type=setting">Setting</a> to choose theme.' => 'You can through <a href="./?type=setting">Setting</a> to choose theme.',
+		'Option' => 'Option',
+		'Publish' => 'Publish',
+		'Allow comment' => 'Allow comment',
+		'Attachment' => 'Attachment',
+		'Filename' => 'Filename',
+		'Upload Time' => 'Upload Time',
+		'Tag' => 'Tag',
+		'Split by commas' => 'Split by commas',
+		'Only a-z,A-Z,0-9,-,_ ,system will create one if empty' => 'Only a-z,A-Z,0-9,-,_ ,system will create one if empty',
+		'Modify' => 'Modify',
+		'Site Name' => 'Site Name',
+		'Webmaster' => 'Webmaster',
+		'Database' => 'Database',
+		'Database host' => 'Database host',
+		'Usually localhost' => 'Usually localhost',
+		'Database Port' => 'Database Port',
+		'Database Account' => 'Database Account',
+		'Database Password' => 'Database Password',
+		'Database Name' => 'Database Name',
+		'Data table prefix' => 'Data table prefix',
+		'Site close tip' => 'Site close tip',
+		'Need server support' => 'Need server support',
+		'Show this in homepage when site close.' => 'Show this in homepage when site close.',
+		'Site close' => 'Site close',
+		'Email' => 'Email',
+		'Current theme' => 'Current theme',
+		'For design theme for SweetRice,you can view _themes/default/theme.config.' => 'For design theme for SweetRice,you can view _themes/default/theme.config.',
+		'Please backup before modify' => 'Please backup before modify',
+		'Comment information' => 'Comment information',
+		'Welcome to SweetRice install form.' => 'Welcome to SweetRice install form.',
+		'inc is not writable,it\'s permissions must be 777.' => 'inc is not writable,it\'s permissions must be 777.',
+		'root dir is not writable,it\'s permissions must be 777.' => 'root dir is not writable,it\'s permissions must be 777.',
+		'attachment is not writable,it\'s permissions must be 777.' => 'attachment is not writable,it\'s permissions must be 777.',
+		'as/lib is not writable,it\'s permissions must be 777.' => 'as/lib is not writable,it\'s permissions must be 777.',
+		'Please change the directory\'s permissions.' => 'Please change the directory\'s permissions.',
+		'Database error!' => 'Database error!',
+		'Install' => 'Install',
+		'Author' => 'Author',
+		'Accept' => 'Accept',
+		'Do not accept' => 'Do not accept',
+		'Edit links content.' => 'Edit links content.',
+		'You can edit ads code and put it to template,or you can directly edit template <a href="./?type=theme">here</a>' => 'You can edit ads code and put it to template,or you can directly edit template <a href="./?type=theme">here</a>',
+		'Ads name' => 'Ads name',
+		'Ads code' => 'Ads code',
+		'Upload' => 'Upload',
+		'File size need less then server limit' => 'File size need less then server limit',
+		'Add file' => 'Add file',
+		'Remove File' => 'Remove File',
+		'Download times' => 'Download times',
+		'If do not select category,the post url will without category name and suffix with .html' => 'If do not select category,the post url will without category name and suffix with .html',
+		'Check' => 'Check',
+		'Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.' => 'Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.',
+		'released' => 'released',
+		'Language' => 'Language',
+		'Replace' => 'Replace',
+		'Plugin' => 'Plugin',
+		'Deinstall' => 'Deinstall',
+		'Version' => 'Version',
+		'Contact' => 'Contact',
+		'Home Page' => 'Home Page',
+		'Parent' => 'Parent',
+		'Repeat Password' => 'Repeat Password',
+		'Please reset your password.' => 'Please reset your password.',
+		'Forgot password' => 'Forgot password',
+		'Please input your administrator\'s email.' => 'Please input your administrator\'s email.',
+		'Please visit your email,and reset your passowrd.' => 'Please visit your email,and reset your passowrd.',
+		'Wrong email.' => 'Wrong email.',
+		'
+Hi %s,
+Please click the links below to reset your password for SweetRice:
+%s%s/?type=password&mode=re&r=%s
+if this is not your request,just remove the email.
 
-	define('CLOSE_TIP','Close');
-	define('ALERT_REDIRECT_TIP','You will be redirected in 3 seconds.');
+
+
+Goodluck!
+SweetRice
+				' => '
+			Hi %s,
+			Please click the links below to reset your password for SweetRice:
+			%s%s/?type=password&mode=re&r=%s
+			if this is not your request,just remove the email.
+
+
+
+			Goodluck!
+			SweetRice
+							',
+		'
+Hi %s,<br />
+Please click the links below to reset your password for SweetRice:<br />
+<a href="%s%s/?type=password&mode=re&r=%s">%s%s/?type=password&mode=re&r=%s</a><br />
+if this is not your request,just remove the email.<br />
+<br />
+<br />
+<br />
+Goodluck!<br />
+SweetRice
+				' => '
+			Hi %s,<br />
+			Please click the links below to reset your password for SweetRice:<br />
+			<a href="%s%s/?type=password&mode=re&r=%s">%s%s/?type=password&mode=re&r=%s</a><br />
+			if this is not your request,just remove the email.<br />
+			<br />
+			<br />
+			<br />
+			Goodluck!<br />
+			SweetRice
+							',
+		'Wrong secret code.' => 'Wrong secret code.',
+		'Your password has been reset succesfully.' => 'Your password has been reset succesfully.',
+		'
+Hi,%s :
+Your password has been reset succesfully,please login your dashboard and manage your website.
+%s%s/
+
+
+Goodluck!
+SweetRice	
+				' => '
+			Hi,%s :
+			Your password has been reset succesfully,please login your dashboard and manage your website.
+			%s%s/
+
+
+			Goodluck!
+			SweetRice	
+							',
+		'
+Hi,%s :<br />
+Your password has been reset succesfully,please login your dashboard and manage your website.<br />
+<a href="%s%s/">%s%s/</a><br />
+<br />
+<br />
+Goodluck!<br />
+SweetRice	
+				' => '
+			Hi,%s :<br />
+			Your password has been reset succesfully,please login your dashboard and manage your website.<br />
+			<a href="%s%s/">%s%s/</a><br />
+			<br />
+			<br />
+			Goodluck!<br />
+			SweetRice	
+							',
+		'Invalid password.' => 'Invalid password.',
+		'Invalid password or Email.' => 'Invalid password or Email.',
+		'Dashboard Directory' => 'Dashboard Directory',
+		'Change Dashboard Directory' => 'Change Dashboard Directory',
+		'User Track' => 'User Track',
+		'Max upload file size' => 'Max upload file size',
+		'Media Center' => 'Media Center',
+		' has been deleted successfully!' => ' has been deleted successfully!',
+		' Not exists or not empty.' => ' Not exists or not empty.',
+		'Media' => 'Media',
+		'Directory' => 'Directory',
+		'File Type' => 'File Type',
+		'Date' => 'Date',
+		'File size' => 'File size',
+		'Cache' => 'Cache',
+		'Full' => 'Full',
+		'Expired' => 'Expired',
+		'Second(s) 0:Never' => 'Second(s) 0:Never',
+		'Enable data cache,this will save resource for query database.' => 'Enable data cache,this will save resource for query database.',
+		'Clean' => 'Clean',
+		'Cache has been clean successfully.' => 'Cache has been clean successfully.',
+		'File(s)' => 'File(s)',
+		'Quote Code' => 'Quote Code',
+		'Template' => 'Template',
+		'Search' => 'Search',
+		'Create another one?' => 'Create another one?',
+		'View image in window' => 'View image in window',
+		'Save' => 'Save',
+		'Action' => 'Action',
+		'Bulk' => 'Bulk',
+		'Update' => 'Update',
+		'Meta' => 'Meta',
+		'Preview' => 'Preview',
+		'General' => 'General',
+		'Permalinks' => 'Permalinks',
+		'Rssfeed' => 'Rssfeed',
+		'Sitemap' => 'Sitemap',
+		'Chart' => 'Chart',
+		'this setting only available for Apache server' => 'this setting only available for Apache server',
+		'Tips: please don\'t modify "RewriteBase %--%",it will be automatically set to the real path.' => 'Tips: please don\'t modify "RewriteBase %--%",it will be automatically set to the real path.',
+		'Edit' => 'Edit',
+		'No bulk action selected' => 'No bulk action selected',
+		'Current version' => 'Current version',
+		'Lastest version' => 'Lastest version',
+		'Automatically' => 'Automatically',
+		'Manually' => 'Manually',
+		'all' => 'all',
+		'These files/directory will be updated' => 'These files/directory will be updated',
+		'Extract' => 'Extract',
+		'successfully' => 'successfully',
+		'failed' => 'failed',
+		'temporary' => 'temporary',
+		'Upgrade' => 'Upgrade',
+		'Download' => 'Download',
+		'Update failed - cannot connect update server.' => 'Update failed - cannot connect update server.',
+		'Updating SweetRice' => 'Updating SweetRice',
+		'Aborted' => 'Aborted',
+		'You can upgrade database manually later,more information see SweetRice_root/upgrade_db.php' => 'You can upgrade database manually later,more information see SweetRice_root/upgrade_db.php',
+		'Next step' => 'Next step',
+		'URL Redirect' => 'URL Redirect',
+		'Set URL redirect(301) here - this feature only available if URL rewrite enabled' => 'Set URL redirect(301) here - this feature only available if URL rewrite enabled',
+		'Visited Pages' => 'Visited Pages',
+		'Referrer Pages' => 'Referrer Pages',
+		'IP' => 'IP',
+		'Remember me' => 'Remember me',
+		'Top 10 of %total_pages% visited page' => 'Top 10 of %total_pages% visited page',
+		'Top 10 of %total_froms% referrer page' => 'Top 10 of %total_froms% referrer page',
+		'Top 10 of %total_ips% ip' => 'Top 10 of %total_ips% ip',
+		'Server Time : %s' => 'Server Time : %s',
+		'Upgrade SweetRice to %s successfully.' => 'Upgrade SweetRice to %s successfully.',
+		'Sorry,some error happen when upgrade db,please upgrade SweetRice manually.!' => 'Sorry,some error happen when upgrade db,please upgrade SweetRice manually.!',
+		'Download SweetRice_core.zip (File size:%s) successfully' => 'Download SweetRice_core.zip (File size:%s) successfully',
+		'Database upgrade failed.<br />Some error maybe here:<br />%s' => 'Database upgrade failed.<br />Some error maybe here:<br />%s',
+		'Database upgrade successfully.' => 'Database upgrade successfully.',
+		'Current version : %s' => 'Current version : %s',
+		'Lastest version : %s' => 'Lastest version : %s',
+		'Extract SweetRice successfully' => 'Extract SweetRice successfully',
+		'Extract SweetRice failed' => 'Extract SweetRice failed',
+		'Update SweetRice files failed' => 'Update SweetRice files failed',
+		'Update SweetRice files successfully' => 'Update SweetRice files successfully',
+		'Clean temporary files successfully' => 'Clean temporary files successfully',
+		'Clean temporary files failed' => 'Clean temporary files failed',
+		'Check update' => 'Check update',
+		'SweetRice installer' => 'SweetRice installer',
+		'Remote File' => 'Remote File',
+		'Attach File' => 'Attach File',
+		'New directory' => 'New directory',
+		'Loading...' => 'Loading...',
+		'Optimize successfully' => 'Optimize successfully',
+		'Optimize failed' => 'Optimize failed',
+		'System Setting' => 'System Setting',
+		'Web Setting' => 'Web Setting',
+		'Uncategory' => 'Uncategory',
+		'Time zone' => 'Time zone',
+		'Admin Email' => 'Admin Email',
+		'Choose time zone' => 'Choose time zone',
+		'Request' => 'Request',
+		'System' => 'System',
+		'Custom' => 'Custom',
+		'Hidden' => 'Hidden',
+		'Sites' => 'Sites',
+		'Site list' => 'Site list',
+		'Sites management' => 'Sites management',
+		'Site attachment directory' => 'Site attachment directory',
+		'Host' => 'Host',
+		'Site configuration' => 'Site configuration',
+		'%s has been installed successfully.' => '%s has been installed successfully.',
+		'%s has been deinstalled successfully.' => '%s has been deinstalled successfully.',
+		'M d Y H:i' => 'M d Y H:i',
+		'You will be redirected in 3 seconds.' => 'You will be redirected in 3 seconds.',
+		'Add parameter' => 'Add parameter',
+		'Remove parameter' => 'Remove parameter',
+		'Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.' => 'Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.',
+		'%s (%s) has been delete successfully.' => '%s (%s) has been delete successfully.',
+		'Database backup file does not exists.' => 'Database backup file does not exists.',
+		'Url has been update successfully.' => 'Url has been update successfully.',
+		'Url has been update failed.' => 'Url has been update failed.',
+		'Plugin list' => 'Plugin list',
+		'Plugin already exists.' => 'Plugin already exists.',
+		'Invalid plugin - missing plugin name' => 'Invalid plugin - missing plugin name',
+		'Login success' => 'Login success',
+		'Login failed' => 'Login failed',
+		'Example link' => 'Example link',
+		'Do not change' => 'Do not change',
+		'Original url' => 'Original url',
+		'Is Index' => 'Is Index',
+		'Homepage' => 'Homepage',
+		'Cancel' => 'Cancel',
+		'URL parse' => 'URL parse',
+		'Add URL Rule' => 'Add URL Rule',
+		'Sql Execute' => 'Sql Execute',
+		'Enter SQL and execute it online,please backup database first.' => 'Enter SQL and execute it online,please backup database first.',
+		'SQL Content' => 'SQL Content',
+		'SQL Execute Success' => 'SQL Execute Success',
+		'Nums Setting' => 'Nums Setting',
+		'Posts in each categories' => 'Posts in each categories',
+		'Posts in uncategories' => 'Posts in uncategories',
+		'Max tags in tag cloud list' => 'Max tags in tag cloud list',
+		'Posts in category page' => 'Posts in category page',
+		'Posts in home page' => 'Posts in home page',
+		'Posts in tag page' => 'Posts in tag page',
+		'Related Posts' => 'Related Posts',
+		'Posts in Pins mode' => 'Posts in Pins mode',
+		'Max posts in Rssfeed page' => 'Max posts in Rssfeed page',
+		'Comments in comment page' => 'Comments in comment page',
+		'Comments in Pins mode' => 'Comments in Pins mode',
+		'Template History' => 'Template History',
+		'Clean Backup' => 'Clean Backup',
+		'Visual' => 'Visual',
+		'HTML' => 'HTML',
+		'Enable header 304' => 'Enable header 304',
+		'Output header 304 if page is not modified,this option will save server time' => 'Output header 304 if page is not modified,this option will save server time',
+		'One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field' => 'One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field',
+		'Save to field list' => 'Save to field list',
+		'Custom Field' => 'Custom Field',
+		'Add Custom Field' => 'Add Custom Field',
+		'Clean Custom Field' => 'Clean Custom Field',
+		'Text' => 'Text',
+		'Single' => 'Single',
+		'Next' => 'Next',
+		'Previous' => 'Previous',
+		'Yes' => 'Yes',
+		'No' => 'No',
+		'By' => 'By',
+		'Server does not supports .Htaccess.' => 'Server does not supports .Htaccess.',
+		'Page Limit' => 'Page Limit',
+		'HTTP 404 - File not found' => 'HTTP 404 - File not found',
+		'%s You can Visit <a href="%s">%s</a> Home page <div id="div_foot">Powered by <a href="http://www.basic-cms.org">Basic-CMS.ORG</a> SweetRice.</div>' => '%s You can Visit <a href="%s">%s</a> Home page <div id="div_foot">Powered by <a href="http://www.basic-cms.org">Basic-CMS.ORG</a> SweetRice.</div>',
+		'Sorry ,the category does not exists.' => 'Sorry ,the category does not exists.',
+		'Sorry ,the entry does not exists.' => 'Sorry ,the entry does not exists.',
+		'Sorry ,the attachment does not exists.' => 'Sorry ,the attachment does not exists.',
+		'Sorry ,the tag does not exists.' => 'Sorry ,the tag does not exists.',
+		'Sorry ,the plugin does not exists.' => 'Sorry ,the plugin does not exists.',
+		'Invalid request,please check your url.' => 'Invalid request,please check your url.',
+		'Read More...' => 'Read More...',
+		'Tags:' => 'Tags:',
+		'Your name' => 'Your name',
+		'Remember Me' => 'Remember Me',
+		'Category Rssfeed' => 'Category Rssfeed',
+		'RSSFeed of %s' => 'RSSFeed of %s',
+		'%s posts ,include %s etc - %s' => '%s posts ,include %s etc - %s',
+		'Permalink:' => 'Permalink:',
+		'User Comments' => 'User Comments',
+		'Copyright' => 'Copyright',
+		'RSSFeed' => 'RSSFeed',
+		'Hello world! Welcome to %s Website.' => 'Hello world! Welcome to %s Website.',
+		'Comments Off' => 'Comments Off',
+		'Please enter your name!' => 'Please enter your name!',
+		'Please enter a valid email!' => 'Please enter a valid email!',
+		'Please enter verification code!' => 'Please enter verification code!',
+		'Please enter your comment!' => 'Please enter your comment!',
+		'Word too large,do not more then 800 chars.' => 'Word too large,do not more then 800 chars.',
+		'Please Check Verification Code,Email and comment and try again!' => 'Please Check Verification Code,Email and comment and try again!',
+		'Submit successfully,thank you!' => 'Submit successfully,thank you!',
+		'Sorry,connect error,please try later!' => 'Sorry,connect error,please try later!',
+		'No entry in this category!' => 'No entry in this category!',
+		'F,jS Y' => 'F,jS Y',
+		'Navigation' => 'Navigation',
+		'Category List' => 'Category List',
+		'Bulk delete' => 'Bulk delete',
+		'Create Category' => 'Create Category',
+		'Meta Setting' => 'Meta Setting',
+		'Modify Category' => 'Modify Category',
+		'All' => 'All',
+		'Bulk Delete' => 'Bulk Delete',
+		'No Record Selected' => 'No Record Selected',
+		'Comment List' => 'Comment List',
+		'Reply Comment' => 'Reply Comment',
+		'Comment User' => 'Comment User',
+		'Files' => 'Files',
+		'Save to list' => 'Save to list',
+		'Please select table to converter,current database is' => 'Please select table to converter,current database is',
+		'Database Setting' => 'Database Setting',
+		'Database Host' => 'Database Host',
+		'Database Prefix' => 'Database Prefix',
+		'Successfully' => 'Successfully',
+		'Edit .htaccess' => 'Edit .htaccess',
+		'Links management' => 'Links management',
+		'Open' => 'Open',
+		'New Category' => 'New Category',
+		'New Directory' => 'New Directory',
+		'Forgot Password' => 'Forgot Password',
+		'Links Admin' => 'Links Admin',
+		'URL' => 'URL',
+		'Permalink Setting' => 'Permalink Setting',
+		'Example Link' => 'Example Link',
+		'XML' => 'XML',
+		'Plugin Admin' => 'Plugin Admin',
+		'Plugin Description' => 'Plugin Description',
+		'Plugin must be install first.' => 'Plugin must be install first.',
+		'Post List' => 'Post List',
+		'All Categories' => 'All Categories',
+		'Time' => 'Time',
+		'Times' => 'Times',
+		'Comments' => 'Comments',
+		'Bulk Action' => 'Bulk Action',
+		'Bulk Modify' => 'Bulk Modify',
+		'Do Not Change' => 'Do Not Change',
+		'Allow Comment' => 'Allow Comment',
+		'General Setting' => 'General Setting',
+		'Website setting' => 'Website setting',
+		'Administrator' => 'Administrator',
+		'Administrator Password' => 'Administrator Password',
+		'Administrator Email' => 'Administrator Email',
+		'Timezone' => 'Timezone',
+		'Choose Timezone' => 'Choose Timezone',
+		'Cache Expired' => 'Cache Expired',
+		'Site Close Tip' => 'Site Close Tip',
+		'Close Website' => 'Close Website',
+		'Welcome to SweetRice!' => 'Welcome to SweetRice!',
+		'Top 10 of %s visited page' => 'Top 10 of %s visited page',
+		'Top 10 of %s referrer page' => 'Top 10 of %s referrer page',
+		'Top 10 of %s ip' => 'Top 10 of %s ip',
+		'Attachment List' => 'Attachment List',
+		'URL Redirect Setting' => 'URL Redirect Setting',
+		'URL Parse' => 'URL Parse',
+		'Sitemap Management' => 'Sitemap Management',
+		'Original URL' => 'Original URL',
+		'Modify Theme' => 'Modify Theme',
+		'Current Theme' => 'Current Theme',
+		'Create Template' => 'Create Template',
+		'Site List' => 'Site List',
+		'Website Configuration' => 'Website Configuration',
+		'Site Management' => 'Site Management',
+		'Website Attachment Directory' => 'Website Attachment Directory',
+		'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
+		'Modify Post' => 'Modify Post',
+		'Prevew' => 'Prevew',
+		'Remove' => 'Remove',
+		'Download Times' => 'Download Times',
+		'File exists' => 'File exists',
+		'Add File' => 'Add File',
+		'<p>Input rule:please note that the source URL must without "http(s)://" and your domain.</p>example: <ol><li>enter <strong>source.html->destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://yourdomain.com/destination.html</li><li>enter <strong>source.html->http(s)://otherdomain.com/destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://otherdomain.com/destination.html</li><li>Support regular rule,example: <strong>/^page\/([a-z0-9]+)\.html$/i->action=post&sys_name=$1</strong> to parse the url and <strong>/^page\/([a-z0-9]+)\.html$/i->$1.html</strong> to redirect the url.</li></ol>' => '<p>Input rule:please note that the source URL must without "http(s)://" and your domain.</p>example: <ol><li>enter <strong>source.html->destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://yourdomain.com/destination.html</li><li>enter <strong>source.html->http(s)://otherdomain.com/destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://otherdomain.com/destination.html</li><li>Support regular rule,example: <strong>/^page\/([a-z0-9]+)\.html$/i->action=post&sys_name=$1</strong> to parse the url and <strong>/^page\/([a-z0-9]+)\.html$/i->$1.html</strong> to redirect the url.</li></ol>',
+		'Keys' => 'Keys',
+		'Vals' => 'Vals',
+		'Please select table to converter,current database is' => 'Please select table to converter,current database is',
+		'SQL Execute' => 'SQL Execute',
+		'Create Post' => 'Create Post',
+		'Welcome to SweetRice - Thank your for install SweetRice as your website management system.'=>'Welcome to SweetRice - Thank your for install SweetRice as your website management system.',
+		'Views' => 'Views',
+		'Read More' => 'Read More',
+		'Entry RSSFeed of %s' => 'Entry RSSFeed of %s',
+		'Post Detail' => 'Post Detail',
+		'Last Update' => 'Last Update',
+		'View All Comments' => 'View All Comments',
+		'Your Email' => 'Your Email',
+		'Your Website' => 'Your Website',
+		'Verification Code' => 'Verification Code',
+		'Leave Comment' => 'Leave Comment',
+		'Related Entry' => 'Related Entry',
+		'User Comment' => 'User Comment',
+		'Remote File' => 'Remote File',
+		'%s You can Visit <a href="%s">%s</a> Home page' => '%s You can Visit <a href="%s">%s</a> Home page',
+		'Comment Off' => 'Comment Off',
+		'If your browser does not redirect automatically,please click here.' => 'If your browser does not redirect automatically,please click here.',
+		'URl Update Successfully' => 'URl Update Successfully',
+		'File' => 'File',
+		'Line' => 'Line',
+		'Message' => 'Message',
+		'SweetRice error report' =>'SweetRice error report',
+		'No SQLite Connected' => 'No SQLite Connected',
+		'No PostgreSQL Connected' => 'No PostgreSQL Connected',
+		'No Mysql Connected' => 'No Mysql Connected',
+		'Please select table to converter,current database is' => 'Please select table to converter,current database is',
+		'Not exists or not empty.' => 'Not exists or not empty.',
+		'No Entry' => 'No Entry',
+		'Failed' => 'Failed',
+		'Main' => 'Main',
+		'Notice email sent failed' => 'Notice email sent failed',
+		'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> Setting -> General</p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> Setting -> General</p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
+		'Database Error' => 'Database Error',
+		'Host name is required' => 'Host name is required',
+		'Host name exists' => 'Host name exists',
+		'Checkbox' => 'Checkbox',
+		'Please input options,split by commas' => 'Please input options,split by commas(,)',
+		'Options is required' => 'Options is required',
+		'>>>>>>>>>>>> More <<<<<<<<<<<<' => '>>>>>>>>>>>> More <<<<<<<<<<<<',
+		'Delete from list' => 'Delete from list',
+		'This action can not be recover,are you sure delete it from custom field list?' => 'This action can not be recover,are you sure delete it from custom field list?',
+		'New' => 'New',
+		'Can not preview this file' => 'Can not preview this file format',
+		'Transfer website' => 'Transfer website',
+		'Online' => 'Online',
+		'Transfer your website data to new hosting by FTP or download data file then upload them to new hosting manually,you may modify inc/db.php to change database setting to new hosting' => 'Transfer your website data to new hosting by FTP or download data file then upload them to new hosting manually,you may modify inc/db.php to change database setting to new hosting',
+		'Pack website' => 'Pack website',
+		'Transfer Type' => 'Transfer Type',
+		'FTP Server' => 'FTP Server',
+		'FTP Port' => 'FTP Port',
+		'FTP User' => 'FTP User',
+		'FTP Password' => 'FTP Password',
+		'FTP Home' => 'FTP Home',
+		'Packing website data maybe take long time,please wait for minutes.' => 'Packing website data maybe take long time,please wait for minutes.',
+		'Website data will be download when submit' => 'Website data will be download when submit',
+		'Please enter FTP option of new hosting,SweetRice will transfer data to the server' => 'Please enter FTP option of new hosting,SweetRice will transfer data to the server',
+		'Please choose transfer type' => 'Please choose transfer type',
+		'Transfer website data maybe take long time,please wait for minutes.' => 'Transfer website data maybe take long time,please wait for minutes.',
+		'Transfer completed,enjoy new hosting' => 'Transfer completed,enjoy new hosting',
+		'Server do not supports ZIP' => 'Server do not supports ZIP',
+		'Can\'t create transfer file' => 'Can\'t create transfer file',
+		'Server does not supports FTP' => 'Server does not supports FTP',
+		'Can not connect FTP server' => 'Can not connect FTP server',
+		'Upload failed' => 'Upload failed',
+		'Missing website data file or invalid FTP option' => 'Missing website data file or invalid FTP option',
+		'Latest pack at ' => 'Latest pack at ',
+		'Extract file failed' => 'Extract file failed',
+		'SweetRice Transfer' => 'SweetRice Transfer',
+		'Transfer your website to new hosting' => 'Transfer your website to new hosting',
+		'Sorry,missing SweetRice-transfer.zip or extract failed,please check error and try again' => 'Sorry,missing SweetRice-transfer.zip or extract failed,please check error and try again',
+		'Extract successfully,please check inc/db.php to confirm database setting updated to new hosting,and choose which database backup you want to import' => 'Extract successfully,please check inc/db.php to confirm database setting updated to new hosting,and choose which database backup you want to import',
+		'Database connected' => 'Database connected',
+		'Database error' => 'Database error',
+		'Update database config' => 'Update database config',
+		'Import database' => 'Import database',
+		'Skip' => 'Skip',
+		'Import database successfully,click the button below to clean all temporary files' => 'Import database successfully,click the button below to clean all temporary files',
+		'Please choose database backup' => 'Please choose database backup',
+		'Test' => 'Test',
+		'SweetRice notice' => 'SweetRice notice',
+		'Test link below' => 'Test link below',
+		'SweetRice first' => 'SweetRice first',
+		'SweetRice only' => 'SweetRice only',
+		'Administrator Priority' => 'Administrator Priority',
+		'Member plugn first' => 'Member plugn first',
+		'Member plugn only' => 'Member plugn only',
+		'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin' => 'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin'
+);
 ?>

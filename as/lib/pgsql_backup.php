@@ -53,7 +53,7 @@
 		}
 		return $tabledump;
 	}
-	$tablelist = $_POST["tablelist"];
+	$tablelist = $_POST['tablelist'];
 	$data = array();
 	foreach($tablelist as $table){
 		$data = array_merge($data,sql2data($table));

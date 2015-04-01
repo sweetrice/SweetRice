@@ -7,30 +7,30 @@
  * @since 0.7.0
  */
  defined('VALID_INCLUDE') or die();
- $mode = $_GET["mode"];
 	if($global_setting['theme']){
 		$theme_dir = SITE_HOME.'_themes/'.$global_setting['theme'].'/';
 	}else{
 		$theme_dir = SITE_HOME.'_themes/default/';
 	}
 	$themes = get_AllTemplate($theme_dir);
+ $mode = $_GET['mode'];
  switch($mode){
 	case 'save':
-		$page = $_GET["page"];
-		if(trim($themes[$page]) && $_POST["contents"]){
-			$contents = stripslashes($_POST["contents"]);
+		$page = $_GET['page'];
+		if(trim($themes[$page]) && $_POST['contents']){
+			$contents = clean_quotes($_POST['contents']);
 			file_put_contents(SITE_HOME.$themes[$page],$contents);
 			$data = getOption($themes[$page].'.bak');
 			$data = unserialize($data['content']);
-			$data[time()] = $_POST["contents"];
-			setOption($themes[$page].'.bak',db_escape(serialize($data)));
+			$data[time()] = $_POST['contents'];
+			setOption($themes[$page].'.bak',serialize($data));
 		}
-		$top_word = MODIFY.' '.THEME;
+		$top_word = _t('Modify Theme');;
 		$inc = 'theme.php';
 	break;
 	case 'clean_backup':
-		$tb = $_POST["tb"];
-		$page = $_GET["page"];
+		$tb = $_POST['tb'];
+		$page = $_GET['page'];
 		$data = getOption($themes[$page].'.bak');
 		if($data['content']){
 			$data = unserialize($data['content']);
@@ -41,18 +41,18 @@
 			}
 		}
 		if(count($bak_list)){
-			setOption($themes[$page].'.bak',db_escape(serialize($bak_list)));
+			setOption($themes[$page].'.bak',serialize($bak_list));
 		}else{
 			delOption($themes[$page].'.bak');
 		}
-		_goto($_SERVER["HTTP_REFERER"]);
+		_goto($_SERVER['HTTP_REFERER']);
 	break;
 	case 'add':
-		$theme_type = $_POST["theme_type"];
-		$name = $_POST["name"];
+		$theme_type = $_POST['theme_type'];
+		$name = $_POST['name'];
 		$name = preg_replace('/[^0-9A-Za-z\-_]/','',$name);
 		if(!$name){
-			_goto($_SERVER["HTTP_REFERER"]);
+			_goto($_SERVER['HTTP_REFERER']);
 		}
 		$name_template = $name.' page template';
 		if(!file_exists($theme_dir.$name.'.php') && !$themes[$name_template]){
@@ -66,19 +66,19 @@
 			}
 			_goto('./?type=theme&page='.$name_template);
 		}else{
-			_goto($_SERVER["HTTP_REFERER"]);
+			_goto($_SERVER['HTTP_REFERER']);
 		}
 	break;
 	case 'delete':
-		$page = $_GET["page"];
+		$page = $_GET['page'];
 		if($themes[$page] && file_exists(SITE_HOME.$themes[$page])){
 			unlink(SITE_HOME.$themes[$page]);
 		}
 		_goto('./?type=theme');
 	break;
 	default:
-		$page = $_GET["page"];
-		$top_word = MODIFY.' '.THEME;
+		$page = $_GET['page'];
+		$top_word = _t('Modify Theme');;
 		$inc = 'theme.php';
  }
  ?>

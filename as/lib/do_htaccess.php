@@ -7,8 +7,9 @@
  * @since 1.0.0
  */
  defined('VALID_INCLUDE') or die();
- $mode = $_GET["mode"];
- if($mode=='save'){
+ $mode = $_GET['mode'];
+ switch($mode){
+	case 'save':
 		ob_start();
 		phpinfo(INFO_MODULES);
 		$str = ob_get_contents();
@@ -17,16 +18,17 @@
 			$support_htaccess = true;
 		}
 		if(!$support_htaccess){
-			alert('Server does not supports .Htaccess.','./?type=htaccess');
+			output_json(array('status'=>0,'status_code'=>_t('Server does not supports .Htaccess.')));
 		}
-		$contents = $_POST["content"];
+		$contents = $_POST['content'];
 		file_put_contents('../inc/htaccess.txt',$contents);
 		$htaccess = file_get_contents('../inc/htaccess.txt');
-		$htaccess = str_replace('%--%',str_replace('//','/',dirname(str_replace('/'.DASHBOARD_DIR,'',$_SERVER["PHP_SELF"])).'/'),$htaccess);
+		$htaccess = str_replace('%--%',str_replace('//','/',dirname(str_replace('/'.DASHBOARD_DIR,'',$_SERVER['PHP_SELF'])).'/'),$htaccess);
 		file_put_contents('../.htaccess',$htaccess);
-		_goto('./?type=htaccess');
- }else{
-	$top_word = 'Edit .htaccess';
-	$inc = 'htaccess.php';
+		output_json(array('status'=>1));
+	break;
+	default:
+		$top_word = _t('Edit .htaccess');
+		$inc = 'htaccess.php';
  }
 ?>

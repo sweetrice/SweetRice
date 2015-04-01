@@ -70,3 +70,19 @@ CREATE TABLE "%--%_links"(
   "url" text,
   "plugin" varchar(255)
 );
+
+
+CREATE TABLE "%--%_item_data" (
+  "id" INTEGER PRIMARY KEY ,
+  "item_id" int(10),
+  "item_type" varchar(255),
+  "data_type" varchar(20),
+  "name" varchar(255),
+  "value" text
+) ;
+
+CREATE INDEX item_data_item_id_index ON %--%_item_data(item_id); 
+
+CREATE INDEX item_data_item_type_index ON %--%_item_data(item_type); 
+
+CREATE INDEX item_data_name_index ON %--%_item_data(name); 

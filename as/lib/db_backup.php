@@ -8,7 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<p><?php echo DATABASE_BACKUP_TIP;?> <b><?php echo DATABASE_TYPE;?></b></p>
+<div class="tip"><?php _e('Please select table to backup,current database is');?> <b><?php echo DATABASE_TYPE;?></b></div>
 <?php
 	if($message){
 ?>
@@ -25,7 +25,7 @@
 <?php
 	}
 ?>
-<li><input type="checkbox" id="checkall" checked/> <input type="submit" value="<?php echo DONE;?>" class="input_submit"/></li>
+<li><input type="checkbox" id="checkall" checked/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></li>
 </ul>
 </div>
 <script type="text/javascript">
@@ -41,7 +41,7 @@
 				}
 			});
 			if (!tablelist.length){
-				alert('<?php echo NO_PACTION_SELECTED;?>');
+				alert('<?php _e('No Record Selected');?>');
 				return ;
 			}
 			_.ajax({

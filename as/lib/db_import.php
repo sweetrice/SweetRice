@@ -9,21 +9,20 @@
  defined('VALID_INCLUDE') or die();
 	if($import){
 ?>
-<h2><?php echo $db_file.DATAIMPORT_TIP1;?></h2>
-<p><?php echo $import_error;?></p>
-<br />
+<div class="tip"><?php echo $db_file._t(' has been import into your database ,any message maybe here:');?>
+<div><?php echo $import_error;?></div></div>
 <?php
 	}
 ?>
-<h2><?php echo DATAIMPORT_TIP2;?></h2>
+<div class="tip"><?php _e('Please select backup file to import or save.');?></div>
 <span id="deleteTip"></span>
 <form method="post" id="bulk_form" action="./?type=data&mode=db_import&form_mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><td><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php echo NAME;?></a></td><td class="td_admin"><?php echo ADMIN;?></td></tr></thead>
+<thead><tr><td><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
 <tbody>
 <?php
-if(file_exists($db_backup_dir)){
+if(is_dir($db_backup_dir)){
 	$d = dir($db_backup_dir);
 	$no = 0;
 	while (false !== ($entry = $d->read())) {
@@ -35,10 +34,10 @@ if(file_exists($db_backup_dir)){
 				$classname='tr_sigle';
 			}
 ?>
-	<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $entry;?>"/> <a href="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=import" onclick="if(confirm('<?php echo DATAIMPORT_TIPS;?>'))return;else return false;"><span id="name_<?php echo $no;?>"><?php echo $entry;?></span></a> (<?php echo number_format(filesize($db_backup_dir.'/'.$entry));?> bytes)</td>
+	<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $entry;?>"/> <a href="javascript:void(0);" url="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=import" class="btn_import"><span id="name_<?php echo $no;?>"><?php echo $entry;?></span></a> (<?php echo number_format(filesize($db_backup_dir.'/'.$entry));?> bytes)</td>
 	<td><span id="action_<?php echo $no;?>"></span>
-	<a title="<?php echo DELETE_TIP;?>" class="action_delete" data="<?php echo $entry;?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php echo DELETE_TIP;?></a> 
-	<a title="<?php echo SAVE;?>" class="action_save" href="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=save"><?php echo SAVE;?></a> 
+	<a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $entry;?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
+	<a title="<?php _e('Save');?>" class="action_save" href="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=save"><?php _e('Save');?></a> 
 	</td></tr>
 <?php
 		}
@@ -49,18 +48,26 @@ if(file_exists($db_backup_dir)){
 </tbody>
 </table>
 </div>
-<input type="submit" value=" <?php echo BULK.' '.DELETE_TIP;?>">
+<input type="submit" value=" <?php _e('Bulk Delete');?>">
+</form>
+<form method="post" action="./?type=data&mode=upload" enctype="multipart/form-data" >
+	<input type="file" name="dbfile" /> <input type="submit" value="<?php _e('Done');?>"/>
 </form>
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
+		_('.btn_import').bind('click',function(){
+			if(confirm('<?php _e('Are you sure replace your database to this data version?');?>')){
+				location.href = _(this).attr('url');
+			}
+		});
 		bind_checkall('#checkall','.ck_item');
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
 		_('.action_delete').bind('click',function(){
-			if(!confirm("<?php echo(DELETE_CONFIRM);?>")) return; deleteAction("db_backup",_(this).attr('data'),_(this).attr('no'));
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('db_backup',_(this).attr('data'),_(this).attr('no'));
 		});
 		_('#bulk_form').bind('submit',function(event){
 			var no = 0;   
@@ -70,7 +77,7 @@ if(file_exists($db_backup_dir)){
 				}
 			});
 			if(no == 0){
-				alert("<?php echo NO_RECORD_SELECTED;?>.");
+				alert('<?php _e('No Record Selected');?>.');
 				_().stopevent(event);
 			}
 		});

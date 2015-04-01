@@ -9,43 +9,41 @@
  defined('VALID_INCLUDE') or die();
 ?>
 <form method="post" action="./?type=url_redirect&mode=save">
-<fieldset><legend><?php echo EDIT.' '.URL_REDIRECT;?> - <?php echo URL_REDIRECT_TITLE;?></legend>
+<fieldset><legend><?php _e('URL Redirect Setting');?> - <?php _e('Set URL redirect(301) here - this feature only available if URL rewrite enabled');?></legend>
 <ol id="redirectList">
 <?php
 $no = 0;
 	foreach($redirectList as $key=>$val){
 		$no += 1;
 ?>
-<li id="_<?php echo $no;?>"><input type="text" name="k[<?php echo $no;?>]" value="<?php echo str_replace('\\\\','\\',$key);?>" size="30"> -> <input type="text" name="t[<?php echo $no;?>]" value="<?php echo $val;?>" size="30"> <input type="radio" value="1" name="r[<?php echo $no;?>]" checked> <?php echo URL_REDIRECT;?> <input type="radio" value="0" name="r[<?php echo $no;?>]" > <?php echo URL_PARSE;?> <input type="button" value="<?php echo DELETE_TIP;?>" class="btn_del" data="<?php echo $no;?>"></li>
+<li id="_<?php echo $no;?>"><input type="text" name="k[<?php echo $no;?>]" value="<?php echo str_replace('\\\\','\\',$key);?>" size="30"> -> <input type="text" name="t[<?php echo $no;?>]" value="<?php echo $val;?>" size="30"> <input type="radio" value="1" name="r[<?php echo $no;?>]" checked> <?php _e('URL Redirect');?> <input type="radio" value="0" name="r[<?php echo $no;?>]" > <?php _e('URL Parse');?> <input type="button" value="<?php _e('Delete');?>" class="btn_del" data="<?php echo $no;?>"> <a href="javascript:void(0);" key="<?php echo BASE_URL.str_replace('\\\\','\\',$key);?>" class="btn_test"><?php _e('Test');?></a></li>
 <?php
 	}
 	foreach($parseList as $key=>$val){
 	$no += 1;
 ?>
-<li id="_<?php echo $no;?>"><input type="text" name="k[<?php echo $no;?>]" value="<?php echo str_replace('\\\\','\\',$key);?>" size="30"> -> <input type="text" name="t[<?php echo $no;?>]" value="<?php echo $val;?>" size="30"> <input type="radio" value="1" name="r[<?php echo $no;?>]"> <?php echo URL_REDIRECT;?> <input type="radio" value="0" name="r[<?php echo $no;?>]" checked> <?php echo URL_PARSE;?> <input type="button" value="<?php echo DELETE_TIP;?>" class="btn_del" data="<?php echo $no;?>"></li>
+<li id="_<?php echo $no;?>"><input type="text" name="k[<?php echo $no;?>]" value="<?php echo str_replace('\\\\','\\',$key);?>" size="30"> -> <input type="text" name="t[<?php echo $no;?>]" value="<?php echo $val;?>" size="30"> <input type="radio" value="1" name="r[<?php echo $no;?>]"> <?php _e('URL Redirect');?> <input type="radio" value="0" name="r[<?php echo $no;?>]" checked> <?php _e('URL Parse');?> <input type="button" value="<?php _e('Delete');?>" class="btn_del" data="<?php echo $no;?>"> <a href="javascript:void(0);" key="<?php echo BASE_URL.str_replace('\\\\','\\',$key);?>" class="btn_test"><?php _e('Test');?></a></li>
 <?php
 	}
 ?>
 </ol>
 <div class="div_clear"></div>
 <input type="hidden" id="no" value="<?php echo intval($no);?>"/>
-<input type="button" value="<?php echo ADD_URL_RULE;?>" class="btn_add">
-<p><?php echo URL_REDIRECT_TIPS;?></p>
+<input type="button" value="<?php _e('Add URL Rule');?>" class="btn_add">
+<div class="tip"><?php _e('<p>Input rule:please note that the source URL must without "http(s)://" and your domain.</p>example: <ol><li>enter <strong>source.html->destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://yourdomain.com/destination.html</li><li>enter <strong>source.html->http(s)://otherdomain.com/destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://otherdomain.com/destination.html</li><li>Support regular rule,example: <strong>/^page\/([a-z0-9]+)\.html$/i->action=post&sys_name=$1</strong> to parse the url and <strong>/^page\/([a-z0-9]+)\.html$/i->$1.html</strong> to redirect the url.</li></ol>');?></div>
 </fieldset>
-<input type="submit" class="input_submit" value="<?php echo UPDATE;?>"/>
+<input type="submit" class="input_submit" value="<?php _e('Update');?>"/>
 </form>
+<a id="test_link" target="_blank"></a>
 <script type="text/javascript">
 <!--
 	var urno = <?php echo intval($no);?>;
-	var URL_REDIRECT = '<?php echo URL_REDIRECT;?>';
-	var URL_PARSE = '<?php echo URL_PARSE;?>';
-	var DELETE_TIP = '<?php echo DELETE_TIP;?>';
 	_().ready(function(){
 		_('.btn_add').bind('click',function(){
 			urno += 1;
 			_('#no').val(urno);
 			var new_rule = document.createElement('li');
-			_(new_rule).attr('id','_'+urn).html('<input type="text" name="k['+urno+']" size="30"> -> <input type="text" name="t['+urno+']" size="30"> <input type="radio" value="1" name="r['+urno+']"> '+URL_REDIRECT+' <input type="radio" value="0" name="r['+urno+']"> '+URL_PARSE+' <input type="button" value="'+DELETE_TIP+'" class="btn_del" id="btn_'+urno+'" data="'+urno+'">');
+			_(new_rule).attr('id','_'+urno).html('<input type="text" name="k['+urno+']" size="30"> -> <input type="text" name="t['+urno+']" size="30"> <input type="radio" value="1" name="r['+urno+']"> <?php _e('URL Redirect');?> <input type="radio" value="0" name="r['+urno+']"> <?php _e('URL Parse');?> <input type="button" value="<?php _e('Delete');?>" class="btn_del" id="btn_'+urno+'" data="'+urno+'">');
 			_('#redirectList').append(new_rule);
 			_('.btn_del').unbind().bind('click',function(){
 				var no = _(this).attr('data');
@@ -56,6 +54,14 @@ $no = 0;
 		_('.btn_del').bind('click',function(){
 			var no = _(this).attr('data');
 			_('#_'+no).remove();
+		});
+
+		_('.btn_test').bind('click',function(){
+			var url = prompt('<?php _e('Test link below');?>',_(this).attr('key'));
+			if (url)
+			{
+				_('#test_link').attr({'href':url}).run('click');
+			}
 		});
 	});
 //-->

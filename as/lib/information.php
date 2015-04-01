@@ -8,10 +8,10 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<p><?php echo INSTALL_INFORMATION;?></p>
-<?php echo LANG;?>:
-<select name="lang" onchange='location.href="./?action=lang&lang="+this.options[this.selectedIndex].value;'>
-	<option value="" selected="selected"><?php echo DEFAULT_TIP;?></option>
+<p><?php _e('Welcome to SweetRice install form.');?></p>
+<?php _e('Language');?>:
+<select name="lang" class="lang">
+	<option value="" selected="selected"><?php _e('Default');?></option>
 <?php
 	foreach($langs as $key=>$val){
 ?>
@@ -20,3 +20,16 @@
 	}	
 ?>
 </select>
+<input type="button" value="<?php _e('Install');?>" class="btn_license">
+<script type="text/javascript">
+<!--
+_().ready(function(){
+	_('.lang').bind('change',function(){
+		location.href = './?action=lang&lang='+_(this).val();
+	});
+	_('.btn_license').bind('click',function(){
+		location.href = './?action=license';
+	});
+});
+//-->
+</script>

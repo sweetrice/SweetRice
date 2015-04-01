@@ -7,31 +7,31 @@
  * @since 0.5.5
  */
  defined('VALID_INCLUDE') or die();
-	$to_db_name = $_POST["to_db_name"];
-	$to_db_left = $_POST["to_db_left"];
-	$to_db_url = $_POST["to_db_url"];
-	$to_db_port = $_POST["to_db_port"];
-	$to_db_username = $_POST["to_db_username"];
-	$to_db_passwd = $_POST["to_db_passwd"];
-	$tablelist = $_POST["tablelist"];
+	$to_db_name = $_POST['to_db_name'];
+	$to_db_left = $_POST['to_db_left'];
+	$to_db_url = $_POST['to_db_url'];
+	$to_db_port = $_POST['to_db_port'];
+	$to_db_username = $_POST['to_db_username'];
+	$to_db_passwd = $_POST['to_db_passwd'];
+	$tablelist = $_POST['tablelist'];
 	
 	if(DATABASE_TYPE == 'mysql' && $to_db_name == $db_name && $to_db_left == DB_LEFT && $to_db_url == $db_url && $to_db_port == $db_port){
-		alert(DATABASE_CONVERT_SUCCESSFULLY,'./');
+		alert(_t('Database convert successfully!'),'./');
 	}
 	if($to_db_name&&$to_db_left&&$tablelist){
 			$plugin_sql = array();
 			$plugin_list = pluginList();
 			foreach($plugin_list AS $plugin_config){
-				if(file_exists(SITE_HOME."_plugin/".$plugin_config['directory'].'/plugin_config.php') && $plugin_config['installed']){
+				if(file_exists(SITE_HOME.'_plugin/'.$plugin_config['directory'].'/plugin_config.php') && $plugin_config['installed']){
 					if($plugin_config['install_sql']){
-						$plugin_sql[$plugin_config['name']] = SITE_HOME."_plugin/".$plugin_config['directory']."/".$plugin_config['install_sql'];
+						$plugin_sql[$plugin_config['name']] = SITE_HOME.'_plugin/'.$plugin_config['directory'].'/'.$plugin_config['install_sql'];
 					}
 				}
 			}
 			$to_conn = mysql_connect($to_db_url.':'.$to_db_port,$to_db_username,$to_db_passwd,true);
 			$to_db = mysql_select_db($to_db_name,$to_conn);
 			if(!$to_db){
-				$message .= DB_ERROR.' <br>';
+				$message .= _t('Database error!').' <br>';
 			}else{
 				$sql = file_get_contents('lib/blog.sql');
 				$sql = str_replace('%--%',$to_db_left,$sql);
@@ -39,7 +39,8 @@
 				foreach($sql as $key=>$val){
 					if(trim($val)){
 						if(!mysql_query($val,$to_conn)){
-							$message .= mysql_error($to_conn).'<br>';
+							$message .= $val.' : '.mysql_error($to_conn).'<br>';
+							break;
 						}
 					}
 				}	
@@ -50,7 +51,8 @@
 						foreach($sql as $key=>$val){
 							if(trim($val)){
 								if(!mysql_query($val,$to_conn)){
-									$message .= mysql_error($to_conn).'<br>';
+									$message .= $val.' : '.mysql_error($to_conn).'<br>';
+									break;
 								}
 							}
 						}	
@@ -79,7 +81,8 @@
 								}
 								$tabledump .= ");";
 								if(!mysql_query($tabledump,$to_conn)){
-									$db_error .= mysql_error($to_conn).'<br>';
+									$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
+									break;
 								}
 							}
 						}
@@ -108,7 +111,7 @@
 								}
 								$tabledump .= ");";
 								if(!mysql_query($tabledump,$to_conn)){
-									$db_error .= mysql_error($to_conn).'<br>';
+									$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
 								}
 							}
 						}
@@ -137,7 +140,7 @@
 									}
 									$tabledump .= ");";
 									if(!mysql_query($tabledump,$to_conn)){
-										$db_error .= mysql_error($to_conn).'<br>';
+										$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
 									}
 							}
 						}
@@ -167,13 +170,13 @@
 			$db_str .= "?>";
 			file_put_contents(SITE_HOME.'inc/db.php',$db_str);
 			mysql_close($to_conn);
-			if(DATABASE_TYPE=='sqlite'){
+			if(DATABASE_TYPE == 'sqlite'){
 				$db = null;
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
-			alert(DATABASE_CONVERT_SUCCESSFULLY,'./');
+			alert(_t('Database convert successfully!'),'./');
 		}	
 	}else{
-		$message = NEED_FORM_DATA;
+		$message = _t('Please fill out form below.');
 	}
 ?>

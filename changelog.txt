@@ -36,6 +36,33 @@ Thank you.
 
 SweetRice change log:
 ======================================
+Change log V1.4.2 12/02/2014
+core update
+	add BASE_DIR for cookie 
+	custom field supports more option
+	upgrade tag : add tag_posts keyword to %--%_option,this update will be load tag page faster then before.
+	add plugin App for website developer 
+	remove subscriber plugin from defalut system
+	supports multiple file upload
+	add website transfer feature - one click transfer data to new hosting
+dashboard
+	plugin description : supports multiple language 
+	add transfer website to other hosting
+	add database backup upload 
+public.js
+	add scrolltop scrollleft function
+======================================
+Change log V1.4.1 03/26/2014
+core update 
+	support custom field for post/category/system setting
+	upgrade public.js animate support color
+	easy control animate speed by animate_fn
+	new language management
+Template
+	support template_helper setting,just add template_helper|template_helper_file to theme.config to enable this feature.
+Dashboard
+	new design
+======================================
 Change log V1.4.0 01/31/2014
 core update 
 	new SweetRice js framework - add function _ and remove _$ to execute custom function 

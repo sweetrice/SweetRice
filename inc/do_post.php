@@ -7,16 +7,16 @@
  * @since 0.7.0
  */
  	defined('VALID_INCLUDE') or die();
-	$post = $_GET["post"];
-	$cateName = $_GET["cateName"];
-	$sql = "WHERE `in_blog` = '1' ";
+	$post = db_escape($_GET['post']);
+	$cateName = $_GET['cateName'];
+	$where = " 1=1 ";
 	if($post){
-		$sql .= " AND UPPER(`sys_name`) = UPPER('$post')";
+		$where .= " AND UPPER(ps.`sys_name`) = UPPER('$post')";
 	}else{
 		_404('entry');
 	}
-	$row = db_array("SELECT `id`,`sys_name`,`category`,`name`,`title`,`keyword`,`description`,`body`,`views`,`date`,`tags`,`allow_comment`,`template` FROM `".DB_LEFT."_posts` ".$sql);
-	if(!$row['id']||($row['category']!=0&&$categories[$row['category']]['link']!=$cateName&&$global_setting['url_rewrite'])){
+	$row = getPostsOne(array('field'=>'ps.*','where'=>$where,'custom_field'=>true,'post_type'=>'show'));
+	if(!$row['id']||($row['category'] != 0 && $categories[$row['category']]['link'] != $cateName && $global_setting['url_rewrite'])){
 		_404('entry');
 	}
 	if($row['sys_name'] != $post){
@@ -35,7 +35,7 @@
 	$description = $row['description'];
 	$keywords = $row['keyword'];
 	$top_word = $row['title'];
-	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$row['name'].' '.ENTRY_RSSFEED.'" href="'.show_link_page_xml($row["sys_name"]).'" />';
+	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$row['name'].' '.ENTRY_RSSFEED.'" href="'.show_link_page_xml($row['sys_name']).'" />';
 	if($row['template']&&$row['template']!='default'&&file_exists($row['template'])){
 		$inc = $row['template'];
 	}else{

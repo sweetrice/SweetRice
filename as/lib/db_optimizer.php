@@ -8,7 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<div><?php echo DATABASE_OPTIMIZE_TIP;?> <b><?php echo DATABASE_TYPE;?></b></div>
+<div class="tip"><?php _e('Please select table to optimizer,current database is');?> <b><?php echo DATABASE_TYPE;?></b></div>
 <div id="table_list">
 <ul>
 <?php
@@ -20,7 +20,7 @@
 ?>
 </ul>
 </div>
-<div class="mg5"><input type="checkbox" id="checkall" checked/> <input type="button" value="<?php echo DONE;?>" class="input_submit"/></div>
+<div class="mg5"><input type="checkbox" id="checkall" checked/> <input type="button" value="<?php _e('Done');?>" class="input_submit"/></div>
 
 <script type="text/javascript">
 <!--
@@ -35,7 +35,7 @@
 				}
 			});
 			if (!tablelist.length){
-				alert('<?php echo NO_PACTION_SELECTED;?>');
+				alert('<?php _e('No Record Selected');?>');
 				return ;
 			}
 			_.ajax({
@@ -44,7 +44,9 @@
 			'url':'./?type=data&mode=db_optimizer&form_mode=yes',
 			'success':function(result){
 				var dlg = _.dialog({
-					'content':result.status_code
+					content:'<div class="optimizer_result">'+result.status_code+'</div>',
+					width:800,
+					layer:1
 				});
 			}
 			});

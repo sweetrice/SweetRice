@@ -14,11 +14,11 @@
 <script type="text/javascript" src="js/init.js"></script>
 <div id="div_center">
 	<div id="div_right">
-	<div id="nav"><a href="<?php echo BASE_URL;?>"><?php echo HOME;?></a> &raquo; <?php echo TAG;?> <a href="<?php echo show_link_tag($tag);?>"><?php echo $tag;?></a></div>
+	<div id="nav"><a href="<?php echo BASE_URL;?>"><?php _e('Home');?></a> &raquo; <?php _e('Tag');?> <a href="<?php echo show_link_tag($tag);?>"><?php echo $tag;?></a></div>
 	<div id="posts">
 <?php
 	if(count($rows)==0):
-		echo '<div align="center">'.NO_ENTRY.'</div>';
+		echo '<div align="center">'._t('No Entry').'</div>';
 	else:
 		foreach($rows as $row):
 			echo _posts($row,$post_output);

@@ -84,3 +84,18 @@ CREATE TABLE "%--%_links"(
   "plugin" varchar(255) NOT NULL,
   PRIMARY KEY  ("lid")
 );
+
+
+DROP TABLE IF EXISTS "%--%_item_data" CASCADE;
+CREATE TABLE "%--%_item_data" (
+  "id" serial,
+  "item_id" int NOT NULL,
+  "item_type" varchar(255) NOT NULL,
+  "data_type" varchar(20) NOT NULL,
+  "name" varchar(255) NOT NULL,
+  "value" text NOT NULL,
+  PRIMARY KEY  ("id")
+);
+CREATE INDEX %--%_item_data_item_id_index ON %--%_item_data ("item_id");
+CREATE INDEX %--%_item_data_item_type_index ON %--%_item_data ("item_type");
+CREATE INDEX %--%_item_data_name_index ON %--%_item_data ("name");

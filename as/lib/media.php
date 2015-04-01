@@ -12,7 +12,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><?php echo DASHBOARD;?></title>
+<title><?php _e('Dashboard');?></title>
 <style>
 *{
 	margin:0;
@@ -40,7 +40,7 @@ table{
 	width:100%;
 }
 .file_table{
-	height:380px;
+	height:370px;
 	overflow:auto;
 }
 input[type=button], input[type=submit] {
@@ -114,6 +114,7 @@ max-height:420px;
 #upload_form form{margin:3px 0px;}
 #remote{width:260px;}
 #upload{width:250px;overflow:hidden;}
+.page_limit{width:30px;}
 </style>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/public.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
@@ -124,41 +125,49 @@ max-height:420px;
 <form method="get" action="./">
 <input type="hidden" name="type" value="media" />
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php echo SEARCH;?> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
-	<input type="text" name="keyword" value="<?php echo $keyword;?>" /> <input type="submit" value="<?php echo SEARCH;?>" class="input_submit"/>
+<?php _e('Search');?> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
+	<input type="text" name="keyword" value="<?php echo $keyword;?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
 <span id="deleteTip"></span>
 <div class="file_table">
 <table cellspacing="1" cellpadding="1">
 <tr><td></td><td>
-<span class="folder"></span> <a href="./?type=media&referrer=<?php echo $referrer;?><?php echo $parent?'&dir='.$parent:'';?>"><?php echo PARENT;?></a></td><td><?php echo MEDIA_CENTER;?></td><td></td></tr>
+<span class="folder"></span> <a href="./?type=media&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a></td><td><?php _e('Media Center');?></td><td></td></tr>
 <?php
 $no = 0;
 for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 	if($files[$i]){
-		if($bgcolor=='#F1F1F1'){
-			$bgcolor = '#F8F8F3';
+		if($classname == 'tr_sigle'){
+			$classname = 'tr_double';
 		}else{
-			$bgcolor='#F1F1F1';
+			$classname='tr_sigle';
 		}
 	 $no +=1;
 ?>
-<tr style="background-color:<?php echo $bgcolor;?>;" id="tr_<?php echo $no;?>" class="trlist" bg="<?php echo $bgcolor;?>"><td><?php echo $no;?></td><td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>" ><td><?php echo $no;?></td><td>
 <?php
 	if($files[$i]['type']=='dir'){
 ?>
 <span class="folder"></span> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $files[$i]['link'].'/';?>"><?php echo $files[$i]['name'];?></a>
 <?php
 	}else{
+		$tmp_prefix = '';
+		if(mb_strlen($files[$i]['name'],'UTF-8') > 36){
+			$tmp_prefix = explode('.',$files[$i]['name']);
+			if(count($tmp_prefix)){
+				$tmp_prefix = '.'.end($tmp_prefix);
+				$files[$i]['name'] = mb_substr($files[$i]['name'],0,32,'UTF-8').'...'.$tmp_prefix;
+			}
+		}
 		switch($referrer){
 			case 'attachment':
 ?>
-<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>"  mtype="<?php echo $files[$i]['type'];?>" class="attlist"><?php echo $files[$i]['name'];?></a>
+<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>" class="attlist"><?php echo $files[$i]['name'];?></a>
 <?php
 			break;
 			default:
 ?>
-<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" class="medialist" mtype="<?php echo $files[$i]['type'];?>"><?php echo $files[$i]['name'];?></a>
+<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" class="medialist" mtype="<?php echo $files[$i]['type'];?>"><?php echo $files[$i]['name'];?></a>
 <?php
 			break;
 		}
@@ -168,7 +177,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <td>
 <?php echo $files[$i]['date'];?></td>
 <td><span id="action_<?php echo $no;?>"></span>
-<a title="<?php echo DELETE_TIP;?>" class="action_delete dellist" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php echo DELETE_TIP;?></a>
+<a title="<?php _e('Delete');?>" class="action_delete dellist" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php _e('Delete');?></a>
 </td></tr>
 <?php
 	}
@@ -180,12 +189,12 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <div id="upload_form">
 <form method="post" action="./?type=media&mode=mkdir">
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php echo NEW_DIRECTORY;?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="text" name="new_dir" /> <input type="submit" value="<?php echo DONE;?>" class="input_submit"/>
+<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
 </form>
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
-<?php echo UPLOAD;?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload" id="upload"> <input type="submit" value="<?php echo DONE;?>" class="input_submit"/>
+<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
 </form>
 </div>
 </div>
@@ -194,55 +203,51 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <?php
 	if($referrer == 'attachment'){
 	?>
-	<input type="text" id="remote"> <input type="button" value="<?php echo ATTACH_FILE;?>" class="aa_btn">
+	<input type="text" id="remote"> <input type="button" value="<?php _e('Attach File');?>" class="aa_btn">
 	<?php }?>
 </div>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
 		_('.aa_btn').bind('click',function(){
-			if (parent._('#att_'+parent.currentNo).val()){
-				parent.closeMedia();
+			if (parent.attach_media.val()){
+				parent._('#SweetRice_dialog_media').find('.SweetRice_dialog_close').run('click');
 			}
 		});
 		_('.attlist').bind('click',function(){
-			parent._('#att_'+parent.currentNo).val(_(this).attr('link'));
+			parent.attach_media.val(_(this).attr('link'));
 			_('#remote').val(_(this).attr('link'));
-			if (_(this).attr('mtype').substring(0,6) == 'image/')
-			{
-				_('#preview').html('<img src="'+_(this).attr('link')+'">');
-			}else{
-				_('#preview').html('');
-			}
+			preview_file(this);
 		});
 		_('#remote').bind('change',function(){
-			parent._('#att_'+parent.currentNo).val(_(this).val());
+			parent.attach_media.val(_(this).val());
 			_('#preview').html('<img src="'+_(this).val()+'">');
 		});
 		_('.dellist').bind('click',function(){
-			if(confirm("<?php echo DELETE_CONFIRM;?>")) {
-				deleteAction("media",_(this).attr('link'),_(this).attr('no'));
-				} else{ 
-					return false;
-				}
+			if(confirm('<?php _e('Are you sure delete it?');?>')) {
+				deleteAction('media',_(this).attr('link'),_(this).attr('no'));
+			}else{ 
+				return false;
+			}
 		});
 
 		_('.medialist').bind('click',function(){
 			parent.document.getElementById('tmp_media').value = _(this).attr('link');
-			if (_(this).attr('mtype').substring(0,6) == 'image/')
-			{
-				_('#preview').html('<img src="'+_(this).attr('link')+'">');
-			}else{
-				_('#preview').html('');
-			}
-		});
-
-		_('.trlist').bind('mouseover',function(){
-			 _(this).css('background-color','#E0E8F1');
-		}).bind('mouseout',function(){
-			_(this).css('background-color',_(this).attr('bg'));
+			preview_file(this);
 		});
 	});
+	function preview_file(obj){
+		if (_(obj).attr('mtype').substring(0,6) == 'image/')
+		{
+			_('#preview').html('<img src="'+_(obj).attr('link')+'">');
+		}else if(_(obj).attr('mtype').substring(0,6) == 'video/'){
+			_('#preview').html('<video width="300" height="200" controls="controls"><source src="'+_(obj).attr('link')+'" type="'+_(obj).attr('mtype')+'" /></video>');
+		}else if(_(obj).attr('mtype').substring(0,6) == 'audio/'){
+			_('#preview').html('<audio width="300" height="20" controls="controls"><source src="'+_(obj).attr('link')+'" type="'+_(obj).attr('mtype')+'" /></audio>');
+		}else{
+			_('#preview').html('<?php _e('Can not preview this file');?>');
+		}
+	}
 //-->
 </script>
 </body>

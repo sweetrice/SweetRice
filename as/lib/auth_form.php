@@ -7,18 +7,18 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
-	include("./lib/head.php");
+	include('./lib/head.php');
 ?>
 <div id="div_center">
 <div class="sign_form">
-<h2><?php echo LOGIN_TIPS;?></h2>
-	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER["REQUIRE_URI"];?>"/>
-	<dl><dt><?php echo ADMIN_ACCOUNT;?></dt><dd><input type="text" id="user"/></dd></dl>
-	<dl><dt><?php echo ADMIN_PASSWORD;?></dt><dd><input type="password" id="passwd"/></dd></dl>
-	<dl><dt></dt><dd><input type="checkbox" id="rememberme" value="1"/> <?php echo REMEMBER_ME;?>
-	<input type="button" value="<?php echo LOGIN;?>" class="input_submit" /> <div id="signTip"></div></dd></dl>
+<h2><?php _e('Please login');?></h2>
+	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUIRE_URI'];?>"/>
+	<dl><dt><?php _e('Account');?></dt><dd><input type="text" id="user"/></dd></dl>
+	<dl><dt><?php _e('Password');?></dt><dd><input type="password" id="passwd"/></dd></dl>
+	<dl><dt></dt><dd><input type="checkbox" id="rememberme" value="1"/> <?php _e('Remember Me');?>
+	<input type="button" value="<?php _e('Login');?>" class="input_submit" /> <div id="signTip"></div></dd></dl>
 	<div class="div_clear"></div>
-	<div class="tr"><a href="./?type=password"><?php echo FORGOT_PASSWORD;?>?</a></div>
+	<div class="tr"><a href="./?type=password"><?php _e('Forgot Password');?>?</a></div>
 </div>
 </div>
 
@@ -55,13 +55,13 @@ function dashboardSignin(){
 	var passwd = _('#passwd').val();
 	var rememberMe = _('#rememberme').attr('checked');
 	if (!user){
-		_('#user').addClass('required');
+		_('#user').addClass('required').run('focus');
 		return ;
 	}else{
 		_('#user').removeClass('required');
 	}
 	if (!passwd){
-		_('#passwd').addClass('required');
+		_('#passwd').addClass('required').run('focus');
 		return ;
 	}else{
 		_('#passwd').removeClass('required');
@@ -89,5 +89,5 @@ function dashboardSignin(){
 //-->
 </script>
 <?php
-	include("lib/foot.php");	
+	include('lib/foot.php');	
 ?>

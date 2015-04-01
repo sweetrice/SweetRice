@@ -90,3 +90,18 @@ CREATE TABLE IF NOT EXISTS `%--%_links`(
   `plugin` varchar(255) NOT NULL,
   PRIMARY KEY  (`lid`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+
+
+DROP TABLE IF EXISTS `%--%_item_data`;
+CREATE TABLE IF NOT EXISTS `%--%_item_data` (
+  `id` int(10) NOT NULL auto_increment,
+  `item_id` int(10) NOT NULL,
+  `item_type` varchar(255) NOT NULL,
+  `data_type` varchar(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `value` text NOT NULL,
+	KEY (`item_id`),
+	KEY (`item_type`),
+	KEY (`name`),
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;

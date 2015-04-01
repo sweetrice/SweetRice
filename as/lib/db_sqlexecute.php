@@ -8,18 +8,18 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<p><?php echo SQL_EXECUTE_TIP;?> <b><?php echo DATABASE_TYPE;?></b></p>
+<div class="tip"><?php _e('Enter SQL and execute it online,please backup database first.');?> <b><?php echo DATABASE_TYPE;?></b></div>
 <?php
 	if($message){
 ?>
-<p id="convert_error"><?php echo $message;?></p>
+<div class="tip" id="convert_error"><?php echo $message;?></div>
 <?php
 	}
 ?>
-<fieldset><legend><?php echo SQL_CONTENT;?></legend>
+<fieldset><legend><?php _e('SQL Content');?></legend>
 <textarea id="sql_content" class="input_textarea"><?php echo $sql_content;?></textarea>
 </fieldset>
-	<input type="button" value="<?php echo DONE;?>" class="input_submit"/>
+	<input type="button" value="<?php _e('Done');?>" class="input_submit"/>
 <script type="text/javascript">
 <!--
 	_().ready(function(){

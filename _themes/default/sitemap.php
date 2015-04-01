@@ -13,7 +13,7 @@
 ?>
 <div id="div_center">
 	<div id="div_right">
-<div id="nav"><a href="<?php echo BASE_URL;?>"><?php echo HOME;?></a> &raquo; <a href="<?php echo show_link_sitemapHtml();?>"><?php echo SITEMAP;?></a></div>
+<div id="nav"><a href="<?php echo BASE_URL;?>"><?php _e('Home');?></a> &raquo; <a href="<?php echo show_link_sitemapHtml();?>"><?php _e('Sitemap');?></a></div>
 <div id="sitemap">
 <ul>
 <?php

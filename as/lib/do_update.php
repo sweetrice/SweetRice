@@ -7,7 +7,7 @@
  * @since 1.0.0
  */
  defined('VALID_INCLUDE') or die();
-	$mode = $_GET["mode"];
+	$mode = $_GET['mode'];
 	if($mode == 'manually'){
 		$upgrade_dir = 'SweetRice_upgrade';
 		if(file_exists('step.txt')){
@@ -21,15 +21,15 @@
 					mkdir(ROOT_DIR.$upgrade_dir);
 				}
 				if(extractZIP(ROOT_DIR.'SweetRice_core.zip',ROOT_DIR.$upgrade_dir.'/')){
-					$str = EXTRACT_SR_SUCCESSFULLY;
+					$str = _t('Extract SweetRice successfully');
 					file_put_contents('step.txt',2);
 					$nextstep = true;
 				}else{
-					$str = EXTRACT_SR_FAILED;
+					$str = _t('Extract SweetRice failed');
 				}
 			break;
 			case 2:
-				$plist = $_POST["plist"];
+				$plist = $_POST['plist'];
 				if($plist){
 					foreach($plist as $val){
 						$target_entry = ROOT_DIR.$val;
@@ -47,13 +47,13 @@
 							break;
 						}
 					}
-				}elseif(!$_POST["submit"]){
+				}elseif(!$_POST['submit']){
 					$copyfailed = true;
 				}
 				if($copyfailed){
-					$str = UPDATE_SR_FILE_FAILED;
+					$str = _t('Update SweetRice files failed');
 				}else{
-					$str = UPDATE_SR_FILE_SUCCESSFULLY;
+					$str = _t('Update SweetRice files successfully');
 					file_put_contents('step.txt',3);
 					$nextstep = true;
 				}
@@ -65,7 +65,7 @@
 					}
 					$upgrade_db = get_data_from_url(BASE_URL.'upgrade_db.php');
 					if($upgrade_db == 'Successfully'){
-						$str = DATABASE_UPGRADE_SUCCESSFULLY;
+						$str = _t('Database upgrade successfully.');
 						if(file_exists(ROOT_DIR.'upgrade_db.php')){
 							unlink(ROOT_DIR.'upgrade_db.php');
 						}
@@ -78,7 +78,7 @@
 						file_put_contents('step.txt',4);
 						$nextstep = true;
 					}else{
-						$str = vsprintf(DATABASE_UPGRADE_FAILED,array($upgrade_db));
+						$str = vsprintf(_t('Database upgrade failed.<br />Some error maybe here:<br />%s'),array($upgrade_db));
 					}
 				}else{
 					if(file_exists(ROOT_DIR.'inc/lastest_update.txt')){
@@ -94,49 +94,49 @@
 			case 4:
 				if(file_exists(ROOT_DIR.'SweetRice_core.zip')&&is_dir(ROOT_DIR.$upgrade_dir.'/')){
 					if(un_(ROOT_DIR.$upgrade_dir.'/')&&unlink(ROOT_DIR.'SweetRice_core.zip')){
-						$str = CLEAN_TEMPORARY_FILES_SUCCESSFULLY;
+						$str = _t('Clean temporary files successfully');
 						file_put_contents('step.txt',5);
 						$nextstep = true;
 					}else{
-						$str = CLEAN_TEMPORARY_FILES_FAILED;
+						$str = _t('Clean temporary files failed');
 					}				
 				}
 			break;
 			case 5:
 				unlink('step.txt');
-				$str = vsprintf(UPGRADE_SR_SUCCESSFULLY,array(SR_VERSION));
+				$str = vsprintf(_t('Upgrade SweetRice to %s successfully.'),array(SR_VERSION));
 			break;
 			default:
 				$content = get_data_from_url('http://www.basic-cms.org/download/17/');
 				if($content){
 					file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
-					$str = vsprintf(DOWNLOAD_SR_SUCCESSFULLY,array(filesize(ROOT_DIR.'SweetRice_core.zip')));
+					$str = vsprintf(_t('Download SweetRice_core.zip (File size:%s) successfully'),array(filesize(ROOT_DIR.'SweetRice_core.zip')));
 					file_put_contents('step.txt',1);
 					$nextstep = true;
 				}else{
-					$str =	UPDATE_FAILED_CONNECT_SERVER;
+					$str =	_t('Update failed - cannot connect update server.');
 				}
 		}
-		$top_word = UPDATE.' SweetRice';
+		$top_word = _t('Update SweetRice');
 	}elseif($mode=='automatically'){
-		$top_word = UPDATE.' SweetRice '.AUTOMATICALLY;
+		$top_word = _t('Update SweetRice Automatically');
 		$str = update_automatically('SweetRice_upgrade');
 	}else{
 		$lastest_ = sweetrice_version();
 		$current_ = SR_VERSION;
 		if($current_){
-			$str = vsprintf(CURRENT_VERSION_TIP,array($current_));
+			$str = vsprintf(_t('Current version : %s'),array($current_));
 			$last_ = '1'.str_replace('.','',$lastest_);
 		}
 		if($lastest_){
-			$str .= ' '.vsprintf(LASTEST_VERSION_TIP,array($lastest_));
+			$str .= ' '.vsprintf(_t('Lastest version : %s'),array($lastest_));
 			$curr_ = '1'.str_replace('.','',$current_);
 		}
 		if($last_-$curr_>0){
 			$update = true;
 			file_put_contents('../inc/lastest_update.txt',$lastest_);
 		}
-		$top_word = CHECK_UPDATE;	
+		$top_word = _t('Check update');	
 	}
 	$inc = 'update.php';	
 ?>

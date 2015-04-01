@@ -10,13 +10,7 @@
 	function do_data($a,$filterData='public'){
 		foreach($a as $key=>$val){
 			if(!is_array($val)){
-				switch($filterData){
-					case 'privacy':
-						$a[$key] = trim(clean_quotes($val));
-					break;
-					default:
-						$a[$key] = db_escape(trim(clean_quotes($val)));
-				}
+				$a[$key] = trim(clean_quotes($val));
 			}else{
 				$a[$key] = do_data($val,$filterData);
 			}
@@ -24,7 +18,7 @@
 		return $a;
 	}
 	function escape_string($str){
-		return htmlspecialchars(db_unescape($str),ENT_QUOTES);
+		return htmlspecialchars($str,ENT_QUOTES);
 	}
 	function clean_quotes($str){
 		if(get_magic_quotes_gpc()){
@@ -40,27 +34,61 @@
 	function db_escape($str){
 		switch(DATABASE_TYPE){
 			case 'sqlite':
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = sqlite_escape_string($val);
+					}
+					return $str;
+				}
 				return sqlite_escape_string($str);
 			break;
 			case 'pgsql':
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = pg_escape_string($val);
+					}
+					return $str;
+				}
 				return pg_escape_string($str);
 			break;
 			default:
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = mysql_real_escape_string($val);
+					}
+					return $str;
+				}
 				return mysql_real_escape_string($str);
 		}
 	}
 	function db_unescape($str){
 		switch(DATABASE_TYPE){
 			case 'sqlite':
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = str_replace('\'\'','\'',$val);
+					}
+					return $str;
+				}
 				return str_replace('\'\'','\'',$str);
 			break;
 			case 'pgsql':
-				$str = str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$str);
-				return $str;
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$val);
+					}
+					return $str;
+				}
+				return str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$str);
 			break;
 			default:
-				$str = stripslashes($str);
-				return $str;
+				if(is_array($str)){
+					foreach($str as $key=>$val){
+						$str[$key] = stripslashes($val);
+					}
+					return $str;
+				}
+				return stripslashes($str);
 		}
 	}
 	if (!function_exists('htmlspecialchars_decode')) {
@@ -101,9 +129,8 @@
 		}
 		$parseList = unserialize($row['content']);
 		foreach($parseList as $key=>$val){
-			$key=ltrim($key,'[');
-			$key=rtrim($key,']');
-			$key=stripslashes($key);
+			$key = ltrim($key,'[');
+			$key = rtrim($key,']');
 			if(preg_match($key,$url,$matches)){
 				parse_str($val,$data);
 				foreach($data as $k=>$v){
@@ -142,8 +169,8 @@
 	//init Url data to SweetRice.
 	function initUrl(){
 		$permalinks = initPermalinks();
-		$load_dir = str_replace('//','/',dirname($_SERVER["PHP_SELF"]).'/');
-		$url = substr(preg_replace("/(\?.*)?$/",'',$_SERVER["REQUEST_URI"]),strlen($load_dir));
+		$load_dir = str_replace('//','/',dirname($_SERVER['PHP_SELF']).'/');
+		$url = substr(preg_replace("/(\?.*)?$/",'',$_SERVER['REQUEST_URI']),strlen($load_dir));
 		$redirectList = array();
 		$row = getOption('redirectList');
 		if($row['content']){
@@ -357,7 +384,7 @@
 	if(!function_exists('mb_substr')){
 		function mb_substr($str,$start,$len,$charcode){
 			$str_len = strlen($str);
-			$tmpstr = "";
+			$tmpstr = '';
 			for($i = 0; $i < $start; $i++){
 				 if(ord(substr($str, $i, 1)) > 127){
 					 if(ord(substr($str, $i, 2)) > 127){
@@ -391,7 +418,7 @@
 	function my_post($to,$subject,$mail_text,$mail_html,$from_mail,$from_name,$mime_boundary,$charset = 'UTF-8'){
 		$from_name = '=?'.$charset.'?B?'.base64_encode($from_name).'?=';
 		$subject = '=?'.$charset.'?B?'.base64_encode($subject).'?=';
-		$headers = "From: ".$from_name." <".($from_mail?$from_mail:'noreply@'.$_SERVER["HTTP_HOST"]).">\n";
+		$headers = 'From: '.$from_name.' <'.($from_mail?$from_mail:'noreply@'.$_SERVER['HTTP_HOST']).">\n";
 		$headers .= "MIME-Version: 1.0\n";
 		$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
 		$message = "--$mime_boundary\n";
@@ -498,6 +525,9 @@
 		if(!extension_loaded('dba')){
 			return ;
 		}
+		if(!is_dir(SITE_HOME.'inc/cache/')){
+			mkdir(SITE_HOME.'inc/cache/');
+		}
 		if(!file_exists(SITE_HOME.'inc/cache/cache.db')){
 			$dba = dba_open(SITE_HOME.'inc/cache/cache.db', 'c', 'db4');
 		}else{
@@ -533,6 +563,12 @@
 			return ;
 		}
 		$db_dir = SITE_HOME.'inc/cache/leveldb';
+		if(!is_dir(SITE_HOME.'inc/cache/')){
+			mkdir(SITE_HOME.'inc/cache/');
+		}
+		if(!is_dir($db_dir)){
+			mkdir($db_dir);
+		}
 		$db = new LevelDb($db_dir);
 		if(!is_object($db)){
 			LevelDB::repair($db_dir);
@@ -567,6 +603,8 @@
 	}
 
 	function db_insert($table,$_id,$_key,$_val,$return_no=false,$database_type=false){
+		$_key = db_escape($_key);
+		$_val = db_escape($_val);
 		$_id[1] = intval($_id[1]);
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
@@ -647,14 +685,15 @@
 			default:
 				$_key = '`'.implode('`,`',$_key).'`';
 				$_val = "'".implode("','",$_val)."'";
-				if($_id[0]){
+				if($_id[0] && $_id[1] > 0){
 					$sql = "REPLACE INTO `".$table."`(`".$_id[0]."`,".$_key.")VALUES('".$_id[1]."',".$_val.")";
 				}else{
 					$sql = "REPLACE INTO `".$table."`(".$_key.")VALUES(".$_val.")";
 				}
 				mysql_query($sql);
 				if($_id[0]){
-					return mysql_insert_id();
+					$insert_id = mysql_insert_id();
+					return $insert_id > 0 ? $insert_id:$_id[1];
 				}else{
 					return true;
 				}
@@ -668,7 +707,7 @@
 			case 'sqlite':
 				global $sqlite_driver,$db;
 				if(!$db){
-					return 'No SQLite connected';
+					return _t('No SQLite Connected');
 				}
 				switch($sqlite_driver){
 					case 'pdo_sqlite':
@@ -689,13 +728,13 @@
 			break;
 			case 'pgsql':
 				if(!pg_version()){
-					return 'No PostgreSQL connected';
+					return _t('No PostgreSQL Connected');
 				}
 				return pg_last_error();
 			break;
 			default:
 				if(!mysql_stat()){
-					return 'No Mysql connected';
+					return _t('No Mysql Connected');
 				}
 				return mysql_error();
 		}
@@ -812,33 +851,45 @@
 		$table = $query['table'];
 		$where = $query['where'];
 		$pager = $query['pager'];
-		$pager_function = $query['pager_function'];
+		$pager_function = $pager['pager_function'];
 		if(!$pager_function){
 			$pager_function = 'pager';
 		}
 		$limit = $query['limit']?get_limit_sql($query['limit'][0],$query['limit'][1]):'';
+		$group = $query['group'];
 		$order = $query['order'];
 		$field = $query['field'];
 		if(!$field){
 			$field = '*';
 		}
 		if(is_array($where)){
-			$where = " WHERE 1=1 ".implode(' AND ',$where);
+			$where = " WHERE 1=1 AND ".implode(' AND ',$where)." ";
 		}elseif(trim($where)){
-			$where = " WHERE ".$where;
+			$where = " WHERE ".$where." ";
 		}
-		if($pager['page_limit']){
+		if($pager['page_limit'] && $pager['p_link']){
 			$page_limit = $pager['page_limit'];
 			$total = db_total("SELECT COUNT(*) FROM $table ".$where);
-			$pager = call_user_func_array($pager_function,array($total,$page_limit,$pager['p_link']));
+			if($pager['curr_page'] == 'last'){
+				$pager['curr_page'] = ceil($total/$page_limit);
+			}
+			$pager = call_user_func_array($pager_function,array($total,$page_limit,$pager['p_link'],$pager['curr_page'],$pager['source_url']));
 			$pager['total'] = $total;
 			if($pager['outPage']){
-				return $pager;
+				return false;
 			}
 			$limit = get_limit_sql($pager['page_start'],$page_limit);
 		}
-		$rows = db_arrays("SELECT ".$field." FROM ".$table." ".$where." ".($order?"ORDER by ".$order:"")." ".$limit);
+		$rows = db_arrays("SELECT ".$field." FROM ".$table.$where.($group?" GROUP by ".$group." ":"").($order?" ORDER by ".$order." ":"").$limit);
+		if($query['fetch_one']){
+			return $rows[0];
+		}
 		return array('rows'=>$rows,'pager'=>$pager);
+	}
+	
+	function db_fetchOne($param){
+		$param['fetch_one'] = true;
+		return db_fetch($param);
 	}
 
 	function sqlite_dbhandle($dbname){
@@ -993,10 +1044,13 @@
 		return $rows;
 	}
 
-	function db_list(){
-		switch(DATABASE_TYPE){
+	function db_list($database_type = false){
+		if(!$database_type){
+			$database_type = DATABASE_TYPE;
+		}
+		switch($database_type){
 			case 'sqlite':
-					$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH');
+					$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH',$database_type);
 					foreach($table_array as $val){
 						if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
 							$table_list[] = $val[0];
@@ -1004,7 +1058,7 @@
 					}
 			break;
 			case 'mysql':
-					$table_array = db_arrays_nocache("SHOW TABLES",'BOTH');
+					$table_array = db_arrays_nocache("SHOW TABLES",'BOTH',$database_type);
 					foreach($table_array as $val){
 						if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
 							$table_list[] = $val[0];
@@ -1012,7 +1066,7 @@
 					}
 			break;
 			case 'pgsql':
-					$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;");
+					$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",$database_type);
 					foreach($table_array as $val){
 						if(substr($val['tablename'],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
 							$table_list[] = $val['tablename'];
@@ -1048,45 +1102,45 @@
 		}
 	}
 
-	function db_total_nocache($sql){
+	function db_total_nocache($sql,$database_type = false){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_total($sql);
+			return db_total($sql,$database_type);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$total = db_total($sql);
+		$total = db_total($sql,$database_type);
 		$global_setting['cache'] = $cache;
 		return $total;
 	}
 
-	function db_array_nocache($sql,$type = 'ASSOC'){
+	function db_array_nocache($sql,$type = 'ASSOC',$database_type = false){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_array($sql,$type);
+			return db_array($sql,$type,$database_type);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$row = db_array($sql,$type);
+		$row = db_array($sql,$type,$database_type);
 		$global_setting['cache'] = $cache;
 		return $row;
 	}
 	
-	function db_arrays_nocache($sql,$type = 'ASSOC'){
+	function db_arrays_nocache($sql,$type = 'ASSOC',$database_type = false){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_arrays($sql,$type);
+			return db_arrays($sql,$type,$database_type);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$rows = db_arrays($sql,$type);
+		$rows = db_arrays($sql,$type,$database_type);
 		$global_setting['cache'] = $cache;
 		return $rows;
 	}
 
 	function _out(){
-		if(!headers_sent()&&extension_loaded("zlib")&&strpos($_SERVER["HTTP_ACCEPT_ENCODING"],"gzip")!==false){
-			ob_start(ob_start("ob_gzhandler"));
+		if(!headers_sent()&&extension_loaded('zlib')&&strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip')!==false){
+			ob_start(ob_start('ob_gzhandler'));
 		}else{
 			ob_start();
 		}
@@ -1101,6 +1155,9 @@
 		if(!$f['name']){
 			return $old_file;
 		}
+		if(substr($dest_dir,-1) != '/'){
+			$dest_dir .= '/';
+		}
 		$tmp = explode('.',$f['name']);
 		if(count($tmp)){
 			$fileext = '.'.end($tmp);
@@ -1110,8 +1167,8 @@
 			$new_file  = md5($new_file).$fileext;
 		}
 		if($f['name']&&strtolower($fileext)!=$file_type){
-			$dest=$dest_dir.$new_file;
-			$r=move_uploaded_file($f['tmp_name'],$dest);
+			$dest = $dest_dir.$new_file;
+			$r = move_uploaded_file($f['tmp_name'],$dest);
 			if($old_file&&file_exists($dest_dir.$old_file)&&$old_file!=$new_file){
 				unlink($dest_dir.$old_file);
 			}
@@ -1153,10 +1210,10 @@
 		}
 	}
 	function user_track(){
-		$ip = $_SERVER["REMOTE_ADDR"];
-		$user_from = $_SERVER["HTTP_REFERER"];
-		$this_page = $_SERVER["REQUEST_URI"];
-		$user_browser = $_SERVER["HTTP_USER_AGENT"];
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$user_from = $_SERVER['HTTP_REFERER'];
+		$this_page = $_SERVER['REQUEST_URI'];
+		$user_browser = $_SERVER['HTTP_USER_AGENT'];
 		$browsers = init_browsers(1);
 		foreach($browsers as $val){
 			if(strpos(strtoupper($user_browser),strtoupper($val))!==false){
@@ -1203,10 +1260,14 @@
 	}
 
  function filesize2print($filename){
-		if(substr($filename,0,strlen(BASE_URL))!=BASE_URL){
-			return 'Remote file';
+		if(substr($filename,0,strlen(SITE_URL)) != SITE_URL && preg_match('/https?:\/\/.+/',$filename)){
+			return _t('Remote File');
 		}
-		$filename = str_replace(BASE_URL,SITE_HOME,$filename);
+		if(substr($filename,0,strlen(SITE_URL)) == SITE_URL){
+			$filename = str_replace(SITE_URL,SITE_HOME,$filename);
+		}else{
+			$filename = SITE_HOME.$filename;
+		}
 		if(!file_exists($filename)){
 			return 'Missing file';
 		}
@@ -1221,6 +1282,16 @@
 			return $fs.'B';
 		}
 	}
+
+	function getAttachmentUrl($filename){
+		if(substr($filename,0,strlen(SITE_URL)) != SITE_URL && preg_match('/https?:\/\/.+/',$filename)){
+			return $filename;
+		}
+		if(substr($filename,0,strlen(SITE_URL)) == SITE_URL){
+			return $filename;
+		}
+		return SITE_URL.$filename;
+	}
 	function filterXMLContent($content){
 		$content = preg_replace("/[(\\x00-\\x08)(\\x0b-\\x0c)(\\x0e-\\x1f)]*/",'',$content);
 		return $content;
@@ -1229,11 +1300,33 @@
 	function _404($tip_404){
 		global $global_setting;
 		header('HTTP/1.1 404 Page Not Found');
-		include("inc/404.php");
+		$page_theme = get_page_themes();
+		switch($tip_404){
+			case 'entry':
+				$tip_404 = _t('Sorry ,the entry does not exists.');
+			break;
+			case 'category':
+				$tip_404 = _t('Sorry ,the category does not exists.');
+			break;
+			case 'attachment':
+				$tip_404 = _t('Sorry ,the attachment does not exists.');
+			break;
+			case 'tags':
+				$tip_404 = _t('Sorry ,the tag does not exists.');
+			break;
+			case 'home':
+				$tip_404 = _t('Invalid request,please check your url.');
+			break;
+		}
+		if($page_theme['404']){
+			include(THEME_DIR.$page_theme['404']);
+		}else{
+			include('inc/404.php');
+		}
 		exit();
 	}
 
-	function getLangTypes($lang_dir){
+	function getLangTypes($lang_dir = false){
 		if(!$lang_dir){
 			$lang_dir = LANG_DIR;
 		}
@@ -1249,10 +1342,10 @@
 	}
 	
 	function getThemeTypes(){
-		if(is_dir(SITE_HOME."_themes/")){
-			$d = dir(SITE_HOME."_themes/");
+		if(is_dir(SITE_HOME.'_themes/')){
+			$d = dir(SITE_HOME.'_themes/');
 			while (false !== ($entry = $d->read())) {
-				if(file_exists(SITE_HOME."_themes/".$entry.'/theme.config')){
+				if(file_exists(SITE_HOME.'_themes/'.$entry.'/theme.config') && $entry != '.' && $entry != '..'){
 						$themes[$entry] = $entry;
 					}
 				}
@@ -1262,7 +1355,7 @@
 	}
 
 	function _403(){
-		header("HTTP/1.1 403 Forbidden"); 
+		header('HTTP/1.1 403 Forbidden'); 
 		die('<!DOCTYPE html>
 <html><head>
 <title>403 Forbidden</title>
@@ -1303,7 +1396,7 @@
 		$last_etag = $_SERVER['HTTP_IF_NONE_MATCH'];
 		$Expires = $last_modify + $ExpiresDate;
 		$Expires = $Expires > time()?$Expires:time();
-		$last_modify = max($last_modify,$_COOKIE["lang_update"],$_COOKIE["theme_update"],SETTING_UPDATE,CATEGORIES_UPDATE,LINKS_UPDATE);
+		$last_modify = max($last_modify,$_COOKIE['lang_update'],$_COOKIE['theme_update'],SETTING_UPDATE,CATEGORIES_UPDATE,LINKS_UPDATE);
 		if($etag&&$last_etag!=$etag){
 			_200($last_modify,$etag,$Expires);
 		}elseif(($last_modify>0&&$last_modify <= $last_access)||($etag&&$last_etag==$etag)){
@@ -1334,9 +1427,9 @@
 
 	function themeLang(){
 		global $global_setting;
-		$lang = $_COOKIE["lang"]?$_COOKIE["lang"]:$global_setting['theme_lang'];
+		$lang = $_COOKIE['lang']?$_COOKIE['lang']:$global_setting['theme_lang'];
 		if(!$lang){
-			$ltmp = explode(',',$_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+			$ltmp = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			switch(strtolower($ltmp[0])){
 				case 'zh-cn':
 					$lang = 'zh-cn';
@@ -1357,13 +1450,13 @@
 
 	function theme(){
 		global $global_setting;
-		$theme = $_COOKIE["theme"]?$_COOKIE["theme"]:$global_setting['theme'];
+		$theme = $_COOKIE['theme']?$_COOKIE['theme']:$global_setting['theme'];
 		if(is_dir(SITE_HOME.'_themes/'.$theme)){
 			return $theme;
 		}
 	}
 
-	function pluginApi($plugin,$apiFunction,$apiReturn=false){
+	function pluginApi($plugin,$apiFunction,$apiReturn=false,$param = array()){
 		$plugin_list = pluginList();
 		if(!$plugin||!$apiFunction||!isPluginInstall($plugin)){return false;}
 			if(file_exists(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php')){
@@ -1374,10 +1467,10 @@
 				}
 				switch($apiReturn){
 					case 'data':
-						echo call_user_func(array($pluginClass,$apiFunction));
+						echo call_user_func_array(array($pluginClass,$apiFunction),$param);
 					break;
 					default:
-						return call_user_func(array($pluginClass,$apiFunction));
+						return call_user_func_array(array($pluginClass,$apiFunction),$param);
 				}
 			}else{
 				return false;
@@ -1394,7 +1487,7 @@
 		}
 	}
 
-	function pluginHookUrl($plugin,$args=array()){
+	function pluginHookUrl($plugin,$args=array(),$source_url = false){
 		if(!isPluginInstall($plugin)){
 			return false;
 		}	
@@ -1402,7 +1495,7 @@
 		$reqs['action'] = 'pluginHook';
 		$reqs['plugin'] = $plugin;
 		ksort($reqs);
-		if(URL_REWRITE){
+		if(URL_REWRITE && !$source_url){
 			$row = getLink($plugin,$reqs);
 			if($row['url']){
 				return $row['url'];
@@ -1424,18 +1517,59 @@
 			return BASE_URL.DASHBOARD_DIR.'/?'.ltrim($str,'&');
 	}
 
-	function getOption($name){
+	function getOption($name,$format = false){
 		if(!$name){
 			return false;
 		}
-		return db_array_nocache("SELECT * FROM `".DB_LEFT."_options` WHERE `name` = '$name'");
+		$data = db_array_nocache("SELECT * FROM `".DB_LEFT."_options` WHERE `name` = '$name'");
+		switch($format){
+			case 'json':
+				$data['output'] = json_decode($data['content']);
+			break;
+			case 'serialize':
+				$data['output'] = unserialize($data['content']);
+			break;
+			case 'session':
+				$data['output'] = session_decode($data['content']);
+			break;
+			case 'base64':
+				$data['output'] = base64_decode($data['content']);
+			break;
+			case 'url':
+				$data['output'] = urldecode($data['content']);
+			break;
+			case 'rawurl':
+				$data['output'] = rawurldecode($data['content']);
+			break;
+		}
+		return $data;
 	}
 
-	function setOption($name,$value){
+	function setOption($name,$value,$format = false){
 		if(!$name){
 			return false;
 		}
-		$row = getOption($name);
+		$row = getOption($name,$format);
+		switch($format){
+			case 'json':
+				$value = json_encode($value);
+			break;
+			case 'serialize':
+				$value = serialize($value);
+			break;
+			case 'session':
+				$value = session_encode();
+			break;
+			case 'base64':
+				$value = base64_encode($value);
+			break;
+			case 'url':
+				$value = urlencode($value);
+			break;
+			case 'rawurl':
+				$value = rawurlencode($value);
+			break;
+		}
 		$id = db_insert(DB_LEFT.'_options',array('id',$row['id']),array('name','content','date'),array($name,$value,time()));
 		return $id;
 	}
@@ -1448,8 +1582,11 @@
 		return ;
 	}
 
-	function pager($total,$page_limit,$p_link){
-		$page = max(1,intval($_GET["p"]));
+	function pager($total,$page_limit,$p_link,$curr_page = 1,$source_url = false){
+		$page = intval($_GET['p']);
+		if($page == 0){
+			$page = $curr_page > 0?$curr_page:1;
+		}
 		if(!$page_limit){
 			$page_limit = 15;
 		}
@@ -1466,38 +1603,38 @@
 		$list_put = '';
 		if($page_total<=10){
 			for($i=1; $i<=$page_total; $i++){
-				$tmp_link = $i>1?(URL_REWRITE?$p_link.$i:$p_link.'&p='.$i):$p_link;
-				$list_put .= "<a href=\"".$tmp_link.(URL_REWRITE&&$i!=1?'/':'')."\" ".($i==$page?'class="pageCurrent"':'').">".$i."</a> ";
+				$tmp_link = URL_REWRITE && !$source_url?$p_link.$i:$p_link.'&p='.$i;
+				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url?'/':'').'" '.($i==$page?'class="pageCurrent"':'').'>'.$i.'</a> ';
 			}
 		}elseif($page == 1){
 			$p_end = 0;
 			for($i=0; $i<($page_last>10?10:$page_last); $i++){
-				$tmp_link = $i>0?(URL_REWRITE?$p_link.($i+1):$p_link.'&p='.($i+1)):$p_link;
-				$list_put .= "<a href=\"".$tmp_link.(URL_REWRITE&&$i>0?'/':'')."\" ".($i==0?'class="pageCurrent"':'').">".($i+1)."</a> ";
+				$tmp_link = URL_REWRITE && !$source_url?$p_link.($i+1):$p_link.'&p='.($i+1);
+				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&$i>0?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($i+1).'</a> ';
 				$p_end +=1;
 			}
-			$list_put .= $page_last>=10?("<a href=\"".(URL_REWRITE?$p_link.'2':$p_link.'&p=2').(URL_REWRITE?'/':'')."\">Next&raquo;</a>"):'';
+			$list_put .= $page_last>=10?('<a href="'.(URL_REWRITE && !$source_url?$p_link.'2':$p_link.'&p=2').(URL_REWRITE && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>'):'';
 		}elseif($page == $page_total){
-			$list_put .= "<a href=\"".(URL_REWRITE?$p_link.($page_total-1):$p_link.'&p='.($page_total-1)).(URL_REWRITE&&$page_total>11?'/':'')."\"/>&laquo;Previous</a> ";
+			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page_total-1):$p_link.'&p='.($page_total-1)).(URL_REWRITE && !$source_url&&$page_total>11?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
 			for($i=$page_total-9; $i<=$page_total; $i++){
-				$tmp_link = $i>1?(URL_REWRITE?$p_link.$i:$p_link.'&p='.$i):$p_link;
-				$list_put .= "<a href=\"".$tmp_link.(URL_REWRITE&&$i>1?'/':'')."\" ".($i==$page_total?'class="pageCurrent"':'').">".$i."</a> ";
+				$tmp_link = URL_REWRITE && !$source_url?$p_link.$i:$p_link.'&p='.$i;
+				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url?'/':'').'" '.($i==$page_total?'class="pageCurrent"':'').'>'.$i.'</a> ';
 			}
 		}elseif($page > 1 && $page < $page_total){
 			$p_end = $page-1;
-			$list_put .= "<a href=\"".($page>2?(URL_REWRITE?$p_link.($page-1):$p_link.'&p='.($page-1)):$p_link).(URL_REWRITE&&$page>2?'/':'')."\"/>&laquo;Previous</a> ";
+			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page-1):$p_link.'&p='.($page-1)).(URL_REWRITE && !$source_url?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
 			if($page_last<10){
 				for($i=10-$page_last; $i>0; $i--){
-					$tmp_link = $page-$i>1?(URL_REWRITE?$p_link.($page-$i):$p_link.'&p='.($page-$i)):$p_link;
-					$list_put .= "<a href=\"".$tmp_link.(URL_REWRITE&&($page-$i)>1?'/':'')."\" ".($i==0?'class="pageCurrent"':'').">".($page-$i)."</a> ";
+					$tmp_link = URL_REWRITE && !$source_url?$p_link.($page-$i):$p_link.'&p='.($page-$i);
+					$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&($page-$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page-$i).'</a> ';
 				}		
 			}
 			for($i=0; $i<($page_last>10?10:$page_last); $i++){
-				$tmp_link = $page+$i>1?(URL_REWRITE?$p_link.($page+$i):$p_link.'&p='.($page+$i)):$p_link;
-				$list_put .= "<a href=\"".$tmp_link.(URL_REWRITE&&($page+$i)>1?'/':'')."\" ".($i==0?'class="pageCurrent"':'').">".($page+$i)."</a> ";
+				$tmp_link = URL_REWRITE && !$source_url?$p_link.($page+$i):$p_link.'&p='.($page+$i);
+				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&($page+$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page+$i).'</a> ';
 				$p_end += 1;
 			}
-			$list_put .= "<a href=\"".(URL_REWRITE?$p_link.($page+1):$p_link.'&p='.($page+1)).(URL_REWRITE?'/':'')."\">Next&raquo;</a>";
+			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page+1):$p_link.'&p='.($page+1)).(URL_REWRITE && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>';
 		}
 		if($page_total>1){
 			$list_put = $list_put?'<div id="PageList">'.$list_put.'</div>':'';
@@ -1507,69 +1644,110 @@
 		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page);
 	}
 
+	function generate_slug(){
+		$str = date('y').str_pad(date('z'),3,0,STR_PAD_LEFT);
+		$salt_num = floor((date('Y') - 2000)/100);
+		for($i=0; $i< 3; $i++){
+			switch(rand(0,1)){
+				case 0:
+					$str .= rand(0,9);
+				break;
+				default:
+					$str .= chr(rand(97,122));
+			}
+		}
+		return $str.date('His').floor((date('Y') - 2000)/100);
+	}
 
 //API for Post insert
 	function post_insert($data=array(),$without_attachment=false,$without_custome_field=false){
 		if(!$data){
 			$data = $_POST;
 		}
-		$id = intval($data["id"]);
-		$name = $data["name"];
+		$id = intval($data['id']);
+		if($id > 0){
+			$row = getPosts(array('ids'=>$id,'fetch_one'=>true));
+			if($row['tags']){
+				$old_tags = explode(',',$row['tags']);
+			}
+		}
+		$name = $data['name'];
 		if(!$name){return false;}
-		$title = $data["title"];
-		$old_link = array('src="'.SITE_URL.ATTACHMENT_DIR,'data="'.SITE_URL.ATTACHMENT_DIR,'value="'.SITE_URL.ATTACHMENT_DIR);
-		$new_link = array('src="'.ATTACHMENT_DIR,'data="'.ATTACHMENT_DIR,'value="'.ATTACHMENT_DIR);
-		$info = str_replace($old_link,$new_link,$data["info"]);
-		$info = db_escape($info);
-		$keyword = $data["keyword"];
-		$tags = explode(',',$data["tags"]);
+		$title = $data['title'];
+		$info = toggle_attachment($data['info']);
+		$keyword = $data['keyword'];
+		$tags = explode(',',$data['tags']);
 		$taglist = array();
 		foreach($tags as $val){
 			$val = trim($val);
-			if($val&&!in_array($val,$taglist)){
+			if($val && !in_array($val,$taglist)){
 				$taglist[] = $val;
 			}
 		}
 		$tags = implode(',',$taglist);
-		$description = $data["description"];
-		$sys_name = $data["sys_name"];
-		$category = intval($data["category"]);
-		$views = intval($data["views"]);
-		$createTime = intval($data["createTime"]);
-		$in_blog = intval($data["in_blog"]);
-		$allow_comment = intval($data["allow_comment"]);
-		$template = $data["template"];
-		if($data["republish"]){
+		$description = $data['description'];
+		$sys_name = $data['sys_name'];
+		$category = intval($data['category']);
+		$views = intval($data['views']);
+		$createTime = intval($data['createTime']);
+		$in_blog = intval($data['in_blog']);
+		$allow_comment = intval($data['allow_comment']);
+		$template = $data['template'];
+		if($data['republish']){
 			$createTime = false;
 		}else{
-			$createTime = intval($data["createTime"]);
+			$createTime = intval($data['createTime']);
 		}
 		if($sys_name){
 			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `sys_name` = '$sys_name' and `id` !='$id' ");
-			if($sysname_total!=0){
-				$sys_name = time();
+			if($sysname_total > 0){
+				$sys_name = generate_slug();
 			}
 		}else{
-			$sys_name = time();
+			$sys_name = generate_slug();
 		}
-		$post_id = db_insert(DB_LEFT."_posts",array('id',$id),array( 'name','title' , 'body' ,'keyword' ,'tags','description' , 'sys_name' ,'date' , 'category' ,'in_blog','views','allow_comment','template'),array(escape_string($name), escape_string($title), $info,escape_string($keyword),db_escape($tags),escape_string($description),$sys_name,($createTime?$createTime:time()), $category ,$in_blog,$views,$allow_comment,$template));
-		if($id>0){
+		$post_id = db_insert(DB_LEFT.'_posts',array('id',$id),array( 'name','title' , 'body' ,'keyword' ,'tags','description' , 'sys_name' ,'date' , 'category' ,'in_blog','views','allow_comment','template'),array(escape_string($name), escape_string($title), $info,escape_string($keyword),$tags,escape_string($description),$sys_name,($createTime?$createTime:time()), $category ,$in_blog,$views,$allow_comment,$template));
+		if(!$post_id){
+			return array('post_id'=>0,'sys_name'=>'');
+		}
+		$tag_posts = getOption('tag_posts');
+		if($tag_posts['content']){
+			$tag_posts = unserialize($tag_posts['content']);
+		}else{
+			$tag_posts = array();
+		}
+		foreach($taglist as $val){
+			if(!in_array($post_id,$tag_posts[$val])){
+				$tag_posts[$val][] = $post_id;
+			}
+		}
+		foreach($old_tags as $val){
+			if(!in_array($val,$taglist)){
+				$_tag_posts = array();
+				foreach($tag_posts[$val] as $v){
+					if($v != $post_id){
+						$_tag_posts[] = $v;
+					}
+				}
+				$tag_posts[$val] = $_tag_posts;
+			}
+		}
+		setOption('tag_posts',serialize($tag_posts));
+		if($id > 0){
 			db_query("UPDATE `".DB_LEFT."_comment` SET `post_cat` = '".$categories[$category]['link']."',`post_slug` = '$sys_name' WHERE `post_id` = '$post_id'");
 		}else{
-			db_insert(DB_LEFT."_item_plugin",array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
+			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
 		}
 		if(!$without_attachment){
-			$attNos = $data["no"];
+			$attNos = $data['no'];
 			$inlist = array();
 			for($i=1;$i<=$attNos;$i++){
-				$attid = intval($data["attid_".$i]);
+				$attid = intval($data['attid_'.$i]);
 				if($data['att_'.$i]){
-					$inlist[] = db_insert(DB_LEFT."_attachment",array('id',$attid),array('post_id','file_name','date','downloads'),array($post_id,$data['att_'.$i],$data["attdate_".$i]?intval($data["attdate_".$i]):time(),intval($data["atttimes_".$i])));
+					$inlist[] = db_insert(DB_LEFT.'_attachment',array('id',$attid),array('post_id','file_name','date','downloads'),array($post_id,str_replace(BASE_URL.ATTACHMENT_DIR,ATTACHMENT_DIR,$data['att_'.$i]),$data['attdate_'.$i]?intval($data['attdate_'.$i]):time(),intval($data['atttimes_'.$i])));
 				}
 			}
-			if(count($inlist)){
-				db_query("DELETE FROM `".DB_LEFT."_attachment` WHERE `id` NOT IN (".implode(',',$inlist).") AND `post_id` = '$post_id'");
-			}
+			db_query("DELETE FROM `".DB_LEFT."_attachment` WHERE `id` NOT IN (".implode(',',$inlist).") AND `post_id` = '$post_id'");
 		}
 
 		if(!$without_custom_field){
@@ -1584,21 +1762,21 @@
 		if(!$data){
 			$data = $_POST;
 		}
-		if(!$data["name"]){return false;}
-		$id = intval($data["id"]);
-		$sys_name = strtolower($data["link"]);
+		if(!$data['name']){return false;}
+		$id = intval($data['id']);
+		$sys_name = strtolower($data['link']);
 		if($sys_name){
 			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_category` WHERE `link` = '$sys_name' and `id` !='$id' ");
-			if($sysname_total>0){
-				$sys_name = time();
+			if($sysname_total > 0){
+				$sys_name = generate_slug();
 			}
 		}else{
-			$sys_name = time();
+			$sys_name = generate_slug();
 		}
-		$cat_id = db_insert(DB_LEFT.'_category',array('id',$id),array('name' , 'link' , 'title' , 'description' , 'keyword' , 'sort_word','parent_id','template'),array(escape_string($data["name"]), $sys_name, escape_string($data["title"]), escape_string($data["description"]), escape_string($data["keyword"]), escape_string($data["sort_word"]), intval($data["parent_id"]),$data["template"]));
+		$cat_id = db_insert(DB_LEFT.'_category',array('id',$id),array('name' , 'link' , 'title' , 'description' , 'keyword' , 'sort_word','parent_id','template'),array(escape_string($data['name']), $sys_name, escape_string($data['title']), escape_string($data['description']), escape_string($data['keyword']), escape_string($data['sort_word']), intval($data['parent_id']),$data['template']));
 		$rows = db_arrays_nocache("SELECT * FROM `".DB_LEFT."_category`");
-		db_query("UPDATE `".DB_LEFT."_options` SET `content` = '".db_escape(serialize($rows))."',`date` = '".time()."' WHERE `name` = 'categories'");
-		if($id==0){
+		setOption('categories',serialize($rows));
+		if($id == 0){
 			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($cat_id,'category',$data['plugin']));
 		}
 		if(!$without_custom_field){
@@ -1614,27 +1792,47 @@
 		for($i=1;$i<=$cfNos;$i++){
 			$cfid = intval($data['cfid['.$i.']']);
 			if($data['cfname'][$i]){
-				$inlist[] = db_insert(DB_LEFT.'_item_data',array('id',$cfid),array('item_id','item_type','data_type','name','value'),array($item_id,$type,$data['cftype'][$i],$data['cfname'][$i],db_escape($data['cfvalue'][$i])));
+				switch($data['cftype'][$i]){
+					case 'file':
+						$cfvalue = str_replace(BASE_URL.ATTACHMENT_DIR,ATTACHMENT_DIR,$data['cfvalue'][$i]);
+					break;
+					case 'html':
+						$cfvalue = toggle_attachment($data['cfvalue'][$i]);
+					break;
+					case 'select':
+						$cfvalue = serialize($data['cfvalue'][$i]);
+					break;
+					default:
+						$cfvalue = $data['cfvalue'][$i];
+				}
+				$inlist[] = db_insert(DB_LEFT.'_item_data',array('id',$cfid),array('item_id','item_type','data_type','name','value'),array($item_id,$type,$data['cftype'][$i],$data['cfname'][$i],$cfvalue));
 				if($data['savelist'][$i]){
-					$savelist[] = array('name'=>$data['cfname'][$i],'type'=>$data['cftype'][$i]);
+					$savelist[] = array('name'=>$data['cfname'][$i],'type'=>$data['cftype'][$i],'options'=>$data['cfoption'][$i]);
 				}
 			}
 		}
-		if(count($inlist)){
-			db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist).") AND `item_id` = '$item_id' AND `item_type` = '$type'");
+		db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist?$inlist:array(0)).") AND `item_id` = '$item_id' AND `item_type` = '$type'");
+		$cfdata = getOption('custom_'.$type.'_field');
+		if($cfdata){
+			$cfdata = unserialize($cfdata['content']);
+		}
+		if($data['deletelist']){
+			$deletelist = explode(',',rtrim($data['deletelist'],','));
+			foreach($cfdata as $key=>$val){
+				if(!in_array($key,$deletelist)){
+					$_cfdata[$key] = $val;
+				}
+			}
+			$cfdata = $_cfdata;
 		}
 		if(count($savelist) > 0){
-			$cfdata = getOption('custom_'.$type.'_field');
-			if($cfdata){
-				$cfdata = unserialize($cflist['content']);
-			}
 			foreach($savelist as $val){
 				if(!$cfdata[$val['name']]){
 					$cfdata[$val['name']] = $val;
 				}
 			}
-			setOption('custom_'.$type.'_field',serialize($cfdata));
 		}
+		setOption('custom_'.$type.'_field',serialize($cfdata));
 	}
 
 	function get_custom_field($param){
@@ -1647,10 +1845,16 @@
 			$where .= " AND `name` = '".$param['name']."'";
 		}
 		if($prams['name']){
-			$data = db_array("SELECT `name`,`value` FROM `".DB_LEFT."_item_data` ".$where);
+			$data = db_array("SELECT `name`,`value`,`data_type` FROM `".DB_LEFT."_item_data` ".$where);
+			if($data['data_type'] == 'select'){
+				$data['value'] = unserialize($data['value']);
+			}
 		}else{
-			$rows = db_arrays("SELECT `name`,`value` FROM `".DB_LEFT."_item_data` ".$where);
+			$rows = db_arrays("SELECT `name`,`value`,`data_type` FROM `".DB_LEFT."_item_data` ".$where);
 			foreach($rows as $val){
+				if($val['data_type'] == 'select'){
+					$val['value'] = unserialize($val['value']);
+				}
 				$data[$val['name']] = $val['value'];
 			}
 		}
@@ -1663,20 +1867,20 @@
 		if(!$data){
 			$data = $_POST;
 		}
-		$comment = nl2br(escape_string(js_unescape($data["info"])));
-		$post_id = intval(js_unescape($data["postID"]));
-		$website = escape_string(js_unescape($data["website"]));
-		$email = js_unescape($data["email"]);
-		$name = escape_string(js_unescape($data["name"]));
-		$remember = intval($data["remember"]);
+		$comment = nl2br(escape_string(js_unescape($data['info'])));
+		$post_id = intval(js_unescape($data['postID']));
+		$website = escape_string(js_unescape($data['website']));
+		$email = js_unescape($data['email']);
+		$name = escape_string(js_unescape($data['name']));
+		$remember = intval($data['remember']);
 		$row = db_array_nocache("SELECT `name`,`allow_comment`,`category`,`sys_name` FROM `".DB_LEFT."_posts` WHERE `id` = '$post_id'");
-		if($_SESSION["hashcode"] != md5(js_unescape($data["code"]))||!checkemail($email)||!$comment||!$row['allow_comment']){
-			return array('status'=>'0','status_code'=>CMT_TIP_RESPONSE_ERROR);
+		if($_SESSION['hashcode'] != md5(js_unescape($data['code']))||!checkemail($email)||!$comment||!$row['allow_comment']){
+			return array('status'=>'0','status_code'=>_t('Please Check Verification Code,Email and comment and try again!'));
 		}else{
-			$post_name = db_escape($row['name']);
+			$post_name = $row['name'];
 			$post_cat = $categories[$row['category']]['link'];
 			$post_slug = $row['sys_name'];
-			$ip = $_SERVER["REMOTE_ADDR"];
+			$ip = $_SERVER['REMOTE_ADDR'];
 			$id = db_insert(DB_LEFT."_comment",array('id',null),array('name','email' ,'website','info','post_id','post_name','post_cat','post_slug','date','ip','reply_date'),array($name,$email,$website,$comment,$post_id,$post_name,$post_cat,$post_slug,time(),$ip,0));
 			if($remember == 1){
 				setcookie('cname',$name,time()+31536000);
@@ -1687,9 +1891,9 @@
 				setcookie('cemail',null,time()-60);
 				setcookie('cwebsite',null,time()-60);
 			}
-			unset($_SESSION["hashcode"]);
+			unset($_SESSION['hashcode']);
 			if($id>0){
-				return array('status'=>'1','status_code'=>CMT_TIP_RESPONSE_SUCCESS);
+				return array('status'=>'1','status_code'=>_t('Submit successfully,thank you!'));
 			}
 			return array('status'=>'0','status_code'=>db_error());
 		}
@@ -1700,11 +1904,11 @@
 		if(!$data){
 			$data = $_POST;
 		}
-		$id = $data["id"];
-		$url = ltrim($data["url"],'/');
+		$id = $data['id'];
+		$url = ltrim($data['url'],'/');
 		$reqs = $data['reqs'];
 		ksort($reqs);
-		$plugin = $data["plugin"];
+		$plugin = $data['plugin'];
 		$row = db_array_nocache("SELECT `lid` FROM `".DB_LEFT."_links` WHERE `url` = '$url'");
 		if($id != $row['lid'] && $row['lid'] > 0){
 			return array('lid'=>false);
@@ -1747,7 +1951,7 @@
 			ob_clean();
 			return $content;
 		}else{
-			return '<div class="blog_text" id="post-'.$row['id'].'"><h2 class="blog_title"><a href="'.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'">'.$row['name'].'</a></h2><div class="post_info"><div class="list_info"><p class="list_date">'.date(POST_DATE_FORMAT,$row['date']).'</p><p class="list_views">'.$row['views'].' '.VIEWS.'</p><p class="div_clear"></p></div>'.postPreview($row['body']).' <span title="'.BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'" class="readmore">'.READ_MORE.'</span></div><p>'.TAGS.' '.$tag_str.'</p></div>';			
+			return '<div class="blog_text" id="post-'.$row['id'].'"><h2 class="blog_title"><a href="'.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'">'.$row['name'].'</a></h2><div class="post_info"><div class="list_info"><p class="list_date">'.date(_t('F,jS Y'),$row['date']).'</p><p class="list_views">'.$row['views'].' '._t('Views').'</p><p class="div_clear"></p></div>'.postPreview($row['body']).' <span title="'.BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'" class="readmore">'._t('Read More').'</span></div><p>'._t('Tag').' '.$tag_str.'</p></div>';			
 		}
 	}
 
@@ -1762,7 +1966,7 @@
 			ob_clean();
 			return $content;
 		}else{
-			return '<fieldset><legend><a name="comment_'.$k.'"></a><a href="'.$comment_link.'#comment_'.$k.'">#'.$last_no.'</a> '.($val['website']?'<a href="'.$val['website'].'" rel="external nofollow">'.$val['name'].'</a>':$val['name']).' '.date('M,d,Y D',$val['date']).'</legend>'.$val['info'].'</fieldset>';			
+			return '<fieldset><legend><a name="comment_'.$k.'"></a><a href="'.$comment_link.'#comment_'.$k.'">#'.$last_no.'</a> '.($val['website']?'<a href="'.$val['website'].'" rel="external nofollow">'.$val['name'].'</a>':$val['name']).' '.date(_t('F,jS Y'),$val['date']).'</legend>'.$val['info'].'</fieldset>';			
 		}
 	}
 
@@ -1774,7 +1978,7 @@
 		}
 		$plugin_list = array();
 		if(is_dir(SITE_HOME.'_plugin/')){
-			$d = dir(SITE_HOME."_plugin/");
+			$d = dir(SITE_HOME.'_plugin/');
 			while (false !== ($entry = $d->read())){
 				if($entry !='.' && $entry !='..' && file_exists(SITE_HOME.'_plugin/'.$entry.'/plugin_config.php')){
 					include(SITE_HOME.'_plugin/'.$entry.'/plugin_config.php');
@@ -1794,8 +1998,8 @@
 			return array();
 		}
 		$site_list = array();
-		if(is_dir(ROOT_DIR."_sites/")){
-			$d = dir(ROOT_DIR."_sites/");
+		if(is_dir(ROOT_DIR.'_sites/')){
+			$d = dir(ROOT_DIR.'_sites/');
 			while (false !== ($entry = $d->read())) {
 				if($entry !='.' && $entry !='..' && file_exists(ROOT_DIR.'_sites/'.$entry.'/inc/db.php')){
 					$site_config = array();
@@ -1903,7 +2107,13 @@
 	}
 
 	function alert($str,$to=false){
-		include(INCLUDE_DIR.'alert.php');
+		ob_end_clean();
+		$page_theme = get_page_themes();
+		if($page_theme['alert']){
+			include(THEME_DIR.$page_theme['alert']);
+		}else{
+			include(INCLUDE_DIR.'alert.php');
+		}
 		exit();
 	}
 
@@ -1925,7 +2135,23 @@
 	exit();
 	}
 
+	function sweetrice_debug($errno, $errstr, $errfile, $errline){
+		global $global_setting;
+		if($errno){
+			$errors = array('file'=>$errfile,'line'=>$errline,'message'=>$errstr);
+		}
+		ob_end_clean();
+		$page_theme = get_page_themes();
+		if($page_theme['error_report']){
+			include(THEME_DIR.$page_theme['error_report']);
+		}else{
+			include(INCLUDE_DIR.'error_report.php');
+		}
+		exit();
+	}
+
 	function error_report(){
+		global $global_setting;
 		if(function_exists('error_get_last')){
 			$errors = error_get_last();
 			$debug = 1;
@@ -1933,80 +2159,86 @@
 			$errors = debug_backtrace();
 			$debug = 2;
 		}
-		if($debug==1 && $errors['type'] != 1){
+		if($debug == 1 && $errors['type'] != 1){
 			return ;
 		}
-		include(INCLUDE_DIR.'error_report.php');
+		ob_end_clean();
+		$page_theme = get_page_themes();
+		if($page_theme['error_report']){
+			include(THEME_DIR.$page_theme['error_report']);
+		}else{
+			include(INCLUDE_DIR.'error_report.php');
+		}
 		exit();
 	}
 	
 	function dashboard_acts(){
 		return array(
-		'category'=>array('title'=>CATEGORY,'file'=>'do_category.php','type'=>1,'child'=>
+		'category'=>array('title'=>_t('Category'),'file'=>'do_category.php','type'=>1,'child'=>
 			array(
-				array('title'=>LISTS,'request'=>array('type'=>'category')),
-				array('title'=>CREATE,'request'=>array('type'=>'category','mode'=>'insert'))
+				array('title'=>_t('List'),'request'=>array('type'=>'category')),
+				array('title'=>_t('Create'),'request'=>array('type'=>'category','mode'=>'insert'))
 			)
 		),
-		'post'=>array('title'=>POST,'file'=>'do_post.php','type'=>1,'child'=>
+		'post'=>array('title'=>_t('Post'),'file'=>'do_post.php','type'=>1,'child'=>
 			array(
-				array('title'=>LISTS,'request'=>array('type'=>'post')),
-				array('title'=>CREATE,'request'=>array('type'=>'post','mode'=>'insert'))
+				array('title'=>_t('List'),'request'=>array('type'=>'post')),
+				array('title'=>_t('Create'),'request'=>array('type'=>'post','mode'=>'insert'))
 			)
 		),
-		'comment'=>array('title'=>COMMENT,'file'=>'do_comment.php','type'=>3,'request'=>array('type'=>'comment')),
-		'attachment'=>array('title'=>ATTACHMENT,'file'=>'do_attachment.php','type'=>3,'request'=>array('type'=>'attachment')),
-		'setting'=>array('title'=>SETTING,'type'=>2,'child'=>
+		'comment'=>array('title'=>_t('Comment'),'file'=>'do_comment.php','type'=>3,'request'=>array('type'=>'comment')),
+		'attachment'=>array('title'=>_t('Attachment'),'file'=>'do_attachment.php','type'=>3,'request'=>array('type'=>'attachment')),
+		'setting'=>array('title'=>_t('Setting'),'type'=>2,'child'=>
 			array(
-				array('title'=>GENERAL,'file'=>'do_setting.php','request'=>array('type'=>'setting')),
+				array('title'=>_t('General'),'file'=>'do_setting.php','request'=>array('type'=>'setting')),
 				array('mustBase'=>true,'title'=>'.htaccess','file'=>'do_htaccess.php','request'=>array('type'=>'htaccess')),
-				array('title'=>URL_REDIRECT,'file'=>'do_urlredirect.php','request'=>array('type'=>'url_redirect'))
+				array('title'=>_t('URL Redirect'),'file'=>'do_urlredirect.php','request'=>array('type'=>'url_redirect'))
 			)
 		),
-		'permalinks'=>array('title'=>PERMALINKS,'file'=>'do_permalinks.php','type'=>1,'child'=>array(
-				array('title'=>SYSTEM_TIP,'request'=>array('type'=>'permalinks','linkType'=>'system')),
-				array('title'=>CUSTOM,'request'=>array('type'=>'permalinks','linkType'=>'custom'))
+		'permalinks'=>array('title'=>_t('Permalinks'),'file'=>'do_permalinks.php','type'=>1,'child'=>array(
+				array('title'=>_t('System'),'request'=>array('type'=>'permalinks','linkType'=>'system')),
+				array('title'=>_t('Custom'),'request'=>array('type'=>'permalinks','linkType'=>'custom'))
 			)
 		),
-		'plugins'=>array('title'=>PLUGIN_LIST,'file'=>'do_plugins.php','request'=>array('type'=>'plugins'),'type'=>5,'child'=>pluginChild()),
-		'ad'=>array('title'=>AD,'file'=>'do_ad.php','type'=>3,'request'=>array('type'=>'ad')),
-		'password'=>array('title'=>PASSWORD,'file'=>'do_password.php','type'=>4),
-		'plugin'=>array('title'=>PLUGIN,'file'=>'do_plugin.php','type'=>4),
-		'track'=>array('title'=>TRACK,'file'=>'do_track.php','type'=>3,'request'=>array('type'=>'track')),
-		'chart'=>array('title'=>CHART,'file'=>'do_chart.php','type'=>4,'request'=>array('type'=>'chart')),
-		'link'=>array('title'=>LINKS,'file'=>'do_link.php','type'=>3,'request'=>array('type'=>'link')),
-		'sitemap'=>array('title'=>SITEMAP,'file'=>'do_sitemap.php','type'=>3,'request'=>array('type'=>'sitemap')),
-		'theme'=>array('title'=>THEME,'file'=>'do_theme.php','type'=>3,'request'=>array('type'=>'theme')),
-		'media_center'=>array('title'=>MEDIA_CENTER,'file'=>'do_media_center.php','type'=>3,'request'=>array('type'=>'media_center')),
-		'media'=>array('title'=>MEDIA,'file'=>'do_media.php','type'=>4,'request'=>array('type'=>'media')),
-		'cache'=>array('title'=>CACHE,'file'=>'do_cache.php','type'=>1,'child'=>
+		'plugins'=>array('title'=>_t('Plugin list'),'file'=>'do_plugins.php','request'=>array('type'=>'plugins'),'type'=>5,'child'=>pluginChild()),
+		'ad'=>array('title'=>_t('Ads'),'file'=>'do_ad.php','type'=>3,'request'=>array('type'=>'ad')),
+		'password'=>array('title'=>_t('Password'),'file'=>'do_password.php','type'=>4),
+		'plugin'=>array('title'=>_t('Plugin'),'file'=>'do_plugin.php','type'=>4),
+		'track'=>array('title'=>_t('Track'),'file'=>'do_track.php','type'=>3,'request'=>array('type'=>'track')),
+		'link'=>array('title'=>_t('Links'),'file'=>'do_link.php','type'=>3,'request'=>array('type'=>'link')),
+		'sitemap'=>array('title'=>_t('Sitemap'),'file'=>'do_sitemap.php','type'=>3,'request'=>array('type'=>'sitemap')),
+		'theme'=>array('title'=>_t('Theme'),'file'=>'do_theme.php','type'=>3,'request'=>array('type'=>'theme')),
+		'media_center'=>array('title'=>_t('Media Center'),'file'=>'do_media_center.php','type'=>3,'request'=>array('type'=>'media_center')),
+		'media'=>array('title'=>_t('Media'),'file'=>'do_media.php','type'=>4,'request'=>array('type'=>'media')),
+		'cache'=>array('title'=>_t('Cache'),'file'=>'do_cache.php','type'=>1,'child'=>
 			array(
-				array('title'=>EXPIRED,'request'=>array('type'=>'cache')),
-				array('title'=>FULL,'request'=>array('type'=>'cache','mode'=>'full'))
+				array('title'=>_t('Expired'),'request'=>array('type'=>'cache'),'ncr'=>true),
+				array('title'=>_t('Full'),'request'=>array('type'=>'cache','mode'=>'full'),'ncr'=>true)
 			)	
 		),
-		'update'=>array('mustBase'=>true,'title'=>UPDATE,'file'=>'do_update.php','type'=>1,'child'=>
+		'update'=>array('mustBase'=>true,'title'=>_t('Update'),'file'=>'do_update.php','type'=>1,'child'=>
 			array(
-				array('title'=>CHECK,'request'=>array('type'=>'update'))
+				array('title'=>_t('Check'),'request'=>array('type'=>'update'))
 			)	
 		),
-		'sites'=>array('title'=>SITES,'mustBase'=>true,'file'=>'do_sites.php','type'=>1,'child'=>
+		'sites'=>array('title'=>_t('Sites'),'mustBase'=>true,'file'=>'do_sites.php','type'=>1,'child'=>
 			array(
-				array('title'=>LISTS,'request'=>array('type'=>'sites')),
-				array('title'=>CREATE,'request'=>array('type'=>'sites','mode'=>'insert'))
+				array('title'=>_t('List'),'request'=>array('type'=>'sites')),
+				array('title'=>_t('Create'),'request'=>array('type'=>'sites','mode'=>'insert'))
 			)
 		),		
-		'data'=>array('title'=>DATA,'file'=>'do_data.php','type'=>1,'child'=>
+		'data'=>array('title'=>_t('Data'),'file'=>'do_data.php','type'=>1,'child'=>
 			array(
-				array('title'=>DATABACKUP,'request'=>array('type'=>'data','mode'=>'db_backup')),
-				array('title'=>DATAIMPORT,'request'=>array('type'=>'data','mode'=>'db_import')),
-				array('title'=>DATACONVERTER,'request'=>array('type'=>'data','mode'=>'db_converter')),
-				array('title'=>DATAOPTIMIZER,'request'=>array('type'=>'data','mode'=>'db_optimizer')),
-				array('title'=>SQL_EXECUTE,'request'=>array('type'=>'data','mode'=>'sql_execute'))
+				array('title'=>_t('Data Backup'),'request'=>array('type'=>'data','mode'=>'db_backup')),
+				array('title'=>_t('Data Import'),'request'=>array('type'=>'data','mode'=>'db_import')),
+				array('title'=>_t('Data Converter'),'request'=>array('type'=>'data','mode'=>'db_converter')),
+				array('title'=>_t('Data Optimizer'),'request'=>array('type'=>'data','mode'=>'db_optimizer')),
+				array('title'=>_t('Sql Execute'),'request'=>array('type'=>'data','mode'=>'sql_execute')),
+				array('title'=>_t('Transfer website'),'request'=>array('type'=>'data','mode'=>'transfer'))
 			)	
 		),
-		'signout'=>array('title'=>LOGOUT,'file'=>'do_signout.php','type'=>3,'request'=>array('type'=>'signout')),
-		'signin'=>array('title'=>LOGIN,'file'=>'do_signin.php','type'=>4)
+		'signout'=>array('title'=>_t('Logout'),'file'=>'do_signout.php','type'=>3,'request'=>array('type'=>'signout')),
+		'signin'=>array('title'=>_t('Login'),'file'=>'do_signin.php','type'=>4)
 		);
 	}
 	
@@ -2039,12 +2271,13 @@
 	function getCategoryPosts($limit=10,$offset=0){
 		$category_list = array();
 		foreach(subCategory() as $cs){
-			$post_rows = getPosts(array(
-				'field' => '`sys_name`,`name`,`category`',
+			$data = getPosts(array(
 				'category_ids' => $cs['id'],
-				'offset' => $offset,
-				'limit' => $limit
+				'limit' => array($offset,$limit),
+				'order' => ' ps.`id` DESC ',
+				'custom_field' => true
 			));
+			$post_rows = $data['rows'];
 			$total_post = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `in_blog` = 1 AND `category` = '".$cs['id']."'");
 			$category_list[] = array('post_rows'=>$post_rows,'total_post'=>$total_post,'category_id'=>$cs['id'],'category_level'=>$cs['level']);
 		}
@@ -2052,7 +2285,16 @@
 	}
 
 	function getUncategoryPosts($limit=20,$offset=0){
-		return db_arrays("SELECT `sys_name`,`category`,`name` FROM `".DB_LEFT."_posts` WHERE `category` = '0' AND `in_blog` = 1 ORDER BY `id` DESC ".get_limit_sql($offset,$limit));
+		$data = getPosts(array(
+			'field' => 'ps.`id`,ps.`sys_name`,ps.`name`,ps.`category`',
+			'category_ids' => 0,
+			'limit' => array($offset,$limit),
+			'order' => ' ps.`id` DESC ',
+			'custom_field' => true
+		));
+		$total_post = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `in_blog` = 1 AND `category` = '0'");
+		$data['total_post'] = $total_post;
+		return $data;
 	}
 
 	function getTagLists($limit=100){
@@ -2071,31 +2313,278 @@
 	}
 
 	function getPosts($param = array()){
-		if(intval($param['limit'])){
-			$limit = get_limit_sql(intval($param['offset']),intval($param['limit']));
+		switch($param['post_type']){
+			case 'show':
+				$where = " ps.`in_blog` = 1 ";
+			break;
+			case 'hide':
+				$where = " ps.`in_blog` = 0 ";
+			break;
+			default:
+				$where = " 1=1 ";	
 		}
-		
-		if(!$param['post_type'] || $param['post_type'] == 'show'){
-			$where = " WHERE `in_blog` = 1 ";
-		}elseif($param['post_type'] == 'hide'){
-			$where = " WHERE `in_blog` = 0 ";
-		}else{
-			$where = " WHERE 1=1 ";
+		if(is_array($param['ids']) && count($param['ids'])){
+			$where .= " AND ps.`id` IN (".implode(',',$param['ids']).")";
+		}elseif($param['ids']){
+			$where .= " AND ps.`id` IN (".$param['ids'].")";
 		}
-		
 		if(is_array($param['category_ids']) && count($param['category_ids']) > 0){
-			$where .= " AND `category` IN (".implode(',',$param['category_ids']).")";
-		}elseif($param['category_ids']){
-			$where .= " AND `category` IN (".$param['category_ids'].")";
+			$where .= " AND ps.`category` IN (".implode(',',$param['category_ids']).")";
+		}elseif(isset($param['category_ids'])){
+			$where .= " AND ps.`category` IN (".$param['category_ids'].")";
+		}
+		if($param['tag']){
+			$tag_sql = '';
+			$tag_posts = getOption('tag_posts','serialize');
+			if($tag_posts['output']){
+				$tag_posts = $tag_posts['output'];
+			}else{
+				$tag_posts = array();
+			}
+			$tag_ids = array();
+			if(is_array($param['tag'])){
+				foreach($param['tag'] as $val){
+					if(is_array($tag_posts[$val])){
+						$tag_ids = array($tag_ids,$tag_posts[$val]);
+					}
+				}
+			}else{
+				$tag_ids = $tag_posts[$param['tag']];
+			}
+			if(count($tag_ids) > 0){
+				$tag_sql = " ps.`id` IN(".implode(',',$tag_ids).")";
+			}
+			$cf_where = '';
+			$cf_sql = " `item_type` = 'post' ";
+			$post_sql = '';
+			$cf_sql_str = '';
+			if(is_array($param['tag'])){
+				foreach($param['tag'] as $val){
+					$cf_sql_str .= "OR `value` LIKE '%".db_escape($val)."%' ";
+					$post_sql .= "OR ps.`title` LIKE '%".db_escape($val)."%' OR ps.`keyword` LIKE '%".db_escape($val)."%' OR ps.`body` LIKE '%".db_escape($val)."%' ";
+				}
+				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
+				$post_sql = substr($post_sql,2);
+			}else{
+				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
+				$post_sql .= "ps.`title` LIKE '%".db_escape($param['tag'])."%' OR ps.`keyword` LIKE '%".db_escape($param['tag'])."%' OR ps.`body` LIKE '%".db_escape($param['tag'])."%' ";
+			}
+			$data = db_fetch(array(
+				'table' => DB_LEFT.'_item_data',
+				'where' => $cf_sql
+			));
+			foreach($data['rows'] as $val){
+				$cf_ids[] = $val['item_id'];
+			}
+			if(count($cf_ids)){
+				$cf_where = " ps.`id` IN(".implode(',',$cf_ids).")";
+			}
+			$where .= " AND (";
+			if($tag_sql){
+				$where .= " ".$tag_sql." ";
+				$left_or = true;
+			}
+			if($cf_where){
+				if($left_or){
+					$where .= " OR ".$cf_where." ";
+				}else{
+					$where .= " ".$cf_where." ";
+				}
+			}
+			if($post_sql){
+				if($left_or){
+					$where .= " OR ".$post_sql." ";
+				}else{
+					$where .= " ".$post_sql." ";
+				}
+			}
+			$where .= " )";
+		}
+		if(is_array($param['ex_ids'])){
+			$where .= " AND ps.`id` NOT IN (".implode(',',$param['ex_ids']).")";
+		}elseif($param['ex_ids']){
+			$where .= " AND ps.`id` NOT IN (".$param['ex_ids'].")";
 		}
 		
-		$where .= $param['tag']?" AND (`title` LIKE '%$tag%' OR `body` LIKE '%$tag%' OR `tags` LIKE '%$tag%') ":'';
+		if(is_array($param['ex_cids'])){
+			$where .= " AND ps.`category` NOT IN (".implode(',',$param['ex_cids']).")";
+		}elseif($param['ex_cids']){
+			$where .= " AND ps.`category` NOT IN (".$param['ex_cids'].")";
+		}
 
-		$order = " ORDER BY ".($param['orderby']?$param['orderby']." ":"`id` ");
-		$order .= " ".($param['order']?$param['order']." ":"DESC ");
+		if(is_array($param['where'])){
+			$param['where'][] = $where;
+			$where = $param['where'];
+		}elseif($param['where'] && $where){
+			$where = $param['where'].' AND '.$where;
+		}
+			
+		$order = $param['order']?$param['order']." ":"ps.`id` DESC ";
 
-		$filed = $param['field']?$param['field']:'*';
-		return db_arrays("SELECT ".$filed." FROM `".DB_LEFT."_posts` ".$where." ".$order." ".$limit);
+		$filed = $param['field']?$param['field']:'ps.*';
+		if(!$param['table']){
+			$table = "`".DB_LEFT."_posts` AS ps ";
+		}else{
+			$table = $param['table'];
+		}
+		$data = db_fetch(array(
+			'table' => $table,
+			'field' => $filed,
+			'where' => $where,
+			'order' => $order,
+			'limit' => $param['limit'],
+			'pager' => $param['pager']
+		));
+		$rows = $data['rows'];
+		if($param['custom_field'] && count($rows)){
+			foreach($rows as $val){
+				$ids[] = $val['id'];
+			}
+			$custom_field_rows = db_arrays("SELECT * FROM `".DB_LEFT."_item_data` WHERE `item_id` IN (".implode(',',$ids).") AND `item_type` = 'post'");
+			foreach($custom_field_rows as $key=>$val){
+				$cfdata[$val['item_id']][$val['name']] = $val;
+			}
+			foreach($rows as $key=>$val){
+				$val['custom_field'] = $cfdata[$val['id']];
+				$rows[$key] = $val;
+			}
+		}
+		if($param['fetch_one']){
+			return $rows[0];
+		}
+		$data['rows'] = $rows;
+		return $data;
+	}
+
+	function getPostsOne($param){
+		$param['fetch_one'] = true;
+		return getPosts($param);
+	}
+
+	function removePosts($param = array()){
+		$data = getPosts($param);
+		foreach($data['rows'] as $val){
+			$pids[] = $val['id'];
+		}
+		if(count($pids)){
+			db_query("DELETE FROM `".DB_LEFT."_posts` WHERE `id` IN (".implode(',',$pids).")");
+			db_query("DELETE FROM `".DB_LEFT."_item_plugin` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'post'");
+			db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'post'");
+			db_query("DELETE FROM `".DB_LEFT."_attachment` WHERE `post_id` IN (".implode(',',$pids).")");
+		}
+	}
+
+	function getCategories($param = array()){
+		$where = " 1 = 1 ";
+		if(is_array($param['ids']) && count($param['ids']) > 0){
+			$where .= " AND c.`id` IN (".implode(',',$param['ids']).")";
+		}elseif($param['ids']){
+			$where .= " AND c.`id` IN (".$param['ids'].")";
+		}
+		
+		if($param['tag']){
+			$cf_where = '';
+			$cf_sql = " `item_type` = 'category' ";
+			$cat_sql = '';
+			$cf_sql_str = '';
+			if(is_array($param['tag'])){
+				foreach($param['tag'] as $val){
+					$cf_sql_str .= "OR `value` LIKE '%".db_escape($val)."%' ";
+					$cat_sql .= "OR c.`title` LIKE '%".db_escape($val)."%' OR c.`name` LIKE '%".db_escape($val)."%' OR c.`sort_word` LIKE '%".db_escape($val)."%' ";
+				}
+				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
+				$cat_sql = substr($post_sql,2);
+			}else{
+				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
+				$cat_sql .= "c.`title` LIKE '%".db_escape($param['tag'])."%' OR c.`name` LIKE '%".db_escape($param['tag'])."%' OR c.`sort_word` LIKE '%".db_escape($param['tag'])."%' ";
+			}
+			$data = db_fetch(array(
+				'table' => DB_LEFT.'_item_data',
+				'where' => $cf_sql
+			));
+			foreach($data['rows'] as $val){
+				$cf_ids[] = $val['item_id'];
+			}
+			if(count($cf_ids)){
+				$cf_where = " c.`id` IN(".implode(',',$cf_ids).")";
+			}
+			$where .= " AND (".$cf_where." OR ".$cat_sql.")";
+		}
+		
+		if(is_array($param['ex_ids'])){
+			$where .= " AND c.`id` NOT IN (".implode(',',$param['ex_ids']).")";
+		}elseif($param['ex_ids']){
+			$where .= " AND c.`id` NOT IN (".$param['ex_ids'].")";
+		}
+
+		if(is_array($param['ex_pids'])){
+			$where .= " AND c.`parent_id` NOT IN (".implode(',',$param['ex_pids']).")";
+		}elseif($param['ex_pids']){
+			$where .= " AND c.`parent_id` NOT IN (".$param['ex_pids'].")";
+		}
+
+		if(is_array($param['where'])){
+			$param['where'][] = $where;
+			$where = $param['where'];
+		}elseif($param['where']){
+			$where = $param['where']." AND ".$where;
+		}
+		$order = ($param['order']?" ".$param['order']." ":" c.`id` DESC ");
+
+		$filed = $param['field']?$param['field']:'c.*';
+		if(!$param['table']){
+			$table = "`".DB_LEFT."_category` as c ";
+		}else{
+			$table = $param['table'];
+		}
+		$data = db_fetch(array(
+			'table' => $table,
+			'field' => $filed,
+			'where' => $where,
+			'order' => $order,
+			'limit' => $param['limit'],
+			'pager' => $param['pager']
+		));
+
+		$rows = $data['rows'];
+		if($param['custom_field'] && count($rows)){
+			foreach($rows as $val){
+				$ids[] = $val['id'];
+			}
+			$custom_field_rows = db_arrays("SELECT * FROM `".DB_LEFT."_item_data` WHERE `item_id` IN (".implode(',',$ids).") AND `item_type` = 'category'");
+			foreach($custom_field_rows as $key=>$val){
+				$cfdata[$val['item_id']][$val['name']] = $val;
+			}
+			foreach($rows as $key=>$val){
+				$val['custom_field'] = $cfdata[$val['id']];
+				$rows[$key] = $val;
+			}
+		}
+		if($param['fetch_one']){
+			return $rows[0];
+		}
+		$data['rows'] = $rows;
+		return $data;
+	}
+
+	function getCategoriesOne($param){
+		$param['fetch_one'] = true;
+		return getCategories($param);
+	}
+
+	function removeCategories($param = array()){
+		$data = getCategories($param);
+		foreach($data['rows'] as $val){
+			$pids[] = $val['id'];
+		}
+		if(count($pids)){
+			db_query("DELETE FROM `".DB_LEFT."_category` WHERE `id` IN (".implode(',',$pids).")");
+			db_query("DELETE FROM `".DB_LEFT."_item_plugin` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'category'");
+			db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'category'");
+			db_query("UPDATE `".DB_LEFT."_posts` SET `category` = '0' WHERE `category` IN (".implode(',',$pids).")");
+		}
+		$rows = db_arrays_nocache("SELECT * FROM `".DB_LEFT."_category`");
+		setOption('categories',serialize($rows));
 	}
 
 	function initNumsSetting($setting){
@@ -2113,4 +2602,45 @@
 		return $setting;
 	}
 
+	function init_lang($lang_file){
+		global $lang_data;
+		$langData = include_once($lang_file);
+		foreach($langData as $key=>$val){
+			$lang_data[md5($key)] = $val;
+		}
+	}
+
+	function _t($text){
+		global $lang_data;
+		if($lang_data[md5($text)]){
+			return $lang_data[md5($text)];
+		}else{
+			return $text;
+		}
+	}
+	function _e($text){
+		echo _t($text);
+	}
+
+	function toggle_attachment($content,$type = 'front'){
+		$relative_link = array('src="'.ATTACHMENT_DIR,'data="'.ATTACHMENT_DIR,'value="'.ATTACHMENT_DIR);
+		$absolute_link = array('src="'.BASE_URL.ATTACHMENT_DIR,'data="'.BASE_URL.ATTACHMENT_DIR,'value="'.BASE_URL.ATTACHMENT_DIR);
+		if($type == 'front'){
+			return str_replace($absolute_link,$relative_link,$content);
+		}else{
+			return str_replace($relative_link,$absolute_link,$content);
+		}
+	}
+
+	function download_file($entry){
+			$data = file_get_contents($entry);
+			ob_end_clean();
+			header('Content-Encoding: none');
+			header('Content-Type: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
+			header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="'.basename($entry).'"');
+			header('Content-Length: '.strlen($data));
+			header('Pragma: no-cache');
+			header('Expires: 0');
+			die($data);
+	}
 ?>

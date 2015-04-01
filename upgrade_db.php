@@ -1,5 +1,6 @@
 <?php
 	define('VALID_INCLUDE',true);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
 	$base_url = 'http://'.$_SERVER["HTTP_HOST"].str_replace('//','/',dirname($_SERVER["PHP_SELF"]).'/');
 	define('BASE_URL',$base_url);
 	$root_dir = dirname(__FILE__).'/';
@@ -355,8 +356,23 @@
 		return $update_db;
 	}
 
+	function db_142(){
+		$data = getPosts();
+		$tag_posts = array();
+		foreach($data['rows'] as $row){
+			if(!$row['tags']){
+				continue;
+			}
+			$taglist = explode(',',$row['tags']);
+			foreach($taglist as $val){
+				$tag_posts[$val][] = $row['id'];
+			}
+		}
+		setOption('tag_posts',serialize($tag_posts));
+	}
+
 	function upgrade_db(){
-		$upgrade_funs = array(123,124,125,130,132,133,140,141);
+		$upgrade_funs = array(123,124,125,130,132,133,140,141,142);
 		$installed_version = str_replace('.','',file_get_contents('inc/lastest.txt'));
 		$update_db = '';
 		foreach($upgrade_funs as $val){

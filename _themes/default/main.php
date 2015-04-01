@@ -14,7 +14,7 @@
 <script type="text/javascript" src="js/init.js"></script>
 <div id="div_center">
 	<div id="div_right">
-	<h1 align="center"><?php echo vsprintf(HOME_H1,array($global_setting['name']));?></h1>
+	<h1 align="center"><?php echo vsprintf(_t('Hello world! Welcome to %s Website.'),array($global_setting['name']));?></h1>
 	<div id="posts">
 <?php 
 		foreach($rows as $row):

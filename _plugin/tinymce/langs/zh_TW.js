@@ -173,5 +173,8 @@ tinymce.addI18n('zh_TW',{
 "Tools": "\u5de5\u5177",
 "View": "\u6aa2\u8996",
 "Table": "\u8868\u683c",
-"Format": "\u683c\u5f0f"
+"Format": "\u683c\u5f0f",
+"Server":"\u670d\u52d9\u5668",
+"Server Media":"\u9060\u7a0b\u6587\u4ef6",
+"Select":"\u9078\u4e2d"
 });

@@ -13,15 +13,15 @@
 ?>
 <div id="div_left">
 <div>
-<a href="<?php echo BASE_URL;?>"><?php echo HOME;?></a>
-<a href="<?php echo show_link_sitemapHtml();?>"><?php echo SITEMAP;?></a>
+<a href="<?php echo BASE_URL;?>"><?php _e('Home');?></a>
+<a href="<?php echo show_link_sitemapHtml();?>"><?php _e('Sitemap');?></a>
 </div>
-<?php if(count($uncategory_list)):?>
+<?php if(count($uncategory_list['rows'])):?>
 <div class="entry_section">
-<h4><?php echo UNCATEGORY;?></h4>		
+<h4><?php _e('Uncategory');?> (<?php echo $uncategory_list['total_post'];?>)</h4>		
 <div class="entry_list">
 <ul>
-<?php foreach($uncategory_list as $post_row):?>
+<?php foreach($uncategory_list['rows'] as $post_row):?>
 	<li><a href="<?php echo show_link_page(null,$post_row['sys_name']);?>"><?php echo $post_row['name'];?></a></li>
 <?php endforeach;?>
 </ul></div>
@@ -47,7 +47,7 @@
 <?php endforeach;?>
 
 <?php if(count($t)):?>
-<div class="entry_section"><h4><?php echo TAGS;?></h4>
+<div class="entry_section"><h4><?php _e('Tag');?></h4>
 <div id="tags">
 <?php
 	$taglist = array();
@@ -69,7 +69,7 @@
 <?php endif;?>
 <?php if($links['content']):?>
 <div class="entry_section">
-<h4><?php echo LINKS;?></h4>
+<h4><?php _e('Links');?></h4>
 <?php echo $links['content'];?>
 </div>
 <?php endif;?>

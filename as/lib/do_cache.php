@@ -7,7 +7,7 @@
  * @since 0.7.0
  */
  defined('VALID_INCLUDE') or die();
- $mode = $_GET["mode"];
+ $mode = $_GET['mode'];
  $cache_dir = SITE_HOME.'inc/cache/';
 	if(file_exists($cache_dir)){
 		switch(true){
@@ -55,5 +55,5 @@
 				$d->close();
 		}
 	}
-	alert(CACHE_CLEAR_SUCCESSFULLY.' '.$no.' '.FILES,'./');
+	die(_t('Cache has been clean successfully.').' '.intval($no).' '._t('Files'));
 ?>

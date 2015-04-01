@@ -7,20 +7,19 @@
  * @since 0.5.4
  */
 	define('DASHABOARD',true);
-	include("../inc/init.php");
-	include("lib/function.php");
-	$_POST = do_data($_POST,'privacy');
-	$_GET = do_data($_GET,'privacy');
-	$type = $_GET["type"];
+	include('../inc/init.php');
+	include('lib/function.php');
 	if(!defined('INSTALLED')){
-		include("lib/install.php");
+		include('lib/install.php');
 		exit();
 	}
 	if(!$global_setting['lang']){
 		$global_setting['lang'] = dashboardLang();
 	}
-	include("lang/".$global_setting['lang']);
+	$lang_data = array();
+	init_lang(INCLUDE_DIR.'lang/'.$global_setting['lang']);
 	$inc = null;
+	$type = $_GET['type'];
 	switch($type){
 		case 'signin':
 			dashboardSignin();
@@ -30,18 +29,18 @@
 			exit();
 		break;
 		case 'password':
-			include("lib/do_password.php");
+			include('lib/do_password.php');
 		break;
 		default:
-			if(!dashboard_signin()){
-				include("lib/auth_form.php");	
+			if(!dashboard_signin() || !getOption('global_setting')){
+				include('lib/auth_form.php');	
 				exit();
 			}
 			$actions = dashboard_actions();
 			if($actions[$type]['file'] && file_exists('lib/'.$actions[$type]['file'])){
 				switch($type){
 					case 'plugin':
-						if(!dashboard_role('dashboard/'.$_GET["plugin"])){
+						if(!dashboard_role('dashboard/'.$_GET['plugin'])){
 							alert('page not found',SITE_URL.DASHBOARD_DIR);
 						}
 					break;
@@ -55,7 +54,7 @@
 				include('lib/do_main.php');
 			}
 	}
-	include("lib/head.php");
+	include('lib/head.php');
 	$bgnav[$type] = 'class="currency_nav"';
 ?>
 <div id="div_center">
@@ -75,4 +74,4 @@ if($inc && file_exists('lib/'.$inc)){
 </div>
 <div class="div_clear"></div>
 </div>
-<?php include("lib/foot.php");?>
+<?php include('lib/foot.php');?>

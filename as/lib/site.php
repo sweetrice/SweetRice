@@ -9,14 +9,14 @@
  defined('VALID_INCLUDE') or die();
 ?>
 <div id="setting_body">
-<label class="setting_label<?php echo $_COOKIE['setting_tab'] != 2?' current':'';?>" for="1"><?php echo SYSTEM_SETTING;?></label><label class="setting_label<?php echo $_COOKIE["setting_tab"] == 2?' current':'';?>" for="2"><?php echo WEB_SETTING;?></label>
+<label class="setting_label<?php echo $_COOKIE['setting_tab'] != 2?' current':'';?>" for="1"><?php _e('System Setting');?></label><label class="setting_label<?php echo $_COOKIE['setting_tab'] == 2?' current':'';?>" for="2"><?php _e('Website setting');?></label>
 <form method="post" action="./?type=setting&mode=save" enctype="multipart/form-data">
 <input type="hidden" name="old_passwd" value="<?php echo $global_setting['passwd'];?>"/>
 <input type="hidden" name="old_logo" value="<?php echo $global_setting['logo'];?>"/>
-<div id="setting_1" <?php echo $_COOKIE['setting_tab'] != 2?'style="display:block;"':'';?>>
-<fieldset><legend><?php echo DASHBOARD.' '.LANG;?></legend>
+<div id="setting_1" <?php echo $_COOKIE['setting_tab'] != 2?'class="show"':'class="hidden"';?>>
+<fieldset><legend><?php echo _t('Dashboard').' '._t('Language');?></legend>
 <select name="lang">
-	<option value="" ><?php echo DEFAULT_TIP;?></option>
+	<option value="" ><?php _e('Default');?></option>
 <?php
 	foreach($lang as $key=>$val){
 ?>
@@ -25,46 +25,54 @@
 	}
 ?>
 </select></fieldset>
-<fieldset><legend><?php echo WEBMASTER;?></legend>
+<fieldset><legend><?php _e('Webmaster');?></legend>
 <input type="text" name="author" value="<?php echo $global_setting['author'];?>"></fieldset>
-<fieldset><legend><?php echo DASHBOARD_DIRECTORY;?></legend>
-<input type="text" name="dashboard_dirs" value="<?php echo DASHBOARD_DIR;?>" <?php echo SITE_HOME == ROOT_DIR?'':'readonly';?>> <?php echo DASHBOARD_DIRECTORY_TIP;?>
+<fieldset><legend><?php _e('Dashboard Directory');?></legend>
+<input type="text" name="dashboard_dirs" value="<?php echo DASHBOARD_DIR;?>" <?php echo SITE_HOME == ROOT_DIR?'':'readonly';?>> 
+<span class="tip"><?php _e('Change Dashboard Directory');?></span>
 </fieldset>
-<fieldset><legend><?php echo DATABASE.' '.SETTING;?></legend>
+<fieldset><legend><?php _e('Database Setting');?></legend>
 <?php
-	if(DATABASE_TYPE=='sqlite'){
+	if(DATABASE_TYPE == 'sqlite'){
 ?>
 <ul>
-<li><?php echo DATABASE;?> : Sqlite</li>
+<li><?php _e('Database');?> : SQLite</li>
 </ul>
 <?php
 	}else{
 ?>
 <ul>
-<li><?php echo DATABASE;?> : <?php echo DATABASE_TYPE?DATABASE_TYPE:'mysql';?></li>
-<li><?php echo DATABASE_HOST;?> : <?php echo $db_url?$db_url:'localhost';?></li>
-<li><?php echo DATA_PORT;?> : <?php echo $db_port;?></li>
-<li><?php echo DATA_ACCOUNT;?> : <?php echo $db_username;?></li>
-<li><?php echo DATA_PASSWORD;?> : <?php echo $db_passwd;?></li>
+<li><?php _e('Database');?> : <?php echo DATABASE_TYPE?DATABASE_TYPE:'MySQL';?></li>
+<li><?php _e('Database Host');?> : <?php echo $db_url?$db_url:'localhost';?></li>
+<li><?php _e('Database Port');?> : <?php echo $db_port;?></li>
+<li><?php _e('Database Account');?> : <?php echo $db_username;?></li>
+<li><?php _e('Database Password');?> : <?php echo $db_passwd;?></li>
 </ul>
 <?php
 	}
 ?>
 </fieldset>
-<fieldset><legend><?php echo DATA_NAME;?></legend>
+<fieldset><legend><?php _e('Database Name');?></legend>
 <?php echo $db_name;?></fieldset>
-<fieldset><legend><?php echo DATA_PREFIX;?></legend>
+<fieldset><legend><?php _e('Database Prefix');?></legend>
 <?php echo DB_LEFT;?></fieldset>
-<fieldset><legend><?php echo ADMIN_ACCOUNT;?></legend>
+<fieldset><legend><?php _e('Administrator Priority');?></legend>
+<input type="radio" name="admin_priority" value="0" <?php echo !$global_setting['admin_priority']?'checked':'';?>/> <?php _e('SweetRice first');?> 
+<input type="radio" name="admin_priority" value="1" <?php echo $global_setting['admin_priority'] == 1?'checked':'';?>/> <?php _e('SweetRice only');?> 
+<input type="radio" name="admin_priority" value="2" <?php echo $global_setting['admin_priority'] == 2?'checked':'';?>/> <?php _e('Member plugn first');?> 
+<input type="radio" name="admin_priority" value="3" <?php echo $global_setting['admin_priority'] == 3?'checked':'';?>/> <?php _e('Member plugn only');?>
+<div class="tip"><?php _e('Do not change this unless member plugin installed,and must be restore it before deinstall member plugin');?></div>
+</fieldset>
+<fieldset><legend><?php _e('Administrator');?></legend>
 <input type="text" name="admin" value="<?php echo $global_setting['admin'];?>"></fieldset>
-<fieldset><legend><?php echo ADMIN_PASSWORD;?></legend>
+<fieldset><legend><?php _e('Administrator Password');?></legend>
 <input type="password" name="passwd"></fieldset>
-<fieldset><legend><?php echo ADMIN_EMAIL;?></legend>
+<fieldset><legend><?php _e('Administrator Email');?></legend>
 <input type="text" name="admin_email" value="<?php echo $global_setting['admin_email'];?>"/>
 </fieldset>
-<fieldset><legend><?php echo TIME_ZONE;?></legend>
+<fieldset><legend><?php _e('Timezone');?></legend>
 <select name="timeZone">
-<option value=""><?php echo CHOOSE_TIME_ZONE;?></option>
+<option value=""><?php _e('Choose Timezone');?></option>
 <?php
 	$tzs = include('timezone.php');
 	$s_tzs[$global_setting['timeZone']] = 'selected';
@@ -77,10 +85,10 @@
 </select>
 </fieldset>
 </div>
-<div id="setting_2" <?php echo $_COOKIE['setting_tab'] == 2?'style="display:block;"':'';?>>
-<fieldset><legend><?php echo THEME.' '.LANG;?></legend>
+<div id="setting_2" <?php echo $_COOKIE['setting_tab'] == 2?'class="show"':'class="hidden"';?>>
+<fieldset><legend><?php echo _t('Theme').' '._t('Language');?></legend>
 <select name="theme_lang">
-	<option value=""><?php echo DEFAULT_TIP;?></option>
+	<option value=""><?php _e('Default');?></option>
 <?php
 	foreach($lang_types as $key=>$val){
 ?>
@@ -89,15 +97,15 @@
 	}
 ?>
 </select></fieldset>
-<fieldset><legend><?php echo SITE_NAME;?></legend>
+<fieldset><legend><?php _e('Site Name');?></legend>
 <input type="text" name="name" value="<?php echo $global_setting['name'];?>">
 </fieldset>
 <fieldset><legend>Logo</legend>
-<img src="<?php echo $global_setting['logo']?'../'.ATTACHMENT_DIR.$global_setting['logo']:'../images/sweetrice.jpg';?>">
-<input type="file" name="logo" class="input_text_tip" > <?php echo MAX_UPLOAD_FILE_TIP,':',UPLOAD_MAX_FILESIZE;?></fieldset>
-<fieldset><legend><?php echo THEME;?></legend>
+<img src="<?php echo $global_setting['logo']?'../'.ATTACHMENT_DIR.$global_setting['logo']:'../images/logo.png';?>">
+<input type="file" name="logo" class="input_text_tip" > <?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></fieldset>
+<fieldset><legend><?php _e('Theme');?></legend>
 <select name="theme">
-	<option value="" selected="selected"><?php echo DEFAULT_TIP;?></option>
+	<option value="" selected="selected"><?php _e('Default');?></option>
 <?php
 	foreach($themes as $val){
 ?>
@@ -106,58 +114,62 @@
 	}	
 ?>
 </select></fieldset>
-<fieldset><legend><?php echo TITLE.'('.DEFAULT_TIP.')';?></legend>
+<fieldset><legend><?php echo _t('Title').'('._t('Default').')';?></legend>
 <input type="text" name="title" class="input_text" value="<?php echo $global_setting['title'];?>"></fieldset>
-<fieldset><legend><?php echo META.' '.SETTING;?></legend>
+<fieldset><legend><?php _e('Meta Setting');?></legend>
 <ul>
-<li><input type="text" name="keyword" class="input_text" value="<?php echo $global_setting['keywords']?$global_setting['keywords']:KEYWORD.'('.DEFAULT_TIP.')';?>" onblur="if (this.value == '') {this.value = '<?php echo KEYWORD.'('.DEFAULT_TIP.')';?>';}" onfocus="if (this.value == '<?php echo KEYWORD.'('.DEFAULT_TIP.')';?>') {this.value = '';}" > <?php echo KEYWORD.'('.DEFAULT_TIP.')';?></li>
-<li><input type="text" name="description" class="input_text" value="<?php echo $global_setting['description']?$global_setting['description']:DESCRIPTION.'('.DEFAULT_TIP.')';?>" onblur="if (this.value == '') {this.value = '<?php echo DESCRIPTION.'('.DEFAULT_TIP.')';?>';}" onfocus="if (this.value == '<?php echo DESCRIPTION.'('.DEFAULT_TIP.')';?>') {this.value = '';}"> <?php echo DESCRIPTION.'('.DEFAULT_TIP.')';?></li>
+<li><input type="text" name="keyword" class="input_text meta" value="<?php echo $global_setting['keywords']?$global_setting['keywords']:_t('Keywords').'('._t('Default').')';?>" data="<?php echo _t('Keywords').'('._t('Default').')';?>"> <?php echo _t('Keywords').'('._t('Default').')';?></li>
+<li><input type="text" name="description" class="input_text meta" value="<?php echo $global_setting['description']?$global_setting['description']:_t('Description').'('._t('Default').')';?>" data="<?php echo _t('Description').'('._t('Default').')';?>"> <?php echo _t('Description').'('._t('Default').')';?></li>
 </ul>
 </fieldset>
-<fieldset><legend><?php echo CACHE;?></legend>
-<input type="checkbox" name="cache" value="1" <?php echo CACHE_SETTING?'checked':'';?>/> <?php echo CACHE_TIPS;?>
+<fieldset><legend><?php _e('Cache');?></legend>
+<input type="checkbox" name="cache" value="1" <?php echo CACHE_SETTING?'checked':'';?>/> <span class="tip"><?php _e('Enable data cache,this will save resource for query database.');?></span>
 </fieldset>
-<fieldset><legend><?php echo CACHE.' '.EXPIRED;?></legend>
-<input type="text" name="cache_expired" value="<?php echo $global_setting['cache_expired'];?>" style="width:50px;"/> <?php echo CACHE_TIPS;?>
+<fieldset><legend><?php _e('Cache Expired');?></legend>
+<input type="text" name="cache_expired" value="<?php echo $global_setting['cache_expired'];?>" style="width:50px;"/> <span class="tip"><?php _e('Second(s) 0:Never');?></span>
 </fieldset>
-<fieldset><legend><?php echo HEADER_304;?></legend>
-<input type="checkbox" name="header_304" value="1" <?php echo $global_setting['header_304']?'checked':'';?>/>  <?php echo HEADER_304_TIP;?>
+<fieldset><legend><?php _e('Enable header 304');?></legend>
+<input type="checkbox" name="header_304" value="1" <?php echo $global_setting['header_304']?'checked':'';?>/> <span class="tip"><?php _e('Output header 304 if page is not modified,this option will save server time');?></span>
 </fieldset>
-<fieldset><legend><?php echo URL_REWRITE_TIP;?></legend>
+<fieldset><legend><?php _e('URL rewrite');?></legend>
 <input type="checkbox" name="url_rewrite" value="1" <?php echo $global_setting['url_rewrite']?'checked':'';?>/> 
-<?php echo NEED_SERVER_SUPPORT;?>
+<span class="tip"><?php _e('Need server support');?></span>
 </fieldset>
-<fieldset><legend><a href="javascript:void(0);" class="tg_ns"><?php echo NUMS_SETTING;?></a></legend>
+<fieldset><legend class="toggle" data="#ns_list"><?php _e('Nums Setting');?></legend>
 <div class="ns_list" id="ns_list">
-<dl><dt><?php echo NS_POST_CATEGORIES;?></dt><dd><input type="text" name="nums_setting[postCategories]" value="<?php echo $global_setting['nums_setting']['postCategories'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_UNCATEGORIES;?></dt><dd><input type="text" name="nums_setting[postUnCategories]" value="<?php echo $global_setting['nums_setting']['postUnCategories'];?>"/></dd></dl>
-<dl><dt><?php echo NS_TAGS;?></dt><dd><input type="text" name="nums_setting[tags]" value="<?php echo $global_setting['nums_setting']['tags'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_CATEGORY;?></dt><dd><input type="text" name="nums_setting[postCategory]" value="<?php echo $global_setting['nums_setting']['postCategory'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_HOME;?></dt><dd><input type="text" name="nums_setting[postHome]" value="<?php echo $global_setting['nums_setting']['postHome'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_TAG;?></dt><dd><input type="text" name="nums_setting[postTag]" value="<?php echo $global_setting['nums_setting']['postTag'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_PINS;?></dt><dd><input type="text" name="nums_setting[postPins]" value="<?php echo $global_setting['nums_setting']['postPins'];?>"/></dd></dl>
-<dl><dt><?php echo NS_POST_RELATED;?></dt><dd><input type="text" name="nums_setting[postRelated]" value="<?php echo $global_setting['nums_setting']['postRelated'];?>"/></dd></dl>
-<dl><dt><?php echo NS_RSSFEED;?></dt><dd><input type="text" name="nums_setting[postRssfeed]" value="<?php echo $global_setting['nums_setting']['postRssfeed'];?>"/></dd></dl>
-<dl><dt><?php echo NS_COMMENT_LIST;?></dt><dd><input type="text" name="nums_setting[commentList]" value="<?php echo $global_setting['nums_setting']['commentList'];?>"/></dd></dl>
-<dl><dt><?php echo NS_COMMENT_PINS;?></dt><dd><input type="text" name="nums_setting[commentPins]" value="<?php echo $global_setting['nums_setting']['commentPins'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in each categories');?></dt><dd><input type="text" name="nums_setting[postCategories]" value="<?php echo $global_setting['nums_setting']['postCategories'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in uncategories');?></dt><dd><input type="text" name="nums_setting[postUnCategories]" value="<?php echo $global_setting['nums_setting']['postUnCategories'];?>"/></dd></dl>
+<dl><dt><?php _e('Max tags in tag cloud list');?></dt><dd><input type="text" name="nums_setting[tags]" value="<?php echo $global_setting['nums_setting']['tags'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in category page');?></dt><dd><input type="text" name="nums_setting[postCategory]" value="<?php echo $global_setting['nums_setting']['postCategory'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in home page');?></dt><dd><input type="text" name="nums_setting[postHome]" value="<?php echo $global_setting['nums_setting']['postHome'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in tag page');?></dt><dd><input type="text" name="nums_setting[postTag]" value="<?php echo $global_setting['nums_setting']['postTag'];?>"/></dd></dl>
+<dl><dt><?php _e('Posts in Pins mode');?></dt><dd><input type="text" name="nums_setting[postPins]" value="<?php echo $global_setting['nums_setting']['postPins'];?>"/></dd></dl>
+<dl><dt><?php _e('Related Posts');?></dt><dd><input type="text" name="nums_setting[postRelated]" value="<?php echo $global_setting['nums_setting']['postRelated'];?>"/></dd></dl>
+<dl><dt><?php _e('Max posts in Rssfeed page');?></dt><dd><input type="text" name="nums_setting[postRssfeed]" value="<?php echo $global_setting['nums_setting']['postRssfeed'];?>"/></dd></dl>
+<dl><dt><?php _e('Comments in comment page');?></dt><dd><input type="text" name="nums_setting[commentList]" value="<?php echo $global_setting['nums_setting']['commentList'];?>"/></dd></dl>
+<dl><dt><?php _e('Comments in Pins mode');?></dt><dd><input type="text" name="nums_setting[commentPins]" value="<?php echo $global_setting['nums_setting']['commentPins'];?>"/></dd></dl>
 <div class="div_clear"></div>
 </div>
 </fieldset>
-<fieldset><legend><?php echo SITE_CLOSE_TIP;?></legend>
-<p><label id="lbVisual" onmousedown='doEditor("visual","close_tip");'>Visual</label>
-<label id="lbHtml" class="current_label" onmousedown='doEditor("html","close_tip");'>HTML</label></p>
-<?php include("lib/tinymce.php");?>
-<textarea id="close_tip" name="close_tip" class="input_textarea"><?php echo $global_setting['close_tip'];?></textarea>
-<br /><?php echo SITE_CLOSE_TIPS;?>
+<fieldset><legend><?php _e('Site Close Tip');?></legend>
+<p><label class="editor_toggle" tid="close_tip" data="visual" id="lbVisual"><?php _e('Visual');?></label>
+<label class="editor_toggle current_label" data="html" tid="close_tip" ><?php _e('HTML');?></label></p>
+<?php include('lib/tinymce.php');?>
+<textarea id="close_tip" name="close_tip" class="input_textarea"><?php echo toggle_attachment($global_setting['close_tip'],'dashboard');?></textarea>
+<div class="tip"><?php _e('Show this in homepage when site close.');?></div>
 </fieldset>
-<fieldset><legend><?php echo SITE_CLOSE;?></legend>
+<fieldset><legend><?php _e('Close Website');?></legend>
 <input type="checkbox" name="close" value="1" <?php echo $global_setting['close']?'checked':'';?>/>
 </fieldset>
-<fieldset><legend><?php echo TRACK;?></legend>
+<fieldset><legend><?php _e('Track');?></legend>
 <input type="checkbox" name="user_track" value="1" <?php echo $global_setting['user_track']?'checked':'';?>/>
 </fieldset>
+<?php 
+	$savelist_none = true;
+	include('lib/custom_field.php');
+?>
 </div>
-<input type="submit" class="input_submit" value="<?php echo DONE;?>"> <input type="button" value="<?php echo BACK;?>" onclick='location.href="./"' class="input_submit">
+<input type="submit" class="input_submit" value="<?php _e('Done');?>"> <input type="button" value="<?php _e('Back');?>" url="./" class="input_submit back">
 </form>
 </div>
 <script type="text/javascript">
@@ -176,8 +188,14 @@
 				}
 			}
 		});
-		_('.tg_ns').bind('click',function(){
-			_('#ns_list').toggle();
+		_('.meta').bind('blur',function(){
+			if (!_(this).val()) {
+				_(this).val(_(this).attr('data'));
+			}
+		}).bind('focus',function(){
+			if (_(this).val() == _(this).attr('data')) {
+				_(this).val('');
+			}
 		});
 	});
 //-->

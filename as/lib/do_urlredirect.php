@@ -7,11 +7,11 @@
  * @since 1.2.0
  */
  defined('VALID_INCLUDE') or die();
- $mode = $_GET["mode"];
+ $mode = $_GET['mode'];
  if($mode == 'save'){
-	$k = $_POST["k"];
-	$t = $_POST["t"];
-	$r = $_POST["r"];
+	$k = $_POST['k'];
+	$t = $_POST['t'];
+	$r = $_POST['r'];
 	$redirectList = array();
 	$parseList = array();
 	foreach($k as $key=>$val){
@@ -23,8 +23,8 @@
 			}
 		}
 	}
-	setOption('redirectList',($redirectList?db_escape(serialize($redirectList)):''));
-	setOption('parseList',($parseList?db_escape(serialize($parseList)):''));
+	setOption('redirectList',($redirectList?serialize($redirectList):''));
+	setOption('parseList',($parseList?serialize($parseList):''));
 	_goto('./?type=url_redirect');
  }else{
 	$urls = array();
@@ -36,7 +36,7 @@
 	if($row['content']){
 		$parseList = unserialize($row['content']);
 	}
-	$top_word = URL_REDIRECT;
+	$top_word = _t('URL Redirect');
 	$inc = 'url_redirect.php';
  }
  ?>

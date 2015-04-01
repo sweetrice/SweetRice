@@ -24,7 +24,11 @@
 			}
 		}
 	}
-	$pRows = db_arrays("SELECT * FROM `".DB_LEFT."_links` ORDER BY `url` ASC ");
+	$data = db_fetch(array(
+		'table' => DB_LEFT.'_links',
+		'order' => "`url` ASC"
+	));
+	$pRows = $data['rows'];
 	foreach($pRows as $key=>$val){
 		if(URL_REWRITE){
 			if(!in_array($val['url'],$hList) && $val['url'] != $index_setting['url']){
@@ -46,19 +50,23 @@
 			}
 		}
 	}
-	$rows = db_arrays("SELECT `sys_name`,`category`,`name`,`date` FROM `".DB_LEFT."_posts` WHERE `in_blog` = '1' ORDER by `id` DESC");
+	$data = getPosts(array(
+		'order'=>"ps.`id` DESC",
+		'post_type'=>'show'
+	));
+	$rows = $data['rows'];
 	foreach($rows as $row){
 		if(!in_array(show_link_page($categories[$row['category']]['link'],$row['sys_name']),$hList) && show_link_page($categories[$row['category']]['link'],$row['sys_name']) != $index_setting['url']){
-			$lList[] = array('link_html'=>BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']),'link_html_body'=>$row['name'],'link_xml'=>show_link_page_xml($row["sys_name"]),'link_xml_body'=>'<img src="images/xmlrss.png">','type'=>'post','date'=>$row['date']);
+			$lList[] = array('link_html'=>BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']),'link_html_body'=>$row['name'],'link_xml'=>show_link_page_xml($row['sys_name']),'link_xml_body'=>'<img src="images/xmlrss.png">','type'=>'post','date'=>$row['date']);
 		}
 	}
-	$type = $_GET["type"];
+	$type = $_GET['type'];
 	if($type=='xml'){
 		$last_modify = pushDate(array($rows,array('date'=>$hRow['date'])));
-		include("inc/sitemap_xml.php");
+		include('inc/sitemap_xml.php');
 		exit();
 	}else{
-		$title = SITEMAP.' - '.$global_setting['name'];
+		$title = _t('Sitemap').' - '.$global_setting['name'];
 		$description = 	$global_setting['description'];
 		$keywords = $global_setting['keywords'];
 		$inc = THEME_DIR.$page_theme['sitemap'];	

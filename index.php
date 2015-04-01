@@ -1,34 +1,36 @@
 <?php
-	include("inc/init.php");
+	include('inc/init.php');
 	defined('INSTALLED') or _goto(DASHBOARD_DIR.'/');
-	if($global_setting['close']){
-		include(INCLUDE_DIR."close_tip.php");
-		exit();
-	}
-	$_POST = do_data($_POST);	
-	$_GET = do_data($_GET);
 	$url_data = initUrl();
 	if($url_data){
 		foreach($url_data as $key=>$val){
 			$_GET[$key] = $val;
 		}
-	}	
-	$lang = themeLang();
-	if($lang && file_exists('inc/lang/'.$lang.'.php')){
-		include('inc/lang/'.$lang.'.php');		
-	}else{
-		$lang = 'en-us';
-		include("inc/lang/en-us.php");
 	}
+	$lang_data = array();
+	$lang = themeLang();
+	if(!$lang || !file_exists('inc/lang/'.$lang.'.php')){
+		$lang = 'en-us.php';
+	}else{
+		$lang .= '.php';
+	}
+	init_lang(INCLUDE_DIR.'lang/'.$lang);
+	$lang = basename($lang,'.php');
 	$theme = theme();
 	define('THEME_DIR',SITE_HOME.($theme?'_themes/'.$theme.'/':'_themes/default/'));
 	define('THEME_URL',SITE_URL.($theme?'_themes/'.$theme.'/':'_themes/default/'));
-	$lang_types = getLangTypes();
-	$s_lang[$lang] = 'selected';
-	$theme_types = getThemeTypes();
-	$s_theme[$theme] = 'selected';
 	$page_theme = get_page_themes();
-	$action = $_GET["action"];
+	if($page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
+		include(THEME_DIR.$page_theme['template_helper']);		
+	}
+	if(file_exists(THEME_DIR.'lang/'.$lang)){
+		init_lang(THEME_DIR.'lang/'.$lang);
+	}
+	if($global_setting['close']){
+		include($page_theme['close']?THEME_DIR.$page_theme['close']:INCLUDE_DIR.'close_tip.php');
+		exit();
+	}
+	$action = $_GET['action'];
 	$inc = $last_modify = null;
 	$actions = array('attachment'=>array('file'=>'do_attachment.php','type'=>1),
 		'lang'=>array('file'=>'do_lang.php','type'=>1),
@@ -45,17 +47,17 @@
 	switch($actions[$action]['type']){
 		case 1:
 			if(file_exists(INCLUDE_DIR.$actions[$action]['file'])){
-				include(INCLUDE_DIR.$actions[$action]['file']);				
+				include(INCLUDE_DIR.$actions[$action]['file']);
 			}
 		break;
 		case 2:
 			if(file_exists(INCLUDE_DIR.$actions[$action]['file'])){
-				include(INCLUDE_DIR.$actions[$action]['file']);				
+				include(INCLUDE_DIR.$actions[$action]['file']);
 			}
 			exit();
 		break;
 		case 3:
-			$plugin = $_GET["plugin"];
+			$plugin = $_GET['plugin'];
 			if(!$plugin){
 				_404('plugin');
 			}
@@ -69,7 +71,7 @@
 		default:
 			if($action=='Forbidden'){
 				_403();
-			}elseif($action&&!preg_match("/(.*)\/$/",$url_data['url'])&&$_GET["rtype"]=='wop'){
+			}elseif($action&&!preg_match('/(.*)\/$/',$url_data['url'])&&$_GET['rtype']=='wop'){
 				_301(BASE_URL.$url_data['url'].'/');
 			}elseif($action){
 				_404('home');

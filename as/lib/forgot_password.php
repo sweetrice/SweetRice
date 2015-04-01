@@ -7,13 +7,13 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
-	include("./lib/head.php");
+	include('./lib/head.php');
 ?>
 <div id="div_center">
 <div class="sign_form">
-<h2><?php echo TIP_INPUT_PASSWORD;?></h2>
-	<dl><dt><?php echo EMAIL;?></dt><dd><input type="text" name="email" id="email" class="w_100"/></dd></dl>
-	<dl><dt></dt><dd><input type="button" value="<?php echo DONE;?>"  class="input_submit"/> <a href="./"><?php echo LOGIN;?></a> <span id="tips"></span></dd></dl>
+<h2><?php _e('Please input your administrator\'s email.');?></h2>
+	<dl><dt><?php _e('Email');?></dt><dd><input type="text" name="email" id="email" class="w_100"/></dd></dl>
+	<dl><dt></dt><dd><input type="button" value="<?php _e('Done');?>"  class="input_submit"/> <a href="./"><?php _e('Login');?></a> <span id="tips"></span></dd></dl>
 	<div class="div_clear"></div>
 </div>
 </div>
@@ -22,26 +22,28 @@
 	_().ready(function(){
 		_('.input_submit').bind('click',function()  {
 			var query = new Object();
-			query.email = _('email').val();
+			query.email = _('#email').val();
 			if (!query.email){
-				_('email').addClass('required');
+				_('#email').addClass('required').run('focus');
 				return ;
 			}else{
-				_('email').removeClass('required');
+				_('#email').removeClass('required');
 			}
-			ajaxd_post(
-				query,
-				'?type=password&mode=get',
-				function(result){
+			_('#tips').html('<img src="../images/ajax-loader.gif">');
+			_.ajax({
+				type:'POST',
+				data:query,
+				url:'?type=password&mode=get',
+				success:function(result){
 						if (typeof(result) == 'object'){
-							_('tips').html(result.msg);
+							_('#tips').html(result.msg);
 						}
 				}
-			);
+			});
 		});
 	});
 //-->
 </script>
 <?php
-	include("lib/foot.php");	
+	include('lib/foot.php');	
 ?>
