@@ -704,6 +704,8 @@ thead tr{
 .transfer_section{display:none;}
 .transfer_section .server_setting{display:none;}
 #toggle_nav{background-color:#DD4B39;width:1%;height:100px;cursor:pointer;display:none;position:fixed;top:45%;left:0px;z-index:9999;}
+.track_list a{transition: all 0.5s ease 0s;}
+.track_curr{font-size:20px;}
 @media (max-width: 960px){
 	#div_center,#div_top,#div_foot{width:98%;min-width:98%;}
 	#admin_left{position:absolute;left:1%;top:0px;z-index:9998;background-color: #4D4D4D;}

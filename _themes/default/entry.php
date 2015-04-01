@@ -11,6 +11,7 @@
 		include(THEME_DIR.$page_theme['head']);		
 	}
 ?>
+
 <div id="div_center">
 	<div id="div_right">
 	<div class="blog_text">

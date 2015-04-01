@@ -27,5 +27,5 @@
 	if($app_inc){
 		$plugin_page[] = APP_DIR.'inc/nav.php';	
 		$plugin_page[] = APP_DIR.'inc/'.$app_inc;
-	}		
+	}
 ?>

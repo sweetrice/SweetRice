@@ -28,7 +28,7 @@
 		$comment_link = show_link_comment(($row['sys_name']?$row['sys_name']:$row['date']),null);
 	}
 	$att_rows = db_arrays("SELECT `file_name`,`downloads`,`id` FROM `".DB_LEFT."_attachment` WHERE `post_id` = '".$row['id']."'");//attachment list
-	db_query("UPDATE `".DB_LEFT."_posts` SET `views` = `views`+1 ".$sql);
+	db_query("UPDATE `".DB_LEFT."_posts` AS ps SET `views` = `views`+1  WHERE ".$where);
 	$category = $row['category'];
 	$relate_entry = db_arrays("SELECT `id`,`name`,`title`,`date`,`sys_name`,`category` FROM `".DB_LEFT."_posts` WHERE `category` = '".$row['category']."' AND `id` != '".$row['id']."' AND `in_blog` = '1' ORDER BY `views` ASC ".get_limit_sql(0,$global_setting['nums_setting']['postRelated']));
 	$title = ($row['title']?$row['title'].' - ':'').$global_setting['name'];

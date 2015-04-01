@@ -293,7 +293,7 @@
 				return $post.'.html';
 			}
 		}else{
-			return formatUrl('action=entry&post='.$post);
+			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link);
 		}
 	}
 	function show_link_page_xml($post,$original_url=false){
@@ -699,7 +699,7 @@
 				}
 		}
 	}
-	function db_error($database_type=false){
+	function db_error($database_type = false,$check_conn = false){
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
 		}
@@ -727,14 +727,18 @@
 				}
 			break;
 			case 'pgsql':
-				if(!pg_version()){
-					return _t('No PostgreSQL Connected');
+				if($check_conn){
+					if(!pg_version()){
+						return _t('No PostgreSQL Connected');
+					}
 				}
 				return pg_last_error();
 			break;
 			default:
-				if(!mysql_stat()){
-					return _t('No Mysql Connected');
+				if($check_conn){
+					if(!mysql_stat()){
+						return _t('No Mysql Connected');
+					}
 				}
 				return mysql_error();
 		}
@@ -883,6 +887,9 @@
 		$rows = db_arrays("SELECT ".$field." FROM ".$table.$where.($group?" GROUP by ".$group." ":"").($order?" ORDER by ".$order." ":"").$limit);
 		if($query['fetch_one']){
 			return $rows[0];
+		}
+		if($query['debug']){
+			return array('rows'=>$rows,'pager'=>$pager,'sql'=>"SELECT ".$field." FROM ".$table.$where.($group?" GROUP by ".$group." ":"").($order?" ORDER by ".$order." ":"").$limit,'db_error'=>db_error());
 		}
 		return array('rows'=>$rows,'pager'=>$pager);
 	}
@@ -1284,6 +1291,9 @@
 	}
 
 	function getAttachmentUrl($filename){
+		if(!$filename){
+			return ;
+		}
 		if(substr($filename,0,strlen(SITE_URL)) != SITE_URL && preg_match('/https?:\/\/.+/',$filename)){
 			return $filename;
 		}

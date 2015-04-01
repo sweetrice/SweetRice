@@ -180,7 +180,6 @@
 ?>
 <div id="div_center">
 <div id="admin_left">
-<div><?php _e('Dashboard');?></div>
 </div>
 <div id="admin_right">
 <?php	include('lib/'.$main_page);?>
