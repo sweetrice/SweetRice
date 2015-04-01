@@ -470,4 +470,8 @@ modify plugin fckeditor php4 config same to php5
 
 fix bug sitting => site close bug.
 
+<<<<<<< HEAD
 ========================================
+=======
+========================================
+>>>>>>> d2b3b71048db0daa3d748cc35e24f0a25565cbbc
