@@ -1,0 +1,473 @@
+#############################################
+SweetRice - Simple Website Management System
+Version 1.4.2
+Author:Hiler Liu steelcal@gmail.com
+Home page:http://www.basic-cms.org/
+#############################################
+Get your rice,Cook your food,SweetRice is very simple,but it can gives you help for website management.
+
+
+Download : http://www.basic-cms.org/download.html
+
+System Recommendations
+PHP version 4.3 or higher.
+MySQL version 4.0 or higher or PostgreSQL or SQLite
+
+Installation: just 1-minute install
+
+   1. Unzip the package in an empty directory.
+   2. Upload everything.
+   3. directory inc,attachment,and root must be writeable.
+   4. Open http://yourdomain/[rootdir]/ in your browser,accept the GPL license and jump to install form,enter your website ,database and administrator information .
+   5. The install script should then send you to the welcome page. 
+   6. Login to SweetRice dashboard.
+
+Feedback and comment 
+If you have any suggestions, ideas, comments, or if you found a bug,please mail to support@basic-cms.org or post comment at basic-cms.org.
+
+Copyright
+SweetRice is released under the GPL V2.
+
+Help SweetRice
+1),If you want to help SweetRice,you may make a donation to me via paypal,my paypal account is steelcal@gmail.com or Bitcoin 1FmPQZ6GGoKXt3fze73g85M7zWTo1xVGFM
+OR
+2),If you can speak in any language include English, French, German, Japanese, Korean, Spanish,Russian,Polish etc,you may help me to translate SweetRice language file,example file at as/lang/,there are default three kinds of language:English,Simplified Chinese,Traditional Chinese
+Thank you.
+
+SweetRice change log:
+======================================
+Change log V1.4.2 12/02/2014
+core update
+	add BASE_DIR for cookie 
+	custom field supports more option
+	upgrade tag : add tag_posts keyword to %--%_option,this update will be load tag page faster then before.
+	add plugin App for website developer 
+	remove subscriber plugin from defalut system
+	supports multiple file upload
+	add website transfer feature - one click transfer data to new hosting
+dashboard
+	plugin description : supports multiple language 
+	add transfer website to other hosting
+	add database backup upload 
+public.js
+	add scrolltop scrollleft function
+======================================
+Change log V1.4.1 03/26/2014
+core update 
+	support custom field for post/category/system setting
+	upgrade public.js animate support color
+	easy control animate speed by animate_fn
+	new language management
+Template
+	support template_helper setting,just add template_helper|template_helper_file to theme.config to enable this feature.
+Dashboard
+	new design
+======================================
+Change log V1.4.0 01/31/2014
+core update 
+	new SweetRice js framework - add function _ and remove _$ to execute custom function 
+	support plugin ajax return
+	support leveldb for cache - leveldb is first choice if server supports leveldb.
+	add template backup when using online editor.
+	add db_fetch function,it will be a goods choice for query data with pager
+	add dashboard.js for Dashboard control
+	new js dialog function _.dialog 
+	add localStorage support _.setData _.getData
+plugin  upgrade to Tinymce 4
+
+======================================
+Change log V1.3.5 06/01/2013
+core update 
+	add sql execute function to dashboard under database management - allow administrator execute SQL online
+	update dashboardSignin function - supports member pluginWithDashboard
+======================================
+Change log V1.3.4 05/07/2013
+core update 
+	update plugin install/deinstall
+	function pluginApi only supports plugin shared function[does not support system function any more]
+	update dashboard function un_ add remove root directory features
+	bulk change template of posts
+	custom index
+	online create/delete template
+	update dashboard media center/media
+	change THEME_DIR with SITE_HOME for mutiple site management
+	URL redirect feature change:support regular rule and support url parsing.
+	Replace $theme_dir to THEME_DIR
+	Add theme and language control in index.php
+	update Ajax control add multiple request support,create new handle by request URL.
+======================================
+Change log V1.3.3 11/08/2012
+core update 
+	add Dashboard action manage
+	add function below
+		pluginDashboardUrl 
+		db_array_nocache - get SQL query result[array] without cache
+		db_arrays_nocache - get SQL query result[list] without cache
+		do_total_nocache - get SQL query result[count] without cache
+		getLink - get plugin links by request
+		createTable - check and create table
+		dropTable - drop table if table exists
+		alterTable - alter table if table exists
+	change function below
+		pluginHookUrl - remove pluginQuery and base64_decode url *
+	update plugin management
+	some bug fixed
+======================================
+Change log V1.3.2 08/18/2012
+core update 
+	add option function 
+		getOption
+		setOption
+	update alter function
+	update 404 page
+	add error_report page
+	update close_tip page
+	supports multiple sites - all site config data will be in _sites directory
+	save some data to database include 
+		permalinks.php => permalinks_system
+		url_redirect.txt => redirectList
+		plugin install.lock => plugin_installed
+	supports custom permalinks for custom page include manage by plugins
+	supports toggle multiple theme
+	add comment reply date - this value will be update when webmaster reply user's comment
+	change database backup directory from dashboard to sites directory
+theme update
+	add mobile theme
+	remove wblog theme from default parkage
+js
+	replace ajax.js to public.js and add some function
+
+======================================
+Change log V1.3.1 07/23/2012
+core update 
+	add timezone support
+comment_form update
+======================================
+Change log V1.3.0 04/30/2012
+core update
+	add pluginHook - allow plugin share function to other plugin; 
+	add post/category insert function - easy to add post/category by plugin
+theme update
+	support multiple theme language
+	add pins.js support
+
+======================================
+Change log V1.2.5 12/29/2011
+database update
+ - remove database table "blog" 
+ - add table "options" to save site config data
+ - add table "item_plugin" to save relationship of post/category with plugin,this feature allow us more flexible manage content create by plugin
+theme update
+ - enable variable global_setting and remove old site config variable.
+ - enable variable categories replace old categories data
+dashboard update
+ - auto detect server type,write .htaccess file to root dir if server supports url rewrite module
+304 status update
+ - count template update time
+======================================
+Change log V1.2.4 11/06/2011
+ - update theme css
+ - update SweetRice update function
+ - update dashboard do_post change date when updated
+ - update theme do_post change last modify date
+ - update function my_post
+======================================
+Change log V1.2.3 10/30/2011
+ - update media management to support remote file
+ - update header status support 304
+======================================
+Change log V1.2.2 10/06/2011
+ - update ad output function
+ - update ads managemet fix bug when delete ad.
+ - update tag description include top 3 post name.
+======================================
+Change log V1.2.1 9/26/2011
+ - update dashboard:update ads management
+ - update track add HTML5 CANVAS support,add top 10 visited,referrer,ip list.
+ - update theme management
+ - update read more setting:remove link and add js control
+ - update user_track function add IE9 and IE10 support
+======================================
+Change log V1.2.0 8/31/2011
+ - update dashboard:add URL redirect feature
+ - update function support post preview:only show first content in P tag,add Read More link.
+ - update theme CSS
+ - update js/comment_form.js and fix bug which db_insert use Postgresql
+ - update post,category modify page,support more template option
+ - update for SEO,clear title,keywords,description data.
+ - update dashboard media_center and post modify template js,fix minor bug.
+======================================
+Change log V1.1.0 8/18/2011
+ - update attachment : fix bug - attachment link
+ - update dashboard media_center and post_modify theme
+======================================
+Change log V1.0.1 5/29/2011
+ - fix some minor bug
+ - support quick sort for posts/category etc 
+======================================
+Change log V1.0.0 4/19/2011
+ - upgrade dashboard 
+    support IE9 track
+	update post ,category management template
+	add function subCategory for list category
+	update dashboard css
+	update language pack
+	update menu and navigation
+	support .htaccess online edit
+	upgrade tinymce to support IE9
+	auto update comment data when update post.
+	update comment list style.
+	update function.php
+	use popup window to add attachment
+	add dashboard function.php move management functions from inc/function.php
+	add SweetRice self update - support upgrade SweetRice automatically or manually.
+ - update default sidebar.php template
+ - update RSSFEED - only show lastest 30 posts.
+ - updata comment form style.
+======================================
+Change log V0.7.1 12/9/2010
+ - upgrade core - fix some minor bug
+ - support HTML5
+ - suppport nginx server
+	 add these code to nginx.conf
+	 if (!-e $request_filename){
+	   rewrite ^/sweetrice_root/.+$ /sweetrice_root/index.php last;
+	 }
+	 location ~* \.(db|txt)$ {
+		if (-f $request_filename) {
+		root sweetrice_root/inc/;
+		break;
+		}
+	}
+ - upgrade SweetRice installer
+ - new form style : remove table tag
+ - update post and comment form.
+ - support attachment alias
+ - quick update post and category
+ - enable autosave when edit post or reply comment
+ - provide webeditor as html or visual
+ - update RSSFEED format - change RSSFEED link
+ - update sitemap add RSSFEED link
+
+Yes,you can modify SweetRice yourself.
+======================================
+Change log V0.7.0 11/11/2010
+
+upgrade dashboard
+ - optimize dashboard index.php.
+ - upgrade css
+ - support quickly delete object with AJAX
+ - upgrade media center
+ - remove column top_home from table posts (by dbto0.7.0.php)
+ - upgrade comment add column
+ - add post comment bulk edit,quickly modify post and comment.
+ - change db_converter for sqlite to sqlite,clean the target file before convert.
+ - upgrade language file.
+ - use new action icon
+ - upgrade cache clean : clean expired cache data or all data.
+ - fix bug : cache for sqlite.(report by jonas at http://www.basic-cms.org/comment/release/)
+ - fix bug for create subcategory. (report by jonas at http://www.basic-cms.org/comment/release/)
+
+upgrade theme
+- update m_list.php and add css.
+- add db_unescape function for built tags link.
+- show 404 error for invalid request url.
+- upgrade RSSFeed.
+- re-design theme for web standard.
+- upgrade comment submit script.
+- upgrade htaccess.txt and change page link when disabled url rewrite. 
+
+At this time ,i must thank my wife for she long time support me,thank my computer,my house,my basketball,my mobile phone and myself,and thank you for use or support SweetRice.
+======================================
+Change log V0.6.7.1 10/22/2010
+
+upgrade dashboard
+ - add function completeInsert ,when complete insert post or category ,you can quickly add another or show list.
+Upgrade theme
+ - upgrade default css 
+Fix vulnerability: http://www.htbridge.ch/advisory/xss_in_sweetrice_cms.html 
+
+Solution for older version:you can change the dashboard directory[recommended] or upgrade SweetRice to 0.6.7.1
+======================================
+Change log V0.6.7 6/28/2010
+
+upgrade core
+ - add custome template to template list
+ - upgrade TinyMCE css
+
+Upgrade theme
+ - upgrade theme's css
+======================================
+Change log V0.6.6 6/4/2010
+
+upgrade core
+ - support sqlite function if web server do not support PDO
+
+======================================
+Change log V0.6.5 5/26/2010
+
+upgrade dashborad
+ - cache management
+ - media management
+upgrade theme
+======================================
+Change log V0.6.4fix 5/14/2010
+
+Fix some minor bug.
+======================================
+Change log V0.6.4 4/27/2010
+
+Upgrade Dashboard
+- support TinyMCE with file management plugin,re-write post add/modify page.
+======================================
+Change log V0.6.3 4/12/2010
+
+Upgrade Dashboard
+- add template to post and category modify page
+Upgrade SweetRice core
+- upgrade db_insert function.
+- upgrade database table design add some field
+- fix some translate error
+- optimize cache
+Upgrade notes:
+If you want to upgrade SweetRice to 0.6.3 from 0.5.x or 0.6.x,you may need execute 0.5_upgrade_0.6.3.php to upgrade database table.[copy 0.5_upgrade_to_0.6.3.php to root dir and access]
+======================================
+Change log V0.6.2 3/16/2010
+
+Upgrade Dashboard
+- upgrade ad code management
+Upgrade theme
+- without ads code. 
+======================================
+Change log V0.6.1 2010-3-13
+
+Upgrade Dashboard 
+- add database optimizer
+- upgrade dashboard style
+Fix : if get_magic_quotes_gpc = ON,data insert error.
+======================================
+Change log V0.6.0 3/8/2010
+
+Upgrade Dashboard 
+- upgrade database backup .
+- add cache option and "clean cache" button
+upgrade core
+- add cache option,it can help you save resource when query database.
+- upgrade data escape function ,this allow you to insert data with quote to database.
+- update database table *_blog,add cache,cache_expired field. you can execute 0.5_upgrade_to_0.6.php to upgrade it.[copy 0.5_upgrade_to_0.6.php to root dir and access]
+======================================
+Change log V0.5.5.5 1/23/2010
+
+Upgrade Dashboard 
+- add Database converter .
+- update plugin list
+- update database backup.
+- update search form.
+======================================
+Change log V0.5.5.4 1/13/2010
+
+Upgrade Dashboard 
+- add tiny head mode.
+- add quick link of plugin list.
+======================================
+Change log V0.5.5.3 12/22/2009
+
+Upgrade Dashboard - view chart
+======================================
+Change log V0.5.5.2 12/15/2009
+
+Upgrade Dashboard  - add Media Center
+======================================
+Change log V0.5.5.1 12/11/2009
+
+Upgrade Dashboard
+======================================
+Change log V0.5.5 12/8/2009
+
+Change SweetRice core.
+Upgrade theme.
+Support AJAX.
+Upgrade core for Sqlite.
+======================================
+Change log V0.5.4 2009/11/29
+
+Fix some minor bug.
+Upgrade classic theme.
+======================================
+Change log V0.5.3 11/13/2009
+
+Upgrade theme.
+======================================
+Change log V0.5.2 11/3/2009
+
+Support database PostgreSql
+fix bug:tag list error
+fix bug:attachment link in non-rewrite mode error 11/2/2009
+fix some minor bug.
+add database time line,your web site can go back to every history.
+======================================
+Change log V0.5.0 10/15/2009
+
+Fix bug:comment form include posts's url.
+Change attachment url non-absolute for diffrent domain.
+Add database Sqlite ,user can select Sqlite for SweetRice
+Add 404 page for "Page not found"
+SweetRice plugin add support Sqlite ,for develop SweetRice plugin,you can see Subscriber document,which include _plugin/subscriber.
+======================================
+Change log V0.4.4 2009-8-28
+
+Support php short tag => off
+more easy to use as old version
+change user track ,you can enable it in dashborad [default is disable]
+User track data use SQLite3 ,fast and reliable. 
+======================================
+Change log V0.4.2 2009-7-21
+
+Add support for dashboard directory custom
+Fix bug:view post in non-rewrite mode.
+Change category link auto creat by time() as post sys-name;
+======================================
+Change log V0.4.1 2009-7-16
+
+Change .htaccess RewriteBase output
+php short_tag ON auto set
+======================================
+Change log V0.4.0 2009-6-24
+
+support password recovery. 
+Change sitemap.xml output[include true time of post]
+======================================
+Change log V0.3.1 2009-5-19
+
+change database table posts and category
+support parent category. 
+
+Notice:for update your SweetRice database table,please open the link http://yourdomain/upgrade_db.php?sql=upgrade_0.3.0-0.3.1.sql 
+when you update your database,please remove the script upgrade_db.php and upgrade_0.3.0-0.3.1.sql from your root directory.
+
+========================================
+Change log V0.3.0 2009-5-12
+
+add plugin support,user can creat own plugin for SweetRice
+add example plugin emaillist:allow user subscribe.
+fix bug sitting => change mysql server.
+
+========================================
+
+======================================
+Change log V0.2.1 2009-4-15
+add theme allrp which basic-cms.org used.
+update dashborad style design
+modify comment form,add url.
+========================================
+
+======================================
+Change log V0.2.0 2009-4-12
+add attachment download times track.
+add more language pack.
+add SweetRice update check.
+modify plugin fckeditor php4 config same to php5
+
+fix bug sitting => site close bug.
+
+========================================
