@@ -587,6 +587,9 @@ SweetRice
 		'Administrator Priority' => 'Administrator Priority',
 		'Member plugn first' => 'Member plugn first',
 		'Member plugn only' => 'Member plugn only',
-		'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin' => 'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin'
+		'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin' => 'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin',
+		'Enable Pagebreak' => 'Enable Pagebreak',
+		'Enable pagebreak for long page content when insert pagebreak to post content.' => 'Enable pagebreak for long page content when insert pagebreak to post content.',
+		'Pagebreak' => 'Pagebreak'
 );
 ?>

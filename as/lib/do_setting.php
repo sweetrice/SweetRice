@@ -50,6 +50,7 @@
 	'header_304'=>intval($_POST['header_304']),
 	'user_track'=>intval($_POST['user_track']),
 	'url_rewrite'=>intval($_POST['url_rewrite']),
+	'pagebreak'=>intval($_POST['pagebreak']),
 	'logo'=>$logo,
 	'theme'=>$_POST['theme'],
 	'lang'=>$_POST['lang'],

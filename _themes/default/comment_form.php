@@ -58,6 +58,10 @@
 			_('#email').run('focus');
 			return ;
 		}
+		var website = _('#website').val();
+		if(!website == 'http://'){
+			website = '';
+		}
 		var code = _('#code').val();
 		if(!code){
 			alert('<?php _e('Please enter verification code!');?>');
@@ -75,7 +79,7 @@
 		}else{
 			var remember = 0;
 		}
-		var website = _('#website').val();
+
 		var postID = _('#postID').val();
 		_(this).attr('_ing',1);
 		var query = new Object();

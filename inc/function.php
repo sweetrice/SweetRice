@@ -168,6 +168,7 @@
 
 	//init Url data to SweetRice.
 	function initUrl(){
+		global $global_setting;
 		$permalinks = initPermalinks();
 		$load_dir = str_replace('//','/',dirname($_SERVER['PHP_SELF']).'/');
 		$url = substr(preg_replace("/(\?.*)?$/",'',$_SERVER['REQUEST_URI']),strlen($load_dir));
@@ -225,9 +226,18 @@
 		}elseif(preg_match("/^([a-zA-Z0-9\-_]+)\.html$/",$url,$matches)){
 			$url_data['action'] = 'entry';
 			$url_data['post'] = $matches[1];
+		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+):([0-9]+)\.html$/",$url,$matches)){
+			$url_data['action'] = 'entry';
+			$url_data['post'] = $matches[1];
+			$url_data['p'] = $matches[2];
 		}elseif(preg_match("/^([a-zA-Z0-9\-_]+)\/(([0-9]{0,3})\/)?$/",$url,$matches)){
 			$url_data['action'] = 'category';
 			$url_data['c'] = $matches[1];
+			$url_data['p'] = $matches[3];
+		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+)\/([a-zA-Z0-9\-_]+):([0-9]+)\/$/",$url,$matches)){
+			$url_data['action'] = 'entry';
+			$url_data['cateName'] = $matches[1];
+			$url_data['post'] = $matches[2];
 			$url_data['p'] = $matches[3];
 		}elseif(preg_match("/^([a-zA-Z0-9\-_]+)\/([a-zA-Z0-9\-_]+)\/$/",$url,$matches)){
 			$url_data['action'] = 'entry';
@@ -296,6 +306,19 @@
 			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link);
 		}
 	}
+	
+	function show_link_pagebreak($cat_link,$post,$pb,$original_url=false){
+		if(URL_REWRITE && !$original_url){
+			if($cat_link){
+				return $cat_link.'/'.$post.($pb > 1?':'.$pb:'').'/';
+			}else{
+				return $post.($pb > 1?':'.$pb:'').'.html';
+			}
+		}else{
+			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link);
+		}
+	}
+
 	function show_link_page_xml($post,$original_url=false){
 		if(URL_REWRITE && !$original_url){
 			$permalinks = initPermalinks();
@@ -304,7 +327,10 @@
 			return formatUrl('action=rssfeed&type=entry&post='.$post);
 		}
 	}
-	function show_link_cat($category,$p='',$original_url=false){
+	function show_link_cat($category,$p = '',$original_url=false){
+		if(!$category){
+			return 'javascript:void(0);';
+		}
 		if(URL_REWRITE && !$original_url){
 			return $category.'/'.($p>1?$p.'/':'');
 		}else{
@@ -1654,6 +1680,60 @@
 		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page);
 	}
 
+	function pager_pagebreak($page_total,$post,$curr_page = 1,$source_url = false){
+		global $categories;
+		$page = intval($_GET['p']);
+		if($page == 0){
+			$page = $curr_page > 0?$curr_page:1;
+		}
+		
+		if($page > $page_total && $page_total){
+			$outPage = true;
+		}else{
+			$outPage = false;
+		}
+		$page_start = ($page-1)*$page_limit;
+		$page_last = $page_total - $page;
+		
+		$list_put = '';
+		if($page_total<=10){
+			for($i=1; $i<=$page_total; $i++){
+				$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$i,$source_url).'" '.($i==$page?'class="pageCurrent"':'').'>'.$i.'</a> ';
+			}
+		}elseif($page == 1){
+			$p_end = 0;
+			for($i=0; $i<($page_last>10?10:$page_last); $i++){
+				$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$i+1,$source_url).'" '.($i==0?'class="pageCurrent"':'').'>'.($i+1).'</a> ';
+				$p_end +=1;
+			}
+			$list_put .= $page_last>=10?('<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],2,$source_url).'">'._t('Next').'&raquo;</a>'):'';
+		}elseif($page == $page_total){
+			$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page_total - 1,$source_url).'"/>&laquo;'._t('Previous').'</a> ';
+			for($i=$page_total-9; $i<=$page_total; $i++){
+				$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$i,$source_url).'" '.($i==$page_total?'class="pageCurrent"':'').'>'.$i.'</a> ';
+			}
+		}elseif($page > 1 && $page < $page_total){
+			$p_end = $page-1;
+			$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page - 1,$source_url).'"/>&laquo;'._t('Previous').'</a> ';
+			if($page_last<10){
+				for($i=10-$page_last; $i>0; $i--){
+					$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page - $i,$source_url).'" '.($i==0?'class="pageCurrent"':'').'>'.($page-$i).'</a> ';
+				}		
+			}
+			for($i=0; $i<($page_last>10?10:$page_last); $i++){
+				$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page + $i,$source_url).'" '.($i==0?'class="pageCurrent"':'').'>'.($page+$i).'</a> ';
+				$p_end += 1;
+			}
+			$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page + 1,$source_url).'">'._t('Next').'&raquo;</a>';
+		}
+		if($page_total > 1){
+			$list_put = $list_put?'<div id="PageList">'.$list_put.'</div>':'';
+		}else{
+			$list_put = '';
+		}
+		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page,'page_total'=>$page_total);
+	}
+
 	function generate_slug(){
 		$str = date('y').str_pad(date('z'),3,0,STR_PAD_LEFT);
 		$salt_num = floor((date('Y') - 2000)/100);
@@ -1976,7 +2056,10 @@
 			ob_clean();
 			return $content;
 		}else{
-			return '<fieldset><legend><a name="comment_'.$k.'"></a><a href="'.$comment_link.'#comment_'.$k.'">#'.$last_no.'</a> '.($val['website']?'<a href="'.$val['website'].'" rel="external nofollow">'.$val['name'].'</a>':$val['name']).' '.date(_t('F,jS Y'),$val['date']).'</legend>'.$val['info'].'</fieldset>';			
+			if(!preg_match('|https?://.{2,}|',$val['website'])){
+				$val['website'] = 'javascript:void(0);';
+			}
+			return '<fieldset><legend><a name="comment_'.$k.'"></a><a href="'.$comment_link.'#comment_'.$k.'" rel="nofollow">#'.$last_no.'</a> '.($val['website']?'<a href="'.$val['website'].'" rel="external nofollow">'.$val['name'].'</a>':$val['name']).' '.date(_t('F,jS Y'),$val['date']).'</legend>'.$val['info'].'</fieldset>';			
 		}
 	}
 
@@ -2652,5 +2735,22 @@
 			header('Pragma: no-cache');
 			header('Expires: 0');
 			die($data);
+	}
+
+	function output_content($content,$return_data = false){
+		if(substr($content,-3) == '<p>'){
+			$content = substr($content,-3);
+		}
+		if(substr($content,0,4) == '</p>'){
+			$content = substr($content,4);
+		}
+		if($return_data){
+			return $content;
+		}
+		echo $content;
+	}
+
+	function pagebreak_description($content){
+		return mb_substr(str_replace("\n",'',strip_tags($content)),0,200,'UTF-8');
 	}
 ?>

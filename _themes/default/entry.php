@@ -18,7 +18,16 @@
 		<div id="nav">
 	<a href="<?php echo BASE_URL;?>"><?php _e('Home')?></a><?php echo $row['category']?' &raquo; <a href="'.show_link_cat($categories[$row['category']]['link'],'').'">'.$categories[$row['category']]['name'].'</a>':'';?> &raquo; <a href="<?php echo BASE_URL,show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>"><?php echo $row['name'];?></a> <a href="<?php echo show_link_page_xml($row['sys_name']);?>"><img src="images/xmlrss.png" alt="<?php echo vsprintf(_t('Entry RSSFeed of %s'),array($row['name']));?>"></a></div>
 	  <h1 class="blog_title"><a href="<?php echo show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>"><?php echo $row['name'];?></a></h1>
-<div class="post_info" id="post-<?php echo $row['id'];?>"><?php echo $row['body'];?></div>
+<div class="post_info" id="post-<?php echo $row['id'];?>">
+<?php if($pager_pagebreak){
+	output_content($post_contents[$pager_pagebreak['page'] - 1]);
+	echo $post_contents[$pager_pagebreak['page'] - 1];
+	echo $pager_pagebreak['list_put'];
+}else{
+	echo $row['body'];
+}
+?>
+</div>
 <?php	
 	if(count($att_rows)>0):
 	foreach($att_rows as $att_row):
@@ -54,7 +63,7 @@
 </div>
 <?php
 	if($row['allow_comment']):
-		include('inc/comment_form.php');
+		include(THEME_DIR.$page_theme['comment_form']);
 	else:
 		_e('Comment Off');
 	endif;

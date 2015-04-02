@@ -34,6 +34,15 @@
 	$title = ($row['title']?$row['title'].' - ':'').$global_setting['name'];
 	$description = $row['description'];
 	$keywords = $row['keyword'];
+	if($global_setting['pagebreak']){
+		$post_contents = explode('<!-- pagebreak -->',$row['body']);
+		if(count($post_contents) > 1){
+			$pager_pagebreak = pager_pagebreak(count($post_contents),$row);
+			$title = ($row['title']?$row['title'].' '._t('Pagebreak').' '.$pager_pagebreak['page'].' - ':'').$global_setting['name'];
+			$description = pagebreak_description($post_contents[$pager_pagebreak['page'] - 1]);
+			$keywords = $row['keyword'];
+		}
+	}
 	$top_word = $row['title'];
 	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$row['name'].' '.ENTRY_RSSFEED.'" href="'.show_link_page_xml($row['sys_name']).'" />';
 	if($row['template']&&$row['template']!='default'&&file_exists($row['template'])){

@@ -41,9 +41,7 @@
 <div id="comment">
 <?php
 	if($row['allow_comment']){
-?>
-<?php include(ROOT_DIR.'inc/comment_form.php');?>
-<?php
+		include(THEME_DIR.$page_theme['comment_form']);
 	}else{
 		_e('Comment Off');
 	}

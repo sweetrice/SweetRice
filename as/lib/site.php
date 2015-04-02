@@ -135,6 +135,10 @@
 <input type="checkbox" name="url_rewrite" value="1" <?php echo $global_setting['url_rewrite']?'checked':'';?>/> 
 <span class="tip"><?php _e('Need server support');?></span>
 </fieldset>
+<fieldset><legend><?php _e('Enable Pagebreak');?></legend>
+<input type="checkbox" name="pagebreak" value="1" <?php echo $global_setting['pagebreak']?'checked':'';?>/> 
+<span class="tip"><?php _e('Enable pagebreak for long page content when insert pagebreak to post content.');?></span>
+</fieldset>
 <fieldset><legend class="toggle" data="#ns_list"><?php _e('Nums Setting');?></legend>
 <div class="ns_list" id="ns_list">
 <dl><dt><?php _e('Posts in each categories');?></dt><dd><input type="text" name="nums_setting[postCategories]" value="<?php echo $global_setting['nums_setting']['postCategories'];?>"/></dd></dl>
