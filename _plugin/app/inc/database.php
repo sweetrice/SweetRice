@@ -15,7 +15,7 @@
 <input type="text" name="keyword" value="<?php echo $_GET['keyword'];?>"/>
 <input type="submit" value="<?php _e('Search');?>"/>
 </form>
-<?php echo $pager['list_put'];?>
+<?php echo $data['pager']['list_put'];?>
 <form method="post" id="bulk_form" action="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'database','mode'=>'bulk'));?>">
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>

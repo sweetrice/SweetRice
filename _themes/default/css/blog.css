@@ -305,12 +305,17 @@ fieldset p{
 #PageList a{
 	padding:0px 2px;
 	font-family:Georgia,arial,sans-serif;
+	padding:5px;
+	border:1px solid #c8c8c8;
+	margin:2px;
 }
 #PageList a:hover{
 	font-weight:bold;
 }
-.pageCurrent{
+#PageList .pageCurrent{
 	font-weight:bold;
+	background-color:#690;
+	color:#fff;
 }
 .attachment{
 	background:url("../../../images/action_icon.png") no-repeat scroll -75px -2px transparent;
@@ -352,6 +357,10 @@ fieldset p{
 	cursor:pointer;
 }
 
+.app_fields{padding:10px;}
+.app_fields textarea{height:150px;}
+.app_div input[type=file],.app_div input[type=button],.app_div input[type=text],.app_div input[type=submit],.app_div select{height:25px;line-height:25px;}
+.app_div{min-height:25px;line-height:25px;}
 
 
 @media (max-width: 1020px){

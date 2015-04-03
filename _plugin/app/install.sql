@@ -14,3 +14,19 @@ CREATE TABLE IF NOT EXISTS `%--%_app_menus` (
 	`parent_id` int(10) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE `%--%_app_form` (
+	`id` INT(10) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`fields` TEXT NOT NULL,
+	`method` ENUM('post','get') NOT NULL DEFAULT 'post',
+	`action` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+
+CREATE TABLE `%--%_app_form_data` (
+	`id` INT(10) NOT NULL AUTO_INCREMENT,
+	`form_id` INT(10) NOT NULL,
+	`data` TEXT NOT NULL,
+	PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;

@@ -44,7 +44,9 @@
 		function app_navs(){
 			return array(
 				array('app_mode'=>'database','name'=>_t('Database')),
-				array('app_mode'=>'menu','name'=>_t('Menu'))
+				array('app_mode'=>'menu','name'=>_t('Menu')),
+				array('app_mode'=>'form','name'=>_t('Form')),
+				array('app_mode'=>'form_data','name'=>_t('Form Data'))
 			);
 		}
 
@@ -54,7 +56,9 @@
 				$actions[$val['app_mode']] = array();
 			}
 			return array_merge($actions,array(
-				'links'=>array()
+				'links'=>array(),
+				'form' => array(),
+				'form_data' => array()
 			));
 		}
 
@@ -86,6 +90,29 @@
 			$subMenus = array_merge ($subMenus,subMenus($sql,$val['id'],$level+1));
 		}
 		return $subMenus;
+	}
+
+	function remove_form_data($ids){
+		$data = db_fetch(array('table'=>ADB.'_app_form_data as afd LEFT JOIN '.ADB.'_app_form as af ON af.id = afd.form_id',
+			'field' => 'afd.*,af.name,af.fields',
+			'where' => "afd.id = '$ids'"
+		));
+		foreach($data['rows'] as $val){
+			$fields = unserialize($val['fields']);
+			$form_data = unserialize($val['data']);
+			foreach($fields as $field){
+				if($field['type'] == 'file' && file_exists(APP_DIR.'data/form/'.$form_data[$field['name']])){
+					unlink(APP_DIR.'data/form/'.$form_data[$field['name']]);	
+				}elseif($field['type'] == 'multi_file'){
+					foreach($form_data[$field['name']] as $mfile){
+						if(file_exists(APP_DIR.'data/form/'.$mfile)){
+							unlink(APP_DIR.'data/form/'.$mfile);
+						}
+					}
+				}
+			}
+		}
+		db_query("DELETE FROM `".ADB."_app_form_data` WHERE `id` IN($ids)");
 	}
 
 	$myApp = new App();

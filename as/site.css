@@ -539,6 +539,7 @@ thead tr{
 	text-align:center;
 	line-height:200px;
 }
+.PageList{margin:10px 0px;}
 .PageList a{
 	padding:0px 2px;
 	font-family:Georgia,arial,sans-serif;
@@ -729,3 +730,4 @@ thead tr{
 	font-style: italic;
 	padding: 5px 10px;
 }
+#field_list ol{margin-left:10px;}

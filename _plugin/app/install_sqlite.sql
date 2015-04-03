@@ -10,3 +10,22 @@ CREATE TABLE "%--%_app_menus" (
 	"order" integer,
 	"parent_id" integer
 );
+
+
+CREATE TABLE "%--%_app_form" (
+	"id" integer PRIMARY KEY,
+	"name" varchar(255),
+	"fields" text,
+	"method" varchar(4),
+	"action" varchar(255),
+	"captcha" integer,
+	PRIMARY KEY ("id")
+);
+
+CREATE TABLE "%--%_app_form_data" (
+	"id" integer PRIMARY KEY,
+	"form_id" integer,
+	"data" text,
+	"date" integer,
+	PRIMARY KEY ("id")
+);

@@ -15,3 +15,22 @@ CREATE TABLE IF NOT EXISTS "%--%_app_menus" (
 	"parent_id" int(10),
   PRIMARY KEY  ("id")
 );
+
+
+CREATE TABLE "%--%_app_form" (
+	"id" serial,
+	"name" varchar(255),
+	"fields" text,
+	"method" enum('post','get') DEFAULT 'post',
+	"action" varchar(255),
+	"captcha" int(1),
+	PRIMARY KEY ("id")
+);
+
+CREATE TABLE "%--%_app_form_data" (
+	"id" serial,
+	"form_id" int(10),
+	"data" text,
+	"date" int(10),
+	PRIMARY KEY ("id")
+);

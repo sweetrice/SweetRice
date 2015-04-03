@@ -589,6 +589,7 @@ SweetRice
 		'Do not change this unless member plugin installed,and must be restore it before deinstall member plugin' => '除非安装了会员插件,否则不要修改这个部分',
 		'Enable Pagebreak' => '启用分页符',
 		'Enable pagebreak for long page content when insert pagebreak to post content.' => '如果将分页符插入文章内容则对文章启用分页符',
-		'Pagebreak' => '分页'
+		'Pagebreak' => '分页',
+		'Click to refresh' => '点击刷新'
 );
 ?>
