@@ -36,7 +36,7 @@ Thank you.
 
 SweetRice change log:
 ======================================
-Change log V1.4.2 12/02/2014
+Change log V1.5.0 5/22/2015
 core update
 	add BASE_DIR for cookie 
 	custom field supports more option
@@ -45,11 +45,15 @@ core update
 	remove subscriber plugin from defalut system
 	supports multiple file upload
 	add website transfer feature - one click transfer data to new hosting
+	add form management for default plugin App
+	change comment_form to default theme directory
+	add form to default theme
 dashboard
 	plugin description : supports multiple language 
 	add transfer website to other hosting
 	add database backup upload 
 public.js
+	remove $ selector only use _
 	add scrolltop scrollleft function
 ======================================
 Change log V1.4.1 03/26/2014
@@ -470,8 +474,4 @@ modify plugin fckeditor php4 config same to php5
 
 fix bug sitting => site close bug.
 
-<<<<<<< HEAD
 ========================================
-=======
-========================================
->>>>>>> d2b3b71048db0daa3d748cc35e24f0a25565cbbc

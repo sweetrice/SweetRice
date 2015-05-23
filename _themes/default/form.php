@@ -18,7 +18,7 @@
 	<input type="hidden" name="id" value="<?php echo $row['id'];?>"/>
 		<?php foreach($fields as $val):
 ?>
-		<fieldset class="app_fields" req="<?php echo $val['required'];?>">
+		<fieldset class="app_fields <?php echo $val['required']?'required':'';?>" req="<?php echo $val['required'];?>">
 			<legend><?php echo $val['tip'];?></legend>
 			<div class="app_div">
 <?php
@@ -106,6 +106,14 @@
 		_('#captcha').bind('click',function(){
 			_(this).attr('src','images/captcha.php?timestamp='+new Date().getTime());
 		});
+		_('.required .app_field').bind('change',function(){
+			if (!_(this).val())
+			{
+				_(this).css({'background-color':'#ff0000'});
+			}else{
+				_(this).css({'background-color':'transparent'});
+			}
+		});
 		_('#app_form').bind('submit',function(event){
 			var isvalid = true;
 			_('.app_fields').each(function(){
@@ -122,6 +130,14 @@
 					{ 
 						isvalid = false;
 						_.ajax_untip('<?php _e('Some field required');?>');
+						_('.required .app_field').each(function(){
+							if (!_(this).val())
+							{
+								_(this).css({'background-color':'#ff0000'});
+							}else{
+								_(this).css({'background-color':'transparent'});
+							}
+						});
 						_.stopevent(event);
 						return;
 					}

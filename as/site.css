@@ -723,6 +723,7 @@ thead tr{
 	.ns_list dt,.ns_list dd,#view_chart dt,#view_chart dd,fieldset dl dt,fieldset dl dd{width:48%;}
 	textarea,.link,.theme_contents{width:90%;}
 	#myCanvas{width:100%;}
+	.tip{display:block;}
 }
 .tip{
 	margin: 10px;

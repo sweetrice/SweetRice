@@ -19,6 +19,7 @@ CREATE TABLE "%--%_app_form" (
 	"method" varchar(4),
 	"action" varchar(255),
 	"captcha" integer,
+	"template" varchar(255),
 	PRIMARY KEY ("id")
 );
 

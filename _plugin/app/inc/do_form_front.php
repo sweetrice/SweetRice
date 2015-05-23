@@ -79,5 +79,9 @@
 		_404();
 	}
 	$title = _t('Please complete form').' '.$row['name'];
-	$inc = THEME_DIR.'form.php';
+	if(!$row['template'] || !file_exists($row['template'])){
+		$inc = THEME_DIR.'form.php';
+	}else{
+		$inc = $row['template'];
+	}
 ?>

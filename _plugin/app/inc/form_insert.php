@@ -44,6 +44,20 @@
 	</div>
 	<?php _e('Please split options by Comma');?>
 </fieldset>
+<fieldset><legend><?php _e('Template');?>:<?php echo $row['template'];?></legend>
+<select name="template">
+<option value=""><?php _e('Default');?></option>
+<?php
+	foreach($template as $key=>$val){
+		$s = '';
+		if($key == $row['template']){
+			$s = 'selected';
+		}
+		echo '<option value="'.$key.'" '.$s.' title="'.$key.'">'.$val.'</option>';
+	}
+?>
+</select>
+</fieldset>
 <input type="submit" value="<?php _e('Done');?>"> 
 </form>
 </div>

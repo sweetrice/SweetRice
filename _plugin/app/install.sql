@@ -21,6 +21,8 @@ CREATE TABLE `%--%_app_form` (
 	`fields` TEXT NOT NULL,
 	`method` ENUM('post','get') NOT NULL DEFAULT 'post',
 	`action` VARCHAR(255) NOT NULL,
+	`captcha` tinyint(1),
+	`template` VARCHAR(255) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 

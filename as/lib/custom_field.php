@@ -112,7 +112,7 @@ endforeach;?>
 </fieldset></li>
 <?php
 	}
-	if(count($cfdata) > count($cflist)){
+	if(is_array($cfdata) && count($cfdata) > count($cflist)){
 ?>
 <?php if(count($cf_rows)):?>
 <input type="button" value="<?php _e('>>>>>>>>>>>> More <<<<<<<<<<<<');?>" class="more_btn" data=".more_cf">

@@ -36,13 +36,18 @@
 				foreach($_POST['fields'] as $key=>$val){
 					$fields[] = array('type'=>$_POST['types'][$key],'name'=>$val,'option'=>$_POST['option'][$key],'tip'=>$_POST['tips'][$key],'required'=>$_POST['required'][$key]);
 				}
-				db_insert(ADB.'_app_form',array('id',$id?$id:null),array('name','fields','method','action','captcha'),array($_POST['name'],serialize($fields),$_POST['method'],$_POST['action'],intval($_POST['captcha'])));
+				db_insert(ADB.'_app_form',array('id',$id?$id:null),array('name','fields','method','action','captcha','template'),array($_POST['name'],serialize($fields),$_POST['method'],$_POST['action'],intval($_POST['captcha']),$_POST['template']));
 				_goto(pluginDashboardUrl(THIS_APP,array('app_mode'=>'form')));
 			}
 			$id = intval($_GET["id"]);
 			if($id > 0){
 				$row = db_array("SELECT * FROM `".ADB."_app_form` WHERE `id` = '$id'");
 				$fields = unserialize($row['fields']);
+			}
+			if($global_setting['theme']){
+				$template = get_template(SITE_HOME.'_themes/'.$global_setting['theme'].'/','Entry');
+			}else{
+				$template = get_template(SITE_HOME.'_themes/default/','Entry');
 			}
 			$app_inc = 'form_insert.php';
 		break;

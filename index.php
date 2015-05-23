@@ -27,6 +27,9 @@
 	define('THEME_DIR',SITE_HOME.($theme?'_themes/'.$theme.'/':'_themes/default/'));
 	define('THEME_URL',SITE_URL.($theme?'_themes/'.$theme.'/':'_themes/default/'));
 	$page_theme = get_page_themes();
+	if($page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
+		include(THEME_DIR.$page_theme['template_helper']);		
+	}
 	$action = $_GET['action'];
 	$inc = $last_modify = null;
 	$actions = array(
@@ -77,9 +80,6 @@
 			include(INCLUDE_DIR.'do_home.php');
 	}
 	if($global_setting['user_track'])	user_track();	
-	if($page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
-		include(THEME_DIR.$page_theme['template_helper']);		
-	}
 	if($global_setting['header_304'])	outputHeader($last_modify);
 	header('Access-Control-Allow-Origin: *');
 	if($inc && file_exists($inc)){

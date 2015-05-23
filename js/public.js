@@ -6,37 +6,6 @@
  * @since 0.5.4
  */
 <!--
-	function $(selector){
-		if ( !selector ) {
-			return false;
-		}
-		var s1 = selector.substring(0,1);
-		if (s1 == '.'){
-			selector = selector.substring(1,selector.length);
-			var a=[],b = document.getElementsByTagName('*');
-			for (var i=0; i< b.length; i++ ) {
-				if (b[i].className.search(new RegExp("\\b" + selector + "\\b")) != -1) {
-					a[a.length] = b[i];
-				}
-			}	
-			if (Object.prototype.toString.call( a ) === '[object Array]' && a.length == 1){
-				return a[0];
-			}else{
-				return a;
-			}
-		}else{
-			if (s1=='#'){
-				selector = selector.substring(1,selector.length);
-			}
-			var b = document.getElementsByTagName('*');
-			for (var i=0; i< b.length; i++ ) {
-				if (b[i].id == selector) {
-					return b[i];
-				}
-			}
-		}
-		return false;
-	}
 	(function( window ) {
 		var Sweetrice = function(elm){
 			return new SweetRice( elm );
@@ -1464,7 +1433,7 @@
 			_('#'+dlgdiv.id).find('.SweetRice_dialog_close').run('click');
 		}
 		_(document.body).append(dlgdiv);
-		_(dlgdiv).html('<div class="SweetRice_menuBar" style="padding:5px;cursor:move;padding:10px;background-color: #f0f0f0;"><div style="width:'+(w-50)+'px;overflow:hidden;float:left;">'+title+'</div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:30px;text-align:right;display:inline;">X</a><div style="clear:both;height:0px;line-height:0px;"></div></div><div class="SweetRice_dialog_content" style="padding:10px;border-top:1px solid #ccc;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 5px 2px rgba(0, 0, 0, 0.35);'});
+		_(dlgdiv).html('<div class="SweetRice_menuBar" style="padding:5px;cursor:move;padding:10px;background-color: #f0f0f0;"><div style="width:'+(w-50)+'px;overflow:hidden;float:left;">'+title+'</div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:30px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;">X</a><div style="clear:both;height:0px;line-height:0px;"></div></div><div class="SweetRice_dialog_content" style="padding:10px;border-top:1px solid #ccc;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 5px 2px rgba(0, 0, 0, 0.35);'});
 		if (param.button){
 			var btn_str = '',btn;
 			for (var i in param.button){

@@ -24,6 +24,7 @@ CREATE TABLE "%--%_app_form" (
 	"method" enum('post','get') DEFAULT 'post',
 	"action" varchar(255),
 	"captcha" int(1),
+	"template" VARCHAR(255),
 	PRIMARY KEY ("id")
 );
 
