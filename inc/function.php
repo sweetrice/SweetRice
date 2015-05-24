@@ -315,7 +315,7 @@
 				return $post.($pb > 1?':'.$pb:'').'.html';
 			}
 		}else{
-			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link);
+			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link.'&p='.$pb);
 		}
 	}
 
@@ -2739,7 +2739,7 @@
 
 	function output_content($content,$return_data = false){
 		if(substr($content,-3) == '<p>'){
-			$content = substr($content,-3);
+			$content = substr($content,0,-3);
 		}
 		if(substr($content,0,4) == '</p>'){
 			$content = substr($content,4);

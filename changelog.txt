@@ -43,11 +43,12 @@ core update
 	upgrade tag : add tag_posts keyword to %--%_option,this update will be load tag page faster then before.
 	add plugin App for website developer 
 	remove subscriber plugin from defalut system
-	supports multiple file upload
+	media & media center supports multiple file upload
 	add website transfer feature - one click transfer data to new hosting
 	add form management for default plugin App
 	change comment_form to default theme directory
-	add form to default theme
+	add form support to default theme
+	add post pagebreak
 dashboard
 	plugin description : supports multiple language 
 	add transfer website to other hosting
@@ -55,6 +56,7 @@ dashboard
 public.js
 	remove $ selector only use _
 	add scrolltop scrollleft function
+	add touch function
 ======================================
 Change log V1.4.1 03/26/2014
 core update 

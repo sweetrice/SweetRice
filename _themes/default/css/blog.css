@@ -145,7 +145,7 @@ fieldset p{
 #div_left{
 	float:right;
 	width:235px;
-	margin-left:0px 0px 0px 10px;
+	margin:0px;
 	border-left:1px dotted #E6E8EB;
 	padding:0px 0px 0px 10px;
 	word-wrap:break-word; 

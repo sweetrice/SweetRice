@@ -1421,6 +1421,92 @@
 		});
 	};
 
+
+
+	this.touch = function(param){
+		if (!param){
+			var param = new Object();
+			
+		}
+		if (!param.stopevent)
+		{
+			param.stopevent = {'start':true,'move':true,'end':true,'leave':true,'cancel':true};
+		}
+		ongoingTouchIndexById = function(idToFind) {
+      for (var i=0; i<window.ongoingTouches.length; i++) {
+        var id = window.ongoingTouches[i].identifier;
+        if (id == idToFind) {
+          return i;
+        }
+      }
+      return -1;
+    }
+		window.ongoingTouches = [];
+		return this.each(function(){
+			var me = _(this);
+			me.unbind('touchstart').bind('touchstart',function(event){
+				var touches = event.changedTouches;
+				for (var i=0; i<touches.length; i++) {
+					window.ongoingTouches.push(touches[i]);
+					if (typeof param.start == 'function')
+					{
+						param.start(window.ongoingTouches,i,me);
+					}
+				}
+				if (param.stopevent.start)
+				{
+					me.stopevent(event);
+				}
+			}).unbind('touchmove').bind('touchmove',function(event){
+				var touches = event.changedTouches;
+				for (var i=0; i<touches.length; i++) {
+					var idx = ongoingTouchIndexById(touches[i].identifier);
+					if (typeof param.move == 'function' && idx >= 0)
+					{
+						param.move(window.ongoingTouches,idx,me);
+					}
+					ongoingTouches.splice(idx, 1, touches[i]);
+				}
+				if (param.stopevent.move)
+				{
+					me.stopevent(event);
+				}
+			}).unbind('touchend').bind('touchend',function(event){
+				var touches = event.changedTouches;
+				for (var i=0; i<touches.length; i++) {
+					var idx = ongoingTouchIndexById(touches[i].identifier);
+					if (typeof param.end == 'function' && idx >= 0)
+					{
+						param.end(window.ongoingTouches,idx,me);
+					}
+					ongoingTouches.splice(idx, 1);
+				}
+				if (param.stopevent.end)
+				{
+					me.stopevent(event);
+				}
+			}).unbind('touchleave').bind('touchleave',function(event){
+				var touches = event.changedTouches;
+				for (var i=0; i<touches.length; i++) {
+					ongoingTouches.splice(i, 1);
+				}
+				if (param.stopevent.end)
+				{
+					me.stopevent(event);
+				}
+			}).unbind('touchcancel').bind('touchcancel',function(event){
+				var touches = event.changedTouches;
+				for (var i=0; i<touches.length; i++) {
+					ongoingTouches.splice(i, 1);
+				}
+				if (param.stopevent.end)
+				{
+					me.stopevent(event);
+				}
+			});
+		});
+	};
+
 	this.dialog = function(param,callback){
 		var name = param.name || new Date().getTime();
 		var w = param.width || 400;
