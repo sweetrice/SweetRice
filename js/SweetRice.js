@@ -7,16 +7,46 @@
  */
 <!--
 	(function( window ) {
-		var Sweetrice = function(elm){
-			return new SweetRice( elm );
-		};
-		Sweetrice.event_list = [];
-		Sweetrice.handle_list = [];
-		Sweetrice.obj_list = [];
-		Sweetrice.xmlHttpTimeout = [];
-		Sweetrice.ajaxHandle = [];
-		Sweetrice.fade_handle = [];
-		Sweetrice.animate_handle = [];
+		if (!window.getComputedStyle) {
+			window.getComputedStyle = function(el, prop) {
+				this.el = el;
+				this.getPropertyValue = function(prop) {
+					var re = /(\-([a-z]){1})/g;
+					if (prop == 'float') prop = 'styleFloat';
+					if (re.test(prop)) {
+						prop = prop.replace(re, function () {
+							return arguments[2].toUpperCase();
+						});
+					}
+					for (var i in el.currentStyle)
+					{
+						if (i == prop)
+						{
+							switch (prop)
+							{
+								case 'width':
+									if (el.currentStyle[i] == 'auto')
+									{
+										return _(el).width()+'px';
+									}
+								break;
+								case 'height':
+									if (el.currentStyle[i] == 'auto')
+									{
+										return _(el).height()+'px';
+									}
+								break;
+							}
+							return el.currentStyle[i];
+						}
+					}
+					return false;
+				}
+				return this;
+			}
+		}else{
+			getComputedStyle = document.defaultView && document.defaultView.getComputedStyle;
+		}
 		function SweetRice(elm){
 			this.inArray = function(a,b){
 				for (var i in a )
@@ -224,16 +254,6 @@
 				return elm.offsetHeight;
 			};
 
-			this.width = function(v){
-				if (this.isArray() && !v){
-					return false;
-				}
-				if (v){
-					return this.css('width',v);
-				}
-				return elm.offsetWidth;
-			};
-
 			this.pageSize = function(){
 				var xScroll,yScroll;
 				if(window.innerHeight&&window.scrollMaxY){
@@ -360,22 +380,22 @@
 				return Object.prototype.toString.call( elm ) === '[object Array]';
 			};
 			this.each = function(fn,callback){
-				if (typeof fn != 'function'){
-					return ;
-				}
-				if (this.isArray()){
-					for (var i in elm ){
-						if (elm[i].nodeName != undefined){
-							(function(){fn.apply(elm[i]);})();
-						}
+					if (typeof fn != 'function'){
+						return ;
 					}
-				}else{
-					(function(){fn.apply(elm);})();
-				}
-				if (typeof callback == 'function'){
-					callback.apply(elm);
-				}
-				return this;
+					if (this.isArray()){
+						for (var i in elm ){
+							if (elm[i].nodeName != undefined){
+								(function(){fn.apply(elm[i]);})();
+							}
+						}
+					}else{
+						(function(){fn.apply(elm);})();
+					}
+					if (typeof callback == 'function'){
+						callback.apply(elm);
+					}
+					return this;
 			};
 			
 
@@ -1155,6 +1175,7 @@
 						this['on' + evType] = Sweetrice.handle_list[_this.bind_handle(this,evType,fn)];
 					}
 				},callback);
+				return this;
 			};
 
 			this.unbind = function(evType,fn, useCapture,callback){
@@ -1366,7 +1387,7 @@
 		}
 	};
 
-	this.drag = function(param){
+	this.drag_custom = function(param){
 		if (!param){
 			var param = new Object();
 		}
@@ -1421,12 +1442,22 @@
 		});
 	};
 
-
+	this.hover = function(fn_mouseover,fn_mouseout){
+		if (typeof fn_mouseover != 'function')
+		{
+			fn_mouseover = function(){}
+		}
+		if (typeof fn_mouseout != 'function')
+		{
+			fn_mouseout = function(){}
+		}
+		this.unbind('mouseover').unbind('mouseut').bind('mouseover',fn_mouseover).bind('mouseout',fn_mouseout);
+	};
+	
 
 	this.touch = function(param){
 		if (!param){
 			var param = new Object();
-			
 		}
 		if (!param.stopevent)
 		{
@@ -1461,9 +1492,9 @@
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
 					var idx = ongoingTouchIndexById(touches[i].identifier);
-					if (typeof param.move == 'function' && idx >= 0)
+					if (typeof param.move == 'function')
 					{
-						param.move(window.ongoingTouches,idx,me);
+						param.move(window.ongoingTouches,idx,touches,i,me);
 					}
 					ongoingTouches.splice(idx, 1, touches[i]);
 				}
@@ -1475,9 +1506,9 @@
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
 					var idx = ongoingTouchIndexById(touches[i].identifier);
-					if (typeof param.end == 'function' && idx >= 0)
+					if (typeof param.end == 'function')
 					{
-						param.end(window.ongoingTouches,idx,me);
+						param.end(window.ongoingTouches,idx,touches,i,me);
 					}
 					ongoingTouches.splice(idx, 1);
 				}
@@ -1559,7 +1590,7 @@
 				param.close();
 			}
 		});
-		_(dlgdiv).find('.SweetRice_menuBar').drag({
+		_(dlgdiv).find('.SweetRice_menuBar').drag_custom({
 		type:'none',
 		'start':function(){
 			_(dlgdiv).attr({'left':parseInt(_(dlgdiv).position().left),'top':parseInt(_(dlgdiv).position().top)});
@@ -1682,52 +1713,47 @@
 		},timeout >= 0 ? timeout:2000);
 	};
 
+	var events = ['click','change','focus','blur','dblclick','mousedown','mouseup','mouseover','mouseout','mousemove','keypress','keydown','keyup','abort','beforeonload','beforeunload','error','load','move','resize','scroll','stop','unload','reset','submit','bounce','finish','start','beforecopy','beforecut','beforeeditfocus','beforepaste','beforeupdate','contextmenu','copy','cut','drag','dragdrop','dragend','dragenter','dragleave','dragover','dragstart','drop','losecapture','paste','select','selectstart','afterupdate','cellchange','dataavailable','datasetchanged','datasetcomplete','errorupdate','rowenter','rowexit','rowsdelete','rowsinserted','beforeprint','filterchange','help','propertychange','readystatechange','message','wheel','offline','online','pagehide','pageshow','popstate','storage','input','invalid','search','canplay','canplaythrough','cuechange','durationchange','emptied','ended','loadeddata','loadedmetadata','loadstart','pause','play','playing','progress','ratechange','seeked','seeking','stalled','suspend','timeupdate','volumechange','waiting','show','toggle'];
+	for (var i in events )
+	{
+		(function(name){
+			if (typeof this[name] == 'function')
+			{
+				var name_fn = '_'+name;
+			}else{
+				var name_fn = name;
+			}
+			this[name_fn] = function(fn){
+				if (typeof fn == 'function')
+				{
+					return this.unbind(name).bind(name,fn);
+				}else{
+					return this.run(name);
+				}
+			};
+		}).call(this,events[i]);
 	}
+	return this;
+}
+
+	
+	var Sweetrice = function(elm){
+		return new SweetRice( elm );
+	};
+	Sweetrice.event_list = [];
+	Sweetrice.handle_list = [];
+	Sweetrice.obj_list = [];
+	Sweetrice.xmlHttpTimeout = [];
+	Sweetrice.ajaxHandle = [];
+	Sweetrice.fade_handle = [];
+	Sweetrice.animate_handle = [];
 	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','pageSize','scrollSize','ready','dialog','stopevent'];
 	for (var i in _list){
 		eval('Sweetrice.'+_list[i]+' = Sweetrice().'+_list[i]+';');
 	}
-	if (!window.getComputedStyle) {
-		window.getComputedStyle = function(el, prop) {
-			this.el = el;
-			this.getPropertyValue = function(prop) {
-				var re = /(\-([a-z]){1})/g;
-				if (prop == 'float') prop = 'styleFloat';
-				if (re.test(prop)) {
-					prop = prop.replace(re, function () {
-						return arguments[2].toUpperCase();
-					});
-				}
-				for (var i in el.currentStyle)
-				{
-					if (i == prop)
-					{
-						switch (prop)
-						{
-							case 'width':
-								if (el.currentStyle[i] == 'auto')
-								{
-									return _(el).width()+'px';
-								}
-							break;
-							case 'height':
-								if (el.currentStyle[i] == 'auto')
-								{
-									return _(el).height()+'px';
-								}
-							break;
-						}
-						return el.currentStyle[i];
-					}
-				}
-				return false;
-			}
-			return this;
-		}
-	}else{
-		getComputedStyle = document.defaultView && document.defaultView.getComputedStyle;
-	}
+
 	window._ = Sweetrice;
+	return Sweetrice;
 })(window);
 
 //-->

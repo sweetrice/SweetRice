@@ -41,6 +41,7 @@
 		'Captcha required' => '验证码是必选的',
 		'Submit' => '提交',
 		'Captcha miss match' => '验证码不匹配',
-		'Form\'s action' => '表单的action'
+		'Form\'s action' => '表单的action',
+		'Enter custom action url or let this empty' => '输入自定义action网址或者留空'
 	);
 ?>

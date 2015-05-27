@@ -732,3 +732,4 @@ thead tr{
 	padding: 5px 10px;
 }
 #field_list ol{margin-left:10px;}
+.plugin_child_nav_curr{border-left: 2px solid #DD4B39 !important;padding-left:5px;font-weight:bold;}

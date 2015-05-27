@@ -24,7 +24,7 @@
 <link href="<?php echo THEME_URL.$page_theme['css'];?>" rel="stylesheet" type="text/css" media="screen" />
 <?php echo $canonical?'<link rel="canonical" href="'.$canonical.'" />':'';?>
 <link rel="shortcut icon" href="images/favicon.ico" />
-<script type="text/javascript" src="js/public.js"></script>
+<script type="text/javascript" src="js/SweetRice.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>

@@ -10,8 +10,8 @@
 ?>
 <style>
 .form_data dl{clear:both;}
-.form_data dl dt{float:left;width:20%;display:inline;border:1px solid #690;margin:5px;padding:5px;border-radius:5px;}
-.form_data dl dd{float:left;width:70%;display:inline;border:1px solid #c8c8c8;margin:5px;padding:5px;border-radius:5px;}
+.form_data dl dt{float:left;width:20%;display:inline;border:1px solid #690;margin:5px 1%;padding:5px 1%;border-radius:5px;}
+.form_data dl dd{float:right;width:70%;display:inline;border:1px solid #c8c8c8;margin:5px 1%;padding:5px 1%;border-radius:5px;}
 .form_data dl{display:none;}
 .toggle_data{text-align:center;cursor:pointer;}
 </style>
@@ -26,7 +26,7 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><td><input type="checkbox" class="checkall"/></td><td><?php _e('Form Name');?></td><td><?php _e('Data');?></td><td><?php _e('Date');?></td><td style="width:30px;"><?php _e('Admin');?></td></tr>
+	<tr><td><input type="checkbox" class="checkall"/></td><td><?php _e('Form Name');?></td><td><?php _e('Data');?></td><td style="width:130px;"><?php _e('Date');?></td><td style="width:30px;"><?php _e('Admin');?></td></tr>
 </thead>
 <tbody>
 <?php
@@ -45,12 +45,12 @@
 echo '<dl '.($key == 0 ?'style="display:block;"':'').'><dt>'.$val['tip'].'</dt><dd>';
 if($val['type'] == 'file'){
 ?>
-<a href="<?php echo BASE_URL.'_plugin/app/data/form/'.$form_data[$val['name']];?>" target ="_blank"><?php echo $form_data[$val['name']];?></a>
+<a href="javascript:void(0);" url="<?php echo BASE_URL.'_plugin/app/data/form/'.$form_data[$val['name']];?>" class="btn_preview"><?php echo $form_data[$val['name']];?></a>
 <?php
 }elseif($val['type'] == 'multi_file'){
 	foreach($form_data[$val['name']] as $mfile){
 ?>
-<a href="<?php echo BASE_URL.'_plugin/app/data/form/'.$mfile;?>" target ="_blank"><?php echo $mfile;?></a>
+<a href="javascript:void(0);" url="<?php echo BASE_URL.'_plugin/app/data/form/'.$mfile;?>" class="btn_preview"><?php echo $mfile;?></a>
 <?php
 	}
 }elseif($val['type'] == 'password'){
@@ -73,6 +73,9 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
+		_('.btn_preview').bind('click',function(){
+			_.dialog({'content':'<iframe src="'+_(this).attr('url')+'" style="width:100%;height:480px;border:none;"></iframe>','width':340,'height':480});
+		});
 		_('.toggle_data').bind('click',function(){
 			_(this).parent().find('dl').toggle();
 		});

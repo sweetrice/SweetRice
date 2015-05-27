@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS "%--%_app_menus" (
 );
 
 
+DROP TABLE IF EXISTS "%--%_app_form";
 CREATE TABLE "%--%_app_form" (
 	"id" serial,
 	"name" varchar(255),
@@ -28,6 +29,7 @@ CREATE TABLE "%--%_app_form" (
 	PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS "%--%_app_form_data";
 CREATE TABLE "%--%_app_form_data" (
 	"id" serial,
 	"form_id" int(10),

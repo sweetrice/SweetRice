@@ -15,7 +15,7 @@
 	<input type="text" id="name" name="name" value="<?php echo $row['name'];?>"/>
 </fieldset>
 <fieldset><legend><?php _e('Form\'s action');?></legend>
-	<input type="text" id="action" name="action" value="<?php echo $row['action'];?>" class="input_text"/>
+	<input type="text" id="action" name="action" value="<?php echo $row['action'];?>" class="input_text"/> <?php _e('Enter custom action url or let this empty');?>
 </fieldset>
 <fieldset><legend><?php _e('Method');?></legend>
 	<?php _e('POST');?> <input type="radio" name="method" value="post" <?php echo $row['method'] == 'post' || !$row['method'] ? 'checked':'';?>/> 

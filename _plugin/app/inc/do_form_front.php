@@ -74,7 +74,6 @@
 	$id = intval($_GET['id']);
 	if($id > 0){
 		$row = db_array("SELECT * FROM `".ADB."_app_form` WHERE `id` = '$id'");
-		$fields = unserialize($row['fields']);
 	}else{
 		_404();
 	}

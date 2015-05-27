@@ -19,14 +19,13 @@ CREATE TABLE "%--%_app_form" (
 	"method" varchar(4),
 	"action" varchar(255),
 	"captcha" integer,
-	"template" varchar(255),
-	PRIMARY KEY ("id")
+	"template" varchar(255)
 );
+
 
 CREATE TABLE "%--%_app_form_data" (
 	"id" integer PRIMARY KEY,
 	"form_id" integer,
 	"data" text,
-	"date" integer,
-	PRIMARY KEY ("id")
+	"date" integer
 );

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `%--%_app_menus` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
+DROP TABLE IF EXISTS `%--%_app_form`;
 CREATE TABLE `%--%_app_form` (
 	`id` INT(10) NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(255) NOT NULL,
@@ -26,9 +27,11 @@ CREATE TABLE `%--%_app_form` (
 	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
 
+DROP TABLE IF EXISTS `%--%_app_form_data`;
 CREATE TABLE `%--%_app_form_data` (
 	`id` INT(10) NOT NULL AUTO_INCREMENT,
 	`form_id` INT(10) NOT NULL,
 	`data` TEXT NOT NULL,
+	`date`  INT(10) NOT NULL,
 	PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;

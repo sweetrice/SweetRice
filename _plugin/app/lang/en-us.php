@@ -41,6 +41,7 @@
 		'Captcha required' => 'Captcha required',
 		'Submit' => 'Submit',
 		'Captcha miss match' => 'Captcha miss match',
-		'Form\'s action' => 'Form\'s action'
+		'Form\'s action' => 'Form\'s action',
+		'Enter custom action url or let this empty' => 'Enter custom action url or let this empty'
 	);
 ?>

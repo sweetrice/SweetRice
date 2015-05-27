@@ -16,7 +16,7 @@
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 <title><?php echo ($top_word?$top_word:_t('Welcome to SweetRice!')),' - ',_t('Dashboard');?></title>
 <link rel="stylesheet" type="text/css" href="site.css">
-<script type="text/javascript" src="../js/public.js"></script>
+<script type="text/javascript" src="../js/SweetRice.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
 <script type="text/javascript" src="js/dashboard.js"></script>
 </head>

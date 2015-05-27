@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
  	defined('VALID_INCLUDE') or die();
-	$s_lang[$lang] = 'selected';
+	$s_lang[basename($lang,'.php')] = 'selected';
 	$s_theme[$theme] = 'selected';
 ?>
 <div id="div_foot">

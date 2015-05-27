@@ -613,8 +613,11 @@ function get_template($theme_dir,$type){
 <li <?php echo $bgnav[$key];?>>
 <div><?php echo $val['title'];?>
 <div class="hidden_ pl10">
-<?php $cCount = count($val['child']);foreach($val['child'] as $v):if($v['mustBase']&&BASE_URL!=SITE_URL){continue;}
-$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
+<?php $cCount = count($val['child']);
+foreach($val['child'] as $v):
+	if($v['mustBase'] && BASE_URL != SITE_URL){continue;}
+$str = null;
+foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <?php if($cCount>2)echo '<p>';?>
 <a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a> 
 <?php if($cCount>2)echo '</p>';?>
@@ -648,7 +651,14 @@ $str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <a href="./?type=<?php echo $key;?>"<?php echo $val['ncr']?' class="ncr"':'';?>><?php echo $val['title'];?></a>
 <div class="hidden_ pl10">
 <?php foreach($val['child'] as $v):if(!dashboard_role($v['name'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a></p>
+<p <?php echo $_GET['plugin'] == $v['request']['plugin']?'class="plugin_child_nav_curr"':'';?>><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a></p>
+<?php if($_GET['plugin'] == $v['request']['plugin']):?>
+<ul class="plugin_child_nav">
+<?php foreach(pluginApi($v['request']['plugin'],'app_navs') as $app_nav):?>
+<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['app_mode'] == $app_nav['app_mode']?'class="plugin_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
+<?php endforeach;?>
+</ul>
+<?php endif;?>
 <?php endforeach;?>
 </div>
 </div>
