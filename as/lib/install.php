@@ -60,7 +60,7 @@
 					if(!$db){
 						$error_db = true;
 					}else{
-						$sql = file_get_contents('lib/blog_sqlite.sql');
+						$sql = file_get_contents('lib/app_sqlite.sql');
 						preg_match_all('/CREATE\s+TABLE\s+"%--%_(.+)"\s+\(/i',$sql, $tables);
 						foreach($tables[1] as $val){
 							$val = trim($val);
@@ -90,7 +90,7 @@
 				case 'pgsql':
 					$conn  = pg_connect("host=".$_POST['db_url']." port=".$_POST['db_port']." dbname=".$_POST['db_name']." user=".$_POST['db_username']." password=".$_POST['db_passwd']);
 					if($conn){
-						$sql = file_get_contents('lib/blog_pgsql.sql');
+						$sql = file_get_contents('lib/app_pgsql.sql');
 						$sql = str_replace('%--%',$_POST['db_left'],$sql);
 						$sql = explode(';',$sql);
 						foreach($sql as $key=>$val){
@@ -117,7 +117,7 @@
 				default:
 					$conn  = mysql_connect($_POST['db_url'],$_POST['db_username'],$_POST['db_passwd']);
 					if($conn &&	mysql_select_db($_POST['db_name'],$conn)){
-					$sql = file_get_contents('lib/blog.sql');
+					$sql = file_get_contents('lib/app.sql');
 					$sql = str_replace('%--%',$_POST['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){

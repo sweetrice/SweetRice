@@ -591,6 +591,25 @@ SweetRice
 		'Enable Pagebreak' => 'Enable Pagebreak',
 		'Enable pagebreak for long page content when insert pagebreak to post content.' => 'Enable pagebreak for long page content when insert pagebreak to post content.',
 		'Pagebreak' => 'Pagebreak',
-		'Click to refresh' => 'Click to refresh'
+		'Click to refresh' => 'Click to refresh',
+		'Are you sure uninstall it?' => 'Are you sure uninstall it?',
+		'No plugin selected' => 'No plugin selected',
+		' is installed,please uninstall it before delete.' => ' is installed,please uninstall it before delete.',
+		' has been delete successfully' => ' has been delete successfully',
+		'Archive only supports zip format' => 'Archive only supports zip format',
+		'Add Plugin' => 'Add Plugin',
+		'Enable' => 'Enable',
+		'Theme List' => 'Theme List',
+		'Add Theme' => 'Add Theme',
+		'Theme has been change successfully' => 'Theme has been change successfully',
+		'No theme seleced or theme does not exists' => 'No theme seleced or theme does not exists',
+		'No theme selected' => 'No theme selected',
+		' is using,please change system theme before delete.' => ' is using,please change system theme before delete.',
+		'Are you sure enable this theme?' => 'Are you sure enable this theme?',
+		'Insert images' => 'Insert images',
+		'Image List' => 'Image List',
+		'Supports zip archive' => 'Supports zip archive',
+		'Reset' => 'Reset',
+		'No image selected' => 'No image selected'
 );
 ?>

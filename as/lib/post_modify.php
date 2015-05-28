@@ -47,7 +47,7 @@ echo '<div id="permalinks"><p>'.SITE_URL.show_link_page($categories[$row['catego
 </fieldset>
 <fieldset><legend><?php _e('Body');?>: </legend> 
 <div class="mg5"><label class="editor_toggle" tid="info" data="visual"><?php _e('Visual');?></label>
-<label class="editor_toggle current_label" data="html" tid="info"><?php _e('HTML');?></label></div>
+<label class="editor_toggle current_label" data="html" tid="info"><?php _e('HTML');?></label><label class="editor_toggle btn_upload"><?php _e('Insert images');?></label></div>
 <?php include('lib/tinymce.php');?>
 <textarea id="info" name="info">
 <?php echo htmlspecialchars($row['body']);?>
@@ -121,6 +121,11 @@ No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php ec
 	var attNo = <?php echo $no;?>;
 	var attach_media;
 	_().ready(function(){
+	_('.btn_upload').bind('click',function(){
+		_(this).prev().prev().click();
+		ifr_body = _(this).parent().parent().find('iframe').items();
+		_.dialog({'title':'<?php _e('Image List');?>','content':'<iframe src="./?type=image" style="border:none;width:100%;height:'+(_.pageSize().windowHeight-200)+'px;"></iframe>','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150});
+	});
 		_('.att_add').bind('click',function(event){
 			attNo += 1;
 			_('#no').val(attNo);

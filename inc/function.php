@@ -2303,6 +2303,7 @@
 		'theme'=>array('title'=>_t('Theme'),'file'=>'do_theme.php','type'=>3,'request'=>array('type'=>'theme')),
 		'media_center'=>array('title'=>_t('Media Center'),'file'=>'do_media_center.php','type'=>3,'request'=>array('type'=>'media_center')),
 		'media'=>array('title'=>_t('Media'),'file'=>'do_media.php','type'=>4,'request'=>array('type'=>'media')),
+		'image'=>array('title'=>_t('Image'),'file'=>'do_image.php','type'=>4,'request'=>array('type'=>'image')),
 		'cache'=>array('title'=>_t('Cache'),'file'=>'do_cache.php','type'=>1,'child'=>
 			array(
 				array('title'=>_t('Expired'),'request'=>array('type'=>'cache'),'ncr'=>true),

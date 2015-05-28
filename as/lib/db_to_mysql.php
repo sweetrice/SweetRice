@@ -33,7 +33,7 @@
 			if(!$to_db){
 				$message .= _t('Database error!').' <br>';
 			}else{
-				$sql = file_get_contents('lib/blog.sql');
+				$sql = file_get_contents('lib/app.sql');
 				$sql = str_replace('%--%',$to_db_left,$sql);
 				$sql = explode(';',$sql);
 				foreach($sql as $key=>$val){

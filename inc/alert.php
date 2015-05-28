@@ -12,7 +12,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php _e('SweetRice notice');?></title>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/public.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
 body{font-family:Verdana,Georgia,arial,sans-serif;}

@@ -34,24 +34,56 @@ $no = 0;
 <div style="margin:10px;"><?php echo is_array($val['description'])?($val['description'][basename($global_setting['lang'],'.php')]?$val['description'][basename($global_setting['lang'],'.php')]:$val['description']['en-us']):$val['description'];?></div>
 <p><?php _e('Author');?>:<?php echo $val['author'];?> | <?php _e('Contact');?>:<a href="mailto:<?php echo $val['contact'];?>"><?php echo $val['contact'];?></a> | <?php _e('Home Page');?>:<a href="<?php echo $val['home_page'];?>"><?php echo $val['home_page'];?></a></p>
 </td>
-<td><?php echo $admin_tip;?></td></tr>
+<td><?php echo $admin_tip;?> <a href="javascript:void(0);" class="btn_delete" data="<?php echo $val['name'];?>" installed="<?php echo $val['installed'];?>"><?php _e('Delete');?></a></td></tr>
 <?php
 	}
 ?>
 </tbody>
 </table>
 </div>
+<fieldset><legend><?php _e('Add Plugin');?></legend>
+<form method="post" enctype="multipart/form-data" action="./?type=plugins&mode=add">
+	<?php _e('Remote File');?> <input type="text" name="app_url" />
+	<?php _e('Upload');?> <input type="file" name="app_file" />
+	<input type="submit" class="input_submit" value="<?php _e('Done');?>"/>
+	<div><?php _e('Archive only supports zip format');?></div>
+</form>
+</fieldset>
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
+		_('.btn_delete').bind('click',function(){
+			if (_(this).attr('installed'))
+			{
+				_.ajax_untip(_(this).attr('data')+'<?php _e(' is installed,please uninstall it before delete.');?>');
+				return ;
+			}
+			if (!confirm('<?php _e('Are you sure delete it?');?>'))
+			{
+				return ;
+			}
+			var _this = this;;
+			_.ajax({
+				'type':'post',
+				'data':{'app_name':_(_this).attr('data')},
+				'url':'./?type=plugins&mode=delete',
+				'success':function(result){
+					_.ajax_untip(result['status_code'],2000);
+					if (result['status'] == 1)
+					{
+						_(_this).parent().parent().remove();
+					}
+				}
+			});
+		});
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
 		_('.btn_plugin').bind('click',function(){
 			if (_(this).attr('mode') == 'deinstall')
 			{
-				if (!confirm('<?php _e('Are you sure delete it?');?>')){
+				if (!confirm('<?php _e('Are you sure uninstall it?');?>')){
 					return ;
 				}
 			}
@@ -59,13 +91,8 @@ $no = 0;
 				type:'GET',
 				url:_(this).attr('url'),
 				success:function(result){
-					_.dialog({
-						'content':result.status_code,
-						'close':function(){
-							if (result.status == 1){
-								window.location.reload();
-							}
-						}
+					_.ajax_untip(result['status_code'],2000,function(){
+						window.location.reload();
 					});
 				}
 			});

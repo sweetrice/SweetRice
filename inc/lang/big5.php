@@ -591,6 +591,25 @@ SweetRice
 		'Enable Pagebreak' => '啟用分頁符',
 		'Enable pagebreak for long page content when insert pagebreak to post content.' => '如果將分頁符插入文章內容則對文章啟用分頁符',
 		'Pagebreak' => '分頁',
-		'Click to refresh' => '點擊刷新'
+		'Click to refresh' => '點擊刷新',
+		'Are you sure uninstall it?' => '確定要卸載?',
+		'No plugin selected' => '沒有指定插件',
+		' is installed,please uninstall it before delete.' => ' 已經安裝,請卸載後再刪除.',
+		' has been delete successfully' => ' 已經刪除成功',
+		'Archive only supports zip format' => '文件只支持zip格式',
+		'Add Plugin' => '添加插件',
+		'Enable' => '啟用',
+		'Theme List' => '樣式列表',
+		'Add Theme' => '添加樣式',
+		'Theme has been change successfully' => '樣式已經修改成功',
+		'No theme seleced or theme does not exists' => '沒有選擇樣式或者樣式不存在',
+		'No theme selected' => '沒有選擇樣式',
+		' is using,please change system theme before delete.' => ' 正在使用中,請在修改啟用其它樣式後再刪除.',
+		'Are you sure enable this theme?' => '確定要啟用這個樣式?',
+		'Insert images' => '插入圖片',
+		'Image List' => '圖片列表',
+		'Supports zip archive' => '支持ZIP文檔',
+		'Reset' => '重置',
+		'No image selected' => '未選擇圖片'
 );
 ?>

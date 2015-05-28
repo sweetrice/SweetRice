@@ -2,11 +2,12 @@
 	include('inc/init.php');
 	defined('INSTALLED') or _goto(DASHBOARD_DIR.'/');
 	if($global_setting['close']){
+		$page_theme = get_page_themes();
 		include($page_theme['close']?THEME_DIR.$page_theme['close']:INCLUDE_DIR.'close_tip.php');
 		exit();
 	}
 	$url_data = initUrl();
-	if($url_data){
+	if(is_array($url_data)){
 		foreach($url_data as $key=>$val){
 			$_GET[$key] = $val;
 		}
@@ -26,11 +27,11 @@
 	$theme = theme();
 	define('THEME_DIR',SITE_HOME.($theme?'_themes/'.$theme.'/':'_themes/default/'));
 	define('THEME_URL',SITE_URL.($theme?'_themes/'.$theme.'/':'_themes/default/'));
+	$action = $_GET['action'];
 	$page_theme = get_page_themes();
 	if($page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
 		include(THEME_DIR.$page_theme['template_helper']);		
 	}
-	$action = $_GET['action'];
 	$inc = $last_modify = null;
 	$actions = array(
 		'attachment'=>array('type'=>1),

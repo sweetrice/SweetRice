@@ -356,7 +356,7 @@
 		return $update_db;
 	}
 
-	function db_142(){
+	function db_150(){
 		$data = getPosts();
 		$tag_posts = array();
 		foreach($data['rows'] as $row){
@@ -372,7 +372,7 @@
 	}
 
 	function upgrade_db(){
-		$upgrade_funs = array(123,124,125,130,132,133,140,141,142);
+		$upgrade_funs = array(123,124,125,130,132,133,140,141,150);
 		$installed_version = str_replace('.','',file_get_contents('inc/lastest.txt'));
 		$update_db = '';
 		foreach($upgrade_funs as $val){

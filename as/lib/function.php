@@ -133,6 +133,9 @@ function copyFiles($source,$destination){
 }
 
 function extractZIP($file_name,$dest_dir){
+	if(substr($dest_dir,-1) != '/'){
+		$dest_dir .= '/';
+	}
 	if(extension_loaded('zlib')||extension_loaded('ZZIPlib')){
 		$zip = zip_open($file_name);
 		if (is_resource($zip)){
@@ -479,7 +482,7 @@ function get_template($theme_dir,$type){
 				if(!$db){
 					$error_db = true;
 				}else{
-					$sql = file_get_contents('./lib/blog_sqlite.sql');
+					$sql = file_get_contents('./lib/app_sqlite.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
@@ -502,7 +505,7 @@ function get_template($theme_dir,$type){
 			case 'pgsql':
 				$conn  = pg_connect('host='.$site_config['db_url'].' port='.$site_config['db_port'].' dbname='.$site_config['db_name'].' user='.$site_config['db_username'].' password='.$site_config['db_passwd']);
 				if($conn){
-					$sql = file_get_contents('./lib/blog_pgsql.sql');
+					$sql = file_get_contents('./lib/app_pgsql.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
@@ -529,7 +532,7 @@ function get_template($theme_dir,$type){
 			default:
 				$conn  = mysql_connect($site_config['db_url'],$site_config['db_username'],$site_config['db_passwd']);
 				if($conn &&	mysql_select_db($site_config['db_name'],$conn)){
-					$sql = file_get_contents('./lib/blog.sql');
+					$sql = file_get_contents('./lib/app.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){

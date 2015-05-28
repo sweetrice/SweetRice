@@ -707,6 +707,20 @@ thead tr{
 #toggle_nav{background-color:#DD4B39;width:1%;height:100px;cursor:pointer;display:none;position:fixed;top:45%;left:0px;z-index:9999;}
 .track_list a{transition: all 0.5s ease 0s;}
 .track_curr{font-size:20px;}
+
+.tip{
+	margin: 10px;
+	background-color: rgba(162, 219, 110, 1);
+	font-style: italic;
+	padding: 5px 10px;
+}
+#field_list ol{margin-left:10px;}
+.plugin_child_nav_curr{border-left: 3px solid #DD4B39 !important;padding-left:5px;font-weight:bold;}
+.template_list li{list-style-type:none;float:left;width:18%;display:inline;height:100px;line-height:100px;box-shadow:1px 1px 1px 1px #ccc;text-align:center;margin:5px 1%;padding:0px;position:relative;}
+.template_list li a{position:absolute;top:5px;right:5px;display:none;width:20px;height:20px;border:1px solid #ccc;line-height:20px;}
+.template_list .curr_theme{background-color:#690;color:#fff;}
+.template_list .curr_theme a{color:#fff;}
+.theme_select{right:auto !important;left:5px;bottom:5px;top:auto !important;}
 @media (max-width: 960px){
 	#div_center,#div_top,#div_foot{width:98%;min-width:98%;}
 	#admin_left{position:absolute;left:1%;top:0px;z-index:9998;background-color: #4D4D4D;}
@@ -725,11 +739,9 @@ thead tr{
 	#myCanvas{width:100%;}
 	.tip{display:block;}
 }
-.tip{
-	margin: 10px;
-	background-color: rgba(162, 219, 110, 1);
-	font-style: italic;
-	padding: 5px 10px;
+@media (max-width: 640px){
+	.template_list li{width:50%;margin:10px 0px;}
 }
-#field_list ol{margin-left:10px;}
-.plugin_child_nav_curr{border-left: 2px solid #DD4B39 !important;padding-left:5px;font-weight:bold;}
+@media (max-width: 320px){
+	.template_list li{width:100%;margin:10px 0px;}
+}

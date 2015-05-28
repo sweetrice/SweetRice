@@ -35,7 +35,7 @@
 			if(!$to_db){
 				$error_db = true;
 			}else{
-				$sql = file_get_contents('lib/blog_sqlite.sql');
+				$sql = file_get_contents('lib/app_sqlite.sql');
 				$sql = str_replace('%--%',$to_db_left,$sql);
 				$sql = explode(';',$sql);
 				foreach($sql as $key=>$val){

@@ -7,9 +7,10 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
+ $using_theme = $global_setting['theme'] ? $global_setting['theme'] : 'default';
 ?>
 <div class="div_info">
-<h2><?php _e('Current Theme');?> : <?php echo $global_setting['theme']?$global_setting['theme']:'Default';?></h2>
+<h2><?php _e('Current Theme');?> : <?php echo $using_theme;?></h2>
 <div class="tip"><?php _e('For design theme for SweetRice,you can view _themes/default/theme.config.');?></div>
 <p><select class="tlist">
 	<option value="" > --- </option>                       
@@ -23,7 +24,7 @@
 </select></p>
 </div>
 <?php
-	if($page&&$themes[$page]){
+	if($page && $themes[$page]){
 		$data = getOption($themes[$page].'.bak');
 		if($data['content']){
 			$bak_list = unserialize($data['content']);
@@ -68,9 +69,87 @@ if(count($bak_list)){
 	</select> <input type="submit" value="<?php _e('Create');?>"/>
 </fieldset>
 </form>
+
+<fieldset><legend><?php _e('Theme List');?></legend>
+<ul class="template_list">
+ <?php
+	foreach(getThemeTypes() as $val){
+?>
+<li <?php echo $using_theme == $val ? 'class="curr_theme"' : '';?> data="<?php echo $val;?>"><?php echo $val;?>
+<?php if($using_theme != $val):?>
+<a href="javascript:void(0);" class="theme_delete" title="<?php _e('Delete');?>">X</a>
+<a href="javascript:void(0);" class="theme_select" title="<?php _e('Enable');?>">Y</a>
+<?php endif;?>
+</li>
+<?php
+	}	
+?>
+<div class="div_clear"></div>
+</ul>
+</fieldset>
+<fieldset><legend><?php _e('Add Theme');?></legend>
+<form method="post" enctype="multipart/form-data" action="./?type=theme&mode=add_theme">
+	<?php _e('Remote File');?> <input type="text" name="theme_url" />
+	<?php _e('Upload');?> <input type="file" name="theme_file" />
+	<input type="submit" class="input_submit" value="<?php _e('Done');?>"/>
+	<div><?php _e('Archive only supports zip format');?></div>
+</form>
+</fieldset>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
+		_('.theme_select').click(function(){
+			if (!confirm('<?php _e('Are you sure enable this theme?');?>'))
+			{
+				return ;
+			}
+			var _this = this;;
+			_.ajax({
+				'type':'post',
+				'data':{'theme':_(_this).parent().attr('data')},
+				'url':'./?type=theme&mode=change_theme',
+				'success':function(result){
+					_.ajax_untip(result['status_code'],2000,function(){
+						window.location.reload();
+					});
+					if (result['status'] == 1)
+					{
+						_('.template_list li').removeClass('curr_theme');
+						_(_this).parent().addClass('curr_theme');
+					}
+				}
+			});
+		});
+		_('.theme_delete').click(function(){
+			if (_(this).attr('data') == '<?php echo $using_theme;?>')
+			{
+				_.ajax_untip(_(this).parent().attr('data')+'<?php _e(' is using,please change system theme before delete.');?>');
+				return ;
+			}
+			if (!confirm('<?php _e('Are you sure delete it?');?>'))
+			{
+				return ;
+			}
+			var _this = this;;
+			_.ajax({
+				'type':'post',
+				'data':{'theme':_(_this).parent().attr('data')},
+				'url':'./?type=theme&mode=delete',
+				'success':function(result){
+					_.ajax_untip(result['status_code'],2000);
+					if (result['status'] == 1)
+					{
+						_(_this).parent().remove();
+					}
+				}
+			});
+		});
+		_('.template_list li').hover(function(){_(this).addClass('curr_theme').find('a').show()},function(){
+			if (_(this).attr('data') != '<?php echo $using_theme;?>')
+			{
+				_(this).removeClass('curr_theme');
+			}
+			_(this).find('a').hide()});
 		bind_checkall('#checkall','.ck_item');
 		_('.tlist').bind('change',function(){
 			var theme = _(this).val();

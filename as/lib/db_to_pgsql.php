@@ -32,7 +32,7 @@
 			if(!$to_conn){
 				$message .= _t('Database error!').' <br>';
 			}else{
-				$sql = file_get_contents('lib/blog_pgsql.sql');
+				$sql = file_get_contents('lib/app_pgsql.sql');
 				$sql = str_replace('%--%',$to_db_left,$sql);
 				$sql = explode(';',$sql);
 				foreach($sql as $key=>$val){

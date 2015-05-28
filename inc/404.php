@@ -13,7 +13,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php _e('HTTP 404 - File not found');?></title>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/public.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
 body{font-family:Verdana,Georgia,arial,sans-serif;}
