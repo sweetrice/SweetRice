@@ -124,7 +124,7 @@ No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php ec
 	_('.btn_upload').bind('click',function(){
 		_(this).prev().prev().click();
 		ifr_body = _(this).parent().parent().find('iframe').items();
-		_.dialog({'title':'<?php _e('Image List');?>','content':'<iframe src="./?type=image" style="border:none;width:100%;height:'+(_.pageSize().windowHeight-200)+'px;"></iframe>','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150});
+		_.dialog({'title':'<?php _e('Image List');?>','content':'<iframe src="./?type=image" style="border:none;width:100%;height:'+(_.pageSize().windowHeight-200)+'px;"></iframe>','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 	});
 		_('.att_add').bind('click',function(event){
 			attNo += 1;

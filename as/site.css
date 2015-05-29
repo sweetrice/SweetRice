@@ -716,7 +716,7 @@ thead tr{
 }
 #field_list ol{margin-left:10px;}
 .plugin_child_nav_curr{border-left: 3px solid #DD4B39 !important;padding-left:5px;font-weight:bold;}
-.template_list li{list-style-type:none;float:left;width:18%;display:inline;height:100px;line-height:100px;box-shadow:1px 1px 1px 1px #ccc;text-align:center;margin:5px 1%;padding:0px;position:relative;}
+.template_list li{list-style-type:none;float:left;width:18%;display:inline;height:100px;line-height:100px;box-shadow:1px 1px 5px #000;text-align:center;margin:5px 1%;padding:0px;position:relative;}
 .template_list li a{position:absolute;top:5px;right:5px;display:none;width:20px;height:20px;border:1px solid #ccc;line-height:20px;}
 .template_list .curr_theme{background-color:#690;color:#fff;}
 .template_list .curr_theme a{color:#fff;}

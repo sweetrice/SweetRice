@@ -133,10 +133,10 @@
 body{font-family:"Microsoft YaHei";font-size:small;}
 .imgs{max-height:450px;}
 .imgs ul{margin: 10px 0px; padding: 0px;}
-.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 1px 1px 2px #ccc;margin-right:2%;text-align:center;padding: 5px 0px;}
+.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 1px 1px 5px #000;margin:1%;text-align:center;padding: 5px 0px;}
 .imgs li img{max-width:98%;max-height:98%;border:1px solid #d8d8d8;}
 .imgs li input[type=checkbox]{position:absolute;right:5px;bottom:5px;}
-.img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: transparent;cursor:pointer;display:none;}
+.img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
 .clear{clear:both;}
 </style>
 </head>
@@ -194,6 +194,11 @@ foreach($_SESSION['imgs'] as $img):?>
 					str += '<p style="text-align:center;"><img src="'+_(this).val()+'" style="max-width:100%;"></p>';
 				}
 			});
+			if (!str)
+			{
+				_.ajax_untip('<?php _e('No image selected');?>');
+				return ;
+			}
 			parent.window.ifr_body.contentWindow.document.body.innerHTML = str + parent.window.ifr_body.contentWindow.document.body.innerHTML;
 			parent._('.SweetRice_dialog_close').run('click');
 		});
