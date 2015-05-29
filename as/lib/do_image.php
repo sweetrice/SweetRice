@@ -199,7 +199,8 @@ foreach($_SESSION['imgs'] as $img):?>
 				_.ajax_untip('<?php _e('No image selected');?>');
 				return ;
 			}
-			parent.window.ifr_body.contentWindow.document.body.innerHTML = str + parent.window.ifr_body.contentWindow.document.body.innerHTML;
+			var ifr_body = parent.window._('.btn_upload').parent().parent().find('iframe').items();
+			ifr_body.contentWindow.document.body.innerHTML = str + ifr_body.contentWindow.document.body.innerHTML;
 			parent._('.SweetRice_dialog_close').run('click');
 		});
 	});

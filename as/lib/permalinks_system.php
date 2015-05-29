@@ -8,7 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<form method="post" action="./?type=permalinks&linkType=system&mode=save">
+<form method="post" action="./?type=permalinks&mode=system&submode=save">
 <fieldset><legend><?php _e('Permalinks');?></legend>
 <div id="permalinks">
 <dl><dt><?php _e('Attachment');?></dt><dd><input type="text" name="attachment_alias" value="<?php echo $permalinks['attachment'];?>"> <?php _e('Example Link');?> : <?php echo BASE_URL;?><span><?php echo $permalinks['attachment'];?></span>/fileName.ext

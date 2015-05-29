@@ -10,12 +10,12 @@
 ?>
 <form method="get" action="./">
 <input type="hidden" name="type" value="permalinks"/>
-<input type="hidden" name="linkType" value="custom"/>
+<input type="hidden" name="mode" value="custom"/>
 <input type="text" name="search" value="<?php echo escape_string($_GET['search']);?>" placeholder="<?php _e('Keywords');?>"/>
 <input type="submit" value="<?php _e('Search');?>"/>
 </form>
 <?php echo $pager['list_put'];?>
-<form method="post" id="bulk_form" action="./?type=permalinks&linkType=custom&mode=bulk">
+<form method="post" id="bulk_form" action="./?type=permalinks&mode=custom&submode=bulk">
 <table>
 <thead><tr><td><input type="checkbox" id="checkall"/> <?php _e('URL');?></td><td><?php _e('Request');?></td><td><?php _e('Plugin');?></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
 <?php
@@ -46,13 +46,13 @@ $no = 0;
 <td class="td_admin">
 <span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['lid'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
-<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=permalinks&linkType=custom&mode=insert&id=<?php echo $row['lid'];?>"><?php _e('Modify');?></a> 
+<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=permalinks&mode=custom&submode=insert&id=<?php echo $row['lid'];?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
 	}
 ?>
 </table>
-<input type="submit" value=" <?php _e('Bulk Delete');?> ">  <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=permalinks&linkType=custom&mode=insert">
+<input type="submit" value=" <?php _e('Bulk Delete');?> ">  <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=permalinks&mode=custom&submode=insert">
 </form>
 <?php echo $pager['list_put'];?>
 

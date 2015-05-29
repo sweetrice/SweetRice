@@ -2289,8 +2289,8 @@
 			)
 		),
 		'permalinks'=>array('title'=>_t('Permalinks'),'file'=>'do_permalinks.php','type'=>1,'child'=>array(
-				array('title'=>_t('System'),'request'=>array('type'=>'permalinks','linkType'=>'system')),
-				array('title'=>_t('Custom'),'request'=>array('type'=>'permalinks','linkType'=>'custom'))
+				array('title'=>_t('System'),'request'=>array('type'=>'permalinks','mode'=>'system')),
+				array('title'=>_t('Custom'),'request'=>array('type'=>'permalinks','mode'=>'custom'))
 			)
 		),
 		'plugins'=>array('title'=>_t('Plugin list'),'file'=>'do_plugins.php','request'=>array('type'=>'plugins'),'type'=>5,'child'=>pluginChild()),

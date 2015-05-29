@@ -622,7 +622,7 @@ foreach($val['child'] as $v):
 $str = null;
 foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <?php if($cCount>2)echo '<p>';?>
-<a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a> 
+<a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a> 
 <?php if($cCount>2)echo '</p>';?>
 <?php endforeach;?>
 </div></div>
@@ -635,7 +635,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <div><?php echo $val['title'];?>
 <div class="hidden_ pl10">
 <?php foreach($val['child'] as $v):if(!dashboard_role($v['request']['type'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a></p>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
 <?php endforeach;?>
 </div></div>
 </li>
@@ -654,11 +654,11 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <a href="./?type=<?php echo $key;?>"<?php echo $val['ncr']?' class="ncr"':'';?>><?php echo $val['title'];?></a>
 <div class="hidden_ pl10">
 <?php foreach($val['child'] as $v):if(!dashboard_role($v['name'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p <?php echo $_GET['plugin'] == $v['request']['plugin']?'class="plugin_child_nav_curr"':'';?>><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr"':'';?>><?php echo $v['title'];?></a></p>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'menu_child_nav_curr':'').'"':($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
 <?php if($_GET['plugin'] == $v['request']['plugin']):?>
-<ul class="plugin_child_nav">
+<ul class="menu_child_nav">
 <?php foreach(pluginApi($v['request']['plugin'],'app_navs') as $app_nav):?>
-<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['app_mode'] == $app_nav['app_mode']?'class="plugin_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
+<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] && $_GET['app_mode'] == $app_nav['app_mode']?'class="menu_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>

@@ -31,6 +31,13 @@
 			}
 		}).bind('mouseover',function(){
 			curr_nav(this);
+		}).bind('mouseout',function(){
+			_('.plugin_nav a').each(function(){
+				if (_(this).attr('title'))
+				{
+					curr_nav(this);
+				}
+			});
 		});
 	});
 	function curr_nav(obj){

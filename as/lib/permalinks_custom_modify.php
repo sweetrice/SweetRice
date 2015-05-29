@@ -8,7 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<form method="post" action="./?type=permalinks&linkType=custom&mode=save" id="pform">
+<form method="post" action="./?type=permalinks&mode=custom&submode=save" id="pform">
 <input type="hidden" name="id" value="<?php echo $row['lid'];?>"/>
 <input type="hidden" name="plugin" value="<?php echo $row['plugin'];?>"/>
 <fieldset><legend><strong><?php _e('URL');?>:</strong></legend>
@@ -48,7 +48,7 @@ if(is_array($reqs)){
 <!--
 	_().ready(function(){
 		_('.back').bind('click',function(){
-			location.href = './?type=permalinks&linkType=custom';
+			location.href = './?type=permalinks&mode=custom';
 		});
 		_('.btn_add').bind('click',function(){
 			reqNo += 1;
@@ -75,7 +75,7 @@ if(is_array($reqs)){
 						'content':result.status_code,
 						'close':function(){
 							if (result.status == 1){
-								location.href = './?type=permalinks&linkType=custom';
+								location.href = './?type=permalinks&mode=custom';
 							}
 						}
 					});

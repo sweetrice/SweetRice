@@ -7,10 +7,11 @@
  * @since 0.7.1
  */
  defined('VALID_INCLUDE') or die();
- $linkType = $_GET['linkType'];
+ $submode = $_GET['submode'];
  $mode = $_GET['mode'];
- if($linkType == 'system'){
-		switch($mode){
+ switch($mode){
+	case 'system':
+		switch($submode){
 			case 'save':
 				$alias = array('attachment','rssfeed','rssfeedCat','rssfeedPost','sitemapXml','sitemapHtml','comment','tag','ad');
 				foreach($alias as $key=>$val){
@@ -24,14 +25,15 @@
 					}
 				}
 				setOption('permalinks_system',($permalinks?serialize($permalinks):''));
-				_goto('./?type=permalinks&linkType=system');
+				_goto('./?type=permalinks&mode=system');
 			break;
 			default:
 				$top_word = _t('Permalink Setting');
 				$inc = 'permalinks_system.php';
 		}
- }elseif($linkType == 'custom'){
-		switch($mode){
+	break;
+	case 'custom':
+		switch($submode){
 			case 'save':
 				$data = $_POST;
 				if(!ltrim($data['url'],'/')){
@@ -66,7 +68,7 @@
 					}
 				}
 				db_query("DELETE FROM `".DB_LEFT."_links` WHERE `lid` IN (".implode(',',$ids).")");
-				_goto('./?type=permalinks&linkType=custom');
+				_goto('./?type=permalinks&mode=custom');
 			break;
 			case 'insert':
 				$id = intval($_GET['id']);
@@ -86,7 +88,7 @@
 					'field' => "*",
 					'where' => $where,
 					'order' => "`url` ASC",
-					'pager' =>  array('p_link'=>'./?type=permalinks&linkType=custom'.($search?'&search='.$search:'').'&',
+					'pager' =>  array('p_link'=>'./?type=permalinks&mode=custom'.($search?'&search='.$search:'').'&',
 					'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:20,
 					'pager_function' => '_pager'
 					)

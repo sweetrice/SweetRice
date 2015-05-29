@@ -33,7 +33,7 @@ function deleteAction(c,v,no){
 			query.adk = v;
 		break;
 		case 'links':
-			url = './?type=permalinks&linkType=custom&mode=delete';
+			url = './?type=permalinks&mode=custom&submode=delete';
 			query.id = v; 
 		break;
 		case 'sites':
