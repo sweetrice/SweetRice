@@ -28,13 +28,13 @@
 		$comment_link = show_link_comment(($row['sys_name']?$row['sys_name']:$row['date']),null);
 	}
 	$att_rows = db_arrays("SELECT `file_name`,`downloads`,`id` FROM `".DB_LEFT."_attachment` WHERE `post_id` = '".$row['id']."'");//attachment list
-	db_query("UPDATE `".DB_LEFT."_posts` AS ps SET `views` = `views`+1  WHERE ".$where);
+	db_query("UPDATE `".DB_LEFT."_posts` SET `views` = `views`+1 WHERE UPPER(`sys_name`) = UPPER('$post')");
 	$category = $row['category'];
 	$relate_entry = db_arrays("SELECT `id`,`name`,`title`,`date`,`sys_name`,`category` FROM `".DB_LEFT."_posts` WHERE `category` = '".$row['category']."' AND `id` != '".$row['id']."' AND `in_blog` = '1' ORDER BY `views` ASC ".get_limit_sql(0,$global_setting['nums_setting']['postRelated']));
 	$title = ($row['title']?$row['title'].' - ':'').$global_setting['name'];
 	$description = $row['description'];
 	$keywords = $row['keyword'];
-	if($global_setting['pagebreak']){
+	if($global_setting['pagebreak'] && $_GET['p'] != 'all'){
 		$post_contents = explode('<!-- pagebreak -->',$row['body']);
 		if(count($post_contents) > 1){
 			$pager_pagebreak = pager_pagebreak(count($post_contents),$row);

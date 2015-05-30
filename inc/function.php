@@ -200,7 +200,7 @@
 		}elseif(preg_match("/^".$permalinks['ad']."\/([a-z0-9A-Z-_]+)\.js$/",$url,$matches)){
 			$url_data['action'] = 'ads';
 			$url_data['adname'] = $matches[1];
-		}elseif($url==$permalinks['rssfeed'].'.xml'){
+		}elseif($url == $permalinks['rssfeed'].'.xml'){
 			$url_data['action'] = 'rssfeed';
 		}elseif(preg_match("/^".$permalinks['rssfeedCat']."\/([a-zA-Z0-9\-_]+)\.xml$/",$url,$matches)){
 			$url_data['action'] = 'rssfeed';
@@ -226,7 +226,7 @@
 		}elseif(preg_match("/^([a-zA-Z0-9\-_]+)\.html$/",$url,$matches)){
 			$url_data['action'] = 'entry';
 			$url_data['post'] = $matches[1];
-		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+):([0-9]+)\.html$/",$url,$matches)){
+		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+):([0-9]+|all)\.html$/",$url,$matches)){
 			$url_data['action'] = 'entry';
 			$url_data['post'] = $matches[1];
 			$url_data['p'] = $matches[2];
@@ -234,7 +234,7 @@
 			$url_data['action'] = 'category';
 			$url_data['c'] = $matches[1];
 			$url_data['p'] = $matches[3];
-		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+)\/([a-zA-Z0-9\-_]+):([0-9]+)\/$/",$url,$matches)){
+		}elseif($global_setting['pagebreak'] && preg_match("/^([a-zA-Z0-9\-_]+)\/([a-zA-Z0-9\-_]+):([0-9]+|all)\/$/",$url,$matches)){
 			$url_data['action'] = 'entry';
 			$url_data['cateName'] = $matches[1];
 			$url_data['post'] = $matches[2];
@@ -310,9 +310,9 @@
 	function show_link_pagebreak($cat_link,$post,$pb,$original_url=false){
 		if(URL_REWRITE && !$original_url){
 			if($cat_link){
-				return $cat_link.'/'.$post.($pb > 1?':'.$pb:'').'/';
+				return $cat_link.'/'.$post.($pb > 1 || $pb == 'all' ?':'.$pb:'').'/';
 			}else{
-				return $post.($pb > 1?':'.$pb:'').'.html';
+				return $post.($pb > 1 || $pb == 'all' ?':'.$pb:'').'.html';
 			}
 		}else{
 			return formatUrl('action=entry&post='.$post.'&catName='.$cat_link.'&p='.$pb);
@@ -1727,7 +1727,7 @@
 			$list_put .= '<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],$page + 1,$source_url).'">'._t('Next').'&raquo;</a>';
 		}
 		if($page_total > 1){
-			$list_put = $list_put?'<div id="PageList">'.$list_put.'</div>':'';
+			$list_put = $list_put?'<div id="PageList">'.$list_put.'<a href="'.show_link_pagebreak($categories[$post['category']]['link'],$post['sys_name'],'all',$source_url).'">'._t('All').'</a></div>':'';
 		}else{
 			$list_put = '';
 		}
