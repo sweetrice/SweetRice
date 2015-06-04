@@ -311,7 +311,7 @@
 						obj = document.documentElement;
 					}
 				}
-				if (!dist)
+				if (typeof dist == 'undefined' || isNaN(parseInt(dist)))
 				{
 					return obj.scrollTop;
 				}
@@ -1451,7 +1451,7 @@
 		{
 			fn_mouseout = function(){}
 		}
-		this.unbind('mouseover').unbind('mouseut').bind('mouseover',fn_mouseover).bind('mouseout',fn_mouseout);
+		return this.unbind('mouseover').unbind('mouseut').bind('mouseover',fn_mouseover).bind('mouseout',fn_mouseout);
 	};
 	
 
@@ -1550,7 +1550,7 @@
 			_('#'+dlgdiv.id).find('.SweetRice_dialog_close').run('click');
 		}
 		_(document.body).append(dlgdiv);
-		_(dlgdiv).html('<div class="SweetRice_menuBar" style="padding:5px;cursor:move;padding:10px;background-color: #f0f0f0;"><div style="overflow:hidden;float:left;">'+title+'</div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:30px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;">&times;</a><div style="clear:both;height:0px;line-height:0px;"></div></div><div class="SweetRice_dialog_content" style="padding:10px;border-top:1px solid #ccc;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 5px 2px rgba(0, 0, 0, 0.35);'});
+		_(dlgdiv).html('<div class="SweetRice_menuBar" style="padding:5px;cursor:move;padding:10px;background-color: #fafafa;"><div style="overflow:hidden;float:left;">'+title+'</div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:25px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;">&times;</a><div style="clear:both;height:0px;line-height:0px;"></div></div><div class="SweetRice_dialog_content" style="padding:10px;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 15px 0px rgba(0, 0, 0, 0.35)'});
 		if (param.button){
 			var btn_str = '',btn;
 			for (var i in param.button){
@@ -1713,6 +1713,36 @@
 		},timeout >= 0 ? timeout:2000);
 	};
 
+	this.randomColor = function( max ,toggle) {  
+		if (!max)
+		{
+			max = 0xFF;
+		}
+		var color = '';
+		var rand = 0;
+		for (var i=0;i<3 ;i++ )
+		{
+			rand = Math.floor( toggle ? 0xFF  - Math.random( ) * max : Math.random( ) * max ).toString(16)
+			color += (rand.length == 1 ? 0:'') + rand;
+		}
+		return '#'+color;
+	};
+
+	this.fromColor = function ( color ) { 
+		color = color.substring(1);
+		if (!color)
+		{
+			return '';
+		}
+		var newcolor = '';
+		for (var i = 0;i < 6 ;i++ )
+		{
+			newcolor += (0xFF - parseInt(color[i]+color[i+1],16)).toString(16);
+			i++ ;
+		}
+		return '#'+newcolor ;
+	}
+
 	var events = ['click','change','focus','blur','dblclick','mousedown','mouseup','mouseover','mouseout','mousemove','keypress','keydown','keyup','abort','beforeonload','beforeunload','error','load','move','resize','scroll','stop','unload','reset','submit','bounce','finish','start','beforecopy','beforecut','beforeeditfocus','beforepaste','beforeupdate','contextmenu','copy','cut','drag','dragdrop','dragend','dragenter','dragleave','dragover','dragstart','drop','losecapture','paste','select','selectstart','afterupdate','cellchange','dataavailable','datasetchanged','datasetcomplete','errorupdate','rowenter','rowexit','rowsdelete','rowsinserted','beforeprint','filterchange','help','propertychange','readystatechange','message','wheel','offline','online','pagehide','pageshow','popstate','storage','input','invalid','search','canplay','canplaythrough','cuechange','durationchange','emptied','ended','loadeddata','loadedmetadata','loadstart','pause','play','playing','progress','ratechange','seeked','seeking','stalled','suspend','timeupdate','volumechange','waiting','show','toggle'];
 	for (var i in events )
 	{
@@ -1730,6 +1760,7 @@
 				}else{
 					return this.run(name);
 				}
+				return this;
 			};
 		}).call(this,events[i]);
 	}
@@ -1747,7 +1778,7 @@
 	Sweetrice.ajaxHandle = [];
 	Sweetrice.fade_handle = [];
 	Sweetrice.animate_handle = [];
-	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','pageSize','scrollSize','ready','dialog','stopevent'];
+	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','pageSize','scrollSize','ready','dialog','stopevent','randomColor','fromColor'];
 	for (var i in _list){
 		eval('Sweetrice.'+_list[i]+' = Sweetrice().'+_list[i]+';');
 	}

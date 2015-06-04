@@ -48,13 +48,13 @@
 		}
 		var name = _('#name').val();
 		if(!name){
-			alert('<?php _e('Please enter your name!');?>');
+			_.ajax_untip('<?php _e('Please enter your name!');?>');
 			_('#name').run('focus');
 			return ;
 		}
 		var email =_('#email').val();
 		if(!CheckEmail(email)){
-			alert('<?php _e('Please enter a valid email!');?>');
+			_.ajax_untip('<?php _e('Please enter a valid email!');?>');
 			_('#email').run('focus');
 			return ;
 		}
@@ -64,13 +64,13 @@
 		}
 		var code = _('#code').val();
 		if(!code){
-			alert('<?php _e('Please enter verification code!');?>');
+			_.ajax_untip('<?php _e('Please enter verification code!');?>');
 			_('#code').run('focus');
 			return ;
 		}
 		var info = _('#info').val();
 		if(info == '' || info==null){
-			alert('<?php _e('Please enter your comment!');?>');
+			_.ajax_untip('<?php _e('Please enter your comment!');?>');
 			_('#info').run('focus');
 			return ;
 		}

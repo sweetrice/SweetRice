@@ -13,11 +13,13 @@
 <div class="sign_form">
 <h2><?php _e('Please reset your password.');?></h2>
 		<input type="hidden" name="r" value="<?php echo $r;?>"/>
-		<dl><dt><?php _e('Admin Email');?></dt><dd><input type="text" id="email" name="email" /></dd></dl>
-		<dl><dt><?php _e('Password');?></dt><dd><input type="password" id="p1" name="p1" /></dd></dl>
-		<dl><dt><?php _e('Repeat Password');?></dt><dd><input type="password" id="p2" name="p2" /></dd></dl>
-		<dl><dt></dt><dd><input type="submit" class="submit_btn" value=" <?php _e('Done');?> " /> <span id="tips"></span></dd></dl>
-<div class="div_clear"></div>
+		<fieldset><legend><?php _e('Admin Email');?></legend>
+		<input type="text" id="email" name="email"/></fieldset>
+		<fieldset><legend><?php _e('Password');?></legend>
+		<input type="password" id="p1" name="p1"/></fieldset>
+		<fieldset><legend><?php _e('Repeat Password');?></legend>
+		<input type="password" id="p2" name="p2"/></fieldset>
+		<input type="submit" class="submit_btn" value=" <?php _e('Done');?> " />  <a href="./"><?php _e('Login');?></a> <span id="tips"></span>
 </div>
 </div>
 <script type="text/javascript">

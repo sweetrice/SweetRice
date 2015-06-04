@@ -19,8 +19,9 @@
 	if($row['sys_name']){
 ?>
 <a href="<?php echo SITE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><?php _e('Prevew');?></a>
-<a title="<?php _e('Delete');?>" href="javascript:void(0);" class="btn_one" url="./?type=post&mode=delete&id=<?php echo $row['id'];?>&one=1"><?php _e('Delete');?></a> 
-<?php echo date('m/d/Y H:i:s',$row['date']);?> <input type="checkbox" name="republish" value="1"/> <?php _e('Update');?>?
+<a title="<?php _e('Delete');?>" href="javascript:void(0);" class="btn_one" url="./?type=post&mode=delete&id=<?php echo $row['id'];?>&one=1"><?php _e('Delete');?></a>
+<span class="tip"> 
+<?php echo date('m/d/Y H:i:s',$row['date']);?> <input type="checkbox" name="republish" value="1"/> <?php _e('Update');?>?</span>
 <?php
 	}
 ?>
@@ -29,7 +30,7 @@
 <input type="text" name="sys_name" class="input_text slug" value="<?php echo $row['sys_name'];?>"> * <span class="tip"><?php _e('Only a-z,A-Z,0-9,-,_ ,system will create one if empty');?></span>
 <?php
 	if($row['sys_name']){
-echo '<div id="permalinks"><p>'.SITE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'</p></div>';
+echo '<span class="tip">'.SITE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'</span>';
 	}
 ?>
 </fieldset>
@@ -37,11 +38,9 @@ echo '<div id="permalinks"><p>'.SITE_URL.show_link_page($categories[$row['catego
 <input type="text" name="title" class="input_text" value="<?php echo $row['title'];?>"> * <span class="tip"><?php _e('Title of Page');?></span>
 </fieldset>
 <fieldset><legend><?php _e('Meta Setting');?></legend>
-<ul>
-<li><input type="text" name="keyword" class="input_text meta" value="<?php echo $row['keyword']?$row['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of Page');?></span></li>
-<li><input type="text" name="description" class="input_text meta" value="<?php echo $row['description']?$row['description']:_t('Description');?>" data="<?php _e('Description');?>"> * <span class="tip"><?php _e('Description of Page');?></span>
-</li>
-</ul>
+<div class="mb10"><input type="text" name="keyword" class="input_text meta" value="<?php echo $row['keyword']?$row['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of Page');?></span></div>
+<div><input type="text" name="description" class="input_text meta" value="<?php echo $row['description']?$row['description']:_t('Description');?>" data="<?php _e('Description');?>"> * <span class="tip"><?php _e('Description of Page');?></span>
+</div>
 </fieldset>
 <fieldset><legend><?php _e('Tag');?>:</legend><input type="text" name="tags" class="input_text" value="<?php echo htmlspecialchars($row['tags'],ENT_QUOTES);?>"> * <span class="tip"><?php _e('Split by commas');?></span>
 </fieldset>
@@ -103,8 +102,10 @@ if(count($att_rows)){
 <input type="hidden" name="attid_<?php echo $no;?>" value="<?php echo $att_row['id'];?>"/>
 <input type="hidden" name="atttimes_<?php echo $no;?>" value="<?php echo $att_row['downloads'];?>"/>
 <input type="hidden" name="attdate_<?php echo $no;?>" value="<?php echo $att_row['date'];?>"/>
-No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php echo $no;?>" name="att_<?php echo $no;?>" value="<?php echo $att_row['file_name'];?>" class="input_text"/> <input type="button" value="<?php _e('Replace');?>" class="replaceAtt" data="<?php echo $no;?>">
- <input type="button" value="<?php _e('Remove File');?>" class="delfile" data="<?php echo $no;?>"> <?php _e('Upload Time');?>:<?php echo date('m/d/y H:i:s',$att_row['date']);?> <?php _e('Download Times');?>:<?php echo $att_row['downloads'];?> <?php echo $is_local?(file_exists(str_replace(SITE_URL,ROOT_DIR,$att_row['file_name']))?'<span class="file_exists">'._t('File exists').'</span>':'<span class="file_noexists">'._t('Does not exists').'</span'):_t('Remote File');?> 
+<div class="form_split">No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php echo $no;?>" name="att_<?php echo $no;?>" value="<?php echo $att_row['file_name'];?>" class="input_text"/> <input type="button" value="<?php _e('Replace');?>" class="replaceAtt" data="<?php echo $no;?>"></div>
+ <div class="form_split"><input type="button" value="<?php _e('Remove File');?>" class="delfile" data="<?php echo $no;?>"> <?php _e('Upload Time');?>:<?php echo date('m/d/y H:i:s',$att_row['date']);?></div>
+ <div class="form_split"><?php _e('Download Times');?>:<?php echo $att_row['downloads'];?> <?php echo $is_local?(file_exists(str_replace(SITE_URL,ROOT_DIR,$att_row['file_name']))?'<span class="file_exists">'._t('File exists').'</span>':'<span class="file_noexists">'._t('Does not exists').'</span'):_t('Remote File');?> 
+ </div>
 </li>
 </div>
 <?php
@@ -129,16 +130,16 @@ No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php ec
 			attNo += 1;
 			_('#no').val(attNo);
 			var new_file = document.createElement('div');
-			_(new_file).attr('id','f_'+attNo).html('<div class="att_list"><?php _e('New');?> <input type="text" name="att_'+attNo+'" id="att_'+attNo+'" class="input_text"/><span id="attname_'+attNo+'"></span> <input type="button" value="<?php _e('Remove');?>" class="delfile" data="'+attNo+'"> <input type="button" value="<?php _e('Replace');?>" class="replaceAtt" data="'+attNo+'"></div>');
+			_(new_file).attr('id','f_'+attNo).html('<div class="att_list"><div class="form_split"><?php _e('New');?> <input type="text" name="att_'+attNo+'" id="att_'+attNo+'" class="input_text"/><span id="attname_'+attNo+'"></span></div><div class="form_split"><input type="button" value="<?php _e('Remove');?>" class="delfile" data="'+attNo+'"> <input type="button" value="<?php _e('Replace');?>" class="replaceAtt" data="'+attNo+'"></div></div>');
 			_('#muti_files').append(new_file);
-			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','name':'media','width':800,'height':500,'layer':true});
+			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 			attach_media = _('#att_'+attNo); 
 			_('.delfile').unbind('click').bind('click',function(event){
 				_('#f_'+_(this).attr('data')).remove();
 			});
 			_('.replaceAtt').unbind('click').bind('click',function(event){
 				attach_media = _('#att_'+_(this).attr('data'));
-				_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':800,'height':500,'layer':true});
+				_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 			});
 		});
 		_('.delfile').bind('click',function(event){
@@ -146,7 +147,7 @@ No.<?php echo $no;?> <?php _e('Filename');?>:<input type="text" id="att_<?php ec
 		});	
 		_('.replaceAtt').bind('click',function(event){
 			attach_media = _('#att_'+_(this).attr('data'));
-			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':800,'height':500,'layer':true});
+			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 		});
 	});
 	//-->

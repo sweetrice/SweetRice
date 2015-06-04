@@ -23,9 +23,21 @@
 <?php endforeach;?>
 </select>
 </div>
+<div class="backtotop"><?php _e('Back');?></div>
 <script type="text/javascript">
 <!--
+	_(window).bind('scroll',function(){
+		if (_.scrollSize().top > _.pageSize().windowHeight)
+		{
+			_('.backtotop').stop().animate({'top':(_.pageSize().windowHeight - 120 + _.scrollSize().top)+'px'}).show();
+		}else{
+			_('.backtotop').hide();
+		}
+	});
 	_().ready(function(){
+		_('.backtotop').click(function(){
+			_(document.body).scrollTop(0);
+		});
 		_('.change_theme').bind('change',function(){
 			doTheme(_(this).val());
 		});

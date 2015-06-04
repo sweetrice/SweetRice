@@ -43,12 +43,14 @@ function editorEnable(id){
 	elements : id,
 	plugins: [
 					'advlist autolink autosave link image lists charmap preview hr anchor',
-					'searchreplace code fullscreen insertdatetime media',
+					'searchreplace fullscreen insertdatetime media',
 					'table contextmenu directionality textcolor pagebreak'
 	],
 
-	toolbar1: 'undo redo | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontselect fontsizeselect | table | pagebreak',
-	toolbar2: 'bullist numlist | searchreplace | outdent indent rtl blockquote | link unlink anchor | image media inserttime hr | removeformat forecolor backcolor | code preview fullscreen',
+	toolbar1: 'bold | italic | underline | hr | bullist | numlist | blockquote | hr | strikethrough | fullscreen',
+	toolbar2: 'alignleft | aligncenter | alignright | alignjustify | searchreplace | outdent | indent | rtl | link | unlink',
+	toolbar3: 'image | media | inserttime | anchor | removeformat | forecolor | backcolor | undo | redo',
+	toolbar4: 'formatselect | fontselect | fontsizeselect | table | pagebreak | preview',
    font_formats: "Andale Mono=andale mono,times;"+
         "Arial=arial,helvetica,sans-serif;"+
         "Arial Black=arial black,avant garde;"+

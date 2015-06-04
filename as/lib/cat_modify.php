@@ -20,10 +20,8 @@
 <input type="text" name="title" class="input_text" value="<?php echo $row['title'];?>"> * <span class="tip"><?php _e('Title of Page');?></span>
 </fieldset>
 <fieldset><legend><?php _e('Meta Setting');?></legend>
-<ul>
-<li><input type="text" name="keyword" class="input_text meta" value="<?php echo $row['keyword']?$row['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of Page');?></span></li>
-<li><input type="text" name="description" data="<?php _e('Description');?>" class="input_text meta" value="<?php echo $row['description']?$row['description']:_t('Description');?>"> * <span class="tip"><?php _e('Description of Page');?></span></li>
-</ul>
+<div class="mb10"><input type="text" name="keyword" class="input_text meta" value="<?php echo $row['keyword']?$row['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of Page');?></span></div>
+<div class="mb10"><input type="text" name="description" data="<?php _e('Description');?>" class="input_text meta" value="<?php echo $row['description']?$row['description']:_t('Description');?>"> * <span class="tip"><?php _e('Description of Page');?></span></div>
 </fieldset>
 <fieldset><legend><?php _e('Top word');?></legend>
 <input type="text" name="sort_word" value="<?php echo $row['sort_word'];?>" class="input_text"> * <span class="tip"><?php _e('At top right of page');?></span>

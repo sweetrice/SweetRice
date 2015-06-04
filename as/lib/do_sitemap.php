@@ -10,8 +10,25 @@
  $mode = $_GET['mode'];
  switch($mode){
 	case 'hide':
-		setOption('hidden_from_sitemap',$_POST['plist']?serialize($_POST['plist']):'');
-		_goto('./?type=sitemap');
+		$submode = $_POST['submode'];
+		$hidden_from_sitemap = getOption('hidden_from_sitemap','serialize');
+		if($submode != 'show'){
+			foreach($_POST['plist'] as $val){
+				if(!in_array($val,$hidden_from_sitemap['output'])){
+					$hidden_from_sitemap['output'][] = $val;
+				}
+			}
+		}else{
+			$tmp = array();
+			foreach($hidden_from_sitemap['output'] as $val){
+				if(!in_array($val,$_POST['plist'])){
+					$tmp[] = $val;
+				}
+			}
+			$hidden_from_sitemap['output'] = $tmp;
+		}
+		setOption('hidden_from_sitemap',serialize($hidden_from_sitemap['output']));
+		_goto($_SERVER['HTTP_REFERER']);
 	break;
 	case 'make_index':
 		$url = js_unescape($_POST['url']);
@@ -33,32 +50,50 @@
 			$hList = unserialize($hRow['content']);
 		}
 		$lList = array();
-		if(is_array($categories)){
-			foreach($categories as $val){
-				$lList[] = array('url'=>show_link_cat($val['link'],''),'link_body'=>$val['name'],'original_url'=>show_link_cat($val['link'],'',true));
-			}
-		}
-		$pRows = db_arrays("SELECT * FROM `".DB_LEFT."_links` ORDER BY `url` ASC ");
-		foreach($pRows as $val){
-			$reqs = unserialize($val['request']);
-			if($reqs){
-				$original_url = '?';
-				foreach($reqs as $k=>$v){
-					$original_url .= $k.'='.$v.'&';
+		$mode = $_GET['mode'];
+		$pager = array('p_link'=>'./?type=sitemap&mode='.$mode.'&','page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager');
+		switch($mode){
+			case 'custom':
+				$data = db_fetch(array('table' => "`".DB_LEFT."_links`",
+				'order' => " `url` ASC",
+				'pager' =>  $pager
+				));
+				foreach($data['rows'] as $val){
+					$reqs = unserialize($val['request']);
+					if($reqs){
+						$original_url = '?';
+						foreach($reqs as $k=>$v){
+							$original_url .= $k.'='.$v.'&';
+						}
+						$original_url = substr($original_url,0,-1);			
+					}else{
+						$original_url = $row['url'];
+					}
+					if(URL_REWRITE){
+						$lList[] = array('url'=>$val['url'],'link_body'=>$val['url'],'original_url'=>$original_url);
+					}else{
+						$lList[] = array('url'=>$original_url,'link_body'=>$original_url,'original_url'=>$original_url);
+					}
 				}
-				$original_url = substr($original_url,0,-1);			
-			}else{
-				$original_url = $row['url'];
-			}
-			if(URL_REWRITE){
-				$lList[] = array('url'=>$val['url'],'link_body'=>$val['url'],'original_url'=>$original_url);
-			}else{
-				$lList[] = array('url'=>$original_url,'link_body'=>$original_url,'original_url'=>$original_url);
-			}
-		}
-		$rows = db_arrays("SELECT `sys_name`,`category`,`name` FROM `".DB_LEFT."_posts` WHERE `in_blog` = '1' ORDER by `id` DESC");
-		foreach($rows as $key=>$row){
-			$lList[] = array('url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name']),'link_body'=>$row['name'],'original_url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name'],true));
+			break;
+			case 'post':
+				$data = db_fetch(array('table' => "`".DB_LEFT."_posts`",
+				'where'=>"`in_blog` = '1'",
+				'order' => " `date` DESC",
+				'pager' => $pager
+				));
+				foreach($data['rows'] as $key=>$row){
+					$lList[] = array('url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name']),'link_body'=>$row['name'],'original_url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name'],true));
+				}
+			break;
+			default:
+				$data = db_fetch(array('table' => "`".DB_LEFT."_category`",
+				'order' => " `ID` ASC",
+				'pager' => $pager
+				));
+				foreach($data['rows'] as $val){
+					$lList[] = array('url'=>show_link_cat($val['link'],''),'link_body'=>$val['name'],'original_url'=>show_link_cat($val['link'],'',true));
+				}
 		}
 		$top_word = _t('Sitemap Management');
 		$index_setting = getOption('index_setting');

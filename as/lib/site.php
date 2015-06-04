@@ -78,7 +78,7 @@
 	$s_tzs[$global_setting['timeZone']] = 'selected';
 	foreach($tzs as $key=>$val){
 ?>
-<option value="<?php echo trim($key);?>" <?php echo $s_tzs[$key];?>><?php echo $val;?></option>
+<option value="<?php echo trim($key);?>" <?php echo $s_tzs[$key];?>><?php echo trim($key);?></option>
 <?php
 	}
 ?>
@@ -102,10 +102,10 @@
 </fieldset>
 <fieldset><legend>Logo</legend>
 <img src="<?php echo $global_setting['logo']?'../'.ATTACHMENT_DIR.$global_setting['logo']:'../images/logo.png';?>">
-<input type="file" name="logo" class="input_text_tip" > <?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></fieldset>
+<input type="file" name="logo" class="input_text_tip" > <span class="tip"><?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></span></fieldset>
 <fieldset><legend><?php _e('Theme');?></legend>
 <select name="theme">
-	<option value="" selected="selected"><?php _e('Default');?></option>
+	<option value=""><?php _e('Default');?></option>
 <?php
 	foreach($themes as $val){
 ?>
@@ -117,10 +117,8 @@
 <fieldset><legend><?php echo _t('Title').'('._t('Default').')';?></legend>
 <input type="text" name="title" class="input_text" value="<?php echo $global_setting['title'];?>"></fieldset>
 <fieldset><legend><?php _e('Meta Setting');?></legend>
-<ul>
-<li><input type="text" name="keyword" class="input_text meta" value="<?php echo $global_setting['keywords']?$global_setting['keywords']:_t('Keywords').'('._t('Default').')';?>" data="<?php echo _t('Keywords').'('._t('Default').')';?>"> <?php echo _t('Keywords').'('._t('Default').')';?></li>
-<li><input type="text" name="description" class="input_text meta" value="<?php echo $global_setting['description']?$global_setting['description']:_t('Description').'('._t('Default').')';?>" data="<?php echo _t('Description').'('._t('Default').')';?>"> <?php echo _t('Description').'('._t('Default').')';?></li>
-</ul>
+<div class="mb10"><input type="text" name="keyword" class="input_text meta" value="<?php echo $global_setting['keywords']?$global_setting['keywords']:_t('Keywords').'('._t('Default').')';?>" data="<?php echo _t('Keywords').'('._t('Default').')';?>"> <span class="tip"><?php echo _t('Keywords').'('._t('Default').')';?></span></div>
+<div class="mb10"><input type="text" name="description" class="input_text meta" value="<?php echo $global_setting['description']?$global_setting['description']:_t('Description').'('._t('Default').')';?>" data="<?php echo _t('Description').'('._t('Default').')';?>"> <span class="tip"><?php echo _t('Description').'('._t('Default').')';?></span></div>
 </fieldset>
 <fieldset><legend><?php _e('Cache');?></legend>
 <input type="checkbox" name="cache" value="1" <?php echo CACHE_SETTING?'checked':'';?>/> <span class="tip"><?php _e('Enable data cache,this will save resource for query database.');?></span>
@@ -152,6 +150,9 @@
 <dl><dt><?php _e('Max posts in Rssfeed page');?></dt><dd><input type="text" name="nums_setting[postRssfeed]" value="<?php echo $global_setting['nums_setting']['postRssfeed'];?>"/></dd></dl>
 <dl><dt><?php _e('Comments in comment page');?></dt><dd><input type="text" name="nums_setting[commentList]" value="<?php echo $global_setting['nums_setting']['commentList'];?>"/></dd></dl>
 <dl><dt><?php _e('Comments in Pins mode');?></dt><dd><input type="text" name="nums_setting[commentPins]" value="<?php echo $global_setting['nums_setting']['commentPins'];?>"/></dd></dl>
+<dl><dt><?php _e('Category link per page in sitemap');?></dt><dd><input type="text" name="nums_setting[category_link_per_page]" value="<?php echo $global_setting['nums_setting']['category_link_per_page'];?>"/></dd></dl>
+<dl><dt><?php _e('Post link per page in sitemap');?></dt><dd><input type="text" name="nums_setting[post_link_per_page]" value="<?php echo $global_setting['nums_setting']['post_link_per_page'];?>"/></dd></dl>
+<dl><dt><?php _e('Custom link per page in sitemap');?></dt><dd><input type="text" name="nums_setting[custom_link_per_page]" value="<?php echo $global_setting['nums_setting']['custom_link_per_page'];?>"/></dd></dl>
 <div class="div_clear"></div>
 </div>
 </fieldset>

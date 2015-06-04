@@ -4,7 +4,13 @@
 	orderby : sort by
 	cid : target object
 */
-function sortBy(orderby,cid){
+function sortBy(orderby,cid,callback){
+	if (typeof callback != 'function')
+	{
+		callback = function(){
+			bind_checkall('#checkall','.ck_item');
+		}
+	}
 	var pBody = [],ts = [], tsid = [],gsid = '',thead,sort = 'asc';
 	var is_li = _(cid).find('li').items().length > 0 ?true:false;
 	if (is_li){
@@ -98,7 +104,7 @@ function sortBy(orderby,cid){
 		}
 	});
 	_('.btn_sort').unbind('click').bind('click',function(){
-			sortBy(this,cid);
+			sortBy(this,cid,callback);
 	});
 	if (is_li){
 		lis = _(cid).find('li');
@@ -115,4 +121,5 @@ function sortBy(orderby,cid){
 		}
 		tmp += 1;
 	});
+	callback();
 }

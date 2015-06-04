@@ -98,7 +98,7 @@ Your password has been reset succesfully,please login your dashboard and manage 
 Goodluck!<br />
 SweetRice	
 				'),array($global_setting['author'],BASE_URL,DASHBOARD_DIR,BASE_URL,DASHBOARD_DIR));
-				$result = my_post($global_setting['admin_email'],_t('Your password has been reset succesfully.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],'SweetRice Dashboard',$global_setting['name'].md5(time())	,'UTF-8');
+				$result = my_post($global_setting['admin_email'],_t('Your password has been reset succesfully.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],_t('SweetRice Dashboard'),$global_setting['name'].md5(time())	,'UTF-8');
 				output_json(array('status'=>$result,'msg'=> $result ? _t('Your password has been reset succesfully.'):_t('Notice email sent failed')));
 			}else{			
 				output_json(array('status'=>0,'msg'=>_t('Invalid password or Email.')));

@@ -599,6 +599,7 @@ SweetRice
 		'Archive only supports zip format' => 'Archive only supports zip format',
 		'Add Plugin' => 'Add Plugin',
 		'Enable' => 'Enable',
+		'Disable' => 'Disable',
 		'Theme List' => 'Theme List',
 		'Add Theme' => 'Add Theme',
 		'Theme has been change successfully' => 'Theme has been change successfully',
@@ -610,6 +611,14 @@ SweetRice
 		'Image List' => 'Image List',
 		'Supports zip archive' => 'Supports zip archive',
 		'Reset' => 'Reset',
-		'No image selected' => 'No image selected'
+		'No image selected' => 'No image selected',
+		'SweetRice Dashboard' => 'SweetRice Dashboard',
+		'Show' => 'Show',
+		'Page' => 'Page',
+		'Auto detect' => 'Auto detect',
+		'Category link per page in sitemap' => 'Category link per page in sitemap',
+		'Post link per page in sitemap' => 'Post link per page in sitemap',
+		'Custom link per page in sitemap' => 'Custom link per page in sitemap',
+		'Extract zip archive?' => 'Extract zip archive?'
 );
 ?>

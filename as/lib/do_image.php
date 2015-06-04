@@ -7,50 +7,6 @@
  * @since 1.3.4
  */
 	defined('VALID_INCLUDE') or die();
-	function _unzip($file_name,$dest){
-		if(!is_dir($dest.'temp')){
-			mkdir($dest.'temp');
-		}
-		if(floatval(PHP_VERSION)<5.2)
-		{
-			$zip = zip_open($file_name);
-			if ($zip) {
-				while ($zip_entry = zip_read($zip)) {
-					if (zip_entry_open($zip, $zip_entry, "r")) {
-						$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-						if(substr(zip_entry_name($zip_entry),-1)=='/')
-						{
-							//mkdir('./'.zip_entry_name($zip_entry));
-						}else
-						{
-							$handle = fopen(zip_entry_name($dest.'temp/'.$zip_entry),'wb');
-							fwrite($handle,$buf);
-							fclose($handle);
-							$data[] = $zip_entry;
-						}
-						zip_entry_close($zip_entry);
-					}
-				}
-				zip_close($zip);
-			}			
-		}else
-		{
-			$zip = new ZipArchive();
-			if ($zip->open($file_name) === TRUE) {
-				$zip->extractTo($dest.'temp/');
-				$zip->close();	
-				$d = dir($dest.'temp/');
-				while (false !== ($entry = $d->read())) {
-					if($entry!='.'&&$entry!='..')
-					{
-						$data[] = $entry;
-					} 
-				}
-				$d->close();
-			}
-		}
-		return $data;
-	}
 	if($_GET['mode'] == 'clean'){
 		$_SESSION['imgs'] = array();
 	}
@@ -71,11 +27,10 @@
 		}
 	}
 	$dest_dir = date('Ymd').'/';
-	$tmp_dir = '../'.ATTACHMENT_DIR.$dest_dir;
+	$tmp_dir = SITE_HOME.ATTACHMENT_DIR.$dest_dir;
 	if(!is_dir($tmp_dir)){
 		mkdir($tmp_dir);
 	}
-
 	if(is_array($_FILES['imgs']['name'])){
 		foreach($_FILES['imgs']['name'] as $key=>$val){
 			$tmp = array(
@@ -87,37 +42,37 @@
 			);
 			
 			if(substr($tmp['name'],-4) == '.zip'){
-				$data = _unzip($tmp['tmp_name'],$tmp_dir);
+				$data = extractZIP($tmp['tmp_name'],$tmp_dir);
 				foreach($data as $val){
-					$tmp = explode('.',$val);
-					$ext = end($tmp);
-					$name = md5($tmp_dir.'temp/'.$val.time()).$ext;
-					rename($tmp_dir.'temp/'.$val,$tmp_dir.$name);
-					$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$name;
+					$val = str_replace(SITE_HOME,SITE_URL,$val);
+					if($val && !in_array($val,$_SESSION['imgs'])){
+						$_SESSION['imgs'][] = $val;
+					}
 				}
-				un_($tmp_dir.'temp/');
 			}else{
 				$upload = upload_($tmp,$tmp_dir,$tmp['name'],null);
-				if(file_exists($tmp_dir.$upload)){
-					$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+				if($upload && file_exists($tmp_dir.$upload)){
+					if(!in_array(SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
+						$_SESSION['imgs'][] = SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+					}
 				}
 			}
 		}
 		_goto('./?type=image');
 	}elseif($_FILES['imgs']['name']){
 		if(substr($_FILES['imgs']['name'],-4) == '.zip'){
-			$data = _unzip($_FILES['imgs']['tmp_name'],$tmp_dir);
+			$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir);
 			foreach($data as $val){
-				$tmp = explode('.',$val);
-				$ext = end($tmp);
-				$name = md5($tmp_dir.'temp/'.$val.time()).$ext;
-				rename($tmp_dir.'temp/'.$val,$tmp_dir.$name);
-				$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$name;
+				$val = str_replace(SITE_DIR,SITE_HOME,$val);
+				if($val && !in_array($val,$_SESSION['imgs'])){
+					$_SESSION['imgs'][] = $val;
+				}
 			}
-			un_($tmp_dir.'temp/');
 		}else{
 			upload_($_FILES['imgs'],$tmp_dir,$_FILES['imgs']['name'],null);
-			$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+			if(!in_array(BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
+				$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+			}
 		}
 		_goto('./?type=image');
 	}
@@ -131,19 +86,120 @@
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
 body{font-family:"Microsoft YaHei";font-size:small;}
+input[type=button], input[type=submit] {
+	padding: 2px 8px !important;
+	border: none;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-khtml-box-sizing: content-box;
+	box-sizing: content-box;
+	cursor:pointer;
+	color: #ffffff;
+	background-color:#669900;
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.4);
+	height:25px;
+	line-height:25px;
+}
+input[type=button]:hover, input[type=submit]:hover {
+	border-color: #669966;
+	background-color:#99CC00;
+	height:25px;
+	line-height:25px;
+}
+select{
+	height:35px;
+}
+select option{
+	line-height:35px;
+}
+input[type=text]:focus,input[type=checkbox]:focus,input[type=password]:focus,select:focus,textarea:focus{
+-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
+}
+p{
+	margin:5px 0px;
+}
+fieldset{
+	padding:10px;
+	margin:10px 0px;
+	border:1px dotted #ccc;
+}
+fieldset:hover{
+	border:1px solid #ccc;
+	box-shadow: 5px 5px 10px #ccc;
+}
+fieldset li{
+	margin:5px 0px 0px 20px;
+}
+fieldset legend{
+	font-weight:bold;
+	padding:0px 5px;
+}
+fieldset label{
+	background-color:#fff;
+	margin-left:2px;
+	padding:5px 10px;
+	cursor:pointer;
+	height:25px;
+	line-height:25px;
+}
+fieldset label:hover{
+	background-color:#669900;
+	color:#ffffff;
+}ul,ol{
+	margin-left:2px;
+}
+
+textarea{
+	border:1px #999999 solid;
+	background-color:#fafafa;
+	-webkit-box-shadow: 3px 3px 15px #ccc;    
+	-moz-box-shadow: 3px 3px 15px #ccc;    
+	box-shadow: 3px 3px 15px #ccc; 
+	border-radius:5px;
+	padding:1%;
+	margin:5px 0px;
+	width:98%;
+}
+iframe{
+	border:0;
+}
+input[type=text],input[type=password]{
+	background-color:#fff;
+	padding:3px 5px;
+	height:24px;
+	line-height:24px;
+	font-size:18px;
+	border: 1px solid #ccc;
+}
+input[type=file]{
+	height:30px;
+	line-height:30px;
+	border: 1px solid #ccc;
+}
 .imgs{max-height:450px;}
 .imgs ul{margin: 10px 0px; padding: 0px;}
-.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 1px 1px 5px #000;margin:1%;text-align:center;padding: 5px 0px;}
+.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 2px 2px 5px #ccc;margin:1%;text-align:center;padding: 5px 0px;}
 .imgs li img{max-width:98%;max-height:98%;border:1px solid #d8d8d8;}
 .imgs li input[type=checkbox]{position:absolute;right:5px;bottom:5px;}
 .img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
 .clear{clear:both;}
+.form_split{line-height:30px;display:inline;margin:2px 10px;height:30px;}
+@media (max-width: 640px){
+	.form_split{float:none;margin-left:5px;display:block;height:auto;}
+	.imgs li{width:48%;}
+	input[type=file]{
+		width:188px;
+	}
+}
 </style>
 </head>
 <body>
 <form method="post" action="" enctype="multipart/form-data" >
-	<input type="file" name="imgs[]" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple> <input type="submit" value="<?php _e('Upload');?>" class="input_submit"/> <?php _e('Supports zip archive');?>
-	<?php _e('all');?> <input type="checkbox" class="ck_item"><input type="button" value="<?php _e('Insert images');?>" class="btn_attach"> <input type="button" value="<?php _e('Reset');?>" class="btn_clean">
+<div class="form_split">
+	<input type="file" name="imgs[]" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple> <input type="submit" value="<?php _e('Upload');?>" class="input_submit"/></div>
+	<div class="form_split"><?php _e('Supports zip archive');?>
+	<?php _e('all');?> <input type="checkbox" class="ck_item"><input type="button" value="<?php _e('Insert images');?>" class="btn_attach"> <input type="button" value="<?php _e('Reset');?>" class="btn_clean"></div>
 </form>
 <div class="imgs">
 <ul>
@@ -179,7 +235,14 @@ foreach($_SESSION['imgs'] as $img):?>
 			function(){
 				_(this).find('a').hide();
 			}
-		);
+		).click(function(){
+			if (_(this).find('.imglist').prop('checked'))
+			{
+				_(this).find('.imglist').prop('checked',false);
+			}else{
+				_(this).find('.imglist').prop('checked',true);
+			}
+		});
 		_('.btn_clean').bind('click',function(){
 			location.href = './?type=image&mode=clean';
 		});

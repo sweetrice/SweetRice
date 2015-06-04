@@ -65,7 +65,7 @@
 	}	
 ?>
 </fieldset>
-<input type="button" class="input_submit" value="<?php _e('Done');?>"> <input type="button" value="<?php _e('Back');?>" url="./?type=sites" class="input_submit back">
+<input type="submit" class="input_submit" value="<?php _e('Done');?>"> <input type="button" value="<?php _e('Back');?>" url="./?type=sites" class="input_submit back">
 </form>
 <script type="text/javascript">
 <!--
@@ -97,14 +97,12 @@
 				form:'#sform',
 				url:_(this).attr('action'),
 				success:function(result){
-					_.dialog({
-						'content':result.status_code,
-						'close':function(){
-							if (result.status == 1){
-								location.href = './?type=sites';
-							}
-						}
-					});
+					if (result['status'] == 1)
+					{
+						location.href = './?type=sites';
+					}else{
+						_.ajax_untip(result['status_code']);
+					}
 				}
 			});
 			_.stopevent(event);

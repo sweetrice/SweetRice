@@ -25,8 +25,7 @@
 <div id="top_image"><a href="<?php echo BASE_URL;?>" target="_blank"><img src="<?php echo BASE_URL;?><?php echo $top_height!='normal'?'images/sweetrice_icon.png':($global_setting['logo']?ATTACHMENT_DIR.$global_setting['logo']:'images/sweetrice.png');?>" alt="<?php echo $global_setting['name'];?>" id="logo"></a></div>
 <div id="top_word">
 <h1><?php echo $top_word?ucfirst($type).' -&gt; '.$top_word:_t('Welcome to SweetRice!');?></h1>
-<div id="top_line" data="<?php echo $top_height;?>">......</div>
 </div>
-<div class="div_clear"></div>
+<div id="top_line" data="<?php echo $top_height;?>">......</div>
 </div>
 <div id="toggle_nav"></div>

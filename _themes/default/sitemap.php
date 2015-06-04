@@ -28,12 +28,14 @@ foreach($lList as $key=>$val):
 		case 'custom':
 			echo '<li><a href="',$val['link_html'],'">',$val['link_html_body'],'</a> <a href="',$val['link_xml'],'">',$val['link_xml_body'],'</a></li>';
 		break;
+		default:
+			echo '<li><a href="',$val['link_html'],'">',$val['link_html_body'],'</a>';
 	endswitch;
 endforeach;
 ?>
 </ul>
 </div>
-
+<?php echo $data['pager']['list_put'];?>
 </div>
 <?php	
 	if(file_exists(THEME_DIR.$page_theme['sidebar'])){

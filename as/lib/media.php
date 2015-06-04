@@ -17,10 +17,9 @@
 *{
 	margin:0;
 	padding:0;
-	font-size:11px;
 }
 body{
-	padding:5px;
+	font-family:"Microsoft YaHei","lucida grande",tahoma,verdana,arial,sans-serif;
 }
 img {
 	border: 0px;
@@ -33,48 +32,12 @@ a:hover{
 	color: #000;
 	text-decoration: underline;
 }
-#upload_form{
-	padding:2px 0px;
-}
 table{
 	width:100%;
 }
 .file_table{
 	height:370px;
 	overflow:auto;
-}
-input[type=button], input[type=submit] {
-	padding: 2px 8px !important;
-	border: 1px solid #bbb;
-	border-radius: 5px;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	-khtml-box-sizing: content-box;
-	box-sizing: content-box;
-	cursor:pointer;
-	color: #ffffff;
-	background-color:#669900;
-	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.4);
-}
-input[type=button]:hover, input[type=submit]:hover {
-	border-color: #669966;
-}
-input[type=text]:focus,input[type=checkbox]:focus,input[type=password]:focus,select:focus,textarea:focus{
--webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
-}
-input[type=text],input[type=password],input[type=file]{
-	border:1px #999999 solid;
-	border-top:1px #669966 solid;
-	background-color:#F2F2F2;
-	padding:3px;
-	border-radius:3px;
-}
-.point{
-	cursor: pointer;
-}
-#deleteTip{
-	background-color:#FFFBCC;
 }
 .folder{
 	background:url("../images/action_icon.png") no-repeat scroll -59px -2px transparent;
@@ -90,6 +53,104 @@ input[type=text],input[type=password],input[type=file]{
 	overflow:hidden;
 	width:20px;
 }
+input[type=button], input[type=submit] {
+	padding: 2px 8px !important;
+	border: none;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-khtml-box-sizing: content-box;
+	box-sizing: content-box;
+	cursor:pointer;
+	color: #ffffff;
+	background-color:#669900;
+	text-shadow:0 -1px 0 rgba(0, 0, 0, 0.4);
+	height:25px;
+	line-height:25px;
+}
+input[type=button]:hover, input[type=submit]:hover {
+	border-color: #669966;
+	background-color:#99CC00;
+	height:25px;
+	line-height:25px;
+}
+select{
+	height:35px;
+}
+select option{
+	line-height:35px;
+}
+input[type=text]:focus,input[type=checkbox]:focus,input[type=password]:focus,select:focus,textarea:focus{
+-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
+box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(125, 125, 125, 0.6);
+}
+p{
+	margin:5px 0px;
+}
+fieldset{
+	padding:10px;
+	margin:10px 0px;
+	border:1px dotted #ccc;
+}
+fieldset:hover{
+	border:1px solid #ccc;
+	box-shadow: 5px 5px 10px #ccc;
+}
+fieldset li{
+	margin:5px 0px 0px 20px;
+}
+fieldset legend{
+	font-weight:bold;
+	padding:0px 5px;
+}
+fieldset label{
+	background-color:#fff;
+	margin-left:2px;
+	padding:5px 10px;
+	cursor:pointer;
+	height:25px;
+	line-height:25px;
+}
+fieldset label:hover{
+	background-color:#669900;
+	color:#ffffff;
+}ul,ol{
+	margin-left:2px;
+}
+
+textarea{
+	border:1px #999999 solid;
+	background-color:#fafafa;
+	-webkit-box-shadow: 3px 3px 15px #ccc;    
+	-moz-box-shadow: 3px 3px 15px #ccc;    
+	box-shadow: 3px 3px 15px #ccc; 
+	border-radius:5px;
+	padding:1%;
+	margin:5px 0px;
+	width:98%;
+}
+iframe{
+	border:0;
+}
+input[type=text],input[type=password]{
+	background-color:#fff;
+	padding:3px 5px;
+	height:24px;
+	line-height:24px;
+	font-size:18px;
+	border: 1px solid #ccc;
+}
+input[type=file]{
+	height:30px;
+	line-height:30px;
+	border: 1px solid #ccc;
+}
+.point{
+	cursor: pointer;
+}
+#deleteTip{
+	background-color:#FFFBCC;
+}
+
 .action_delete{
 	background:url("../images/action_icon.png") no-repeat scroll -18px -2px transparent;
 	float:left;
@@ -111,28 +172,61 @@ max-height:420px;
 	vertical-align:middle;
 	}
 .clear{clear:both;height:0px;line-height:0px;}
-#upload_form form{margin:3px 0px;}
+
 #remote{width:260px;}
 #upload{width:250px;overflow:hidden;}
 .page_limit{width:30px;}
+.imgs{max-height:450px;}
+.imgs ul{margin: 10px 0px; padding: 0px;}
+.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 2px 2px 5px #ccc;margin:1%;text-align:center;padding: 5px 0px;cursor:pointer;}
+.imgs li div{width:100%;word-wrap: break-word; word-break: break-all;height:100%;overflow:hidden;}
+.imgs li img{max-width:98%;max-height:98%;border:1px solid #d8d8d8;}
+.imgs li input[type=checkbox]{position:absolute;right:5px;bottom:5px;}
+.img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
+.clear{clear:both;}
+.imgs li div a{display:block;width:100%;height:100%;}
+.form_split{float:left;line-height:30px;display:inline;margin:2px 10px;height:30px;}
+.selected_item{box-shadow: 2px 2px 5px #690 !important;}
+@media (max-width: 640px){
+	.form_split{float:none;margin-left:5px;display:block;height:auto;}
+	.imgs li{width:48%;}
+}
 </style>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/public.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
-<div id="file_list">
-
+<div class="form_split">
+<form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
+<div class="form_split">
+<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
+	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
+</form>
+</div>
+<div class="form_split">
+<form method="post" action="./?type=media&mode=mkdir">
+<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
+<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
+</form>
+</div>
+<div class="clear"></div>
+<div class="form_split">
+<span class="folder"></span> <a href="./?type=media<?php echo $parent?'&dir='.$parent:'';?>&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a>
+</div>
+<div class="form_split">
 <form method="get" action="./">
 <input type="hidden" name="type" value="media" />
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
 <?php _e('Search');?> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
 	<input type="text" name="keyword" value="<?php echo $keyword;?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
+</div>
+<div class="clear"></div>
 <span id="deleteTip"></span>
-<div class="file_table">
-<table cellspacing="1" cellpadding="1">
-<tr><td></td><td>
-<span class="folder"></span> <a href="./?type=media&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a></td><td><?php _e('Media Center');?></td><td></td></tr>
+<div class="imgs">
+<ul>
 <?php
 $no = 0;
 for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
@@ -144,80 +238,66 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		}
 	 $no +=1;
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>" ><td><?php echo $no;?></td><td>
+<li id="tr_<?php echo $no;?>" class="<?php echo $files[$i]['type'] == 'dir' ? 'isdir':'isfile';?>">
 <?php
 	if($files[$i]['type']=='dir'){
 ?>
-<span class="folder"></span> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $files[$i]['link'].'/';?>"><?php echo $files[$i]['name'];?></a>
+<div>
+<a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $files[$i]['link'].'/';?>"><span title="<?php echo $files[$i]['name'];?>"><?php echo $files[$i]['name'];?></span></a></div>
 <?php
 	}else{
 		$tmp_prefix = '';
+		$tmp_prefix = explode('.',$files[$i]['name']);
+		$tmp_prefix = '.'.end($tmp_prefix);
 		if(mb_strlen($files[$i]['name'],'UTF-8') > 36){
-			$tmp_prefix = explode('.',$files[$i]['name']);
 			if(count($tmp_prefix)){
-				$tmp_prefix = '.'.end($tmp_prefix);
 				$files[$i]['name'] = mb_substr($files[$i]['name'],0,32,'UTF-8').'...'.$tmp_prefix;
 			}
 		}
-		switch($referrer){
-			case 'attachment':
+		if(in_array(strtolower($tmp_prefix),array('.jpg','.png','.gif','.jpeg','.bmp'))){
 ?>
-<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>" class="attlist"><?php echo $files[$i]['name'];?></a>
+<img src="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" class="<?php echo $referrer == 'attachment'?'attlist':'medialist';?>" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>">
 <?php
-			break;
-			default:
-?>
-<span class="article" ></span><a href="javascript:void(0);" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" class="medialist" mtype="<?php echo $files[$i]['type'];?>"><?php echo $files[$i]['name'];?></a>
+		}else{
+?><div>
+<a href="javascript:void(0);" class="<?php echo $referrer == 'attachment'?'attlist':'medialist';?>" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>"><?php echo $files[$i]['name'];?></a></div>
 <?php
-			break;
 		}
 	}
 ?>
-</td>
-<td>
-<?php echo $files[$i]['date'];?></td>
-<td><span id="action_<?php echo $no;?>"></span>
-<a title="<?php _e('Delete');?>" class="action_delete dellist" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php _e('Delete');?></a>
-</td></tr>
+<a title="<?php _e('Delete');?>" class="action_delete dellist img_delete" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php _e('Delete');?></a></li>
+
 <?php
 	}
 }
 ?>
-</table>
+</ul>
 </div>
-<div style="text-align:center;"><?php echo $pager['list_put'];?></div>
-<div id="upload_form">
-<form method="post" action="./?type=media&mode=mkdir">
-<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
-</form>
-<form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
-<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
-</form>
-</div>
-</div>
-<div class="preview">
-<div id="preview"></div>
-<?php
-	if($referrer == 'attachment'){
-	?>
-	<input type="text" id="remote"> <input type="button" value="<?php _e('Attach File');?>" class="aa_btn">
-	<?php }?>
-</div>
+<div class="clear"></div>
+<?php echo $pager['list_put'];?>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
-		_('.aa_btn').bind('click',function(){
-			if (parent.attach_media.val()){
-				parent._('#SweetRice_dialog_media').find('.SweetRice_dialog_close').run('click');
+		_('.imgs li').hover(function(){
+				_(this).css({'background-color':'#fafafa'}).find('.img_delete').show();
+			},
+			function(){
+				_(this).css({'background-color':'#fff'}).find('.img_delete').hide();
 			}
+		).click(function(){
+			_('.imgs li').removeClass('selected_item');
+			_(this).addClass('selected_item');
+		});
+		_('.isfile').bind('click',function(){
+			_('.isfile').removeClass('selected_item');
+			_(this).addClass('selected_item');
 		});
 		_('.attlist').bind('click',function(){
 			parent.attach_media.val(_(this).attr('link'));
 			_('#remote').val(_(this).attr('link'));
-			preview_file(this);
+		}).bind('dblclick',function(){
+			parent.attach_media.val(_(this).attr('link'));
+			parent._('#SweetRice_dialog_media').find('.SweetRice_dialog_close').run('click');
 		});
 		_('#remote').bind('change',function(){
 			parent.attach_media.val(_(this).val());
@@ -233,21 +313,8 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 
 		_('.medialist').bind('click',function(){
 			parent.document.getElementById('tmp_media').value = _(this).attr('link');
-			preview_file(this);
 		});
 	});
-	function preview_file(obj){
-		if (_(obj).attr('mtype').substring(0,6) == 'image/')
-		{
-			_('#preview').html('<img src="'+_(obj).attr('link')+'">');
-		}else if(_(obj).attr('mtype').substring(0,6) == 'video/'){
-			_('#preview').html('<video width="300" height="200" controls="controls"><source src="'+_(obj).attr('link')+'" type="'+_(obj).attr('mtype')+'" /></video>');
-		}else if(_(obj).attr('mtype').substring(0,6) == 'audio/'){
-			_('#preview').html('<audio width="300" height="20" controls="controls"><source src="'+_(obj).attr('link')+'" type="'+_(obj).attr('mtype')+'" /></audio>');
-		}else{
-			_('#preview').html('<?php _e('Can not preview this file');?>');
-		}
-	}
 //-->
 </script>
 </body>

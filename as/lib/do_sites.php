@@ -14,7 +14,7 @@
 	if($status['error_db'] || $status['message']){
 		output_json(array('status'=>0,'status_code'=>$status['error_db'].' '.$status['message']));
 	}else{
-		output_json(array('status'=>1,'data'=>$_POST));
+		output_json(array('status'=>1));
 	}
  }elseif($mode == 'delete'){
 	$host = $_POST['host'];

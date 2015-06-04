@@ -10,7 +10,7 @@
 ?>
 <div id="tbl">
 <table>
-<thead><tr><td><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="version" stt="number"><?php _e('Version');?></a></td><td><?php _e('Plugin Description');?></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="version" stt="number"><?php _e('Version');?></a></th><th class="media_content"><?php _e('Plugin Description');?></th><th class="td_admin" style="width:60px;"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;
@@ -29,8 +29,8 @@ $no = 0;
 			$plugin_link = 'javascript:void(0);" class="noinstall"';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo $plugin_link;?>"><span id="name_<?php echo $no;?>"><?php echo $val['name'];?></span></a></td><td><span id="version_<?php echo $no;?>"><?php echo $val['version'];?></span></td>
-<td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo $plugin_link;?>"><span id="name_<?php echo $no;?>"><?php echo $val['name'];?></span></a></td><td class="media_content"><span id="version_<?php echo $no;?>"><?php echo $val['version'];?></span></td>
+<td class="media_content">
 <div style="margin:10px;"><?php echo is_array($val['description'])?($val['description'][basename($global_setting['lang'],'.php')]?$val['description'][basename($global_setting['lang'],'.php')]:$val['description']['en-us']):$val['description'];?></div>
 <p><?php _e('Author');?>:<?php echo $val['author'];?> | <?php _e('Contact');?>:<a href="mailto:<?php echo $val['contact'];?>"><?php echo $val['contact'];?></a> | <?php _e('Home Page');?>:<a href="<?php echo $val['home_page'];?>"><?php echo $val['home_page'];?></a></p>
 </td>
@@ -43,10 +43,10 @@ $no = 0;
 </div>
 <fieldset><legend><?php _e('Add Plugin');?></legend>
 <form method="post" enctype="multipart/form-data" action="./?type=plugins&mode=add">
-	<?php _e('Remote File');?> <input type="text" name="app_url" />
-	<?php _e('Upload');?> <input type="file" name="app_file" />
-	<input type="submit" class="input_submit" value="<?php _e('Done');?>"/>
-	<div><?php _e('Archive only supports zip format');?></div>
+	<div class="form_split"><?php _e('Remote File');?> <input type="text" name="app_url" /></div>
+	<div class="form_split"><?php _e('Upload');?> <input type="file" name="app_file" /></div>
+	<div class="form_split"><input type="submit" class="input_submit" value="<?php _e('Done');?>"/></div>
+	<div class="form_split"><?php _e('Archive only supports zip format');?></div>
 </form>
 </fieldset>
 <script type="text/javascript" src="js/BodySort.js"></script>

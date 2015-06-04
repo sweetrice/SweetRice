@@ -49,10 +49,8 @@
 <fieldset><legend><?php _e('Title');?></legend>
 <input type="text" name="title" class="input_text" value="<?php echo $_POST['title'];?>"> * <span class="tip"><?php _e('Title of page');?></span></fieldset>
 <fieldset><legend><?php _e('Meta Setting');?></legend>
-<ul>
-<li><input type="text" name="keyword" id="keyword" class="input_text meta" value="<?php echo $_POST['keyword']?$_POST['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of page');?></span></li>
-<li><input type="text" name="description" id="description" class="input_text meta" value="<?php echo $_POST['description']?$_POST['description']:_t('Description');?>" data="<?php _e('Description');?>"> * <span class="tip"><?php _e('Description of page');?></span></li>
-</ul>
+<div class="mb10"><input type="text" name="keyword" id="keyword" class="input_text meta" value="<?php echo $_POST['keyword']?$_POST['keyword']:_t('Keywords');?>" data="<?php _e('Keywords');?>"> * <span class="tip"><?php _e('Keywords of page');?></span></div>
+<div class="mb10"><input type="text" name="description" id="description" class="input_text meta" value="<?php echo $_POST['description']?$_POST['description']:_t('Description');?>" data="<?php _e('Description');?>"> * <span class="tip"><?php _e('Description of page');?></span></div>
 </fieldset>
 </div>
 <input type="submit" value="<?php _e('Done');?>"> <input type="button" value="<?php _e('Back');?>" url="./" class="input_submit back">

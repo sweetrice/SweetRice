@@ -10,7 +10,7 @@
 ?>
 <div id="tbl">
 <table>
-<thead><tr><td><a href="javascript:void(0);" class="btn_sort" data="domain"><?php _e('Host');?></a></td><td><?php _e('Website Configuration');?></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="domain"><?php _e('Host');?></a></th><th><?php _e('Website Configuration');?></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;
@@ -22,7 +22,7 @@ $no = 0;
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="http://<?php echo $key.substr(BASE_URL,strlen($_SERVER['HTTP_HOST'])+7);?>"><span id="domain_<?php echo $no;?>"><?php echo $key;?></span></a></td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="http://<?php echo $key.substr(BASE_URL,strlen($_SERVER['HTTP_HOST'])+7);?>"><span id="domain_<?php echo $no;?>"><?php echo $key;?></span></a></td>
 <td>
 <div style="margin:10px;">
 <?php echo _t('Database').' : <strong>'.$val['database_type'].'</strong>';?>  

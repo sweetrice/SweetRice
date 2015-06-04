@@ -30,14 +30,15 @@
 		}
 ?>
 <li id="cf_<?php echo $no;?>">
-<fieldset><legend><?php _e('Name');?> <input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text">
-<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"> 
+<fieldset><legend><?php _e('Name');?> 
 <?php if(!$savelist_none):?>
 <?php if($cfdata[$val['name']]):?>
 <?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name'];?>" class="df_list"> 
 <?php else:?>
 <?php _e('Save to list');?> <input type="checkbox" data="<?php echo $val['name'];?>" name="savelist[<?php echo $no;?>]">
 <?php endif;?> <?php endif;?></legend>
+<div class="mb10"> <input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text">
+<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"></div>
 <input type="hidden" name="cfid[<?php echo $no;?>]" value="<?php echo $val['id'];?>">
 <?php if(($val['data_type'] == 'radio' && !$cfdata[$val['name']]['options']) || ($val['data_type'] == 'select' && !$cfdata[$val['name']]['options'])):?>
 <input type="hidden" name="cftype[<?php echo $no;?>]" value="text">
@@ -126,9 +127,10 @@ endforeach;?>
 			$no += 1;
 ?>
 <li id="cf_<?php echo $no;?>">
-<fieldset><legend><?php _e('Name');?> <input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text"> 
-<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"> 
+<fieldset><legend><?php _e('Name');?> 
 <?php if(!$savelist_none):?><?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name'];?>" class="df_list"> <?php endif;?></legend>
+<div class="mb10"><input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text"> 
+<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"></div>
 <input type="hidden" name="cftype[<?php echo $no;?>]" value="<?php echo $val['type'];?>">
 <input type="hidden" name="cfoption[<?php echo $no;?>]" value="<?php echo $val['options'];?>">
 <?php switch($val['type']){
@@ -193,6 +195,7 @@ endforeach;?>
 <div class="div_clear"></div>
 <input type="hidden" id="cfno" name="cfno" data="<?php echo intval($no);?>"<?php echo !count($cf_rows)?'':' value="'.intval($no).'"';?>/>
 <div class="mg5">
+<div class="form_split">
 <select id="cftype">
 	<option value="text"><?php _e('Text');?></option>
 	<option value="password"><?php _e('Password');?></option>
@@ -202,7 +205,12 @@ endforeach;?>
 	<option value="html"><?php _e('HTML');?></option>
 	<option value="file"><?php _e('Files');?></option>
 </select> 
-<input type="button" value="<?php _e('Add Custom Field');?>" class="cf_add"> <input type="button" value="<?php echo _e('Clean Custom Field');?>" class="cf_clean"> <div class="tip"><?php _e('One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field');?></div></div>
+</div>
+<div class="form_split">
+<input type="button" value="<?php _e('Add Custom Field');?>" class="cf_add"></div>
+<div class="form_split"><input type="button" value="<?php echo _e('Clean Custom Field');?>" class="cf_clean"> <div class="tip"><?php _e('One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field');?>
+</div>
+</div></div>
 </div>
 </fieldset>
 <script type="text/javascript">
@@ -303,7 +311,7 @@ endforeach;?>
 					value_html = '<textarea name="cfvalue['+cfno+']" id="cfvalue['+cfno+']"></textarea>';
 				break;
 			}
-			_(new_rule).attr('id','cf_'+cfno).html('<fieldset><legend><?php _e('Name');?> <input type="text" name="cfname['+cfno+']" class="input_text"><?php if(!$savelist_none):?> <input type="button" value="<?php _e('Delete');?>" class="cf_del" id="cf_'+cfno+'" data="'+cfno+'"><input type="hidden" name="cftype['+cfno+']" value="'+_('#cftype').val()+'"><input type="hidden" name="cfoption['+cfno+']" value="'+cfoption+'"> <?php _e('Save to list');?> <input type="checkbox" value="1" name="savelist['+cfno+']"><?php endif;?></legend>' + value_html + '</fieldset>');
+			_(new_rule).attr('id','cf_'+cfno).html('<fieldset><legend><?php _e('Name');?> <?php if(!$savelist_none):?> <input type="button" value="<?php _e('Delete');?>" class="cf_del" id="cf_'+cfno+'" data="'+cfno+'"><input type="hidden" name="cftype['+cfno+']" value="'+_('#cftype').val()+'"><input type="hidden" name="cfoption['+cfno+']" value="'+cfoption+'"> <?php _e('Save to list');?> <input type="checkbox" value="1" name="savelist['+cfno+']"><?php endif;?></legend><div class="mb10"><input type="text" name="cfname['+cfno+']" class="input_text"></div>' + value_html + '</fieldset>');
 			_('#cfList').append(new_rule);
 			_('.cf_del').unbind('click').bind('click',function(){
 				var no = _(this).attr('data');

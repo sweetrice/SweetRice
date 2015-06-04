@@ -19,7 +19,7 @@
 <form method="post" id="bulk_form" action="./?type=data&mode=db_import&form_mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><td><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th><input type="checkbox" id="checkall"/></th><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 if(is_dir($db_backup_dir)){
@@ -34,7 +34,7 @@ if(is_dir($db_backup_dir)){
 				$classname='tr_sigle';
 			}
 ?>
-	<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $entry;?>"/> <a href="javascript:void(0);" url="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=import" class="btn_import"><span id="name_<?php echo $no;?>"><?php echo $entry;?></span></a> (<?php echo number_format(filesize($db_backup_dir.'/'.$entry));?> bytes)</td>
+	<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $entry;?>"/></td><td class="max50"><a href="javascript:void(0);" url="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=import" class="btn_import"><span id="name_<?php echo $no;?>"><?php echo $entry;?></span></a> (<?php echo number_format(filesize($db_backup_dir.'/'.$entry));?> bytes)</td>
 	<td><span id="action_<?php echo $no;?>"></span>
 	<a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $entry;?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
 	<a title="<?php _e('Save');?>" class="action_save" href="./?type=data&mode=db_import&db_file=<?php echo $entry;?>&form_mode=save"><?php _e('Save');?></a> 

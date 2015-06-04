@@ -53,10 +53,18 @@ switch($mode){
 					'error' => $_FILES['upload']['error'][$key],
 					'size' => $_FILES['upload']['size'][$key]
 				);
-				upload_($tmp,$dest_dir,$tmp['name'],null);
+				if(substr($tmp['name'],-4) == '.zip' && $_POST['unzip']){
+					extractZIP($tmp['tmp_name'],$dest_dir);
+				}else{
+					upload_($tmp,$dest_dir,$tmp['name'],null);
+				}
 			}
 		}else{
-			upload_($_FILES['upload'],$dest_dir,$_FILES['upload']['name'],null);
+			if(substr($_FILES['upload']['name'],-4) == '.zip' && $_POST['unzip']){
+				extractZIP($_FILES['upload']['tmp_name'],$dest_dir);
+			}else{
+				upload_($_FILES['upload'],$dest_dir,$_FILES['upload']['name'],null);
+			}
 		}
 		_goto($_SERVER['HTTP_REFERER']);
 	break;

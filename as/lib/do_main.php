@@ -14,5 +14,8 @@
   if(file_exists('../inc/lastest_update.txt')){
 		$lastest_update = file_get_contents('../inc/lastest_update.txt');
 	}	
+	$lang = getLangTypes(INCLUDE_DIR.'lang/');
+	$themes = getThemeTypes();
+	$lang_types = getLangTypes();
 	$inc = 'main.php';
  ?>

@@ -38,7 +38,8 @@
 		}
 ?>
 <form method="post" action="./?type=theme&mode=save&page=<?php echo $page;?>">
-<fieldset><legend><?php echo _t('Modify').' '.$page.' : '.$themes[$page];?>:</legend>
+<fieldset><legend><?php echo _t('Modify');?></legend>
+<?php echo $page.' : '.$themes[$page];?>
 	<textarea name="contents" class="theme_contents"><?php echo htmlspecialchars($page_contents);?></textarea>
 </fieldset>
 	<input type="submit" class="input_submit" value=" <?php _e('Done');?> "/> * <span class="tip"><?php _e('Please backup before modify');?></span> <?php if(!$from_bak):?><input type="button" value="<?php _e('Delete');?>" class="btn_delete" data="<?php echo $page;?>"><?php endif;?>
@@ -62,11 +63,13 @@ if(count($bak_list)){
 ?>
 <form method="post" action="./?type=theme&mode=add">
 <fieldset><legend><?php _e('Create Template');?></legend>
- <?php _e('Name');?> <input type="text" name="name" /> 
-	<select name="theme_type">
+ <div class="form_split"><?php _e('Name');?> <input type="text" name="name" /></div> 
+<div class="form_split"><select name="theme_type">
 		<option value="category" selected="selected"><?php _e('Category');?></option>
 		<option value="entry"><?php _e('Post');?></option>
-	</select> <input type="submit" value="<?php _e('Create');?>"/>
+	</select>
+	<input type="submit" value="<?php _e('Create');?>"/>
+</div>
 </fieldset>
 </form>
 
@@ -89,10 +92,10 @@ if(count($bak_list)){
 </fieldset>
 <fieldset><legend><?php _e('Add Theme');?></legend>
 <form method="post" enctype="multipart/form-data" action="./?type=theme&mode=add_theme">
-	<?php _e('Remote File');?> <input type="text" name="theme_url" />
-	<?php _e('Upload');?> <input type="file" name="theme_file" />
-	<input type="submit" class="input_submit" value="<?php _e('Done');?>"/>
-	<div><?php _e('Archive only supports zip format');?></div>
+	<div class="form_split"><?php _e('Remote File');?> <input type="text" name="theme_url" /></div>
+	<div class="form_split"><?php _e('Upload');?> <input type="file" name="theme_file" /></div>
+	<div class="form_split"><input type="submit" class="input_submit" value="<?php _e('Done');?>"/></div>
+	<div class="form_split"><?php _e('Archive only supports zip format');?></div>
 </form>
 </fieldset>
 <script type="text/javascript">

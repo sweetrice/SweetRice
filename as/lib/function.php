@@ -136,7 +136,8 @@ function extractZIP($file_name,$dest_dir){
 	if(substr($dest_dir,-1) != '/'){
 		$dest_dir .= '/';
 	}
-	if(extension_loaded('zlib')||extension_loaded('ZZIPlib')){
+	$data = array();
+	if((extension_loaded('zlib')||extension_loaded('ZZIPlib')) && 1>1){
 		$zip = zip_open($file_name);
 		if (is_resource($zip)){
 			while ($zip_entry = zip_read($zip)) {
@@ -150,18 +151,28 @@ function extractZIP($file_name,$dest_dir){
 						$handle = fopen($dest_dir.zip_entry_name($zip_entry),'wb');
 						fwrite($handle,$buf);
 						fclose($handle);
+						$data[] = $dest_dir.zip_entry_name($zip_entry);
 					}
 					zip_entry_close($zip_entry);
 				}
 			}
 			zip_close($zip);
-			return true;
-		}else{
-			return false;
 		}
 	}else{
-		return false;
+		$zip = new ZipArchive();
+		if ($zip->open($file_name) === TRUE) {
+			$temp_dir = 'temp'.time().rand(1000,9999);
+			$zip->extractTo($dest_dir.$temp_dir.'/');
+			$zip->close();
+			$_data = sweetrice_files($dest_dir.$temp_dir.'/');
+			foreach($_data as $val){
+				rename($val,$dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/')));
+				$data[] = $dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/'));
+			}
+			rmdir($dest_dir.$temp_dir);
+		}
 	}
+	return count($data)?$data:false;
 }
 
 function get_template($theme_dir,$type){
@@ -247,14 +258,17 @@ function get_template($theme_dir,$type){
 <?php
 	exit();
 	}
-	function sweetrice_files($upgrade_dir){
+	function sweetrice_files($_dir){
+		if(substr($_dir,-1) != '/'){
+			$_dir .= '/';
+		}
 		$filelist = array();
-		$d = dir($upgrade_dir);
+		$d = dir($_dir);
 		while (false !== ($entry = $d->read())) {
 		if($entry!='.'&&$entry!='..'){
-			$filelist[] = $upgrade_dir.$entry;
-			if(is_dir($upgrade_dir.$entry)){
-				$filelist = array_merge ($filelist,sweetrice_files($upgrade_dir.$entry.'/'));
+			$filelist[] = $_dir.$entry;
+			if(is_dir($_dir.$entry)){
+				$filelist = array_merge ($filelist,sweetrice_files($_dir.$entry.'/'));
 			}
 		}
 		}
@@ -622,7 +636,7 @@ foreach($val['child'] as $v):
 $str = null;
 foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <?php if($cCount>2)echo '<p>';?>
-<a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a> 
+<a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a> 
 <?php if($cCount>2)echo '</p>';?>
 <?php endforeach;?>
 </div></div>
@@ -635,7 +649,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <div><?php echo $val['title'];?>
 <div class="hidden_ pl10">
 <?php foreach($val['child'] as $v):if(!dashboard_role($v['request']['type'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
 <?php endforeach;?>
 </div></div>
 </li>
@@ -654,11 +668,11 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 <a href="./?type=<?php echo $key;?>"<?php echo $val['ncr']?' class="ncr"':'';?>><?php echo $val['title'];?></a>
 <div class="hidden_ pl10">
 <?php foreach($val['child'] as $v):if(!dashboard_role($v['name'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'menu_child_nav_curr':'').'"':($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'menu_child_nav_curr':'').'"':($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
 <?php if($_GET['plugin'] == $v['request']['plugin']):?>
 <ul class="menu_child_nav">
 <?php foreach(pluginApi($v['request']['plugin'],'app_navs') as $app_nav):?>
-<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] && $_GET['app_mode'] == $app_nav['app_mode']?'class="menu_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
+<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] && $_GET['app_mode'] == $app_nav['app_mode']?' class="menu_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>

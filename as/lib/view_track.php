@@ -11,6 +11,7 @@
 	if(!file_exists($dbname)){
 		$new_track = true;
 	}
+	$db_track = sqlite_dbhandle($dbname);
 	$y = $_GET['y'];
 	if($y ==''){
 		$y = date('Y');
@@ -26,7 +27,6 @@
 		$month_end = mktime(23,59,59,$m,$d,$y);
 		$browsers = init_browsers(1);
 		$bg_browsers = init_browsers(2);
-		$db_track = sqlite_dbhandle($dbname);
 		if($new_track){
 			sqlite_dbquery($db_track,"CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
 			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");

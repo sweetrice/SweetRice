@@ -13,10 +13,12 @@
 <div class="sign_form">
 <h2><?php _e('Please login');?></h2>
 	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUIRE_URI'];?>"/>
-	<dl><dt><?php _e('Account');?></dt><dd><input type="text" id="user"/></dd></dl>
-	<dl><dt><?php _e('Password');?></dt><dd><input type="password" id="passwd"/></dd></dl>
-	<dl><dt></dt><dd><input type="checkbox" id="rememberme" value="1"/> <?php _e('Remember Me');?>
-	<input type="button" value="<?php _e('Login');?>" class="input_submit" /> <div id="signTip"></div></dd></dl>
+	<fieldset><legend><?php _e('Account');?></legend>
+	<input type="text" id="user"/></fieldset>
+	<fieldset><legend><?php _e('Password');?></legend>
+	<input type="password" id="passwd"/></fieldset>
+	<input type="checkbox" id="rememberme" value="1"/> <?php _e('Remember Me');?>
+	<input type="button" value="<?php _e('Login');?>" class="input_submit" /> <div id="signTip"></div>
 	<div class="div_clear"></div>
 	<div class="tr"><a href="./?type=password"><?php _e('Forgot Password');?>?</a></div>
 </div>

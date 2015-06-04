@@ -12,9 +12,9 @@
 <div id="div_center">
 <div class="sign_form">
 <h2><?php _e('Please input your administrator\'s email.');?></h2>
-	<dl><dt><?php _e('Email');?></dt><dd><input type="text" name="email" id="email" class="w_100"/></dd></dl>
-	<dl><dt></dt><dd><input type="button" value="<?php _e('Done');?>"  class="input_submit"/> <a href="./"><?php _e('Login');?></a> <span id="tips"></span></dd></dl>
-	<div class="div_clear"></div>
+<fieldset><legend><?php _e('Email');?></legend>
+<dd><input type="text" name="email" id="email"/></fieldset>
+<input type="button" value="<?php _e('Done');?>"  class="input_submit"/> <a href="./"><?php _e('Login');?></a> <span id="tips"></span>
 </div>
 </div>
 <script type="text/javascript">

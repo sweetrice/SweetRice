@@ -39,6 +39,13 @@ defined('VALID_INCLUDE') or die();
 				$tmp .="<changefreq>daily</changefreq>\n";
 				$tmp .= '</url>'."\n";
 			break;
+			default:
+				$tmp .= '<url>'."\n";
+				$tmp .="<loc>".str_replace('&','&amp;',$val['link_xml'])."</loc>\n";
+				$tmp .="<priority>0.9</priority>\n";
+				$tmp .="<lastmod>".mod_date('')."</lastmod>\n";
+				$tmp .="<changefreq>daily</changefreq>\n";
+				$tmp .= '</url>'."\n";
 		}
 	}
 	header("Content-type:text/xml");

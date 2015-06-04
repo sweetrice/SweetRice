@@ -9,10 +9,8 @@
 	defined('VALID_INCLUDE') or die();
 ?>
 <strong><?php _e('You can edit ads code and put it to template,or you can directly edit template <a href="./?type=theme">here</a>');?></strong>
-<div id="tbl">
-<table>
-<thead><tr><td><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td><?php _e('Quote Code');?></td><td class="td_admin"><?php echo _e('Admin');?></td></tr></thead>
-<tbody>
+<div>
+<ul class="ads">
 <?php
 $no = 0;
 	foreach($ads as $val){
@@ -23,19 +21,21 @@ $no = 0;
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
-<td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><span id="name_<?php echo $no;?>"><?php echo $val;?></span></td><td>
-<?php highlight_string('<script type="text/javascript" src="'.BASE_URL.show_link_ads($val).'"></script>');?></td>
-<td class="td_admin">
-<span id="action_<?php echo $no;?>"></span>
+<li class="<?php echo $classname;?>" id="li_<?php echo $no;?>">
+<div class="ads_list">
+<h3><?php echo $val;?></h3>
+<div class="ads_content">
+<?php highlight_string('<script type="text/javascript" src="'.BASE_URL.show_link_ads($val).'"></script>');?>
+</div>
+<p><span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $val;?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
-<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=ad&adk=<?php echo $val;?>"><?php _e('Modify');?></a> 
-</td></tr>
+<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=ad&adk=<?php echo $val;?>"><?php _e('Modify');?></a> </p>
+</div>
+</li>
 <?php
 	}
 ?>
-</tbody>
-</table>
+</ul>
 </div>
 <form method="post" action="./?type=ad&mode=save">
 <fieldset><legend><strong><?php _e('Ads name');?>:</strong></legend>

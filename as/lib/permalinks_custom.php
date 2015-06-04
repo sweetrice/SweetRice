@@ -17,7 +17,7 @@
 <?php echo $pager['list_put'];?>
 <form method="post" id="bulk_form" action="./?type=permalinks&mode=custom&submode=bulk">
 <table>
-<thead><tr><td><input type="checkbox" id="checkall"/> <?php _e('URL');?></td><td><?php _e('Request');?></td><td><?php _e('Plugin');?></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Request');?></th><th><?php _e('Plugin');?></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <?php
 $no = 0;
 	foreach($rows as $row){
@@ -40,8 +40,8 @@ $no = 0;
 ?>
 <tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
 <td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span>
-<input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['lid'];?>"/> <a href="<?php echo BASE_URL.$row['url'];?>"><?php echo BASE_URL.$row['url'];?></a>
-</td><td><a href="<?php echo $original_url;?>"><?php echo $original_url;?></a></td>
+<input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['lid'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.$row['url'];?>"><?php echo BASE_URL.$row['url'];?></a>
+</td><td class="media_content"><a href="<?php echo $original_url;?>"><?php echo $original_url;?></a></td>
 <td><?php echo $row['plugin'];?></td>
 <td class="td_admin">
 <span id="action_<?php echo $no;?>"></span>

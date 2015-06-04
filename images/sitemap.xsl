@@ -60,7 +60,7 @@
 				<h1>SweetRice XML Sitemap</h1>
 				<div id="intro">
 					<p>
-Basic-cms.org SweetRice Website Program.
+SweetRice Website Program.
 					</p>
 				</div>
 				<div id="content">

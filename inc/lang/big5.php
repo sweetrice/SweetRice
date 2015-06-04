@@ -599,6 +599,7 @@ SweetRice
 		'Archive only supports zip format' => '文件只支持zip格式',
 		'Add Plugin' => '添加插件',
 		'Enable' => '啟用',
+		'Disable' => '禁用',
 		'Theme List' => '樣式列表',
 		'Add Theme' => '添加樣式',
 		'Theme has been change successfully' => '樣式已經修改成功',
@@ -610,6 +611,14 @@ SweetRice
 		'Image List' => '圖片列表',
 		'Supports zip archive' => '支持ZIP文檔',
 		'Reset' => '重置',
-		'No image selected' => '未選擇圖片'
+		'No image selected' => '未選擇圖片',
+		'SweetRice Dashboard'=>'SweetRice 控制台',
+		'Show' => '顯示',
+		'Page' => '頁面',
+		'Auto detect' => '自動檢測',
+		'Category link per page in sitemap' => '站點地圖中的分類鏈接',
+		'Post link per page in sitemap' => '站點地圖中的頁面鏈接',
+		'Custom link per page in sitemap' => '站點地圖中的自定義鏈接',
+		'Extract zip archive?' => '解壓ZIP文檔?'
 );
 ?>

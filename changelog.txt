@@ -36,7 +36,7 @@ Thank you.
 
 SweetRice change log:
 ======================================
-Change log V1.5.0 5/27/2015
+Change log V1.5.0 06/04/2015
 core update
 	add BASE_DIR for cookie - access from meta
 	custom field supports more option
@@ -49,6 +49,8 @@ core update
 	change comment_form to default theme directory
 	add form support to default theme
 	add post pagebreak
+	add mail function supports attachment add param attachments
+	all new design support mobile management
 dashboard
 	plugin description : supports multiple language 
 	add transfer website to other hosting
@@ -56,6 +58,8 @@ dashboard
 	support plugin/theme upload/fetch/delete
 	one click change theme 
 	add quick insert image to post_modify management
+	upload file support unzip
+	one click change dashboard background
 public.js to SweetRice.js and update below
 	remove $ selector only use _
 	add scrolltop scrollleft function

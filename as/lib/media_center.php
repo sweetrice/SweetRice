@@ -18,7 +18,7 @@
 <form method="post" id="bulk_form" action="./?type=media_center&mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><td><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="filetype"><?php echo _e('File Type');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="date"><?php _e('Date');?></a></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th class="max50" style="text-align:left;"><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="filetype"><?php echo _e('File Type');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="date"><?php _e('Date');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;
@@ -31,7 +31,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span>
+<tr class="<?php echo $classname?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span>
 <?php
 	if($files[$i]['type']=='dir'){
 ?>
@@ -54,7 +54,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 ?>
 </td>
 
-<td><span id="filetype_<?php echo $no;?>"><?php echo $files[$i]['type']=='dir'?_t('Directory'):$files[$i]['type'];?></span></td><td>
+<td class="media_content"><span id="filetype_<?php echo $no;?>"><?php echo $files[$i]['type']=='dir'?_t('Directory'):$files[$i]['type'];?></span></td><td class="media_content">
 <span id="date_<?php echo $no;?>" class="sortNo"><?php echo $files[$i]['date'];?></span><?php echo date(_t('M d Y H:i'),$files[$i]['date']);?></td>
 <td class="td_admin"><span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a></td></tr>
@@ -90,7 +90,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		});
 		bind_checkall('#checkall','.ck_item');
 		_('.btn_sort').bind('click',function(){
-			sortBy(this,'#tbl');
+			sortBy(this,'#tbl',function(){bind_checkall('#checkall','.ck_item');});
 			_('.attimage').unbind('click').bind('click',function(){
 				if (!_(this).attr('data')){
 					return false;

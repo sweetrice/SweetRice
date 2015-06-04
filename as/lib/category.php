@@ -16,7 +16,7 @@
 <form method="post" id="bulk_form" action="./?type=category&mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><td align="left"><input type="checkbox" id="checkall"/> <a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="slug"><?php _e('Slug');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="parent"><?php echo _e('Parent');?></a></td><td><a href="javascript:void(0);" class="btn_sort" data="title"><?php _e('Title');?></a></td><td class="td_admin"><?php _e('Admin');?></td></tr></thead>
+<thead><tr><th><input type="checkbox" id="checkall"/></th><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="slug"><?php _e('Slug');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="parent"><?php echo _e('Parent');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="title"><?php _e('Title');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;
@@ -28,7 +28,7 @@ foreach($data['rows'] as $row){
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/> <a href="<?php echo BASE_URL.show_link_cat($row['link'],'');?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td><span id="slug_<?php echo $no;?>"><?php echo $row['link'];?></span></td><td><span id="parent_<?php echo $no;?>"><a href="<?php echo show_link_cat($categories[$row['parent_id']]['link']);?>"><?php echo $row['parent_id']?$categories[$row['parent_id']]['name']:_t('Main');?></a></span></td><td><span id="title_<?php echo $no;?>"><?php echo $row['title'];?></span></td><td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.show_link_cat($row['link'],'');?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td class="media_content"><span id="slug_<?php echo $no;?>"><?php echo $row['link'];?></span></td><td class="media_content"><span id="parent_<?php echo $no;?>"><a href="<?php echo show_link_cat($categories[$row['parent_id']]['link']);?>"><?php echo $row['parent_id']?$categories[$row['parent_id']]['name']:_t('Main');?></a></span></td><td class="media_content"><span id="title_<?php echo $no;?>"><?php echo $row['title'];?></span></td><td>
 <span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
 <a title="<?php _e('Modify');?>" class="action_modify" href="./?type=category&mode=modify&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 

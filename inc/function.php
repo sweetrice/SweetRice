@@ -210,11 +210,15 @@
 			$url_data['action'] = 'rssfeed';
 			$url_data['type'] = 'entry';
 			$url_data['post'] = $matches[1];
-		}elseif($url==$permalinks['sitemapXml'].'.xml'){
+		}elseif(preg_match('|^'.$permalinks['sitemapXml'].'/?(.+?)?/?([0-9]+)?\.xml$|',$url,$match)){
 			$url_data['action'] = 'sitemap';
 			$url_data['type'] = 'xml';
-		}elseif($url==$permalinks['sitemapHtml'].'/'){
+			$url_data['mode'] = $match[1];
+			$url_data['p'] = $match[2];
+		}elseif(preg_match('|^'.$permalinks['sitemapHtml'].'/(.+?)?/?([0-9]+)?/?$|',$url,$match)){
 			$url_data['action'] = 'sitemap';
+			$url_data['mode'] = $match[1];
+			$url_data['p'] = $match[2];
 		}elseif(preg_match("/^".$permalinks['comment']."\/([a-zA-Z0-9\-_]+)\/(([0-9]{0,3})\/)?$/",$url,$matches)){
 			$url_data['action'] = 'comment';
 			$url_data['post'] = $matches[1];
@@ -369,22 +373,23 @@
 			return formatUrl('action=attachment&id='.$fileID);
 		}
 	}
-	function show_link_sitemapHtml($original_url=false){
+	function show_link_sitemapHtml($original_url=false,$mode = '',$page = 0){
 		$permalinks = initPermalinks();
 		if(URL_REWRITE && !$original_url){
-			return $permalinks['sitemapHtml'].'/';
+			return $permalinks['sitemapHtml'].'/'.($mode?$mode.'/':'').($page?$page.'/':'');
 		}else{
-			return formatUrl('action=sitemap');
+			return formatUrl('action=sitemap'.($mode ? '&mode='.$mode:'').($page?'&p='.$page:''));
 		}
 	}
-	function show_link_sitemapXml($original_url=false){
+	function show_link_sitemapXml($original_url=false,$mode = '',$page = 0){
 		$permalinks = initPermalinks();
 		if(URL_REWRITE && !$original_url){
-			return $permalinks['sitemapXml'].'.xml';
+			return $permalinks['sitemapXml'].($mode?'/'.$mode:'').($page?'/'.$page:'').'.xml';
 		}else{
-			return formatUrl('action=sitemap&type=xml');
+			return formatUrl('action=sitemap&type=xml'.($mode ? '&mode='.$mode:'').($page?'&p='.$page:''));
 		}
 	}
+
 	function show_link_rssfeed($original_url=false){
 		$permalinks = initPermalinks();
 		if(URL_REWRITE && !$original_url){
@@ -441,12 +446,35 @@
 		$email = strtolower($email);
 		return preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]*\.)+[a-zA-Z]{2,3}$/",$email);
 	}
-	function my_post($to,$subject,$mail_text,$mail_html,$from_mail,$from_name,$mime_boundary,$charset = 'UTF-8'){
+	function my_post($to,$subject,$mail_text,$mail_html,$from_mail,$from_name,$mime_boundary,$charset = 'UTF-8',$attachments = array()){		
+		$attach_content = '';
+		if(count($attachments)){
+			foreach($attachments as $val){
+				if(!file_exists($val)){
+					continue;
+				}
+				$tmp = explode('/',$val);
+				$fp = fopen($val, "r");
+				$data = fread($fp, filesize($val)); 
+				$attach_source = chunk_split (base64_encode($data));
+				$attach_content .= "\n\n";
+				$attach_content .= "--$mime_boundary\n";
+				$attach_content .= "Content-Type: ".sr_file_type($tmp[count($tmp)-1])."; name=".'=?'.$charset.'?B?'.base64_encode($tmp[count($tmp)-1]).'?='."\n";
+				$attach_content .= "Content-disposition: attachment;filename=".'=?'.$charset.'?B?'.base64_encode($tmp[count($tmp)-1]).'?='."\n";
+				$attach_content .= "Content-transfer-encoding: base64\n\n";
+				$attach_content .= $attach_source;
+			}
+		}
+		if($attach_content){
+			$content_type = 'multipart/mixed';
+		}else{
+			$content_type = 'multipart/alternative';
+		}
 		$from_name = '=?'.$charset.'?B?'.base64_encode($from_name).'?=';
 		$subject = '=?'.$charset.'?B?'.base64_encode($subject).'?=';
 		$headers = 'From: '.$from_name.' <'.($from_mail?$from_mail:'noreply@'.$_SERVER['HTTP_HOST']).">\n";
 		$headers .= "MIME-Version: 1.0\n";
-		$headers .= "Content-Type: multipart/alternative; boundary=\"$mime_boundary\"\n";
+		$headers .= "Content-Type: ".$content_type."; boundary=\"$mime_boundary\"\n";
 		$message = "--$mime_boundary\n";
 		$message .= "Content-Type: text/plain; charset=".$charset."\n";
 		$message .= "Content-Transfer-Encoding: 8bit\n\n";
@@ -457,6 +485,9 @@
 		$message .= "Content-Transfer-Encoding: 8bit\n\n";
 		$message .= $mail_html;
 		$message .= "\n";
+		if($attach_content){
+			$message .= $attach_content;
+		}
 		$message .= "--$mime_boundary--\n\n";
 		$mail_sent = mail( $to, $subject, $message, $headers );
 		return $mail_sent;
@@ -1183,7 +1214,7 @@
 		ob_end_flush();
 	}
 
-	function upload_($f,$dest_dir,$new_file,$old_file){
+	function upload_($f,$dest_dir,$new_file,$old_file,$always_new = false){
 		$file_type = '.php';
 		if(!$f['name']){
 			return $old_file;
@@ -1195,14 +1226,16 @@
 		if(count($tmp)){
 			$fileext = '.'.end($tmp);
 		}
-		
 		if(preg_match("/[^a-zA-Z0-9_\-\.\s]+/",$new_file)){
 			$new_file  = md5($new_file).$fileext;
 		}
-		if($f['name']&&strtolower($fileext)!=$file_type){
+		if($always_new){
+			$new_file  = md5($new_file.time()).$fileext;
+		}
+		if($f['name'] && strtolower($fileext) != $file_type){
 			$dest = $dest_dir.$new_file;
 			$r = move_uploaded_file($f['tmp_name'],$dest);
-			if($old_file&&file_exists($dest_dir.$old_file)&&$old_file!=$new_file){
+			if($old_file && file_exists($dest_dir.$old_file) && $old_file != $new_file){
 				unlink($dest_dir.$old_file);
 			}
 			return $new_file;
@@ -1677,7 +1710,7 @@
 		}else{
 			$list_put = '';
 		}
-		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page);
+		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page,'page_total'=>$page_total);
 	}
 
 	function pager_pagebreak($page_total,$post,$curr_page = 1,$source_url = false){
