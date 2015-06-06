@@ -79,24 +79,15 @@
 			}
 			$import = true;
 		}
-		if($form_mode == 'delete'){
-			$db_file = js_unescape($_POST['db_file']);
-			$no = $_POST['no'];
-			if(file_exists($db_backup_dir.'/'.$db_file)){
-				unlink($db_backup_dir.'/'.$db_file);
-				output_json(array('status'=>'1','id'=>$db_file,'no'=>$no,'data'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Data Backup'),$db_file))));
-			}else{
-				output_json(array('status'=>'0','id'=>$db_file,'no'=>$no,'status_code'=>_t('Missing Data Backup')));
-			}
-		}elseif($form_mode == 'bulk'){
+		if($form_mode == 'bulk'){
 			$plist = $_POST['plist'];
 			foreach($plist as $val){
 				if(file_exists($db_backup_dir.'/'.$val)){
 					unlink($db_backup_dir.'/'.$val);
 				}
 			}
-			_goto($_SERVER['HTTP_REFERER']);
-		}elseif($form_mode=='save' &&		file_exists($db_backup_dir.'/'.$db_file)){
+			output_json(array('status'=>'1','status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Data Backup'),implode(',',$plist)))));
+		}elseif($form_mode == 'save' &&		file_exists($db_backup_dir.'/'.$db_file)){
 			download_file($db_backup_dir.'/'.$db_file);
 		}
 		$top_word = _t('Data Import');

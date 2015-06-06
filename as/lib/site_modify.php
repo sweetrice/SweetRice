@@ -21,18 +21,26 @@
 </fieldset>
 <fieldset><legend><?php _e('Database Setting');?></legend>
 <div class="row2">
-<dl><dt>
-<?php _e('Database');?>:</dt><dd><select name="site_config[db_type]" class="database_type">
+<div class="form_split">
+<?php _e('Database');?>:</div>
+<div class="form_split"><select name="site_config[db_type]" class="database_type">
 	<option value="mysql" <?php echo $s_dtype['mysql'];?>>MySQL</option>
 	<option value="sqlite" <?php echo $s_dtype['sqlite'];?>>SQLite</option>
 	<option value="pgsql" <?php echo $s_dtype['pgsql'];?>>PostgreSQL</option>
 </select>
-</dd></dl></div>
+</div></div>
 <div id="database_setting" class="row2" style="display:<?php echo $_POST['database_type']=='sqlite'?'none':'block';?>">
-<dl><dt><?php _e('Database Host');?> : </dt><dd><input type="text" name="site_config[db_url]" value="<?php echo $_POST['db_url']?$_POST['db_url']:'localhost';?>"> *<?php _e('Usually localhost');?></dd></dl>
-<dl><dt><?php _e('Database Port');?> : </dt><dd><input type="text" name="site_config[db_port]" id="db_port" value="<?php echo $_POST['db_port']?$_POST['db_port']:3306;?>"></dd></dl>
-<dl><dt><?php _e('Database Account');?> : </dt><dd><input type="text" name="site_config[db_username]" value="<?php echo $_POST['db_username'];?>"></dd></dl>
-<dl><dt><?php _e('Database Password');?> : </dt><dd><input type="password" name="site_config[db_passwd]" value="<?php echo $_POST['db_passwd'];?>"></dd></dl>
+<div class="form_split"><?php _e('Database Host');?></div><div class="div_clear mb10"></div>
+<div class="form_split"><input type="text" name="site_config[db_url]" value="<?php echo $_POST['db_url']?$_POST['db_url']:'localhost';?>"> <span class="tip"><?php _e('Usually localhost');?></span></div><div class="div_clear mb10"></div>
+<div class="form_split"><?php _e('Database Port');?></div><div class="div_clear mb10"></div>
+<div class="form_split"><input type="text" name="site_config[db_port]" id="db_port" value="<?php echo $_POST['db_port']?$_POST['db_port']:3306;?>"></div><div class="div_clear mb10"></div>
+<div class="form_split"><?php _e('Database Account');?></div>
+<div class="div_clear mb10"></div>
+<div class="form_split"><input type="text" name="site_config[db_username]" value="<?php echo $_POST['db_username'];?>"></div>
+<div class="div_clear mb10"></div>
+<div class="form_split"><?php _e('Database Password');?></div>
+<div class="div_clear mb10"></div>
+<div class="form_split"><input type="password" name="site_config[db_passwd]" value="<?php echo $_POST['db_passwd'];?>"></div>
 </div>
 </fieldset>
 <fieldset><legend><?php _e('Database Name');?></legend>
@@ -44,14 +52,16 @@
 <fieldset><legend><?php _e('Administrator Password');?></legend>
 <input type="password" name="passwd"></fieldset>
 <fieldset><legend><?php _e('Website Attachment Directory');?></legend>
-<input type="radio" name="attachment_type" value="1" checked/>_sites/<span id="host_body"></span><input type="text" name="attachment_dir" value="attachment">
-<input type="radio" name="attachment_type" value="2"/><?php echo ATTACHMENT_DIR;?>
+<div class="form_split">
+<input type="radio" name="attachment_type" value="1" checked/>_sites/<span id="host_body"></span><input type="text" name="attachment_dir" value="attachment"></div>
+<div class="form_split">
+<input type="radio" name="attachment_type" value="2"/><?php echo ATTACHMENT_DIR;?></div>
 </fieldset>
 <fieldset><legend><?php _e('Theme');?></legend>
 <?php
 	foreach($themes as $val){
 ?>
-<input type="checkbox" name="themes[]" value="<?php echo $val;?>" <?php echo $val=='default'?'checked onclick="return false;" ':'';?>/> <?php echo $val;?> 
+<div class="form_split"><input type="checkbox" name="themes[]" value="<?php echo $val;?>" <?php echo $val=='default'?'checked onclick="return false;" ':'';?>/> <?php echo $val;?> </div>
 <?php
 	}	
 ?>
@@ -60,7 +70,7 @@
 <?php
 	foreach(pluginList() as $val){
 ?>
-<input type="checkbox" name="plugins[]" value="<?php echo $val['directory'];?>"/> <?php echo $val['name'];?> 
+<div class="form_split"><input type="checkbox" name="plugins[]" value="<?php echo $val['directory'];?>"/> <?php echo $val['name'];?> </div>
 <?php
 	}	
 ?>

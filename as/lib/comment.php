@@ -13,7 +13,6 @@
 	<input type="text" name="search" value="<?php echo escape_string($_GET['search']);?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>"  class="input_submit"/>
 </form>
 <?php echo $pager['list_put'];?>
-<div class="mg5 pd5"><input type="checkbox" class="checkall"/> <?php _e('All');?></div>
 <form method="post" id="bulk_form" action="./?type=comment&mode=bulk">
 <div>
 	<ul class="comments">
@@ -53,24 +52,36 @@
 <!--
 	_().ready(function(){
 		bind_checkall('.checkall','.ck_item');
-		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('comment',_(this).attr('data'),_(this).attr('no'));
+		_('.action_delete').bind('click',function(){	
+			_(this).parent().parent().find('.ck_item').prop('checked',true);
+			_('.btn_submit').run('click');
 		});
 		_('#bulk_form').bind('submit',function(event){
-		var no = 0;   
-		_('.ck_item').each(function(){
-			if (_(this).prop('checked')){
-				no += 1;
+			_.stopevent(event);
+			var no = 0;   
+			_('.ck_item').each(function(){
+				if (_(this).prop('checked')){
+					no += 1;
+				}
+			});
+			if(no > 0){
+				if(!confirm('<?php _e('Are you sure delete it?');?>')){
+					return ;
+				}
+			}else{
+				alert('<?php _e('No Record Selected');?>');
+				return ;
 			}
-		});
-		if(no > 0){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')){
-				_().stopevent(event);
-			}
-		}else{
-			alert('<?php _e('No Record Selected');?>');
-			_().stopevent(event);
-		}
+			from_bulk(this,function(){
+				_('.ck_item').each(function(){
+					if (_(this).prop('checked')){
+						var _this = this;
+						_(this).fadeOut(500,function(){
+							_(_this).parent().parent().parent().remove();
+						});
+					}
+				});
+			});
 		});
 	});
 //-->

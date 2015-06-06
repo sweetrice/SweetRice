@@ -63,8 +63,8 @@ if(count($bak_list)){
 ?>
 <form method="post" action="./?type=theme&mode=add">
 <fieldset><legend><?php _e('Create Template');?></legend>
- <div class="form_split"><?php _e('Name');?> <input type="text" name="name" /></div> 
-<div class="form_split"><select name="theme_type">
+ <div class="form_split"><?php _e('Name');?> <input type="text" name="name" class="mw150">
+<select name="theme_type">
 		<option value="category" selected="selected"><?php _e('Category');?></option>
 		<option value="entry"><?php _e('Post');?></option>
 	</select>

@@ -9,12 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  switch($mode){
-	case 'delete':
-		$id = intval($_POST['id']);
-		$no = $_POST['no'];
-		db_query("DELETE FROM `".DB_LEFT."_comment` WHERE `id` = '$id'");	 
-		output_json(array('status'=>'1','id'=>$id,'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Comment'),$id))));
-	break;
 	case 'view':
 		$id = intval($_GET['id']);
 		$commets = db_array("SELECT * FROM `".DB_LEFT."_comment` WHERE `id` = '$id' ");
@@ -36,8 +30,9 @@
 		if(count($plist)){
 			$ids = implode(',',$plist);
 			db_query("DELETE FROM `".DB_LEFT."_comment` WHERE `id` IN ($ids)");
+			output_json(array('status'=>1,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Comment'),$ids))));
 		}
-		_goto($_SERVER['HTTP_REFERER']);
+		output_json(array('status'=>0,'status_code'=>_t('Sorry,some error happened')));
 	break;
 	default:
 		$search = db_escape($_GET['search']);

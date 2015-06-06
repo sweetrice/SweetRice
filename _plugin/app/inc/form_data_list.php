@@ -9,11 +9,11 @@
  defined('VALID_INCLUDE') or die();
 ?>
 <style>
-.form_data dl{clear:both;}
-.form_data dl dt{float:left;width:20%;display:inline;border:1px solid #690;margin:5px 1%;padding:5px 1%;border-radius:5px;}
-.form_data dl dd{float:right;width:70%;display:inline;border:1px solid #c8c8c8;margin:5px 1%;padding:5px 1%;border-radius:5px;}
-.form_data dl{display:none;}
+.formdata{display:none;}
 .toggle_data{text-align:center;cursor:pointer;}
+.btn_preview{width:100%;word-wrap: break-word; word-break: break-all;}
+.formdata_title{margin-bottom:5px;font-weight:bold;}
+.formdata_content{margin:5px 0px;border-bottom:1px solid #ccc;padding:5px;}
 </style>
 <select id="form">
 <option value="0"></option>
@@ -26,7 +26,7 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><td><input type="checkbox" class="checkall"/></td><td><?php _e('Form Name');?></td><td><?php _e('Data');?></td><td style="width:130px;"><?php _e('Date');?></td><td style="width:30px;"><?php _e('Admin');?></td></tr>
+	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Form Name');?></th><th><?php _e('Data');?></th><th style="width:130px;"><?php _e('Date');?></th><th style="width:30px;"><?php _e('Admin');?></th></tr>
 </thead>
 <tbody>
 <?php
@@ -41,8 +41,12 @@
 ?>
 <tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['form_id']))?>" target="_blank"><?php echo $row['name'];?></a></td><td class="form_data">
 <div class="toggle_data">---</div>
+<div class="formdata">
 <?php foreach($fields as $val):
-echo '<dl '.($key == 0 ?'style="display:block;"':'').'><dt>'.$val['tip'].'</dt><dd>';
+?>
+<div class="formdata_title"><?php echo $val['tip'];?></div>
+<div class="formdata_content">
+<?php
 if($val['type'] == 'file'){
 ?>
 <a href="javascript:void(0);" url="<?php echo BASE_URL.'_plugin/app/data/form/'.$form_data[$val['name']];?>" class="btn_preview"><?php echo $form_data[$val['name']];?></a>
@@ -54,11 +58,22 @@ if($val['type'] == 'file'){
 <?php
 	}
 }elseif($val['type'] == 'password'){
-	echo '******';
+?>
+	<input type="password" value="<?php echo $form_data[$val['name']];?>" onclick="if(this.type == 'text'){this.type = 'password'}else{this.type = 'text'};" readonly>
+<?php
+}elseif($val['type'] == 'select'){
+	foreach($form_data[$val['name']] as $tmp){
+?>
+<?php echo $tmp;?> 
+<?php
+	}
 }else{
 	echo nl2br($form_data[$val['name']]);
 }
-echo '</dd></dl>';
+?>
+</div>
+<div>
+<?php
 endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 <a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a>
 </td></tr>
@@ -73,11 +88,11 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
-		_('.btn_preview').bind('click',function(){
-			_.dialog({'content':'<iframe src="'+_(this).attr('url')+'" style="width:100%;height:480px;border:none;"></iframe>','width':340,'height':480});
-		});
 		_('.toggle_data').bind('click',function(){
-			_(this).parent().find('dl').toggle();
+			_.dialog({'title':'<?php _e('View form data');?>','content':_(this).parent().find('.formdata').html()});
+			_('.btn_preview').bind('click',function(){
+				_.dialog({'content':'<iframe src="'+_(this).attr('url')+'" style="width:100%;height:480px;border:none;"></iframe>','width':340,'height':480});
+			});
 		});
 		_('#form').bind('change',function(){
 			location.href  = '<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'form_data'));?>&form_id=' + _(this).val();
@@ -103,7 +118,18 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 				alert('<?php _e('No Record Selected');?>.');
 				_().stopevent(event);
 			}
+			from_bulk(this,function(){
+				_('.ck_item').each(function(){
+					if (_(this).prop('checked')){
+						var _this = this;
+						_(this).fadeOut(500,function(){
+							_(_this).parent().parent().remove();
+						});
+					}
+				});
 			});
+			_.stopevent(event);
+		});
 	});
 //-->
 </script>

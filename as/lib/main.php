@@ -10,8 +10,9 @@
 ?>
 <div id="sweetrice_status">
 <fieldset><legend><?php echo vsprintf(_t('<span>%s</span> System Information'),array($global_setting['name']));?></legend>
-<img src="<?php echo BASE_URL;?><?php echo $global_setting['logo']?ATTACHMENT_DIR.$global_setting['logo']:'images/logo.png';?>" alt="<?php echo $global_setting['name'];?>">
-<?php echo vsprintf(_t('Database <span>%s</span> <span>%s</span> <span>%s</span>'),array(DATABASE_TYPE,(($db||$conn)?_t('Connected'):_t('does not connected')),(DATABASE_TYPE == 'sqlite'?_t('SQLite driver ').$sqlite_driver:'')));?>
+<div class="form_split"><img src="<?php echo BASE_URL;?><?php echo $global_setting['logo']?ATTACHMENT_DIR.$global_setting['logo']:'images/logo.png';?>" alt="<?php echo $global_setting['name'];?>"></div>
+<div class="form_split">
+<?php echo vsprintf(_t('Database <span>%s</span> <span>%s</span> <span>%s</span>'),array(DATABASE_TYPE,(($db||$conn)?_t('Connected'):_t('does not connected')),(DATABASE_TYPE == 'sqlite'?_t('SQLite driver ').$sqlite_driver:'')));?></div>
 </fieldset>
 <fieldset><legend><?php echo vsprintf(_t('Website status : %s'),array($global_setting['close']?_t('Close'):_t('Running')));?></legend>
 <div class="setting_toggle" data="close">

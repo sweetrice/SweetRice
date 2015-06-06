@@ -44,12 +44,14 @@ switch($mode){
 	case 'bulk':
 		$plist = $_POST['plist'];
 		foreach($plist as $val){
+			$tmp = $val;
 			$val = MEDIA_DIR.$val;
 			if(is_file($val)&&substr($val,0,STRLEN_MEDIA_DIR)==MEDIA_DIR){
 				@unlink($val);
+				$dlist[] = $tmp;
 			}
 		}
-		_goto($_SERVER['HTTP_REFERER']);
+		output_json(array('status'=>1,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Media'),implode(',',$dlist)))));
 	break;
 	case 'upload':
 		$_POST['dir_name'] = str_replace('../','',$_POST['dir_name']);
@@ -63,10 +65,18 @@ switch($mode){
 					'error' => $_FILES['upload']['error'][$key],
 					'size' => $_FILES['upload']['size'][$key]
 				);
-				upload_($tmp,$dest_dir,$tmp['name'],null);
+				if(substr($tmp['name'],-4) == '.zip' && $_POST['unzip']){
+					extractZIP($tmp['tmp_name'],$dest_dir);
+				}else{
+					upload_($tmp,$dest_dir,$tmp['name'],null);
+				}
 			}
 		}else{
-			upload_($_FILES['upload'],$dest_dir,$_FILES['upload']['name'],null);
+			if(substr($_FILES['upload']['name'],-4) == '.zip' && $_POST['unzip']){
+				extractZIP($_FILES['upload']['tmp_name'],$dest_dir);
+			}else{
+				upload_($_FILES['upload'],$dest_dir,$_FILES['upload']['name'],null);
+			}
 		}
 		_goto($_SERVER['HTTP_REFERER']);
 	break;

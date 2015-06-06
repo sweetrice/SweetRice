@@ -34,7 +34,7 @@
 			if($_POST['name']){
 				$id = intval($_POST['id']);
 				foreach($_POST['fields'] as $key=>$val){
-					$fields[] = array('type'=>$_POST['types'][$key],'name'=>$val,'option'=>$_POST['option'][$key],'tip'=>$_POST['tips'][$key],'required'=>$_POST['required'][$key]);
+					$fields[] = array('type'=>$_POST['types'][$key],'name'=>$val,'option'=>$_POST['option'][$key],'select_multiple'=>$_POST['select_multiple'][$key],'tip'=>$_POST['tips'][$key],'required'=>$_POST['required'][$key]);
 				}
 				db_insert(ADB.'_app_form',array('id',$id?$id:null),array('name','fields','method','action','captcha','template'),array($_POST['name'],serialize($fields),$_POST['method'],$_POST['action'],intval($_POST['captcha']),$_POST['template']));
 				_goto(pluginDashboardUrl(THIS_APP,array('app_mode'=>'form')));

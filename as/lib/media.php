@@ -190,28 +190,13 @@ max-height:420px;
 @media (max-width: 640px){
 	.form_split{float:none;margin-left:5px;display:block;height:auto;}
 	.imgs li{width:48%;}
+	.new_dir{width:150px;}
 }
 </style>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
-<div class="form_split">
-<form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
-<div class="form_split">
-<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
-	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
-</form>
-</div>
-<div class="form_split">
-<form method="post" action="./?type=media&mode=mkdir">
-<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
-</form>
-</div>
-<div class="clear"></div>
 <div class="form_split">
 <span class="folder"></span> <a href="./?type=media<?php echo $parent?'&dir='.$parent:'';?>&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a>
 </div>
@@ -275,6 +260,22 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 </div>
 <div class="clear"></div>
 <?php echo $pager['list_put'];?>
+<div class="form_split">
+<form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
+<div class="form_split">
+<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
+	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
+</form>
+</div>
+<div class="form_split">
+<form method="post" action="./?type=media&mode=mkdir">
+<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
+<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+	<input type="text" name="new_dir" class="new_dir"/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
+</form>
+</div>
+<div class="clear"></div>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
@@ -306,6 +307,22 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		_('.dellist').bind('click',function(){
 			if(confirm('<?php _e('Are you sure delete it?');?>')) {
 				deleteAction('media',_(this).attr('link'),_(this).attr('no'));
+				var _this = this;
+				_.ajax({
+					'type':'post',
+					'data':{'file':_(this).attr('link')},
+					'url':'./?type=media&mode=delete',
+					'success':function(result){
+						if (result['status_code'])
+						{
+							_.ajax_untip(result['status_code']);
+						}
+						if (result['status'] == 1)
+						{
+							_(_this).parent().remove();
+						}
+					}
+				});
 			}else{ 
 				return false;
 			}

@@ -7,12 +7,14 @@
 	<xsl:template match="/">
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
+				<meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 				<title>XML Sitemap</title>
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 				<style type="text/css">
 					body {
-						font-family:"Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
-						font-size:13px;
+						font-family:"Microsoft Yahei","Lucida Grande","Lucida Sans Unicode",Tahoma,Verdana;
+						padding: 0px;
+						margin: 0px;
 					}
 					
 					#intro {
@@ -32,7 +34,6 @@
 					
 					th {
 						text-align:left;
-						padding-right:30px;
 						font-size:11px;
 					}
 					
@@ -64,7 +65,7 @@ SweetRice Website Program.
 					</p>
 				</div>
 				<div id="content">
-					<table cellpadding="5">
+					<table cellpadding="0">
 						<tr style="border-bottom:1px black solid;">
 							<th>URL</th>
 							<th>Priority</th>

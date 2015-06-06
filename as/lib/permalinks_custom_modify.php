@@ -24,8 +24,8 @@ if(is_array($reqs)){
 ?>
 <div class="att_list" id="req_<?php echo $no;?>">
 <li>
-<?php _e('Keys');?> <input type="text" name="keys[]" value="<?php echo $key;?>"/>  
-<?php _e('Vals');?> <input type="text" name="vals[]" value="<?php echo $val;?>"/> <input type="button" value="<?php _e('Remove parameter');?>" class="btn_del" data="<?php echo $no;?>">
+<div class="form_split"><?php _e('Keys');?> <input type="text" name="keys[]" value="<?php echo $key;?>"/></div> 
+<div class="form_split"><?php _e('Vals');?> <input type="text" name="vals[]" value="<?php echo $val;?>"/></div> <div class="form_split"><input type="button" value="<?php _e('Remove parameter');?>" class="btn_del" data="<?php echo $no;?>"></div>
 </li>
 </div>
 <?php
@@ -54,7 +54,7 @@ if(is_array($reqs)){
 			reqNo += 1;
 			_('#no').val(reqNo);
 			var new_req = document.createElement('div');
-			_(new_req).attr('id','req_'+reqNo).addClass('att_list').html('<li><?php _e('Keys');?> <input type="text" name="keys[]"/> <?php _e('Vals');?> <input type="text" name="vals[]"/> <input type="button" value="<?php _e('Remove parameter');?>" data="'+reqNo+'" id="btn_'+reqNo+'" class="btn_del"></li>');
+			_(new_req).attr('id','req_'+reqNo).addClass('att_list').html('<li><div class="form_split"><?php _e('Keys');?> <input type="text" name="keys[]"/></div><div class="form_split"><?php _e('Vals');?> <input type="text" name="vals[]"/></div> <div class="form_split"><input type="button" value="<?php _e('Remove parameter');?>" data="'+reqNo+'" id="btn_'+reqNo+'" class="btn_del"></div></li>');
 			_('#multi_request').append(new_req);
 			_('#btn_'+reqNo).bind('click',function(){
 				_('#req_'+_(this).attr('data')).remove();

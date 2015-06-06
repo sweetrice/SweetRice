@@ -17,12 +17,13 @@
 		}
 		_goto('./?type=ad');
 	break;
-	case 'delete':
+	case 'bulk':
+		$plist = $_POST['plist'];
 		$ads_dir = SITE_HOME.'inc/ads/';
-		$adk = $_POST['adk'];
-		$no = $_POST['no'];
-		unlink($ads_dir.$adk.'.php');
-		output_json(array('status'=>'1','id'=>$adk,'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Ads'),$adk))));
+		foreach($plist as $val){
+			unlink($ads_dir.$val.'.php');
+		}
+		output_json(array('status'=>'1','status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Ads'),implode(',',$plist)))));
 	break;
 	default:
 		$ads = array();

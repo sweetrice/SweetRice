@@ -32,14 +32,30 @@
 	?>
 	</select></legend>
 <div id="database_type" class="row2" style="display:<?php echo $totype=='sqlite'?'none':'';?>;">
-<dl><dt><?php _e('Database Host');?> : </dt><dd><input type="text" name="to_db_url" value="<?php echo $_POST['to_db_url']?$_POST['to_db_url']:'localhost';?>"> * <span class="tip"><?php _e('Usually localhost');?></span></dd></dl>
-<dl><dt><?php _e('Database Port');?> : </dt><dd><input type="text" name="to_db_port" id="to_db_port" value="<?php echo $_POST['to_db_port']?$_POST['to_db_port']:3306;?>"></dd></dl>
-<dl><dt><?php _e('Database Account');?> : </dt><dd><input type="text" name="to_db_username" value="<?php echo $_POST['to_db_username'];?>"></dd></dl>
-<dl><dt><?php _e('Database Password');?> : </dt><dd><input type="password" name="to_db_passwd" value="<?php echo $_POST['to_db_passwd'];?>"></dd></dl>
+<div class="form_split"><span class="w120"><?php _e('Database Host');?></span></div>
+<div class="form_split"><input type="text" name="to_db_url" value="<?php echo $_POST['to_db_url']?$_POST['to_db_url']:'localhost';?>"></div>
+<div class="form_split"><span class="tip"><?php _e('Usually localhost');?></span></div>
+
+<div class="div_clear mb10"></div>
+<div class="form_split"><span class="w120"><?php _e('Database Port');?></span></div>
+<div class="form_split"><input type="text" name="to_db_port" id="to_db_port" value="<?php echo $_POST['to_db_port']?$_POST['to_db_port']:3306;?>"></div>
+
+<div class="div_clear mb10"></div>
+<div class="form_split"><span class="w120"><?php _e('Database Account');?></span></div>
+<div class="form_split"><input type="text" name="to_db_username" value="<?php echo $_POST['to_db_username'];?>"></div>
+
+<div class="div_clear mb10"></div>
+<div class="form_split"><span class="w120"><?php _e('Database Password');?></span></div>
+<div class="form_split"><input type="password" name="to_db_passwd" value="<?php echo $_POST['to_db_passwd'];?>"></div>
+<div class="div_clear mb10"></div>
 </div>
 <div class="row2">
-<dl><dt><?php _e('Database Name');?> : </dt><dd><input type="text" name="to_db_name" value="<?php echo $_POST['to_db_name'];?>"></dd></dl>
-<dl><dt><?php _e('Database Prefix');?> : </dt><dd><input type="text" name="to_db_left" value="<?php echo $_POST['to_db_left']?$_POST['to_db_left']:DB_LEFT;?>"></dd></dl>
+<div class="form_split"><span class="w120"><?php _e('Database Name');?></span></div>
+<div class="form_split"><input type="text" name="to_db_name" value="<?php echo $_POST['to_db_name'];?>"></div>
+<div class="div_clear mb10"></div>
+<div class="form_split"><span class="w120"><?php _e('Database Prefix');?></span></div>
+<div class="form_split"><input type="text" name="to_db_left" value="<?php echo $_POST['to_db_left']?$_POST['to_db_left']:DB_LEFT;?>"></div>
+<div class="div_clear mb10"></div>
 </div>
 </fieldset>
 <div id="table_list">

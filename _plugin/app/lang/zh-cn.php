@@ -18,7 +18,7 @@
 		'Menu' => '导航管理',
 		'Link Text' => '链接文字',
 		'Link URL' => '链接',
-		'Child menus' => '子菜单',
+		'Sub' => '子菜单',
 		'Parents menus' => '父菜单',
 		'Field Name' => '字段名称',
 		'Show Name' => '提示名称',
@@ -42,6 +42,8 @@
 		'Submit' => '提交',
 		'Captcha miss match' => '验证码不匹配',
 		'Form\'s action' => '表单的action',
-		'Enter custom action url or let this empty' => '输入自定义action网址或者留空'
+		'Enter custom action url or let this empty' => '输入自定义action网址或者留空',
+		'Options' => '选项',
+		'Multiple' => '多选'
 	);
 ?>

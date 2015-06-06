@@ -9,14 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  switch($mode){
-	case 'delete':
-		$id = intval($_POST['id']);
-		$no = $_POST['no'];
-		if($id > 0){
-			removeCategories(array('ids'=>$id));
-		}
-		output_json(array('status'=>'1','id'=>$id,'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Category'),$id))));
-	break;
 	case 'modify':
 		$id = intval($_GET['id']);
 		if($id > 0){
@@ -72,7 +64,7 @@
 		if(count($ids) > 0){
 			removeCategories(array('ids'=>$ids));
 		}
-		_goto($_SERVER['HTTP_REFERER']);
+		output_json(array('status'=>1,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Category'),implode(',',$ids)))));
 	break;
 	default:
 		$where = " ip.`plugin` = '' AND ip.`item_type` = 'category'";

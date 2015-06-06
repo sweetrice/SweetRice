@@ -19,7 +19,7 @@
 <form method="post" id="bulk_form" action="./?type=data&mode=db_import&form_mode=bulk">
 <div id="tbl">
 <table>
-<thead><tr><th><input type="checkbox" id="checkall"/></th><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
+<thead><tr><th class="data_no"><input type="checkbox" id="checkall"/></th><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="name"><?php _e('Name');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 if(is_dir($db_backup_dir)){
@@ -48,7 +48,7 @@ if(is_dir($db_backup_dir)){
 </tbody>
 </table>
 </div>
-<input type="submit" value=" <?php _e('Bulk Delete');?>">
+<input type="submit" value=" <?php _e('Bulk Delete');?>" class="btn_submit">
 </form>
 <form method="post" action="./?type=data&mode=upload" enctype="multipart/form-data" >
 	<input type="file" name="dbfile" /> <input type="submit" value="<?php _e('Done');?>"/>
@@ -56,7 +56,7 @@ if(is_dir($db_backup_dir)){
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
-	_().ready(function(){
+	_.ready(function(){
 		_('.btn_import').bind('click',function(){
 			if(confirm('<?php _e('Are you sure replace your database to this data version?');?>')){
 				location.href = _(this).attr('url');
@@ -66,10 +66,12 @@ if(is_dir($db_backup_dir)){
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
-		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('db_backup',_(this).attr('data'),_(this).attr('no'));
+		_('.action_delete').bind('click',function(){			
+			_(this).parent().parent().find('.ck_item').prop('checked',true);
+			_('.btn_submit').run('click');
 		});
 		_('#bulk_form').bind('submit',function(event){
+			_.stopevent(event);
 			var no = 0;   
 			_('.ck_item').each(function(){
 				if (_(this).prop('checked')){
@@ -78,8 +80,19 @@ if(is_dir($db_backup_dir)){
 			});
 			if(no == 0){
 				alert('<?php _e('No Record Selected');?>.');
-				_().stopevent(event);
+				_.stopevent(event);
 			}
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; 
+			from_bulk(this,function(){
+				_('.ck_item').each(function(){
+					if (_(this).prop('checked')){
+						var _this = this;
+						_(this).fadeOut(500,function(){
+							_(_this).parent().parent().remove();
+						});
+					}
+				});
+			});
 		});
 	});
 //-->

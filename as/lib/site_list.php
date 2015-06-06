@@ -51,7 +51,23 @@ $no = 0;
 			sortBy(this,'#tbl');
 		});
 		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('sites',_(this).attr('data'),_(this).attr('no'));
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; 
+			var _this = this;
+			_.ajax({
+				'type':'post',
+				'data':{'host':_(this).attr('data')},
+				'url':'./?type=sites&mode=delete',
+				'success':function(result){
+					if (result['status_code'])
+					{
+						_.ajax_untip(result['status_code']);
+					}
+					if (result['status'] == 1)
+					{
+						_(_this).parent().parent().remove();
+					}
+				}
+			});
 		});
 	});
 //-->

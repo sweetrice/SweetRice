@@ -20,7 +20,7 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><td><input type="checkbox" class="checkall"/> <?php _e('ID');?></td><td><?php _e('Content');?></td><td style="width:60px;"><?php _e('Admin');?></td></tr>
+	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th><?php _e('ID');?></th><th class="max50"><?php _e('Content');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr>
 </thead>
 <tbody>
 <?php
@@ -31,7 +31,7 @@
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/> <?php echo $row['id'];?></td><td><?php echo $row['content'];?></td><td>
+<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><?php echo $row['id'];?></td><td class="max50"><?php echo $row['content'];?></td><td>
 <a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a> <a title="<?php _e('Modify');?>" class="action_modify" href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'database','mode'=>'insert','id'=>$row['id']));?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
@@ -61,13 +61,25 @@
 			});
 			if(no > 0){
 				if(!confirm('<?php _e('Are you sure delete it?');?>')){
-					_().stopevent(event);
+					_.stopevent(event);
 				}
 			}else{
 				alert('<?php _e('No Record Selected');?>.');
-				_().stopevent(event);
+				_.stopevent(event);
+				return ;
 			}
+			from_bulk(this,function(){
+				_('.ck_item').each(function(){
+					if (_(this).prop('checked')){
+						var _this = this;
+						_(this).fadeOut(500,function(){
+							_(_this).parent().parent().remove();
+						});
+					}
+				});
 			});
+			_.stopevent(event);
+		});
 	});
 //-->
 </script>

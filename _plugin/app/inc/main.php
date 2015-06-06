@@ -12,7 +12,7 @@
 
 <form method="post" action="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'links'));?>">
 <fieldset><legend><?php _e('Custom App URL');?></legend>
-<a href="<?php echo $myApp->app_url('home');?>" target="_blank"><?php _e('Home');?></a> <input type="text" name="url[home]" value="<?php echo $links['home']['url'];?>"/><input type="hidden" name="lids[home]" value="<?php echo $links['home']['lid'];?>" />
+<a href="<?php echo $myApp->app_url('home');?>" target="_blank"><?php _e('Home');?></a> <input type="text" name="url[home]" value="<?php echo $links['home']['url'];?>" class="mw180"/><input type="hidden" name="lids[home]" value="<?php echo $links['home']['lid'];?>" />
 <input type="submit" value="<?php _e('Done');?>"/>
 </fieldset>
 </form>

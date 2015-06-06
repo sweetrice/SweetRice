@@ -112,6 +112,7 @@ select{
 }
 table{
 	width:100%;
+	margin-bottom:10px;
 }
 table th{
 	padding:5px;
@@ -445,9 +446,8 @@ thead tr{
 }
 #table_list li{
 	list-style-type:none;
-	height:20px;
-	line-height:20px;
-	margin-top:5px;
+	height:35px;
+	line-height:35px;
 	border-bottom:1px dotted #ccc;
 }
 #convert_error{
@@ -729,10 +729,6 @@ thead tr{
 .pd20{padding:20px;}
 .toggle{cursor:pointer;border-bottom:1px solid #ccc;}
 .hidden{display:none;}
-#permalinks {padding:10px;}
-#permalinks dl dt{float:left;width:15%;margin:5px 0px;display:inline;}
-#permalinks dl dd{float:left;width:84%;margin:5px 0px;display:inline;}
-#permalinks dl{clear:both;}
 .page_limit{width:30px;}
 .optimizer_result{word-break:break-all;}
 .optimizer_result span{font-weight:bold;margin:0px 10px;color:green;}
@@ -769,7 +765,11 @@ thead tr{
 .form_split{margin:0px 0px 10px 10px;float:none;line-height:30px;display:inline;}
 .mobile_content{display:none;}
 .max50{max-width:50%;word-wrap: break-word; word-break: break-all; }
+.data_no{text-align:left;width:20px;}
 .mb10{margin-bottom:10px;}
+.w100{width:100px;display:inline-block;}
+.w120{width:120px;display:inline-block;}
+.w80{width:80px;display:inline-block;}
 @media (max-width: 960px){
 	#div_center,#div_top,#div_foot{width:98%;min-width:98%;}
 	#admin_left{position:absolute;left:1%;top:0px;z-index:9998;background-color: #4D4D4D;}
@@ -792,7 +792,7 @@ thead tr{
 	#top_line{display:none;}
 	.top_image{display:block !important;}
 	.mce-menubtn.mce-fixed-width span{width:auto !important;}
-	#redirectList li span{display:block;margin-bottom:10px;}
+	#redirectList li span{display:block;}
 	.form_split{float:none;margin-left:0px;display:block;}
 	.mobile_content{display:block;}
 	.media_content{display:none;}
@@ -802,6 +802,12 @@ thead tr{
 	.mce-btn button{padding:4px !important;margin:0px;}
 	.mce-flow-layout{margin-bottom:10px !important;}
 	.mce-btn-group .mce-first.mce-last{border-radius:0px !important;background-image:none;border:none;}
+	.mw100{width:100px;display:inline-block;}
+	.mw120{width:120px;display:inline-block;}
+	.mw80{width:80px;display:inline-block;}
+	.mw140{width:140px;display:inline-block;}
+	.mw180{width:180px;display:inline-block;}
+	.mw90{width:90px;display:inline-block;}
 }
 @media (max-width: 320px){
 	.template_list li{width:100%;margin:10px 0px;}

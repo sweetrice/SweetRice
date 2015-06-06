@@ -21,7 +21,7 @@
 				$ids = implode(',',$ids);
 				db_query("DELETE FROM `".ADB."_app` WHERE `id` IN ($ids)");
 			}
-			_goto($_POST['returnUrl']?$_POST['returnUrl']:$_SERVER["HTTP_REFERER"]);
+			output_json(array('status'=>1));
 		break;
 		case 'insert':
 			if($_POST['content']){

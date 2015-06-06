@@ -11,7 +11,7 @@
 <form method="get" action="./">
 <input type="hidden" name="type" value="media_center" />
 <?php _e('Search');?> <a href="./?type=media_center&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a> <input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
-	<input type="text" name="keyword" value="<?php echo escape_string($keyword);?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
+	<input type="text" name="keyword" value="<?php echo escape_string($keyword);?>" placeholder="<?php _e('Keywords');?>" class="mw180"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
 <p><span class="folder" ></span><a href="./?type=media_center<?php echo $parent?'&dir='.$parent:'';?>"><?php _e('Parent');?></a></p>
 <span id="deleteTip"></span>
@@ -72,8 +72,11 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>"/>
 </form>
 <form method="post" action="./?type=media_center&mode=upload" enctype="multipart/form-data" >
+<div class="form_split">
 <?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload[]" multiple> <input type="submit" value="<?php _e('Done');?>"/> * <span class="tip"><?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></span>
+	<input type="file" name="upload[]" multiple>
+</div>
+<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>"/> <span class="tip"><?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></span></div>
 </form>
 </div>
 </div>
@@ -86,7 +89,23 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <!--
 	_().ready(function(){
 		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('media_center',_(this).attr('data'),_(this).attr('no'));
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; 
+			var _this = this;
+			_.ajax({
+				'type':'post',
+				'data':{'file':_(this).attr('data')},
+				'url':'./?type=media_center&mode=delete',
+				'success':function(result){
+					if (result['status_code'])
+					{
+						_.ajax_untip(result['status_code']);
+					}
+					if (result['status'] == 1)
+					{
+						_(_this).parent().parent().remove();
+					}
+				}
+			});
 		});
 		bind_checkall('#checkall','.ck_item');
 		_('.btn_sort').bind('click',function(){
@@ -117,6 +136,17 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 			alert('<?php _e('No Record Selected');?>.');
 			_().stopevent(event);
 		}
+		from_bulk(this,function(){
+			_('.ck_item').each(function(){
+				if (_(this).prop('checked')){
+					var _this = this;
+					_(this).fadeOut(500,function(){
+						_(_this).parent().parent().remove();
+					});
+				}
+			});
+		});
+		_.stopevent(event);
 		});
 	});
 </script>

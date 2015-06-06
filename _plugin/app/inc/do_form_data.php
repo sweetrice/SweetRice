@@ -9,13 +9,6 @@
 	defined('VALID_INCLUDE') or die();
 	$mode = $_GET['mode'];
 	switch($mode){
-		case 'delete':
-			$id = intval($_GET['id']);
-			if($id > 0){
-				remove_form_data($id);
-			}
-			_goto($_SERVER['HTTP_REFERER']);
-		break;
 		case 'bulk':
 			$plist = $_POST['plist'];
 			foreach($plist as $val){
@@ -28,7 +21,7 @@
 				$ids = implode(',',$ids);
 				remove_form_data($ids);
 			}
-			_goto($_SERVER['HTTP_REFERER']);
+			output_json(array('status'=>1));
 		break;
 		default:
 			$form_id = intval($_GET['form_id']);

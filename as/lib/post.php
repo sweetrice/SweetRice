@@ -37,7 +37,7 @@
 <div id="tbl">
 <table>
 <thead><tr>
-<th><input type="checkbox" id="checkall"/></th>
+<th class="data_no"><input type="checkbox" id="checkall"/></th>
 <th class="max50"><a href="javascript:void(0);" data="name" class="btn_sort"><?php _e('Name');?></a></th>
 <th class="media_content"><a href="javascript:void(0);" data="category" class="btn_sort"><?php _e('Category');?></a></th>
 <th class="media_content"><a href="javascript:void(0);" data="date" class="btn_sort"><?php _e('Time');?></a></th>
@@ -74,7 +74,7 @@ $no = 0;
 <div id="pmodify" style="display:none;">
 <fieldset><legend><?php _e('Bulk Modify');?></legend>
 <div class="form_split">
-<?php _e('Category');?> : <select name="pcat">
+<span class="mw80"><?php _e('Category');?> : </span><select name="pcat">
 <option value="no"><?php _e('Do Not Change');?></option>
 <option value="0"><?php _e('Uncategory');?></option>
 <?php
@@ -88,19 +88,19 @@ $s_category[$category] = 'selected';
 	}
 ?>
 </select></div>
-<div class="form_split"><?php _e('Publish');?> : 
+<div class="form_split"><span class="mw80"><?php _e('Publish');?> :</span> 
 <select name="in_blog">
 	<option value="3"><?php _e('Do Not Change');?></option>
 	<option value="0"><?php _e('No');?></option>
 	<option value="1"><?php _e('Yes');?></option>
 </select></div>
-<div class="form_split"><?php _e('Allow Comment');?> : 
+<div class="form_split"><span class="mw80"><?php _e('Allow Comment');?> : </span>
 <select name="allow_comment">
 	<option value="3"><?php _e('Do Not Change');?></option>
 	<option value="0"><?php _e('No');?></option>
 	<option value="1"><?php _e('Yes');?></option>
 </select></div>
-<div class="form_split"><?php _e('Template');?> : 
+<div class="form_split"><span class="mw80"><?php _e('Template');?> : </span>
 <select name="template">
 	<option value=""><?php _e('Do Not Change');?></option>
 <?php foreach($template as $key=>$val){
@@ -115,7 +115,7 @@ $s_category[$category] = 'selected';
 </fieldset>
 </div>
 </div>
-<div class="mg5"><input type="submit" value=" <?php _e('Done');?> ">  <input type="button" value="<?php _e('Create');?>" url="./?type=post&mode=insert" class="back"></div>
+<div class="mg5"><input type="submit" value=" <?php _e('Done');?> " class="btn_submit">  <input type="button" value="<?php _e('Create');?>" url="./?type=post&mode=insert" class="back"></div>
 </form>
 <?php echo $pager['list_put'];?>
 <script type="text/javascript" src="js/BodySort.js"></script>
@@ -133,10 +133,13 @@ $s_category[$category] = 'selected';
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
-		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; deleteAction('post',_(this).attr('data'),_(this).attr('no'));
+		_('.action_delete').bind('click',function(){			
+			_(this).parent().parent().find('.ck_item').prop('checked',true);
+			_('#paction').val('pdelete');
+			_('.btn_submit').run('click');
 		});
 		_('#bulk_form').bind('submit',function(event){
+			_.stopevent(event);
 			var ckd = false;   
 			_('.ck_item').each(function(){
 				if (_(this).prop('checked')){
@@ -146,22 +149,35 @@ $s_category[$category] = 'selected';
 			var paction = _('#paction').val();
 			if (paction == 'pdelete' && ckd){
 				if (!confirm('<?php _e('Are you sure delete it?');?>')){
-					_().stopevent(event);
 					return ;
 				}
 			}
 			if (!paction || !ckd){
 				if (!ckd){
 					alert('<?php _e('No Record Selected');?>');
-					_().stopevent(event);
 					return ;
 				}
 				if (!paction){
 					alert('<?php _e('No bulk action selected');?>');
-					_().stopevent(event);
 					return ;
 				}
 			}
+			from_bulk(this,function(){
+				if (paction == 'pdelete')
+				{
+					_('.ck_item').each(function(){
+						if (_(this).prop('checked')){
+							var _this = this;
+							_(this).fadeOut(500,function(){
+								_(_this).parent().parent().remove();
+							});
+						}
+					});
+				}else{
+					window.location.reload();
+				}
+			});
+			return ;
 		});
 	});
 //-->

@@ -12,7 +12,7 @@
 <div id="div_center">
 <div class="sign_form">
 <h2><?php _e('Please login');?></h2>
-	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUIRE_URI'];?>"/>
+	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUEST_URI'];?>"/>
 	<fieldset><legend><?php _e('Account');?></legend>
 	<input type="text" id="user"/></fieldset>
 	<fieldset><legend><?php _e('Password');?></legend>

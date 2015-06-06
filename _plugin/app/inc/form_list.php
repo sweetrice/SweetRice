@@ -20,7 +20,7 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><td><input type="checkbox" class="checkall"/></td><td><?php _e('Name');?></td><td><?php _e('Method');?></td><td><?php _e('Form Action');?></td><td style="width:40%;"><?php _e('Fields');?></td><td style="width:60px;"><?php _e('Admin');?></td></tr>
+	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Name');?></th><th><?php _e('Method');?></th><th class="media_content"><?php _e('Form Action');?></th><th style="width:40%;" class="media_content"><?php _e('Fields');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr>
 </thead>
 <tbody>
 <?php
@@ -32,8 +32,8 @@
 		}
 		$fields = unserialize($row['fields']);
 ?>
-<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['id']))?>" target="_blank"><?php echo $row['name'];?></a></td><td><?php echo $row['method'];?></td><td><?php echo $row['action'];?></td><td><?php foreach($fields as $val):
-echo $val['tip'].'['.$val['type'].($val['option']?' '._t('Options').':'.$val['option']:'').'] '.($val['required']?_t('Required'):_t('Optional')).'<br />';
+<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td class="max50"><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['id']))?>" target="_blank"><?php echo $row['name'];?></a></td><td><?php echo $row['method'];?></td><td class="media_content"><?php echo $row['action'];?></td><td class="media_content"><?php foreach($fields as $val):
+echo $val['tip'].'['.$val['type'].($val['option']?' '._t('Options').':'.$val['option']:'').'] '.($val['required']?_t('Required'):_t('Optional')).($val['select_multiple']?' '._t('Multiple'):'').'<br />';
 endforeach;?></td><td>
 <a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a> <a title="<?php _e('Modify');?>" class="action_modify" href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'form','mode'=>'insert','id'=>$row['id']));?>"><?php _e('Modify');?></a> 
 </td></tr>

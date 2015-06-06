@@ -126,7 +126,7 @@
 			break;
 			case 'select':
 ?>
-		<select name="<?php echo $val['name'];?>" class="app_field">
+		<select name="<?php echo $val['name'];?><?php echo $val['select_multiple']?'[]':''?>" class="app_field" <?php echo $val['select_multiple'] ? 'multiple style="height:100px;"':'';?>>
 <?php
 			foreach(explode(',',$val['option']) as $option):
 ?>

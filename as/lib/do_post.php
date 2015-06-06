@@ -9,17 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  switch($mode){
-	case 'delete':
-		$id = intval($_POST['id']);
-		if($id > 0){
-			removePosts(array('ids'=>$id));		
-		}
-		if($_GET['one'] == 1){
-			_goto('./?type=post');
-		}else{
-			output_json(array('status'=>'1','id'=>$id,'no'=>intval($_POST['no']),'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Post'),$id))));
-		}
-	break;
 	case 'modify':
 		$id = intval($_GET['id']);
 		if($id > 0){
@@ -81,6 +70,7 @@
 			switch($paction){
 				case 'pdelete':
 					removePosts(array('ids'=>$ids));
+					output_json(array('status'=>1,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Post'),$ids))));
 				break;
 				case 'pmodify':
 					$pcat = $_POST['pcat'];
@@ -104,10 +94,11 @@
 					if($pcat!='no'){
 						db_query("UPDATE `".DB_LEFT."_comment` SET `post_cat` = '".$categories[intval($pcat)]['link']."' WHERE `post_id` IN ($ids)");
 					}
+					output_json(array('status'=>1,'status_code'=>vsprintf(_t('%s (%s) has been update successfully.'),array(_t('Post'),$ids))));
 				break;
 			}
 		}
-		_goto($_SERVER['HTTP_REFERER']);
+		output_json(array('status'=>0,'status_code'=>_t('Sorry,some error happened')));
 	break;
 	default:
 		$where = " ip.`plugin` = '' AND ip.`item_type` = 'post'";

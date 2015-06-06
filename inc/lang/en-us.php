@@ -329,14 +329,15 @@ SweetRice
 		'Site attachment directory' => 'Site attachment directory',
 		'Host' => 'Host',
 		'Site configuration' => 'Site configuration',
-		'%s has been installed successfully.' => '%s has been installed successfully.',
-		'%s has been deinstalled successfully.' => '%s has been deinstalled successfully.',
+		'%s has been install successfully.' => '%s has been install successfully.',
+		'%s has been deinstall successfully.' => '%s has been deinstall successfully.',
 		'M d Y H:i' => 'M d Y H:i',
 		'You will be redirected in 3 seconds.' => 'You will be redirected in 3 seconds.',
 		'Add parameter' => 'Add parameter',
 		'Remove parameter' => 'Remove parameter',
 		'Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.' => 'Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.',
 		'%s (%s) has been delete successfully.' => '%s (%s) has been delete successfully.',
+		'%s (%s) has been update successfully.' => '%s (%s) has been update successfully.',
 		'Database backup file does not exists.' => 'Database backup file does not exists.',
 		'Url has been update successfully.' => 'Url has been update successfully.',
 		'Url has been update failed.' => 'Url has been update failed.',
@@ -619,6 +620,7 @@ SweetRice
 		'Category link per page in sitemap' => 'Category link per page in sitemap',
 		'Post link per page in sitemap' => 'Post link per page in sitemap',
 		'Custom link per page in sitemap' => 'Custom link per page in sitemap',
-		'Extract zip archive?' => 'Extract zip archive?'
+		'Extract zip archive?' => 'Extract zip archive?',
+		'Sorry,some error happened' => 'Sorry,some error happened'
 );
 ?>

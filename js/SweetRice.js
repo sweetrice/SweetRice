@@ -1401,12 +1401,55 @@
 					param.start(me);
 				}
 				_(this).stopevent(event);
+			}).unbind('touchstart').bind('touchstart',function(event){
+				var event = event || window.event;
+				me.attr({'x':event.clientX||event.touches[0].pageX,'y':event.clientY||event.touches[0].pageY,'left':parseInt(me.css('left') || me.position().left),'top':parseInt(me.css('top') || me.position().top)});
+				if (typeof param.start == 'function')
+				{
+					param.start(me);
+				}
+				_(this).stopevent(event);
+			}).bind('touchmove',function(event){
+				var event = event || window.event;
+				if (me.attr('x') > 0)
+				{
+					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
+					switch (param.type)
+					{
+						case 'none':
+
+						break;
+						case 'x':
+							me.css({left:(parseInt(me.attr('left')) + diffX)+'px'});
+						break;
+						case 'y':
+							me.css({top:(parseInt(me.attr('top')) + diffY)+'px'});
+						break;
+						default:
+							me.css({left:(parseInt(me.attr('left')) + diffX)+'px',top:(parseInt(me.attr('top')) + diffY)+'px'});
+					}
+					if (typeof param.move == 'function')
+					{
+						param.move(diffX,diffY,me);
+					}
+					_(this).stopevent(event);
+				}
+			}).bind('touchend',function(event){
+				me.removeAttr('x');
+				me.removeAttr('y');
+				me.removeAttr('left');
+				me.removeAttr('top');
+				if (typeof param.complete == 'function')
+				{
+					param.complete(me);
+				}
+				_(this).stopevent(event);
 			});
 			_(document).bind('mousemove',function(event){
 				var event = event || window.event;
 				if (me.attr('x') > 0)
 				{
-					var diffX = parseInt(event.clientX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY) - parseInt(me.attr('y'));
+					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
 					switch (param.type)
 					{
 						case 'none':
@@ -1550,7 +1593,7 @@
 			_('#'+dlgdiv.id).find('.SweetRice_dialog_close').run('click');
 		}
 		_(document.body).append(dlgdiv);
-		_(dlgdiv).html('<div class="SweetRice_menuBar" style="padding:5px;cursor:move;padding:10px;background-color: #fafafa;"><div style="overflow:hidden;float:left;">'+title+'</div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:25px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;">&times;</a><div style="clear:both;height:0px;line-height:0px;"></div></div><div class="SweetRice_dialog_content" style="padding:10px;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 15px 0px rgba(0, 0, 0, 0.35)'});
+		_(dlgdiv).html('<div class="SweetRice_menuBar" style="height:20px;cursor:move;padding:10px;background-color: #fafafa;"><div style="overflow:hidden;float:left;">'+title+'</div><div style="clear:both;height:0px;line-height:0px;"></div></div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:25px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;position:absolute;top:10px;right:10px;">&times;</a><div class="SweetRice_dialog_content" style="padding:10px;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 15px 0px rgba(0, 0, 0, 0.35)'});
 		if (param.button){
 			var btn_str = '',btn;
 			for (var i in param.button){

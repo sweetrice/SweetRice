@@ -18,7 +18,7 @@
 		'Menu' => 'Menu',
 		'Link Text' => 'Link Text',
 		'Link URL' => 'Link URL',
-		'Child menus' => 'Child menus',
+		'Sub' => 'Sub',
 		'Parents menus' => 'Parents menus',
 		'Field Name' => 'Field Name',
 		'Show Name' => 'Show Name',
@@ -42,6 +42,8 @@
 		'Submit' => 'Submit',
 		'Captcha miss match' => 'Captcha miss match',
 		'Form\'s action' => 'Form\'s action',
-		'Enter custom action url or let this empty' => 'Enter custom action url or let this empty'
+		'Enter custom action url or let this empty' => 'Enter custom action url or let this empty',
+		'Options' => 'Options',
+		'Multiple' => 'Multiple'
 	);
 ?>

@@ -329,14 +329,15 @@ SweetRice
 	'Site attachment directory' => '站點附件目錄',
 	'Host' => '主機',
 	'Site configuration' => '站點配置',
-	'%s has been installed successfully.' => '%s已經安裝成功.',
-	'%s has been deinstalled successfully.' => '%s已經反安裝成功.',
+	'%s has been install successfully.' => '%s已經安裝成功.',
+	'%s has been deinstall successfully.' => '%s已經反安裝成功.',
 	'M d Y H:i' => 'm月d日 Y年 H:i',
 	'You will be redirected in 3 seconds.' => '您將在3秒鐘內被重定向到新頁面.',
 	'Add parameter' => '增加參數',
 	'Remove parameter' => '移除參數',
 	'Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.' => '不需要帶域名,只需要輸入目錄或頁面名稱,例如: /custom_dir/custom_page.html /custom_dir/custom_page/ 之類.',
 	'%s (%s) has been delete successfully.' => '%s (%s) 刪除成功.',
+	'%s (%s) has been update successfully.' => '%s (%s) 更新成功.',
 	'Database backup file does not exists.' => '數據庫備份文件不存在.',
 	'Url has been update successfully.' => '鏈接更新完成.',
 	'Url has been update failed.' => '鏈接更新失敗.',
@@ -619,6 +620,7 @@ SweetRice
 		'Category link per page in sitemap' => '站點地圖中的分類鏈接',
 		'Post link per page in sitemap' => '站點地圖中的頁面鏈接',
 		'Custom link per page in sitemap' => '站點地圖中的自定義鏈接',
-		'Extract zip archive?' => '解壓ZIP文檔?'
+		'Extract zip archive?' => '解壓ZIP文檔?',
+		'Sorry,some error happened' => '很抱歉，有些錯誤發生'
 );
 ?>

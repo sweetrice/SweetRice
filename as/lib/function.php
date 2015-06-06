@@ -760,7 +760,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 				if(is_object($pluginInstaller) && method_exists($pluginInstaller,'beforeInstall')){
 					$pluginInstaller->afterInstall();
 				}
-				return array('status'=>1,'status_code'=>vsprintf(_t('%s has been installed successfully.'),array($plugin_config['name'])));
+				return array('status'=>1,'status_code'=>vsprintf(_t('%s has been install successfully.'),array($plugin_config['name'])));
 			}else{
 				return array('status'=>0,'status_code'=>$message);
 			}
@@ -849,7 +849,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 				if(is_object($pluginInstaller) && method_exists($pluginInstaller,'afterDeInstall')){
 					$pluginInstaller->afterDeInstall();
 				}
-				return array('status'=>1,'status_code'=>vsprintf(_t('%s has been deinstalled successfully.'),array($plugin_config['name'])));
+				return array('status'=>1,'status_code'=>vsprintf(_t('%s has been deinstall successfully.'),array($plugin_config['name'])));
 			}else{
 				return array('status'=>0,'status_code'=>$message);
 			}

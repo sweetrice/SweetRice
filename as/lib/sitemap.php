@@ -17,7 +17,7 @@
 <input type="hidden" id="submode" name="submode"/>
 <div id="tbl">
 <table>
-<thead><tr><th style="text-align:left;"><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Original URL');?></th><th style="width:30px;"><?php _e('Show');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr></thead>
+<thead><tr><th class="data_no"><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Original URL');?></th><th style="width:30px;"><?php _e('Show');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;

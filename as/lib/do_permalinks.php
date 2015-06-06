@@ -53,22 +53,16 @@
 				$result = links_insert($data);
 				output_json(array('status'=>1,'status_code'=>$result['lid']?_t('Url has been update successfully.'):_t('Url has been update failed.')));
 			break;
-			case 'delete':
-				$id = intval($_POST['id']);
-				$no = intval($_POST['no']);
-				db_query("DELETE FROM `".DB_LEFT."_links` WHERE `lid` = '$id'");
-				output_json(array('status'=>'1','id'=>$id,'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Links'),$id))));
-			break;
 			case 'bulk':
 				$plist = $_POST['plist'];
 				foreach($plist as $val){
 					$val = intval($val);
-					if($val>0){
+					if($val > 0){
 						$ids[] = $val;
 					}
 				}
 				db_query("DELETE FROM `".DB_LEFT."_links` WHERE `lid` IN (".implode(',',$ids).")");
-				_goto('./?type=permalinks&mode=custom');
+				output_json(array('status'=>'1','status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Links'),implode(',',$plist)))));
 			break;
 			case 'insert':
 				$id = intval($_GET['id']);

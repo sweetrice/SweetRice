@@ -17,7 +17,7 @@
 <?php echo $pager['list_put'];?>
 <form method="post" id="bulk_form" action="./?type=permalinks&mode=custom&submode=bulk">
 <table>
-<thead><tr><th><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Request');?></th><th><?php _e('Plugin');?></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
+<thead><tr><th class="data_no"><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Request');?></th><th><?php _e('Plugin');?></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <?php
 $no = 0;
 	foreach($rows as $row){
@@ -52,32 +52,44 @@ $no = 0;
 	}
 ?>
 </table>
-<input type="submit" value=" <?php _e('Bulk Delete');?> ">  <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=permalinks&mode=custom&submode=insert">
+<input type="submit" value=" <?php _e('Bulk Delete');?> " class="btn_submit">  <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=permalinks&mode=custom&submode=insert">
 </form>
 <?php echo $pager['list_put'];?>
 
 <script type="text/javascript">
 <!--
 	_().ready(function(){
-		_('.action_delete').bind('click',function(){
-			if(confirm('<?php _e('Are you sure delete it?');?>')) deleteAction('links',_(this).attr('data'),_(this).attr('no'));
+		_('.action_delete').bind('click',function(){			
+			_(this).parent().parent().find('.ck_item').prop('checked',true);
+			_('.btn_submit').run('click');
 		});
 		bind_checkall('#checkall','.ck_item');
 		_('#bulk_form').bind('submit',function(event){
-		var no = 0;   
-		_('.ck_item').each(function(){
-			if (_(this).prop('checked')){
-				no += 1;
+			_.stopevent(event);
+			var no = 0;   
+			_('.ck_item').each(function(){
+				if (_(this).prop('checked')){
+					no += 1;
+				}
+			});
+			if(no > 0){
+				if(!confirm('<?php _e('Are you sure delete it?');?>')){
+					return ;
+				}
+			}else{
+				alert('<?php _e('No Record Selected');?>');
+				return ;
 			}
-		});
-		if(no > 0){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')){
-				_().stopevent(event);
-			}
-		}else{
-			alert('<?php _e('No Record Selected');?>');
-			_().stopevent(event);
-		}
+			from_bulk(this,function(){
+				_('.ck_item').each(function(){
+					if (_(this).prop('checked')){
+						var _this = this;
+						_(this).fadeOut(500,function(){
+							_(_this).parent().parent().remove();
+						});
+					}
+				});
+			});
 		});
 	});
 //-->

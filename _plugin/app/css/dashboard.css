@@ -1,4 +1,4 @@
-.menu_list{margin:10px 0px 10px 20px;position:relative;}
+.menu_list{margin:10px 0px 10px 0px;position:relative;}
 .menu_list li{position:absolute;list-style-type:none;}
 .btn_move{background-color:#e5e5e5 !important;}
 .draging,.draging input{cursor:move !important;}
