@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php _e('HTTP 404 - File not found');?></title>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>

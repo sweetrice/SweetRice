@@ -47,11 +47,11 @@ return array(
 	'Keywords' => '關鍵字',
 	'Keywords of Page' => '顯示在網頁KEYWORDS標籤中',
 	'Description' => '介紹',
-	'Description of Page' => '顯示在頁面DESCRIPTION標籤中',
+	'Description of page' => '顯示在頁面DESCRIPTION標籤中',
 	'Slug' => '鏈接字',
 	'Only a-z,A-Z,0-9,-,_' => '英文,數據及-組成,用於生成分類鏈接',
 	'Title' => '標題',
-	'Title of Page' => '頁面TITLE,顯示在頁面的TITLE標籤中',
+	'Title of page' => '頁面TITLE,顯示在頁面的TITLE標籤中',
 	'Top word' => '短說明',
 	'At top right of page' => '顯示在頁面最上邊LOGO右側',
 	'Done' => '完成',
@@ -621,6 +621,7 @@ SweetRice
 		'Post link per page in sitemap' => '站點地圖中的頁面鏈接',
 		'Custom link per page in sitemap' => '站點地圖中的自定義鏈接',
 		'Extract zip archive?' => '解壓ZIP文檔?',
-		'Sorry,some error happened' => '很抱歉，有些錯誤發生'
+		'Sorry,some error happened' => '很抱歉，有些錯誤發生',
+		'Choose file' => '選擇文件'
 );
 ?>

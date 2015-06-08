@@ -621,6 +621,7 @@ SweetRice
 		'Post link per page in sitemap' => 'Post link per page in sitemap',
 		'Custom link per page in sitemap' => 'Custom link per page in sitemap',
 		'Extract zip archive?' => 'Extract zip archive?',
-		'Sorry,some error happened' => 'Sorry,some error happened'
+		'Sorry,some error happened' => 'Sorry,some error happened',
+		'Choose file' => 'Choose file'
 );
 ?>

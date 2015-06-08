@@ -45,13 +45,13 @@
 		'Name' => '名称',
 		'Category name' => '分类名称,在页面中向分类页链接的文字',
 		'Keywords' => '关键字',
-		'Keywords of Page' => '显示在网页KEYWORDS标签中',
+		'Keywords of page' => '显示在网页KEYWORDS标签中',
 		'Description' => '介绍',
-		'Description of Page' => '显示在页面DESCRIPTION标签中',
+		'Description of page' => '显示在页面DESCRIPTION标签中',
 		'Slug' => '链接字',
 		'Only a-z,A-Z,0-9,-,_' => '英文,数据及-组成,用于生成分类链接',
 		'Title' => '标题',
-		'Title of Page' => '网页TITLE,显示在页面的TITLE标签中',
+		'Title of page' => '网页TITLE,显示在页面的TITLE标签中',
 		'Top word' => '短说明',
 		'At top right of page' => '显示在页面最上边LOGO右侧',
 		'Done' => '完成',
@@ -620,6 +620,7 @@ SweetRice
 		'Post link per page in sitemap' => '站点地图中的页面链接',
 		'Custom link per page in sitemap' => '站点地图中的自定义链接',
 		'Extract zip archive?' => '解压ZIP文档?',
-		'Sorry,some error happened' => '很抱歉，有些错误发生'
+		'Sorry,some error happened' => '很抱歉，有些错误发生',
+		'Choose file' => '选择文件'
 );
 ?>

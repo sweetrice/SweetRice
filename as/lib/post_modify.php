@@ -124,7 +124,7 @@ if(count($att_rows)){
 	_().ready(function(){
 	_('.btn_upload').bind('click',function(){
 		_(this).prev().prev().click();
-		_.dialog({'title':'<?php _e('Image List');?>','content':'<iframe src="./?type=image" style="border:none;width:100%;height:'+(_.pageSize().windowHeight-200)+'px;"></iframe>','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
+		_.dialog({'title':'<?php _e('Image List');?>','content':'<iframe src="./?type=image" style="border:none;width:100%;height:'+((_.pageSize().windowHeight-200) > 300?(_.pageSize().windowHeight-200):300)+'px;"></iframe>','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 	});
 		_('.att_add').bind('click',function(event){
 			attNo += 1;
@@ -132,14 +132,14 @@ if(count($att_rows)){
 			var new_file = document.createElement('div');
 			_(new_file).attr('id','f_'+attNo).html('<div class="att_list"><div class="form_split"><?php _e('New');?> <input type="text" name="att_'+attNo+'" id="att_'+attNo+'" class="input_text"/><span id="attname_'+attNo+'"></span></div><div class="form_split"><input type="button" value="<?php _e('Remove');?>" class="delfile" data="'+attNo+'"> <input type="button" value="<?php _e('Replace');?>" class="replaceAtt" data="'+attNo+'"></div></div>');
 			_('#muti_files').append(new_file);
-			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
+			_.dialog({'title':'<?php _e('Choose file');?>','content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 			attach_media = _('#att_'+attNo); 
 			_('.delfile').unbind('click').bind('click',function(event){
 				_('#f_'+_(this).attr('data')).remove();
 			});
 			_('.replaceAtt').unbind('click').bind('click',function(event){
 				attach_media = _('#att_'+_(this).attr('data'));
-				_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
+				_.dialog({'title':'<?php _e('Choose file');?>','content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'<?php _e('Choose file');?>','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 			});
 		});
 		_('.delfile').bind('click',function(event){
@@ -147,7 +147,7 @@ if(count($att_rows)){
 		});	
 		_('.replaceAtt').bind('click',function(event){
 			attach_media = _('#att_'+_(this).attr('data'));
-			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
+			_.dialog({'title':'<?php _e('Choose file');?>','content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'<?php _e('Choose file');?>','name':'media','width':_.pageSize().windowWidth,'height':_.pageSize().windowHeight-150,'layer':true});
 		});
 	});
 	//-->

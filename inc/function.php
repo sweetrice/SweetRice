@@ -2726,6 +2726,9 @@
 		$setting['postRssfeed'] = $setting['postRssfeed']?$setting['postRssfeed']:50;
 		$setting['commentList'] = $setting['commentList']?$setting['commentList']:15;
 		$setting['commentPins'] = $setting['commentPins']?$setting['commentPins']:12;
+		$setting['category_link_per_page'] = $setting['category_link_per_page']?$setting['category_link_per_page']:50;
+		$setting['post_link_per_page'] = $setting['post_link_per_page']?$setting['post_link_per_page']:50;
+		$setting['custom_link_per_page'] = $setting['custom_link_per_page']?$setting['custom_link_per_page']:50;
 		return $setting;
 	}
 

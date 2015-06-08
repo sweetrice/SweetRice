@@ -191,6 +191,12 @@ max-height:420px;
 	.form_split{float:none;margin-left:5px;display:block;height:auto;}
 	.imgs li{width:48%;}
 	.new_dir{width:150px;}
+	.mw120{max-width:120px;}
+	.mw140{max-width:140px;}
+	.mw150{max-width:150px;}
+	.mw160{max-width:160px;}
+	.mw170{max-width:170px;}
+	.mw180{max-width:180px;}
 }
 </style>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
@@ -205,7 +211,7 @@ max-height:420px;
 <input type="hidden" name="type" value="media" />
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
 <?php _e('Search');?> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
-	<input type="text" name="keyword" value="<?php echo $keyword;?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
+	<input type="text" name="keyword" value="<?php echo $keyword;?>" placeholder="<?php _e('Keywords');?>" class="mw160"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
 </div>
 <div class="clear"></div>
@@ -264,7 +270,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
 <div class="form_split">
 <?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload[]" id="upload" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
+	<input type="file" name="upload[]" id="upload" class="mw180" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
 	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
 </form>
 </div>
@@ -272,7 +278,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <form method="post" action="./?type=media&mode=mkdir">
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
 <?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="text" name="new_dir" class="new_dir"/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
+	<input type="text" name="new_dir" class="new_dir mw120"/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
 </form>
 </div>
 <div class="clear"></div>

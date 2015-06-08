@@ -380,4 +380,5 @@ fieldset p{
 	#div_foot select{display:none;}
 	#top_image{float:none;width:100%;}
 	#top_word{float:none;width:100%;}
+	.app_div input[type=file]{max-width:200px;}
 }
