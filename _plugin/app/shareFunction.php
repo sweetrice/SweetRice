@@ -180,9 +180,9 @@
 		_('.required .app_field').bind('change',function(){
 			if (!_(this).val())
 			{
-				_(this).css({'background-color':'#ff0000'});
+				_(this).css({'border-top-color':'red'});
 			}else{
-				_(this).css({'background-color':'transparent'});
+				_(this).css({'border-top-color':'#696'});
 			}
 		});
 		_('#app_form').bind('submit',function(event){
@@ -204,9 +204,9 @@
 						_('.required .app_field').each(function(){
 							if (!_(this).val())
 							{
-								_(this).css({'background-color':'#ff0000'});
+								_(this).css({'border-top-color':'red'});
 							}else{
-								_(this).css({'background-color':'transparent'});
+								_(this).css({'border-top-color':'#696'});
 							}
 						});
 						_.stopevent(event);

@@ -19,30 +19,27 @@
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
-body{font-family:Verdana,Georgia,arial,sans-serif;background-color:#555;}
-h1{height:60px;line-height:60px;border-bottom:1px solid #fff;color:#fff;padding-left:30px;}
-#div_foot{	background-color:#444;height:30px;	line-height:30px;	color:#fff;text-align:center;}
+body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
+.header{line-height:30px;font-size:20px;background-color:#444;box-shadow:0px 0px 2px 2px #444;color:#fafafa;padding:0px 10px;}
+#div_foot{	background-color:#444;height:30px;	line-height:30px;	color:#fff;text-align:center;padding:0px 10px;}
 #div_foot a{	color: #66CC00;	text-decoration: none;}
 #div_foot a:hover{	color: #66CC00;	text-decoration: underline;}
-.content{text-align:center;background-color:#fff;}
-.content dl{clear:both;}
-.content dt{width:20%;float:left;display:inline;text-align:right;}
-.content dd{width:79%;float:right;display:inline;text-align:left;}
-.clear{clear:both;}
+.content{margin:0px 10px;}
+.content div{margin-bottom:16px;}
 </style>
 </head>
 <body>
-<h1><?php _e('SweetRice error report');?></h1>
+<div class="header"><?php _e('SweetRice error report');?></div>
 <div class="content">
 <?php if($db_error):?>
-<dl><dt><?php _e('Database');?></dt><dd><?php echo db_error();?></dd></dl>
+<fieldset><legend><?php _e('Database');?></legend><?php echo db_error();?></fieldset>
 <?php endif;?>
 <?php
 	if(is_array($errors)){
 		foreach($errors as $key=>$val){
 			if(in_array($key,array('file','line','message'))){
 ?>
-<dl><dt><?php _e(ucfirst($key));?></dt><dd><?php echo $key=='file'?substr($val,strlen(ROOT_DIR)-1):$val;?></dd></dl>
+<fieldset><legend><?php _e(ucfirst($key));?></legend><?php echo $key=='file'?substr($val,strlen(ROOT_DIR)-1):$val;?></fieldset>
 <?php
 			}
 		}
@@ -51,16 +48,16 @@ h1{height:60px;line-height:60px;border-bottom:1px solid #fff;color:#fff;padding-
 <div class="clear"></div>
 </div>
 <div id="div_foot">
-<?php _e('Copyright')?> &copy; <?php echo date('Y');?> <a href="<?php echo BASE_URL;?>"><?php echo $global_setting['name'];?></a> Powered By <a href="http://www.basic-cms.org">Basic CMS SweetRice</a>
+Powered By <a href="http://www.basic-cms.org">Basic CMS SweetRice</a>
 </select>
 </div>
 <script type="text/javascript">
 <!--
 	_().ready(function(){
-		_('.content').css({'margin-top':((_.pageSize().windowHeight-91-_('.content').height())/2)+'px','margin-bottom':((_.pageSize().windowHeight-91-_('.content').height())/2)+'px'});
+		_('.content').css({'margin-top':((_.pageSize().windowHeight-60-_('.content').height())/2)+'px','margin-bottom':((_.pageSize().windowHeight-60-_('.content').height())/2)+'px'});
 	});
 	_(window).bind('resize',function(){
-		_('.content').animate({'margin-top':((_.pageSize().windowHeight-91-_('.content').height())/2)+'px','margin-bottom':((_.pageSize().windowHeight-91-_('.content').height())/2)+'px'});
+		_('.content').animate({'margin-top':((_.pageSize().windowHeight-60-_('.content').height())/2)+'px','margin-bottom':((_.pageSize().windowHeight-60-_('.content').height())/2)+'px'});
 	});
 //-->
 </script>
