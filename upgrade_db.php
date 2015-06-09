@@ -341,7 +341,7 @@
 		$update_db = false;
 		switch(DATABASE_TYPE){
 			case 'sqlite':
-				$update_db .= createTable(DB_LEFT.'_item_data',"CREATE TABLE \"".DB_LEFT."_item_data\"(   \"id\" INTEGER PRIMARY KEY ,  \"item_id\" int(10),  \"item_type\" varchar(255),  \"data_type\" varchar(20),  \"name\" varchar(255),  \"value\" text");
+				$update_db .= createTable(DB_LEFT.'_item_data',"CREATE TABLE \"".DB_LEFT."_item_data\"(   \"id\" INTEGER PRIMARY KEY ,  \"item_id\" int(10),  \"item_type\" varchar(255),  \"data_type\" varchar(20),  \"name\" varchar(255),  \"value\" text)");
 				db_query("CREATE INDEX item_data_item_id_index ON ".DB_LEFT."_item_data(item_id)");
 				db_query("CREATE INDEX item_data_item_type_index ON ".DB_LEFT."_item_data(item_type)");
 				db_query("CREATE INDEX item_data_name_index ON ".DB_LEFT."_item_data(name)");

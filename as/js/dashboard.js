@@ -19,6 +19,10 @@ _().ready(function(){
 	_(document.body).css({'background-color':color});
 	_('#toggle_nav').bind('click',function(){
 		_('#dashboard_nav').toggle();
+		if (_('#dashboard_nav').css('display') == 'block')
+		{
+			_('#dashboard_nav ul li div div').addClass('show_');
+		}
 		_(document.body).scrollTop(0);
 	});
 	_(document.body ? document.body : document.documentElement).bind('click', function(e){

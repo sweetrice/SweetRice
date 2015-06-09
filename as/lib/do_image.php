@@ -185,6 +185,9 @@ input[type=file]{
 .img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
 .clear{clear:both;}
 .form_split{line-height:30px;display:inline;margin:2px 10px;height:30px;}
+input[type=file]{
+	width:250px;
+}
 @media (max-width: 640px){
 	.form_split{float:none;margin-left:5px;display:block;height:auto;}
 	.imgs li{width:48%;}

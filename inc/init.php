@@ -77,9 +77,10 @@
 				}
 			}
 		}
-		if($global_setting['timeZone']){
-			date_default_timezone_set($global_setting['timeZone']);
+		if(!$global_setting['timeZone']){
+			$global_setting['timeZone'] = 'America/Los_Angeles';
 		}
+		date_default_timezone_set($global_setting['timeZone']);
 		$permalinks = initPermalinks();
 		if(SITE_HOME != ROOT_DIR && file_exists(SITE_HOME.'inc/site_config.php')){
 			include(SITE_HOME.'inc/site_config.php');
