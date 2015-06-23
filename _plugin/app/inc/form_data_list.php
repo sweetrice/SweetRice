@@ -99,11 +99,13 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 		});
 		bind_checkall('.checkall','.ck_item');
 		_('.action_delete').bind('click',function(){
+			_('.ck_item').prop('checked',false);
 			_(this).parent().parent().find('.ck_item').prop('checked',true);
 			_('.btn_submit').run('click');
 		});
 
 		_('#bulk_form').bind('submit',function(event){
+			_.stopevent(event);
 			var no = 0;   
 			_('.ck_item').each(function(){
 				if (_(this).prop('checked')){
@@ -112,11 +114,11 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 			});
 			if(no > 0){
 				if(!confirm('<?php _e('Are you sure delete it?');?>')){
-					_().stopevent(event);
+					return ;
 				}
 			}else{
 				alert('<?php _e('No Record Selected');?>.');
-				_().stopevent(event);
+				return ;
 			}
 			from_bulk(this,function(){
 				_('.ck_item').each(function(){
@@ -128,7 +130,6 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 					}
 				});
 			});
-			_.stopevent(event);
 		});
 	});
 //-->

@@ -1934,7 +1934,7 @@
 				}
 			}
 		}
-		db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist?$inlist:array(0)).") AND `item_id` = '$item_id' AND `item_type` = '$type'");
+		db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist?$inlist:array(0)).") AND `item_id` = '$item_id' AND `item_type` = '$type' AND `data_type` != '' ");
 		$cfdata = getOption('custom_'.$type.'_field');
 		if($cfdata){
 			$cfdata = unserialize($cfdata['content']);
@@ -1963,25 +1963,37 @@
 			return false;
 		}
 		$data = array();
-		$where = " WHERE `item_type` = '".$param['item_type']."' AND `item_id` = '".$param['item_id']."' ";
+		if(is_array($param['item_id'])){
+			$item_ids = implode(',',$param['item_id']);
+		}else{
+			$item_ids = $param['item_id'];
+		}
+		$where = " WHERE `item_type` = '".$param['item_type']."' AND `item_id` IN( '".$item_ids."') ";
 		if($param['name']){
 			$where .= " AND `name` = '".$param['name']."'";
 		}
-		if($prams['name']){
-			$data = db_array("SELECT `name`,`value`,`data_type` FROM `".DB_LEFT."_item_data` ".$where);
-			if($data['data_type'] == 'select'){
-				$data['value'] = unserialize($data['value']);
+		$rows = db_arrays("SELECT * FROM `".DB_LEFT."_item_data` ".$where);
+		foreach($rows as $val){
+			if($val['data_type'] == 'select'){
+				$val['value'] = unserialize($val['value']);
 			}
-		}else{
-			$rows = db_arrays("SELECT `name`,`value`,`data_type` FROM `".DB_LEFT."_item_data` ".$where);
-			foreach($rows as $val){
-				if($val['data_type'] == 'select'){
-					$val['value'] = unserialize($val['value']);
-				}
-				$data[$val['name']] = $val['value'];
+			$data[$val['item_id']][$val['name']] = $val['value'];
+		}
+		if(!is_array($param['item_id'])){
+			if($param['name']){
+				$data = $data[$param['item_id']][$param['name']];
+			}else{
+				$data = $data[$param['item_id']];
 			}
 		}
 		return $data;
+	}
+
+	
+	function set_custom_data($item_type,$item_id,$name,$value,$data_type = ''){
+		$row = db_array("SELECT * FROM `".DB_LEFT."_item_data` WHERE `item_id` = '$item_id' AND `item_type` = '$item_type' AND `data_type` = '$data_type' AND `name` = '$name'");
+		db_insert(DB_LEFT.'_item_data',array('id',$row['id']>0?$row['id']:null),array('item_id','item_type','data_type','name','value'),array($item_id,$item_type,$data_type,$name,$value));
+		return ;
 	}
 
 //API comment insert

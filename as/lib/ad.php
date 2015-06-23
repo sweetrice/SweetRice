@@ -60,6 +60,7 @@ $no = 0;
 			sortBy(this,'#tbl');
 		});
 		_('.action_delete').bind('click',function(){	
+			_('.ck_item').prop('checked',false);
 			_(this).parent().parent().find('.ck_item').prop('checked',true);
 			_('.btn_submit').run('click');
 		});

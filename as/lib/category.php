@@ -31,7 +31,7 @@ foreach($data['rows'] as $row){
 <tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.show_link_cat($row['link'],'');?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td class="media_content"><span id="slug_<?php echo $no;?>"><?php echo $row['link'];?></span></td><td class="media_content"><span id="parent_<?php echo $no;?>"><a href="<?php echo show_link_cat($categories[$row['parent_id']]['link']);?>"><?php echo $row['parent_id']?$categories[$row['parent_id']]['name']:_t('Main');?></a></span></td><td class="media_content"><span id="title_<?php echo $no;?>"><?php echo $row['title'];?></span></td><td>
 <span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
-<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=category&mode=modify&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
+<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=category&mode=insert&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
 	}
@@ -50,6 +50,7 @@ foreach($data['rows'] as $row){
 			sortBy(this,'#tbl');
 		});
 		_('.action_delete').bind('click',function(){	
+			_('.ck_item').prop('checked',false);
 			_(this).parent().parent().find('.ck_item').prop('checked',true);
 			_('.btn_submit').run('click');
 		});

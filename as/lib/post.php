@@ -57,7 +57,7 @@ $no = 0;
 ?>
 <tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td class="media_content"><span id="category_<?php echo $no;?>"><?php echo $categories[$row['category']]['name'];?></span></td><td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td><td><span id="comments_<?php echo $no;?>"><?php echo number_format($cmtRows[$row['id']]);?></span></td><td><?php echo $row['in_blog']?_t('Yes'):_t('No');?></td><td><span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
-<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=modify&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
+<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
 	}
@@ -133,7 +133,8 @@ $s_category[$category] = 'selected';
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
-		_('.action_delete').bind('click',function(){			
+		_('.action_delete').bind('click',function(){		
+			_('.ck_item').prop('checked',false);	
 			_(this).parent().parent().find('.ck_item').prop('checked',true);
 			_('#paction').val('pdelete');
 			_('.btn_submit').run('click');

@@ -185,7 +185,7 @@ max-height:420px;
 .img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
 .clear{clear:both;}
 .imgs li div a{display:block;width:100%;height:100%;}
-.form_split{float:left;line-height:30px;display:inline;margin:2px 10px;height:30px;}
+.form_split{float:left;line-height:30px;display:inline;margin:2px 10px 0px 2px;height:30px;}
 .selected_item{box-shadow: 2px 2px 5px #690 !important;}
 @media (max-width: 640px){
 	.form_split{float:none;margin-left:5px;display:block;height:auto;}
@@ -266,14 +266,14 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 </div>
 <div class="clear"></div>
 <?php echo $pager['list_put'];?>
-<div class="form_split">
+
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
 <div class="form_split">
 <?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
 	<input type="file" name="upload[]" id="upload" class="mw180" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
 	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
 </form>
-</div>
+
 <div class="form_split">
 <form method="post" action="./?type=media&mode=mkdir">
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />

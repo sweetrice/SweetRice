@@ -9,29 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  switch($mode){
-	case 'modify':
-		$id = intval($_GET['id']);
-		if($id > 0){
-			$row = getPosts(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
-			$att_rows = db_arrays("SELECT * FROM `".DB_LEFT."_attachment` WHERE `post_id` = '$id'");
-			$cf_rows = $row['custom_field'];
-			$row['body'] = toggle_attachment($row['body'],'dashboard');
-		}
-		if($global_setting['theme']){
-			$template = get_template(SITE_HOME.'_themes/'.$global_setting['theme'].'/','Entry');
-		}else{
-			$template = get_template(SITE_HOME.'_themes/default/','Entry');
-		}
-		$top_word = _t('Modify Post');
-		$subCategory = subCategory(" AND ip.`plugin` = ''");
-		$referer = parse_url($_SERVER['HTTP_REFERER']);
-		preg_match('/&p=([0-9]+)/',$referer['query'],$matches);
-		if($_SESSION['post_list_p']!=$matches[1]&&$matches[1]){
-			$_SESSION['post_list_p'] = $matches[1];
-		}
-		$returnUrl = './?type=post'.($_SESSION['post_list_p']?'&p='.$_SESSION['post_list_p']:'');
-		$inc = 'post_modify.php';
-	break;
 	case 'insert':
 		$post_data = post_insert();
 		if($post_data['post_id']){
@@ -51,9 +28,24 @@
 			}else{
 				$template = get_template(SITE_HOME.'_themes/default/','Entry');
 			}
-			$top_word = _t('Create Post');
+			$id = intval($_GET['id']);
+			if($id > 0){
+				$row = getPosts(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
+				$att_rows = db_arrays("SELECT * FROM `".DB_LEFT."_attachment` WHERE `post_id` = '$id'");
+				$cf_rows = $row['custom_field'];
+				$row['body'] = toggle_attachment($row['body'],'dashboard');
+				$top_word = _t('Modify Post');
+			}else{
+				$top_word = _t('Create Post');
+			}
+			$referer = parse_url($_SERVER['HTTP_REFERER']);
+			preg_match('/&p=([0-9]+)/',$referer['query'],$matches);
+			if($_SESSION['post_list_p']!=$matches[1]&&$matches[1]){
+				$_SESSION['post_list_p'] = $matches[1];
+			}
+			$returnUrl = './?type=post'.($_SESSION['post_list_p']?'&p='.$_SESSION['post_list_p']:'');
 			$subCategory = subCategory(" AND ip.`plugin` = ''");
-			$inc = 'post_modify.php';
+			$inc = 'post_insert.php';
 		}
 	break;
 	case 'bulk':
@@ -103,20 +95,21 @@
 	default:
 		$where = " ip.`plugin` = '' AND ip.`item_type` = 'post'";
 		$search = db_escape($_GET['search']);
+		$search_url = '';
 		if($search){
 			$where .= " AND ps.`title` LIKE '%$search%' OR ps.`name` LIKE '%$search%' ";
-			$pl_search .= '&search='.$_GET['search'];
+			$search_url .= '&search='.$_GET['search'];
 		}
 		$category = $_GET['category'] != '' ? intval($_GET['category']):'all';
 		if($category != 'all'){
 			$where .= " AND ps.`category` = '$category' ";
-			$pl_search .= '&category='.intval($_GET['category']);
+			$search_url .= '&category='.intval($_GET['category']);
 		}
 		
 		$data = getPosts(array('table'=>" `".DB_LEFT."_posts` AS ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ps.`id` = ip.`item_id`",
 			'field' => "ps.*",
 			'where'=>$where,
-			'pager' =>  array('p_link'=>'./?type=post'.$pl_search.'&',
+			'pager' =>  array('p_link'=>'./?type=post'.$search_url.'&',
 			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
 		));
 		$pager = $data['pager'];

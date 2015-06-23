@@ -44,6 +44,7 @@
 		'Form\'s action' => 'Form\'s action',
 		'Enter custom action url or let this empty' => 'Enter custom action url or let this empty',
 		'Options' => 'Options',
-		'Multiple' => 'Multiple'
+		'Multiple' => 'Multiple',
+		'View form data' => 'View form data'
 	);
 ?>

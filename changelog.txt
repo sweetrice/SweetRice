@@ -36,7 +36,7 @@ Thank you.
 
 SweetRice change log:
 ======================================
-Change log V1.5.0 06/04/2015
+Change log V1.5.0 06/12/2015
 core update
 	add BASE_DIR for cookie - access from meta
 	custom field supports more option
@@ -51,6 +51,7 @@ core update
 	add post pagebreak
 	add mail function supports attachment add param attachments
 	all new design support mobile management
+	add set_custom_data function : save custom data to table item_data
 dashboard
 	plugin description : supports multiple language 
 	add transfer website to other hosting

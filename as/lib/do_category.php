@@ -9,27 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  switch($mode){
-	case 'modify':
-		$id = intval($_GET['id']);
-		if($id > 0){
-			$row = getCategories(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
-			$cf_rows = $row['custom_field'];
-			$data = getCategories(array('where'=>"`parent_id` = '0' AND `id` !='".$row['id']."'"));
-			$cat = $data['rows'];
-		}else{
-			$data = getCategories(array('where'=>"`parent_id` = '0'"));
-			$cat = $data['rows'];
-		}
-		$s_parent[$row['parent_id']] = 'selected';
-		if($global_setting['theme']){
-			$template = get_template(SITE_HOME.'_themes/'.$global_setting['theme'].'/','Category');
-		}else{
-			$template = get_template(SITE_HOME.'_themes/default/','Category');
-		}
-		$top_word = _t('Modify Category');
-		$subCategory = subCategory(" AND ip.`plugin` = ''");
-		$inc = 'cat_modify.php';
-	break;
 	case 'insert':
 		$cat_data = category_insert();
 		if($cat_data['cat_id']){
@@ -48,9 +27,16 @@
 			}else{
 				$template = get_template(SITE_HOME.'_themes/default/','Category');
 			}
-			$top_word = _t('Create Category');
+			$id = intval($_GET['id']);
+			if($id > 0){
+				$row = getCategories(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
+				$cf_rows = $row['custom_field'];
+				$top_word = _t('Modify Category');
+			}else{
+				$top_word = _t('Create Category');
+			}
 			$subCategory = subCategory(" AND ip.`plugin` = ''");
-			$inc = 'cat_modify.php';
+			$inc = 'cat_insert.php';
 		}
 	break;
 	case 'bulk':
@@ -69,18 +55,19 @@
 	default:
 		$where = " ip.`plugin` = '' AND ip.`item_type` = 'category'";
 		$search = db_escape($_GET['search']);
+		$search_url = '';
 		if($search){
 			$where .= " AND c.`title` LIKE '%$search%'";
-			$pl_search .= '&search='.$_GET['search'];
+			$search_url .= '&search='.$_GET['search'];
 		}
 		if($_GET['parent']){
 			$where .= " AND c.`parent_id` = '".intval($_GET['parent'])."'";
-			$pl_search .= '&parent='.$_GET['parent'];
+			$search_url .= '&parent='.$_GET['parent'];
 		}
 		$data = db_fetch(array('table'=>" `".DB_LEFT."_category` AS c LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON c.`id` = ip.`item_id`",
 			'field' => "c.*",
 			'where'=>$where,
-			'pager' =>  array('p_link'=>'./?type=category'.$pl_search.'&',
+			'pager' =>  array('p_link'=>'./?type=category'.$search_url.'&',
 			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
 		));
 		$top_word = _t('Category List');

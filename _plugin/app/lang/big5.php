@@ -44,6 +44,7 @@
 		'Form\'s action' => '表單的action',
 		'Enter custom action url or let this empty' => '輸入自定義action網址或者留空',
 		'Options' => '選項',
-		'Multiple' => '多選'
+		'Multiple' => '多選',
+		'View form data' => '查看表單數據'
 	);
 ?>
