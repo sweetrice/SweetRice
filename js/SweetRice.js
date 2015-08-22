@@ -1506,25 +1506,16 @@
 		{
 			param.stopevent = {'start':true,'move':true,'end':true,'leave':true,'cancel':true};
 		}
-		ongoingTouchIndexById = function(idToFind) {
-      for (var i=0; i<window.ongoingTouches.length; i++) {
-        var id = window.ongoingTouches[i].identifier;
-        if (id == idToFind) {
-          return i;
-        }
-      }
-      return -1;
-    }
-		window.ongoingTouches = [];
+		window.savedTouches = [];
 		return this.each(function(){
 			var me = _(this);
 			me.unbind('touchstart').bind('touchstart',function(event){
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
-					window.ongoingTouches.push(touches[i]);
+					savedTouches[touches[i].identifier] = {pageX:touches[i].pageX,pageY:touches[i].pageY};
 					if (typeof param.start == 'function')
 					{
-						param.start(window.ongoingTouches,i,me);
+						param.start(savedTouches,touches[i].identifier,me);
 					}
 				}
 				if (param.stopevent.start)
@@ -1534,12 +1525,11 @@
 			}).unbind('touchmove').bind('touchmove',function(event){
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
-					var idx = ongoingTouchIndexById(touches[i].identifier);
 					if (typeof param.move == 'function')
 					{
-						param.move(window.ongoingTouches,idx,touches,i,me);
+						param.move(savedTouches,touches[i].identifier,touches,i,me);
 					}
-					ongoingTouches.splice(idx, 1, touches[i]);
+					savedTouches[touches[i].identifier] = {pageX:touches[i].pageX,pageY:touches[i].pageY};
 				}
 				if (param.stopevent.move)
 				{
@@ -1548,21 +1538,11 @@
 			}).unbind('touchend').bind('touchend',function(event){
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
-					var idx = ongoingTouchIndexById(touches[i].identifier);
 					if (typeof param.end == 'function')
 					{
-						param.end(window.ongoingTouches,idx,touches,i,me);
+						param.end(savedTouches,touches[i].identifier,touches,i,me);
 					}
-					ongoingTouches.splice(idx, 1);
-				}
-				if (param.stopevent.end)
-				{
-					me.stopevent(event);
-				}
-			}).unbind('touchleave').bind('touchleave',function(event){
-				var touches = event.changedTouches;
-				for (var i=0; i<touches.length; i++) {
-					ongoingTouches.splice(i, 1);
+					savedTouches[touches[i].identifier] = null;
 				}
 				if (param.stopevent.end)
 				{
@@ -1571,7 +1551,7 @@
 			}).unbind('touchcancel').bind('touchcancel',function(event){
 				var touches = event.changedTouches;
 				for (var i=0; i<touches.length; i++) {
-					ongoingTouches.splice(i, 1);
+					savedTouches[touches[i].identifier] = null;
 				}
 				if (param.stopevent.end)
 				{
