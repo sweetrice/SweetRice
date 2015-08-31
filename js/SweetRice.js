@@ -1528,7 +1528,6 @@
 					{
 						param.move(savedTouches,touches[i].identifier,touches,i,me);
 					}
-					savedTouches[touches[i].identifier] = {pageX:touches[i].pageX,pageY:touches[i].pageY};
 				}
 				if (param.stopevent.move)
 				{
