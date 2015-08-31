@@ -1175,7 +1175,6 @@
 						this['on' + evType] = Sweetrice.handle_list[_this.bind_handle(this,evType,fn)];
 					}
 				},callback);
-				return this;
 			};
 
 			this.unbind = function(evType,fn, useCapture,callback){
