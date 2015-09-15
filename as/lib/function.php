@@ -366,8 +366,8 @@ function get_template($theme_dir,$type){
 
 	function dashboard_signout(){
 		if($_COOKIE['admin'] && $_COOKIE['passwd']){
-			setcookie('admin','',time()-60);
-			setcookie('passwd','',time()-60);
+			setcookie('admin','',time()-60,BASE_DIR.DASHBOARD_DIR.'/');
+			setcookie('passwd','',time()-60,BASE_DIR.DASHBOARD_DIR.'/');
 		}else{
 			$orow = getOption('pluginWithDashboard');
 			if($orow['content']){
