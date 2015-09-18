@@ -1442,7 +1442,6 @@
 				{
 					param.complete(me);
 				}
-				_(this).stopevent(event);
 			});
 			_(document).bind('mousemove',function(event){
 				var event = event || window.event;
@@ -1479,7 +1478,6 @@
 				{
 					param.complete(me);
 				}
-				_(this).stopevent(event);
 			});
 		});
 	};
@@ -1611,6 +1609,7 @@
 				param.close();
 			}
 		});
+
 		_(dlgdiv).find('.SweetRice_menuBar').drag({
 		type:'none',
 		'start':function(){
