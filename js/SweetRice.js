@@ -288,10 +288,10 @@
 
 			this.scrollSize = function(){
 				var xScroll,yScroll;
-				if(self.pageYOffset){
+				if(self.pageYOffset || self.pageXOffset){
 					yScroll = self.pageYOffset;
 					xScroll = self.pageXOffset;
-				}else if(document.documentElement&&document.documentElement.scrollTop){
+				}else if(document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)){
 					yScroll = document.documentElement.scrollTop;
 					xScroll = document.documentElement.scrollLeft;
 				}else if(document.body){
