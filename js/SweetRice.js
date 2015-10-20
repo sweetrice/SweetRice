@@ -984,6 +984,12 @@
 			};
 
 			this.load = function(url,callback){
+				if (typeof url == 'function') {
+					this.bind('load',function(){
+						url();
+					},false,callback);
+					return ;
+				}
 				var query = new Object();
 				_.ajax({
 					'type':'GET',
@@ -1316,34 +1322,34 @@
 	  Sweetrice.ajaxHandle[k].send(null);
 	}
 
-		this.serializeForm = function(){
-			var data = '';
-			_this.find('*').each(function(){
-				if (!!_(this).attr('name'))
+	this.serializeForm = function(){
+		var data = '';
+		_this.find('*').each(function(){
+			if (!!_(this).attr('name'))
+			{
+				var submit = false;
+				switch (_(this).attr('type'))
 				{
-					var submit = false;
-					switch (_(this).attr('type'))
-					{
-						case 'checkbox':
-							if (_(this).prop('checked')){
-								submit = true;
-							}
-						break;
-						case 'radio':
-							if (_(this).prop('checked')){
-								submit = true;
-							}
-						break;
-						default:
+					case 'checkbox':
+						if (_(this).prop('checked')){
 							submit = true;
-					}
-					if (submit){
-							data += '&'+_(this).attr('name')+'='+_(this).val();
-					}
+						}
+					break;
+					case 'radio':
+						if (_(this).prop('checked')){
+							submit = true;
+						}
+					break;
+					default:
+						submit = true;
 				}
-			});
-			return data;
-		};
+				if (submit){
+						data += '&'+_(this).attr('name')+'='+_(this).val();
+				}
+			}
+		});
+		return data;
+	};
 
 	this.ajax = function(param){
 		if (!param.timeout){
@@ -1359,6 +1365,9 @@
 		if (param.form)
 		{
 			query = _(param.form).serializeForm();
+			if (!param.type && _(param.form).attr('method')) {
+				param.type = _(param.form).attr('method');
+			}
 		}else{
 			var data = param.data;
 			for (var i in data ){

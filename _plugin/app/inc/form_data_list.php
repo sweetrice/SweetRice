@@ -91,7 +91,7 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 		_('.toggle_data').bind('click',function(){
 			_.dialog({'title':'<?php _e('View form data');?>','content':_(this).parent().find('.formdata').html()});
 			_('.btn_preview').bind('click',function(){
-				_.dialog({'content':'<iframe src="'+_(this).attr('url')+'" style="width:100%;height:480px;border:none;"></iframe>','width':340,'height':480});
+				_.dialog({'content':'<img src="'+_(this).attr('url')+'" style="width:320px;"></iframe>','width':340});
 			});
 		});
 		_('#form').bind('change',function(){
