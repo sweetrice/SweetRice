@@ -48,6 +48,9 @@
 			getComputedStyle = document.defaultView && document.defaultView.getComputedStyle;
 		}
 		function SweetRice(elm){
+			if (typeof elm == 'function') {
+				return elm();
+			}
 			this.inArray = function(a,b){
 				for (var i in a )
 				{
