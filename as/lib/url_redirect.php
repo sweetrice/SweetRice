@@ -32,7 +32,7 @@ $no = 0;
 </div>
 <input type="hidden" id="no" value="<?php echo intval($no);?>"/>
 <input type="button" value="<?php _e('Add URL Rule');?>" class="btn_add">
-<div class="tip"><?php _e('<p>Input rule:please note that the source URL must without "http(s)://" and your domain.</p>example: <ol><li>enter <strong>source.html->destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://yourdomain.com/destination.html</li><li>enter <strong>source.html->http(s)://otherdomain.com/destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://otherdomain.com/destination.html</li><li>Support regular rule,example: <strong>/^page\/([a-z0-9]+)\.html$/i->action=post&sys_name=$1</strong> to parse the url and <strong>/^page\/([a-z0-9]+)\.html$/i->$1.html</strong> to redirect the url.</li></ol>');?></div>
+<div class="tip"><?php _e('<p>Input rule:please note that the source URL must without "http(s)://" and your domain.</p>example: <ol><li>enter <strong>source.html->destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://yourdomain.com/destination.html</li><li>enter <strong>source.html->http(s)://otherdomain.com/destination.html</strong> to redirect http(s)://yourdomain.com/source.html to http(s)://otherdomain.com/destination.html</li><li>Support regular rule,example: <strong>/^page\/([a-z0-9]+)\.html$/i->action=entry&sys_name=$1</strong> to parse the url and <strong>/^page\/([a-z0-9]+)\.html$/i->$1.html</strong> to redirect the url.</li></ol>');?></div>
 </fieldset>
 <input type="submit" class="input_submit" value="<?php _e('Update');?>"/>
 </form>
