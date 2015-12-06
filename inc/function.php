@@ -54,11 +54,11 @@
 			default:
 				if(is_array($str)){
 					foreach($str as $key=>$val){
-						$str[$key] = mysql_real_escape_string($val);
+						$str[$key] = $GLOBALS['mysql_lib']->real_escape_string($val);
 					}
 					return $str;
 				}
-				return mysql_real_escape_string($str);
+				return $GLOBALS['mysql_lib']->real_escape_string($str);
 		}
 	}
 	function db_unescape($str){
@@ -398,6 +398,7 @@
 			return formatUrl('action=rssfeed');
 		}
 	}
+
 	function postPreview($content){
 		preg_match_all("/.*(<p ?.*>(.+)<\/p>)+.*/",$content,$matchs);
 		foreach($matchs[1] as $key=>$val){
@@ -412,6 +413,7 @@
 		}
 		return $previewContent;
 	}
+
 	if(!function_exists('mb_substr')){
 		function mb_substr($str,$start,$len,$charcode){
 			$str_len = strlen($str);
@@ -442,10 +444,12 @@
 			return $tmpstr;
 		}
 	}
+
 	function checkemail($email){
 		$email = strtolower($email);
 		return preg_match("/^[_\.0-9a-zA-Z-]+@([0-9a-zA-Z][0-9a-zA-Z-]*\.)+[a-zA-Z]{2,3}$/",$email);
 	}
+
 	function my_post($to,$subject,$mail_text,$mail_html,$from_mail,$from_name,$mime_boundary = '',$charset = 'UTF-8',$attachments = array()){		
 		if(!$mime_boundary){
 			$mime_boundary = md5(time());
@@ -495,23 +499,24 @@
 		$mail_sent = mail( $to, $subject, $message, $headers );
 		return $mail_sent;
 	}
+
 	function js_unescape($str){
-			$ret = '';
-			$len = strlen($str);
-			for ($i = 0; $i < $len; $i++){
-					if ($str[$i] == '%' && $str[$i+1] == 'u'){
-							$val = hexdec(substr($str, $i+2, 4));
-							if ($val < 0x7f) $ret .= chr($val);
-							else if($val < 0x800) $ret .= chr(0xc0|($val>>6)).chr(0x80|($val&0x3f));
-							else $ret .= chr(0xe0|($val>>12)).chr(0x80|(($val>>6)&0x3f)).chr(0x80|($val&0x3f));
-							$i += 5;
-					}else if ($str[$i] == '%'){
-							$ret .= urldecode(substr($str, $i, 3));
-							$i += 2;
-					}
-					else $ret .= $str[$i];
-			}
-			return $ret;
+		$ret = '';
+		$len = strlen($str);
+		for ($i = 0; $i < $len; $i++){
+				if ($str[$i] == '%' && $str[$i+1] == 'u'){
+						$val = hexdec(substr($str, $i+2, 4));
+						if ($val < 0x7f) $ret .= chr($val);
+						else if($val < 0x800) $ret .= chr(0xc0|($val>>6)).chr(0x80|($val&0x3f));
+						else $ret .= chr(0xe0|($val>>12)).chr(0x80|(($val>>6)&0x3f)).chr(0x80|($val&0x3f));
+						$i += 5;
+				}else if ($str[$i] == '%'){
+						$ret .= urldecode(substr($str, $i, 3));
+						$i += 2;
+				}
+				else $ret .= $str[$i];
+		}
+		return $ret;
 	}
 
 	function sweetrice_cache($cache_link,$data,$cache_type){
@@ -662,6 +667,8 @@
 		return isset($cache_data)?$cache_data:false;
 	}
 
+	
+
 	function db_insert($table,$_id,$_key,$_val,$return_no=false,$database_type=false){
 		$_key = db_escape($_key);
 		$_val = db_escape($_val);
@@ -750,15 +757,16 @@
 				}else{
 					$sql = "REPLACE INTO `".$table."`(".$_key.")VALUES(".$_val.")";
 				}
-				mysql_query($sql);
+				$GLOBALS['mysql_lib']->query($sql);
 				if($_id[0]){
-					$insert_id = mysql_insert_id();
+					$insert_id = $GLOBALS['mysql_lib']->insert_id();
 					return $insert_id > 0 ? $insert_id:$_id[1];
 				}else{
 					return true;
 				}
 		}
 	}
+
 	function db_error($database_type = false,$check_conn = false){
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
@@ -796,13 +804,14 @@
 			break;
 			default:
 				if($check_conn){
-					if(!mysql_stat()){
+					if(!$GLOBALS['mysql_lib']->stat()){
 						return _t('No Mysql Connected');
 					}
 				}
-				return mysql_error();
+				return $GLOBALS['mysql_lib']->error();
 		}
 	}
+
 	function db_query($sql,$database_type=false){
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
@@ -819,10 +828,11 @@
 				return pg_last_error();
 			break;
 			default:
-				mysql_query($sql);
-				return mysql_error();
+				$GLOBALS['mysql_lib']->query($sql);
+				return $GLOBALS['mysql_lib']->error();
 		}
 	}
+
 	function db_arrays($sql,$type = 'ASSOC',$database_type=false){
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
@@ -844,17 +854,20 @@
 					while($row = pg_fetch_array($res,null,$type=='BOTH'?PGSQL_BOTH:PGSQL_ASSOC)){
 						$rows[] = $row;
 					}
+					pg_free_result($res);
 				break;
 				default:
-					$res = mysql_query($sql);
-					while($row = mysql_fetch_array($res,$type=='BOTH'?MYSQL_BOTH:MYSQL_ASSOC)){
+					$res = $GLOBALS['mysql_lib']->query($sql);
+					while($row = $GLOBALS['mysql_lib']->fetch_array($res,$GLOBALS['mysql_lib']->result_type($type))){
 						$rows[] = $row;
 					}
+					$GLOBALS['mysql_lib']->free_result($res);
 			}
 			sweetrice_cache($cache_link,$rows,'db_arrays');
 			return is_array($rows)?$rows:array();
 		}
 	}
+
 	function db_array($sql,$type = 'ASSOC',$database_type=false){
 		if(!$database_type){
 			$database_type = DATABASE_TYPE;
@@ -872,10 +885,14 @@
 				break;
 				case 'pgsql':
 					$sql = str_replace('`','"',$sql);
-					$row = pg_fetch_array(pg_query($sql),null,$type=='BOTH'?PGSQL_BOTH:PGSQL_ASSOC);
+					$res = pg_query($sql);
+					$row = pg_fetch_array($res,null,$type=='BOTH'?PGSQL_BOTH:PGSQL_ASSOC);
+					pg_free_result($res);
 				break;
 				default:
-					$row = mysql_fetch_array(mysql_query($sql),$type=='BOTH'?MYSQL_BOTH:MYSQL_ASSOC);
+					$res = $GLOBALS['mysql_lib']->query($sql);
+					$row = $GLOBALS['mysql_lib']->fetch_array($res,$GLOBALS['mysql_lib']->result_type($type));
+					$GLOBALS['mysql_lib']->free_result($res);
 			}
 			sweetrice_cache($cache_link,$row,'db_array');
 			return is_array($row)?$row:array();
@@ -903,7 +920,7 @@
 					$total = $row[0];
 				break;
 				default:
-					$row = mysql_fetch_row(mysql_query($sql));
+					$row = $GLOBALS['mysql_lib']->fetch_row($GLOBALS['mysql_lib']->query($sql));
 					$total = $row[0];
 			}
 			sweetrice_cache($cache_link,$total,'db_total');
@@ -2792,5 +2809,96 @@
 
 	function pagebreak_description($content){
 		return mb_substr(str_replace("\n",'',strip_tags($content)),0,200,'UTF-8');
+	}
+
+	class mysql_lib{
+		public function __construct($db_setting){
+			if (MYSQL_LIB == 'mysqli') {
+				$GLOBALS['mysqli'] = new MySQLi($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['name']);
+			}else{
+				$conn = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
+				mysql_select_db($db_setting['name'],$conn);
+			}
+		}
+
+		public function real_escape_string($value){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_real_escape_string($GLOBALS['mysqli'],$value);
+			}
+			return mysql_real_escape_string($value);
+		}
+
+		public function query($sql){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_query($GLOBALS['mysqli'],$sql);
+			}
+			return mysql_query($sql);
+		}
+
+		public function fetch_array($result,$result_type){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_fetch_array($result,MYSQLI_BOTH);
+			}
+			return mysql_fetch_array($result,MYSQL_BOTH);
+		}
+
+
+		public function fetch_row($result){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_fetch_row($result);
+			}
+			return mysql_fetch_row($result);
+		}
+
+		public function num_fields($result){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_num_fields($result);
+			}
+			return mysql_num_fields($result);
+		}
+
+		public function error(){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_error($GLOBALS['mysqli']);
+			}
+			return mysql_error();
+		}
+		
+		public function free_result($result){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_free_result($result);
+			}
+			return mysql_free_result($result);	
+		}
+
+
+		public function stat(){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_stat($GLOBALS['mysqli']);
+			}
+			return mysql_stat();		
+		}
+
+		public function close(){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_close($GLOBALS['mysqli']);
+			}
+			return mysql_close();		
+		}
+
+		public function insert_id(){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_insert_id($GLOBALS['mysqli']);
+			}
+			return mysql_insert_id();		
+		}
+
+
+		public function result_type($type){
+			if(MYSQL_LIB == 'mysqli'){
+				return $type == 'BOTH' ? MYSQLI_BOTH : MYSQLI_ASSOC;
+			}
+			return $type == 'BOTH' ? MYSQL_BOTH : MYSQL_ASSOC;
+		}
 	}
 ?>

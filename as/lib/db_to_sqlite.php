@@ -10,7 +10,7 @@
 	$to_db_name = $_POST['to_db_name'];
 	$to_db_left = $_POST['to_db_left'];
 	if(DATABASE_TYPE == 'sqlite' && $to_db_name == $db_name && $to_db_left == DB_LEFT){
-		alert(_t('Database convert successfully!'),'./');
+		output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
 	}
 	$tablelist = $_POST['tablelist'];
 	if($to_db_name&&$to_db_left&&$tablelist){
@@ -100,9 +100,9 @@
 					case 'mysql':
 						foreach($tablelist as $val){
 							$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
-							$res = mysql_query("SELECT * FROM `".$val."`");
-							$numfields = mysql_num_fields($res);
-							while ($row = mysql_fetch_row($res)){
+							$res = $GLOBALS['mysql_lib']->query("SELECT * FROM `".$val."`");
+							$numfields = $GLOBALS['mysql_lib']->num_fields($res);
+							while ($row = $GLOBALS['mysql_lib']->fetch_row($res)){
 								$comma = "";
 								$tabledump = "INSERT INTO \"".$to_val."\" VALUES(";
 								for($i = 0; $i < $numfields; $i++){
@@ -173,9 +173,11 @@
 				$db = null;
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
-			alert(_t('Database convert successfully!'),'./');
-		}	
+			output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
+		}else{
+			output_json(array('status'=>0,'status_code'=>$message));
+		}
 	}else{
-		$message = _t('Please fill out form below.');
+		output_json(array('status'=>0,'status_code'=>_t('Please fill out form below.')));
 	}
 ?>

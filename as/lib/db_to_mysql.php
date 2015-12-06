@@ -16,9 +16,9 @@
 	$tablelist = $_POST['tablelist'];
 	
 	if(DATABASE_TYPE == 'mysql' && $to_db_name == $db_name && $to_db_left == DB_LEFT && $to_db_url == $db_url && $to_db_port == $db_port){
-		alert(_t('Database convert successfully!'),'./');
+		output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
 	}
-	if($to_db_name&&$to_db_left&&$tablelist){
+	if($to_db_name && $to_db_left && $tablelist){
 			$plugin_sql = array();
 			$plugin_list = pluginList();
 			foreach($plugin_list AS $plugin_config){
@@ -28,9 +28,8 @@
 					}
 				}
 			}
-			$to_conn = mysql_connect($to_db_url.':'.$to_db_port,$to_db_username,$to_db_passwd,true);
-			$to_db = mysql_select_db($to_db_name,$to_conn);
-			if(!$to_db){
+			$GLOBALS['mysql_lib'] = new mysql_lib($to_db_url.':'.$to_db_port,$to_db_username,$to_db_passwd,$to_db_name,true);
+			if(!$GLOBALS['mysql_lib']->stat()){
 				$message .= _t('Database error!').' <br>';
 			}else{
 				$sql = file_get_contents('lib/app.sql');
@@ -38,8 +37,8 @@
 				$sql = explode(';',$sql);
 				foreach($sql as $key=>$val){
 					if(trim($val)){
-						if(!mysql_query($val,$to_conn)){
-							$message .= $val.' : '.mysql_error($to_conn).'<br>';
+						if(!$GLOBALS['mysql_lib']->query($val,$to_conn)){
+							$message .= $val.' : '.$GLOBALS['mysql_lib']->error($to_conn).'<br>';
 							break;
 						}
 					}
@@ -50,8 +49,8 @@
 						$sql = explode(';',$sql);
 						foreach($sql as $key=>$val){
 							if(trim($val)){
-								if(!mysql_query($val,$to_conn)){
-									$message .= $val.' : '.mysql_error($to_conn).'<br>';
+								if(!$GLOBALS['mysql_lib']->query($val,$to_conn)){
+									$message .= $val.' : '.$GLOBALS['mysql_lib']->error($to_conn).'<br>';
 									break;
 								}
 							}
@@ -80,8 +79,8 @@
 									$comma = ",";
 								}
 								$tabledump .= ");";
-								if(!mysql_query($tabledump,$to_conn)){
-									$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
+								if(!$GLOBALS['mysql_lib']->query($tabledump,$to_conn)){
+									$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib']->error($to_conn).'<br>';
 									break;
 								}
 							}
@@ -95,9 +94,9 @@
 					case 'mysql':
 						foreach($tablelist as $val){
 							$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
-							$res = mysql_query("SELECT * FROM `".$val."`",$conn);
-							$numfields = mysql_num_fields($res);
-							while ($row = mysql_fetch_row($res)){
+							$res = $GLOBALS['mysql_lib']->query("SELECT * FROM `".$val."`",$conn);
+							$numfields = $GLOBALS['mysql_lib']->num_fields($res);
+							while ($row = $GLOBALS['mysql_lib']->fetch_row($res)){
 								$comma = "";
 								$tabledump = "INSERT INTO `".$to_val."` VALUES(";
 								for($i = 0; $i < $numfields; $i++){
@@ -110,8 +109,8 @@
 									$comma = ",";
 								}
 								$tabledump .= ");";
-								if(!mysql_query($tabledump,$to_conn)){
-									$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
+								if(!$GLOBALS['mysql_lib']->query($tabledump,$to_conn)){
+									$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib']->error($to_conn).'<br>';
 								}
 							}
 						}
@@ -139,8 +138,8 @@
 									$comma = ",";
 									}
 									$tabledump .= ");";
-									if(!mysql_query($tabledump,$to_conn)){
-										$db_error .= $tabledump.' : '.mysql_error($to_conn).'<br>';
+									if(!$GLOBALS['mysql_lib']->query($tabledump,$to_conn)){
+										$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib']->error($to_conn).'<br>';
 									}
 							}
 						}
@@ -169,14 +168,16 @@
 			$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 			$db_str .= "?>";
 			file_put_contents(SITE_HOME.'inc/db.php',$db_str);
-			mysql_close($to_conn);
+			$GLOBALS['mysql_lib']->close($to_conn);
 			if(DATABASE_TYPE == 'sqlite'){
 				$db = null;
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
-			alert(_t('Database convert successfully!'),'./');
-		}	
+			output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
+		}else{
+			output_json(array('status'=>0,'status_code'=>$message));
+		}
 	}else{
-		$message = _t('Please fill out form below.');
+		output_json(array('status'=>0,'status_code'=>_t('Please fill out form below.')));
 	}
 ?>

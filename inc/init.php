@@ -32,6 +32,11 @@
 	include(INCLUDE_DIR.'function.php');
 	register_shutdown_function('error_report');
 	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
+	if (function_exists('mysql_connect') ) {
+		define('MYSQL_LIB','mysql');
+	}else{
+		define('MYSQL_LIB','mysqli');
+	}
 	if(file_exists(INCLUDE_DIR.'install.lock.php')){
 		if(file_exists(SITE_HOME.'inc/db.php')){
 			include(SITE_HOME.'inc/db.php');
@@ -48,8 +53,7 @@
 					$conn = pg_connect('host='.$db_url.' port='.$db_port.' dbname='.$db_name.' user='.$db_username.' password='.$db_passwd);
 				break;
 				case 'mysql':
-					$conn = mysql_connect($db_url.':'.$db_port,$db_username,$db_passwd);
-					mysql_select_db($db_name,$conn);
+					$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 				break;
 			}	
 		}

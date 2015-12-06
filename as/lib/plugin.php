@@ -52,7 +52,7 @@ $no = 0;
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
-	_().ready(function(){
+	_.ready(function(){
 		_('.btn_delete').bind('click',function(){
 			if (_(this).attr('installed'))
 			{
@@ -92,7 +92,9 @@ $no = 0;
 				url:_(this).attr('url'),
 				success:function(result){
 					_.ajax_untip(result['status_code'],2000,function(){
-						window.location.reload();
+						if (result['status'] == 1) {
+							window.location.reload();
+						};
 					});
 				}
 			});

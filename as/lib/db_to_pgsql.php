@@ -16,7 +16,7 @@
 	$tablelist = $_POST['tablelist'];
 	
 	if(DATABASE_TYPE == 'pgsql' && $to_db_name == $db_name && $to_db_left == DB_LEFT && $to_db_url == $db_url && $to_db_port == $db_port){
-		alert(_t('Database convert successfully!'),'./');
+		output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
 	}
 	if($to_db_name&&$to_db_left&&$tablelist){
 			$plugin_sql = array();
@@ -97,11 +97,11 @@
 						foreach($tablelist as $val){
 							$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
 							$field_list = '';
-							$res = mysql_query("SELECT * FROM `".$val."`");
-							while($row_field = mysql_fetch_field($res)){
+							$res = $GLOBALS['mysql_lib']->query("SELECT * FROM `".$val."`");
+							while($row_field = $GLOBALS['mysql_lib']->fetch_field($res)){
 								$field_list[$row_field->name] = $row_field->type;
 							}
-							while ($row = mysql_fetch_array($res)){
+							while ($row = $GLOBALS['mysql_lib']->fetch_array($res)){
 								$comma = "";
 								$str_ = $str = '';
 								foreach($field_list as $fl=>$tp){
@@ -190,9 +190,11 @@
 				$db = null;
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
-			alert(_t('Database convert successfully!'),'./');
+			output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));
+		}else{
+			output_json(array('status'=>0,'status_code'=>$message));
 		}
 	}else{
-		$message = _t('Please fill out form below.');
+		output_json(array('status'=>0,'status_code'=>_t('Please fill out form below.')));
 	}
 ?>

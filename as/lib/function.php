@@ -544,15 +544,15 @@ function get_template($theme_dir,$type){
 				}
 			break;
 			default:
-				$conn  = mysql_connect($site_config['db_url'],$site_config['db_username'],$site_config['db_passwd']);
-				if($conn &&	mysql_select_db($site_config['db_name'],$conn)){
+				$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$site_config['db_url'],'port'=>$site_config['db_port'],'username'=>$site_config['db_username'],'passwd'=>$site_config['db_passwd'],'name'=>$site_config['db_name'],'newlink'=>true));
+				if($GLOBALS['mysql_lib']->stat()){
 					$sql = file_get_contents('./lib/app.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							if(!mysql_query($val)){
-								$message .= mysql_error().'<br>';
+							if(!$GLOBALS['mysql_lib']->query($val)){
+								$message .= $GLOBALS['mysql_lib']->error().'<br>';
 							}
 						}
 					}
@@ -696,13 +696,13 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 	function plugin_install($plugin){
 		$plugin_list = pluginList();
 		if(!$plugin_list[$plugin]['name']){
-			alert(_t('Invalid plugin - missing plugin name'),'./?type=plugins');
+			return array('status'=>0,'status_code'=>_t('Invalid plugin - missing plugin name'));
 		}
 		$plugin_directory = $plugin_list[$plugin]['directory'];
 		$optionRow = getOption('plugin_installed');
 		$plugin_installed = unserialize($optionRow['content']);
 		if($plugin_installed[$plugin]){
-			alert(_t('Plugin already exists.'),'./?type=plugins');
+			return array('status'=>0,'status_code'=>_t('Plugin already exists.'));
 		}
 		if(file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php')){
 			include_once(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php');

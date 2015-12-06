@@ -30,8 +30,7 @@
 			$conn = pg_connect("host=".$db_url." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_passwd);
 		break;
 		case 'mysql':
-			$conn = mysql_connect($db_url.':'.$db_port,$db_username,$db_passwd);
-			mysql_select_db($db_name,$conn);
+			$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 		break;
 	}
 	function db_123(){
@@ -242,7 +241,7 @@
 	function sites_133(){
 		global $db,$conn;
 		$db_root = $db;
-		$conn_root = $conn;
+		$GLOBALS['mysql_lib_root'] = $GLOBALS['mysql_lib'];
 		$site_home = ROOT_DIR.'_sites/';
 		if(!is_dir($site_home)){
 			return ;
@@ -260,8 +259,7 @@
 						$conn = pg_connect("host=".$db_url." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_passwd);
 					break;
 					case 'mysql':
-						$conn = mysql_connect($db_url.':'.$db_port,$db_username,$db_passwd);
-						mysql_select_db($db_name,$conn);
+						$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 					break;
 					default:
 						continue;
@@ -295,7 +293,7 @@
 		}
 		$d->close();
 		$db = $db_root;
-		$conn = $conn_root;
+		$GLOBALS['mysql_lib'] = $GLOBALS['mysql_lib_root'];
 		return ;
 	}
 

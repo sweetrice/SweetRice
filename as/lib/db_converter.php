@@ -21,7 +21,7 @@
 <?php
 	}
 ?>
-<form method="post" action="./?type=data&mode=db_converter&form_mode=yes">
+<form method="post" action="./?type=data&mode=db_converter&form_mode=yes" id="convert_form">
 <fieldset><legend><?php _e('Database Setting');?> - <select name="totype" class="totype">
 <?php
 		foreach(array('sqlite','mysql','pgsql') as $val){
@@ -51,7 +51,7 @@
 </div>
 <div class="row2">
 <div class="form_split"><span class="w120"><?php _e('Database Name');?></span></div>
-<div class="form_split"><input type="text" name="to_db_name" value="<?php echo $_POST['to_db_name'];?>"></div>
+<div class="form_split"><input type="text" class="req" name="to_db_name" value="<?php echo $_POST['to_db_name'];?>"></div>
 <div class="div_clear mb10"></div>
 <div class="form_split"><span class="w120"><?php _e('Database Prefix');?></span></div>
 <div class="form_split"><input type="text" name="to_db_left" value="<?php echo $_POST['to_db_left']?$_POST['to_db_left']:DB_LEFT;?>"></div>
@@ -74,7 +74,7 @@
 
 <script type="text/javascript">
 <!--
-	_().ready(function(){
+	_.ready(function(){
 		bind_checkall('#checkall','.ck_item');
 		_('.totype').bind('change',function(){
 		var t = _(this).val();
@@ -89,6 +89,31 @@
 				_('#to_db_port').val(5432);
 			}
 		}
+		});
+		_('#convert_form').submit(function(event){
+			_.stopevent(event);
+			var req_field;
+			_('.req').each(function(){
+				if(!_(this).val() && !req_field){
+					req_field = this;
+				}
+			});
+			if (req_field) {
+				_(req_field).focus();
+				return ;
+			}
+			_.ajax({
+				'form':this,
+				'success':function(result){
+					if (result['status'] == 1) {
+						_.ajax_untip(result['status_code'],2000,function(){
+							location.href = './';
+						});
+					}else{
+						_.ajax_untip(result['status_code']);
+					}
+				}
+			});	
 		});
 	});
 //-->

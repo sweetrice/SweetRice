@@ -14,11 +14,11 @@
 .row2 dl dd{float:left;width:84%;margin:5px 0px;display:inline;}
 </style>
  <span class="message"><?php echo $message;?></span>
-<form method="post" action="./?action=ok">
+<form method="post" action="./?action=save" id="install_form">
 <fieldset><legend><?php _e('Site Name');?></legend>
-<input type="text" name="name" value="<?php echo $_POST['name'];?>"></fieldset>
+<input type="text" name="name" value="<?php echo $_POST['name'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Webmaster');?></legend>
-<input type="text" name="author" value="<?php echo $_POST['author'];?>"></fieldset>
+<input type="text" name="author" value="<?php echo $_POST['author'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Database Setting');?></legend>
 <div class="row2">
 <div class="form_split">
@@ -48,13 +48,13 @@
 </div>
 </fieldset>
 <fieldset><legend><?php _e('Database Name');?></legend>
-<input type="text" name="db_name" value="<?php echo $_POST['db_name'];?>"></fieldset>
+<input type="text" name="db_name" value="<?php echo $_POST['db_name'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Database Prefix');?></legend>
-<input type="text" name="db_left" value="<?php echo $_POST['db_left']?$_POST['db_left']:'v';?>"></fieldset>
+<input type="text" name="db_left" value="<?php echo $_POST['db_left']?$_POST['db_left']:'v';?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Administrator');?></legend>
-<input type="text" name="admin" value="<?php echo $_POST['admin'];?>"></fieldset>
+<input type="text" name="admin" class="req" value="<?php echo $_POST['admin'];?>"></fieldset>
 <fieldset><legend><?php _e('Administrator Password');?></legend>
-<input type="password" name="passwd"></fieldset>
+<input type="password" name="passwd" class="req"></fieldset>
 
 <div id="meta_setting" ><?php echo _t('Default').' Meta '._t('Setting');?></div>
 <div id="meta" style="display:none;">
@@ -96,6 +96,29 @@
 			if (_(this).val() == _(this).attr('data')) {
 				_(this).val('');
 			}
+		});
+		_('#install_form').submit(function(event){
+			_.stopevent(event);
+			var req_field;
+			_('.req').each(function(){
+				if(!_(this).val() && !req_field){
+					req_field = this;
+				}
+			});
+			if (req_field) {
+				_(req_field).focus();
+				return ;
+			}
+			_.ajax({
+				'form':this,
+				'success':function(result){
+					if (result['status'] == 1) {
+						location.href = '<?php echo BASE_URL.DASHBOARD_DIR.'/';?>';
+					}else{
+						_.ajax_untip(result['status_code']);
+					}
+				}
+			});			
 		});
 	});
 //-->

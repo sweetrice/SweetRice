@@ -17,7 +17,7 @@
 </style>
 <form method="post" action="./?type=sites&mode=save" enctype="multipart/form-data" id="sform">
 <fieldset><legend><?php _e('Host');?></legend>
-<input type="text" name="host" class="host"/>
+<input type="text" name="host" class="host req" />
 </fieldset>
 <fieldset><legend><?php _e('Database Setting');?></legend>
 <div class="row2">
@@ -44,13 +44,13 @@
 </div>
 </fieldset>
 <fieldset><legend><?php _e('Database Name');?></legend>
-<input type="text" name="site_config[db_name]" value="<?php echo $_POST['db_name'];?>"></fieldset>
+<input type="text" name="site_config[db_name]" value="<?php echo $_POST['db_name'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Database Prefix');?></legend>
-<input type="text" name="site_config[db_left]" value="<?php echo $_POST['db_left']?$_POST['db_left']:'v';?>"></fieldset>
+<input type="text" name="site_config[db_left]" value="<?php echo $_POST['db_left']?$_POST['db_left']:'v';?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Administrator');?></legend>
-<input type="text" name="admin" value="<?php echo $_POST['admin'];?>"></fieldset>
+<input type="text" name="admin" value="<?php echo $_POST['admin'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Administrator Password');?></legend>
-<input type="password" name="passwd"></fieldset>
+<input type="password" name="passwd" class="req"></fieldset>
 <fieldset><legend><?php _e('Website Attachment Directory');?></legend>
 <div class="form_split">
 <input type="radio" name="attachment_type" value="1" checked/>_sites/<span id="host_body"></span><input type="text" name="attachment_dir" value="attachment"></div>
@@ -101,7 +101,18 @@
 			_('#host_body').html(_(this).val() + '/');
 		});
 
-		_('#sform').bind('submit',function(event){		
+		_('#sform').bind('submit',function(event){
+			_.stopevent(event);
+			var req_field;
+			_('.req').each(function(){
+				if(!_(this).val() && !req_field){
+					req_field = this;
+				}
+			});
+			if (req_field) {
+				_(req_field).focus();
+				return ;
+			}	
 			_.ajax({
 				type:_(this).attr('method'),
 				form:'#sform',
@@ -115,8 +126,6 @@
 					}
 				}
 			});
-			_.stopevent(event);
-			return false;
 		});
 
 	});
