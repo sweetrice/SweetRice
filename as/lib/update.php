@@ -61,19 +61,19 @@ _().ready(function(){
 	_('.updb').bind('click',function(){
 		var updialog = _.dialog({content:'<img src="../images/ajax-loader.gif">'});
 		var query = new Object();
-		ajaxd_get(
-			query,
-			'../upgrade_db.php',
-			function(result){
+		_.ajax({
+			'type':'get',
+			'url':'../upgrade_db.php',
+			'success':function(result){
 				switch (result){
 					case 'Successfully':
 						location.href = './?type=update&mode=manually';
 					break;
 					default:
-						updialog.find('.SweetRice_dialog_content').html('<?php echo UPGRADE_SR_FAILED;?>');
+						updialog.find('.SweetRice_dialog_content').html('<?php echo _t('Database').' '._t('Upgrade').' '._t('Failed');?>');
 				}
 			}
-		);
+		});
 	});
 });
 //-->
