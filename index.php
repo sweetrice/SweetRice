@@ -52,8 +52,8 @@
 			}
 		break;
 		case 2:
-			if(file_exists(INCLUDE_DIR.$actions[$action]['file'])){
-				include(INCLUDE_DIR.$actions[$action]['file']);
+			if(file_exists(INCLUDE_DIR.'do_'.$action.'.php')){
+				include(INCLUDE_DIR.'do_'.$action.'.php');
 			}
 			exit();
 		break;

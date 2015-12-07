@@ -100,12 +100,11 @@
 			$where .= " AND ps.`title` LIKE '%$search%' OR ps.`name` LIKE '%$search%' ";
 			$search_url .= '&search='.$_GET['search'];
 		}
-		$category = $_GET['category'] != '' ? intval($_GET['category']):'all';
-		if($category != 'all'){
+		$category = isset($_GET['category'])? intval($_GET['category']):'all';
+		if($category !== 'all'){
 			$where .= " AND ps.`category` = '$category' ";
 			$search_url .= '&category='.intval($_GET['category']);
 		}
-		
 		$data = getPosts(array('table'=>" `".DB_LEFT."_posts` AS ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ps.`id` = ip.`item_id`",
 			'field' => "ps.*",
 			'where'=>$where,
