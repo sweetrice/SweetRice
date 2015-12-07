@@ -52,7 +52,7 @@ core update
 	add mail function supports attachment add param attachments
 	all new design support mobile management
 	add set_custom_data function : save custom data to table item_data
-	add mysqli support for PHP 7
+	add mysql support for PHP 7 use mysqli
 dashboard
 	plugin description : supports multiple language 
 	add transfer website to other hosting

@@ -118,7 +118,7 @@ case 'save':
 				}
 			break;
 			default:
-				$GLOBALS['mysql_lib'] = new mysql_lib($_POST['db_url'].':'.$_POST['db_port'],$_POST['db_username'],$_POST['db_passwd'],$_POST['db_name']);
+				$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$_POST['db_url'],'port'=>$_POST['db_port'],'username'=>$_POST['db_username'],'passwd'=>$_POST['db_passwd'],'name'=>$_POST['db_name'],'newlink'=>true));
 				if($GLOBALS['mysql_lib']->stat()){
 				$sql = file_get_contents('lib/app.sql');
 				$sql = str_replace('%--%',$_POST['db_left'],$sql);

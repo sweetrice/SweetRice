@@ -1371,6 +1371,9 @@
 			if (!param.type && _(param.form).attr('method')) {
 				param.type = _(param.form).attr('method');
 			}
+			if (!param.url && _(param.form).attr('action')) {
+				param.url = _(param.form).attr('action');
+			}
 		}else{
 			var data = param.data;
 			for (var i in data ){

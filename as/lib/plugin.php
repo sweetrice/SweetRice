@@ -42,9 +42,9 @@ $no = 0;
 </table>
 </div>
 <fieldset><legend><?php _e('Add Plugin');?></legend>
-<form method="post" enctype="multipart/form-data" action="./?type=plugins&mode=add">
-	<div class="form_split"><?php _e('Remote File');?> <input type="text" name="app_url" /></div>
-	<div class="form_split"><?php _e('Upload');?> <input type="file" name="app_file" /></div>
+<form method="post" enctype="multipart/form-data" action="./?type=plugins&mode=add" id="upload_form">
+	<div class="form_split"><?php _e('Remote File');?> <input type="text" name="app_url" id="app_url" /></div>
+	<div class="form_split"><?php _e('Upload');?> <input type="file" id="app_file" name="app_file" /></div>
 	<div class="form_split"><input type="submit" class="input_submit" value="<?php _e('Done');?>"/></div>
 	<div class="form_split"><?php _e('Archive only supports zip format');?></div>
 </form>
@@ -53,6 +53,12 @@ $no = 0;
 <script type="text/javascript">
 <!--
 	_.ready(function(){
+		_('#upload_form').submit(function(event){
+			if (!_('#app_file').val() && !_('#app_url').val()) {
+				_('#app_url').focus();
+				_.stopevent(event);
+			}
+		});
 		_('.btn_delete').bind('click',function(){
 			if (_(this).attr('installed'))
 			{
