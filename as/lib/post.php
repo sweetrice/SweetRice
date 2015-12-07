@@ -42,6 +42,7 @@
 <th class="media_content"><a href="javascript:void(0);" data="category" class="btn_sort"><?php _e('Category');?></a></th>
 <th class="media_content"><a href="javascript:void(0);" data="date" class="btn_sort"><?php _e('Time');?></a></th>
 <th><a href="javascript:void(0);" data="comments" stt="number" class="btn_sort"><?php _e('Comments');?></a></th>
+<th><a href="javascript:void(0);" data="views" stt="number" class="btn_sort"><?php _e('Views');?></a></th>
 <th><?php _e('Publish');?></th>
 <th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
@@ -55,7 +56,13 @@ $no = 0;
 			$classname='tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td><td class="media_content"><span id="category_<?php echo $no;?>"><?php echo $categories[$row['category']]['name'];?></span></td><td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td><td><span id="comments_<?php echo $no;?>"><?php echo number_format($cmtRows[$row['id']]);?></span></td><td><?php echo $row['in_blog']?_t('Yes'):_t('No');?></td><td><span id="action_<?php echo $no;?>"></span>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
+<td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td>
+<td class="max50"><a href="<?php echo BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td>
+<td class="media_content"><span id="category_<?php echo $no;?>"><?php echo $categories[$row['category']]['name'];?></span></td>
+<td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td>
+<td><span id="comments_<?php echo $no;?>"><?php echo $cmtRows[$row['id']];?></span></td>
+<td><span id="views_<?php echo $no;?>"><?php echo $row['views'];?></span></td><td><?php echo $row['in_blog']?_t('Yes'):_t('No');?></td><td><span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
 <a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
 </td></tr>
