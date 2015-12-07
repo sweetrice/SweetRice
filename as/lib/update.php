@@ -60,7 +60,7 @@
 _().ready(function(){
 	_('link').each(function(){
 		if (_(this).attr('type').toLowerCase() == 'text/css') {
-			_(this).attr('href',(_(this).attr('href').indexOf('?') == -1 ? '?' : '&' )+'time='+new Date().getTime());
+			_(this).attr('href',_(this).attr('href') + (_(this).attr('href').indexOf('?') == -1 ? '?' : '&' )+'time='+new Date().getTime());
 		}
 	});
 	_('.updb').bind('click',function(){
