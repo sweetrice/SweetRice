@@ -67,7 +67,7 @@ _().ready(function(){
 			'success':function(result){
 				switch (result){
 					case 'Successfully':
-						location.href = './?type=update&mode=manually';
+						location.href = './?type=update&mode=manually&time='+new Date().getTime();
 					break;
 					default:
 						updialog.find('.SweetRice_dialog_content').html('<?php echo _t('Database').' '._t('Upgrade').' '._t('Failed');?>');
@@ -81,7 +81,7 @@ _().ready(function(){
 <?php
 	}elseif($nextstep){
 ?>
-<input type="button" value="<?php _e('Next step');?>" url="./?type=update&mode=manually" class="back">
+<input type="button" value="<?php _e('Next step');?>" url="./?type=update&mode=manually&time=<?php echo microtime(true);?>" class="back">
 <?php
 	}
  }elseif($mode == 'automatically'){
@@ -96,7 +96,7 @@ _().ready(function(){
 ?>
 <p><?php _e('Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.');?></p>
 <input type="button" value="<?php _e('Automatically');?>" url="./?type=update&mode=automatically" class="back">
-<input type="button" value="<?php _e('Manually');?>" url="./?type=update&mode=manually" class="back">
+<input type="button" value="<?php _e('Manually');?>" url="./?type=update&mode=manually&time=<?php echo microtime(true);?>" class="back">
 <?php
 	}elseif($update){
 		_e('Your server does not support zlib or ZZIPlib extension,please <a href="http://www.basic-cms.org/download.html">download SweetRice</a> and upgrade manually.');
