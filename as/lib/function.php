@@ -11,23 +11,24 @@ function sweetrice_version(){
 	$lastest = trim(get_data_from_url('http://www.basic-cms.org/lastest.html'));
 	return $lastest;
 }
+
 function update_automatically($upgrade_dir){
-	eval("\$str = '<p>'"._t('Update')."' SweetRice</p>';");
+	eval("\$str = '<p>"._t('Update')." SweetRice</p>';");
 	$content = get_data_from_url('http://www.basic-cms.org/download/17/');
 	if($content){
 		file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
-		eval("\$str .= '<p>'"._t('Download')."' SweetRice_core.zip ("._t('File size:')."'.filesize(\ROOT_DIR.'SweetRice_core.zip').') '"._t('successfully')."'.</p>';");
+		eval("\$str .= '<p>"._t('Download')." SweetRice_core.zip ("._t('File size:')." ".filesize(ROOT_DIR.'SweetRice_core.zip').") "._t('successfully')."</p>';");
 	}else{
-		eval("\$str .= '<p>'"._t('Update failed - cannot connect update server.')."'</p>';");
+		eval("\$str .= '<p>"._t('Update failed - cannot connect update server.')."</p>';");
 		return $str;
 	}
 	if(!file_exists(ROOT_DIR.$upgrade_dir)){
 		mkdir(ROOT_DIR.$upgrade_dir);
 	}
 	if(extractZIP(ROOT_DIR.'SweetRice_core.zip',ROOT_DIR.$upgrade_dir.'/')){
-		eval("\$str .= '<p>'"._t('Extract')."' SweetRice_core.zip '"._t('successfully')."'.</p>';");
+		eval("\$str .= '<p>"._t('Extract')." SweetRice_core.zip "._t('successfully')."</p>';");
 	}else{
-		eval("\$str .= '<p>'."._t('Extract').".' SweetRice_core.zip '"._t('Failed')."'.</p>';");
+		eval("\$str .= '<p>"._t('Extract').". SweetRice_core.zip "._t('Failed')."</p>';");
 		return $str;
 	}
 	$sweetrice_files = sweetrice_files(ROOT_DIR.$upgrade_dir.'/');
@@ -39,36 +40,36 @@ function update_automatically($upgrade_dir){
 		}
 		if(is_dir($val)){
 			if(!is_dir($target_entry)&&!mkdir($target_entry)){
-				eval("\$str .= '<p>'"._t('Update')."' SweetRice '"._t('Files')."' '"._t('Aborted')."'.</p>';");
+				eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
 				return $str;
 			}
 		}else{
 			if(is_file($target_entry)){
 				if(md5_file($val) != md5_file($target_entry)&&!copy($val,$target_entry)){
-					eval("\$str .= '<p>'"._t('Update')."' SweetRice '"._t('Files')."' '"._t('Aborted')."'.</p>';");
+					eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
 					return $str;
 				}
 			}else{
 				if(!copy($val,$target_entry)){
-					eval("\$str .= '<p>'"._t('Update')."' SweetRice '"._t('Files')."' '"._t('Aborted')."'.</p>';");
+					eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
 					return $str;
 				}
 			}
 		}
 	}
-	eval("\$str .= '<p>'"._t('Update')."' SweetRice '"._t('Files')."' '"._t('successfully')."'.</p>';");
+	eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('successfully')."</p>';");
 	if(file_exists(ROOT_DIR.$upgrade_dir.'/upgrade_db.php')){
 		if(!file_exists(ROOT_DIR.'upgrade_db.php')){
 			copy(ROOT_DIR.$upgrade_dir.'/upgrade_db.php',ROOT_DIR.'/upgrade_db.php');
 		}
 		$upgrade_db = get_data_from_url(BASE_URL.'upgrade_db.php');
 		if($upgrade_db == 'Successfully'){
-			eval("\$str .= '<p>'"._t('Database')."' '"._t('Upgrade')."' '"._t('successfully')."'.</p>';");
+			eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('successfully')."</p>';");
 			if(file_exists(ROOT_DIR.'upgrade_db.php')){
 				unlink(ROOT_DIR.'upgrade_db.php');
 			}
 		}else{
-			eval("\$str .= '<p>'"._t('Database')."' '"._t('Upgrade')."' '"._t('Failed')."'. </p><p>'.\$upgrade_db.'</p>';");
+			eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('Failed')." </p><p>$upgrade_db</p>';");
 		}
 	}
 	if(file_exists(ROOT_DIR.'inc/lastest_update.txt')){
@@ -79,12 +80,12 @@ function update_automatically($upgrade_dir){
 		file_put_contents(ROOT_DIR.'inc/lastest.txt',$lastest);
 	}
 	if(un_(ROOT_DIR.$upgrade_dir.'/')&&unlink(ROOT_DIR.'SweetRice_core.zip')){
-		eval("\$str .= '<p>'"._t('Clean')."' '"._t('temporary')."' '"._t('Files')."' '"._t('successfully')."'.</p>';");
+		eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('successfully')."</p>';");
 	}else{
-		eval("\$str .= '<p>'"._t('Clean')."' '"._t('temporary')."' '"._t('Files')."' '"._t('Failed')."'.</p>';");
+		eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('Failed')."</p>';");
 		return $str;
 	}
-	eval("\$str .= '<p>'"._t('Upgrade')."' SweetRice to '.\$lastest.' '"._t('successfully')."'.</p>';");
+	eval("\$str .= '<p>"._t('Upgrade')." SweetRice to $lastest "._t('successfully')."</p>';");
 	return $str;
 }
 function un_($_dir,$_rmdir = true){
