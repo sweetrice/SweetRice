@@ -26,12 +26,12 @@ _().ready(function(){
 		_(document.body).scrollTop(0);
 	});
 	_(document.body ? document.body : document.documentElement).bind('click', function(e){
-	var event = e ? e : window.event;
+		var event = e ? e : window.event;
 		var target = event.target ? event.target : event.srcElement;
-		if(target.id != 'admin_left' && _.pageSize().windowWidth < 960){
-				_('#admin_left').hide();		
+		if(target.id != 'admin_left' && _('#toggle_nav').css('display') == 'block'){
+			_('#admin_left').hide();		
 		}
-		if (target.id == 'toggle_nav' || _.pageSize().windowWidth >= 960)
+		if (target.id == 'toggle_nav')
 		{
 			_('#admin_left').show();
 		}
@@ -71,15 +71,15 @@ _().ready(function(){
 	});
 });
 _(window).bind('resize',function(){
-	if (_.pageSize().windowWidth > 960 && _('#dashboard_nav').css('display') == 'none')
+	if (_('#toggle_nav').css('display') == 'none' && _('#dashboard_nav').css('display') == 'none')
 	{
 		_('#dashboard_nav').show();
 	}
-	if (_.pageSize().windowWidth < 960 && _('#dashboard_nav').css('display') == 'block')
+	if (_('#toggle_nav').css('display') == 'block' && _('#dashboard_nav').css('display') == 'block')
 	{
 		_('#dashboard_nav').hide();
 	}
-	if ( _.pageSize().windowWidth >= 960)
+	if ( _('#toggle_nav').css('display') == 'none')
 	{
 		_('#admin_left').show();
 	}
