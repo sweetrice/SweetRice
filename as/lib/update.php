@@ -54,7 +54,7 @@
 <?php
 	}elseif($step == 2 && file_exists('../upgrade_db.php')){
 ?>
-<input type="button" id="submit_button" value="<?php _e('Next Step');?>" onclick="upgrade_db();" class="updb">
+<input type="button" id="submit_button" value="<?php _e('Next Step');?>" class="updb">
 <script type="text/javascript">
 <!--
 _().ready(function(){
