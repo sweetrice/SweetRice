@@ -59,7 +59,9 @@
 <!--
 _().ready(function(){
 	_('link').each(function(){
-		_(this).attr('href',(_(this).attr('href').indexOf('?') == -1 ? '?' : '&' )+'time='+new Date().getTime());
+		if (_(this).attr('type').toLowerCase() == 'text/css') {
+			_(this).attr('href',(_(this).attr('href').indexOf('?') == -1 ? '?' : '&' )+'time='+new Date().getTime());
+		}
 	});
 	_('.updb').bind('click',function(){
 		var updialog = _.dialog({content:'<img src="../images/ajax-loader.gif">'});
