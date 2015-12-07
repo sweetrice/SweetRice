@@ -58,7 +58,9 @@
 <script type="text/javascript">
 <!--
 _().ready(function(){
-	_('link').attr('href','site.css?time='+new Date().getTime());
+	_('link').each(function(){
+		_(this).attr('href',(_(this).attr('href').indexOf('?') == -1 ? '?' : '&' )+'time='+new Date().getTime());
+	});
 	_('.updb').bind('click',function(){
 		var updialog = _.dialog({content:'<img src="../images/ajax-loader.gif">'});
 		var query = new Object();
