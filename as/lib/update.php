@@ -14,7 +14,7 @@
 <?php
 	if($step == 1 || ($step == 2 && $copyfailed)){
 ?>
-<form method="post" action="./?type=update&mode=manually&time=<?php echo microtime(true);?>">
+<form method="post" action="./?type=update&mode=manually">
 <fieldset><legend><?php _e('These files/directory will be updated');?></legend>
 <ul>
 <li><input type="checkbox" id="checkall" name="checkall" onclick="checkboxAll(this);" checked/> <?php _e('Check');?> <?php _e('All');?></li>
@@ -58,6 +58,7 @@
 <script type="text/javascript">
 <!--
 _().ready(function(){
+	_('link').attr('href','site.css?time='+new Date().getTime());
 	_('.updb').bind('click',function(){
 		var updialog = _.dialog({content:'<img src="../images/ajax-loader.gif">'});
 		var query = new Object();
