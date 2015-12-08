@@ -434,7 +434,7 @@ function get_template($theme_dir,$type){
 	}
 
 	function initSiteDB(){
-		global $conn,$db,$global_setting;
+		global $db,$global_setting;
 		$site_config = $_POST['site_config'];
 		$error_db = $message = null;
 		$host = $_POST['host'];

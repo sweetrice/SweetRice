@@ -858,7 +858,7 @@
 				break;
 				default:
 					$res = $GLOBALS['mysql_lib']->query($sql);
-					while($row = $GLOBALS['mysql_lib']->fetch_array($res,$GLOBALS['mysql_lib']->result_type($type))){
+					while($row = $GLOBALS['mysql_lib']->fetch_array($res,$type)){
 						$rows[] = $row;
 					}
 					$GLOBALS['mysql_lib']->free_result($res);
@@ -891,7 +891,7 @@
 				break;
 				default:
 					$res = $GLOBALS['mysql_lib']->query($sql);
-					$row = $GLOBALS['mysql_lib']->fetch_array($res,$GLOBALS['mysql_lib']->result_type($type));
+					$row = $GLOBALS['mysql_lib']->fetch_array($res,$type);
 					$GLOBALS['mysql_lib']->free_result($res);
 			}
 			sweetrice_cache($cache_link,$row,'db_array');
@@ -1134,29 +1134,19 @@
 		}
 		switch($database_type){
 			case 'sqlite':
-					$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH',$database_type);
-					foreach($table_array as $val){
-						if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
-							$table_list[] = $val[0];
-						}
-					}
+				$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH',$database_type);
 			break;
 			case 'mysql':
-					$table_array = db_arrays_nocache("SHOW TABLES",'BOTH',$database_type);
-					foreach($table_array as $val){
-						if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
-							$table_list[] = $val[0];
-						}
-					}
+				$table_array = db_arrays_nocache("SHOW TABLES",'BOTH',$database_type);
 			break;
 			case 'pgsql':
-					$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",$database_type);
-					foreach($table_array as $val){
-						if(substr($val['tablename'],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
-							$table_list[] = $val['tablename'];
-						}
-					}
+				$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",$database_type);
 			break;
+		}
+		foreach($table_array as $val){
+			if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
+				$table_list[] = $val[0];
+			}
 		}
 		return $table_list;
 	}
@@ -2814,10 +2804,10 @@
 	class mysql_lib{
 		public function __construct($db_setting){
 			if (MYSQL_LIB == 'mysqli') {
-				$GLOBALS['mysqli'] = new MySQLi($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['name']);
+				$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
 			}else{
-				$conn = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
-				mysql_select_db($db_setting['name'],$conn);
+				$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
+				mysql_select_db($db_setting['name'],$this->link);
 			}
 		}
 
@@ -2830,16 +2820,16 @@
 
 		public function query($sql){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_query($GLOBALS['mysqli'],$sql);
+				return mysqli_query($this->link,$sql);
 			}
 			return mysql_query($sql);
 		}
 
 		public function fetch_array($result,$result_type){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_fetch_array($result,MYSQLI_BOTH);
+				return mysqli_fetch_array($result,$this->result_type($result_type));
 			}
-			return mysql_fetch_array($result,MYSQL_BOTH);
+			return mysql_fetch_array($result,$this->result_type($result_type));
 		}
 
 
@@ -2859,7 +2849,7 @@
 
 		public function error(){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_error($GLOBALS['mysqli']);
+				return mysqli_error($this->link);
 			}
 			return mysql_error();
 		}
@@ -2871,28 +2861,26 @@
 			return mysql_free_result($result);	
 		}
 
-
 		public function stat(){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_stat($GLOBALS['mysqli']);
+				return mysqli_stat($this->link);
 			}
 			return mysql_stat();		
 		}
 
 		public function close(){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_close($GLOBALS['mysqli']);
+				return mysqli_close($this->link);
 			}
 			return mysql_close();		
 		}
 
 		public function insert_id(){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_insert_id($GLOBALS['mysqli']);
+				return mysqli_insert_id($this->link);
 			}
 			return mysql_insert_id();		
 		}
-
 
 		public function result_type($type){
 			if(MYSQL_LIB == 'mysqli'){

@@ -37,13 +37,13 @@
 			$totype = $_POST['totype'];
 			switch($totype){
 				case 'sqlite':
-						include('lib/db_to_sqlite.php');
+					include('lib/db_to_sqlite.php');
 				break;
 				case 'mysql':
-						include('lib/db_to_mysql.php');
+					include('lib/db_to_mysql.php');
 				break;
 				case 'pgsql':
-						include('lib/db_to_pgsql.php');
+					include('lib/db_to_pgsql.php');
 				break;
 			}
 		}

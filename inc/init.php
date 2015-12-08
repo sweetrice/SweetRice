@@ -32,7 +32,7 @@
 	include(INCLUDE_DIR.'function.php');
 	register_shutdown_function('error_report');
 	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
-	if (function_exists('mysql_connect') ) {
+	if (function_exists('mysql_connect')) {
 		define('MYSQL_LIB','mysql');
 	}else{
 		define('MYSQL_LIB','mysqli');
@@ -55,7 +55,7 @@
 				case 'mysql':
 					$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 				break;
-			}	
+			}
 		}
 		define('INSTALLED',true);
 		$global_setting = getOption('global_setting');

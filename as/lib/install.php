@@ -22,7 +22,8 @@ case 'lang':
 	}
 	_goto($_SERVER['HTTP_REFERER']);
 break;
-case 'license':$main_page = 'license.php';
+case 'license':
+	$main_page = 'license.php';
 break;
 case 'install':
 	if(!is_writable(INCLUDE_DIR)){
