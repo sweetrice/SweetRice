@@ -434,9 +434,9 @@ function get_template($theme_dir,$type){
 	}
 
 	function initSiteDB(){
-		global $db,$global_setting;
+		global $conn,$db,$global_setting;
 		$site_config = $_POST['site_config'];
-		$error_db = $message = null;
+		$inited = false;
 		$host = $_POST['host'];
 		if(!$host){
 			return array('message'=>_t('Host name is required'));
@@ -445,7 +445,7 @@ function get_template($theme_dir,$type){
 			if(!is_dir(ROOT_DIR.'_sites/'.$host)){
 				mkdir(ROOT_DIR.'_sites/'.$host);
 			}elseif(file_exists(ROOT_DIR.'_sites/'.$host.'/inc/db.php')){
-				return array('error_db'=>$error_db?_t('Host name exists'):'','message'=>$message);
+				return array('error_db'=>_t('Host name exists'));
 			}
 			$site_root = ROOT_DIR.'_sites/'.$host.'/';
 			if(!is_dir(ROOT_DIR.'_sites/'.$host.'/inc')){
@@ -507,14 +507,17 @@ function get_template($theme_dir,$type){
 								$message .= $error.'<br>';
 							}
 						}
-					}	
-					$db_str = "<?php \n";
-					$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
-					$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
-					$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
-					$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
-					$db_str .= '?>';
-					file_put_contents($site_root.'inc/db.php',$db_str);
+					}
+					if (!$message) {
+						$db_str = "<?php \n";
+						$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
+						$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
+						$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
+						$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
+						$db_str .= '?>';
+						file_put_contents($site_root.'inc/db.php',$db_str);
+						$inited = true;
+					}
 				}
 			break;
 			case 'pgsql':
@@ -530,16 +533,21 @@ function get_template($theme_dir,$type){
 							}
 						}
 					}
-					$db_str = "<?php \n";
-					$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
-					$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
-					$db_str .= '$db_url = \''.$site_config['db_url'].'\';'."\n";
-					$db_str .= '$db_port = \''.$site_config['db_port'].'\';'."\n";
-					$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
-					$db_str .= '$db_username = \''.$site_config['db_username'].'\';'."\n";
-					$db_str .= '$db_passwd = \''.$site_config['db_passwd'].'\';'."\n";
-					$db_str .= '?>';
-					file_put_contents($site_root.'inc/db.php',$db_str);
+					if (!$message) {
+						$db_str = "<?php \n";
+						$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
+						$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
+						$db_str .= '$db_url = \''.$site_config['db_url'].'\';'."\n";
+						$db_str .= '$db_port = \''.$site_config['db_port'].'\';'."\n";
+						$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
+						$db_str .= '$db_username = \''.$site_config['db_username'].'\';'."\n";
+						$db_str .= '$db_passwd = \''.$site_config['db_passwd'].'\';'."\n";
+						$db_str .= '?>';
+						file_put_contents($site_root.'inc/db.php',$db_str);
+						$inited = true;
+					}else{
+						$error_db = true;
+					}
 				}else{
 					$error_db = true;
 				}
@@ -552,26 +560,32 @@ function get_template($theme_dir,$type){
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							if(!$GLOBALS['mysql_lib']->query($val)){
+							$GLOBALS['mysql_lib']->query($val);
+							if($GLOBALS['mysql_lib']->error()){
 								$message .= $GLOBALS['mysql_lib']->error().'<br>';
 							}
 						}
 					}
-					$db_str = "<?php \n";
-					$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
-					$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
-					$db_str .= '$db_url = \''.$site_config['db_url'].'\';'."\n";
-					$db_str .= '$db_port = \''.$site_config['db_port'].'\';'."\n";
-					$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
-					$db_str .= '$db_username = \''.$site_config['db_username'].'\';'."\n";
-					$db_str .= '$db_passwd = \''.$site_config['db_passwd'].'\';'."\n";
-					$db_str .= '?>';
-					file_put_contents($site_root.'inc/db.php',$db_str);
+					if (!$message) {
+						$db_str = "<?php \n";
+						$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
+						$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
+						$db_str .= '$db_url = \''.$site_config['db_url'].'\';'."\n";
+						$db_str .= '$db_port = \''.$site_config['db_port'].'\';'."\n";
+						$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
+						$db_str .= '$db_username = \''.$site_config['db_username'].'\';'."\n";
+						$db_str .= '$db_passwd = \''.$site_config['db_passwd'].'\';'."\n";
+						$db_str .= '?>';
+						file_put_contents($site_root.'inc/db.php',$db_str);
+						$inited = true;
+					}else{
+						$error_db = true;
+					}
 				}else{
 					$error_db = true;
 				}			
 		}
-		if(!$error_db && !$message){
+		if($inited){
 			$setting = serialize(array('name'=>escape_string($global_setting['name']), 'author'=>escape_string($global_setting['author']) ,'title'=>escape_string($global_setting['title']) , 'keywords'=>escape_string($global_setting['keywords']) , 'description'=>escape_string($global_setting['description']) ,  'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>'','admin_email'=>''));
 			$setting_id = db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('global_setting',db_escape($setting),time()),false,$db_type);
 			if(!$setting_id){
@@ -585,8 +599,9 @@ function get_template($theme_dir,$type){
 			if(!$links_id){
 				$message .= db_error().'<br />';
 			}
+			return array('inited'=>true);
 		}
-		return array('error_db'=>$error_db?_t('Database Error'):'','message'=>$message);
+		return array('inited'=>$inited,'error_db'=>$error_db?_t('Database Error'):'','message'=>$message);
 	}
 
 	function rmSite($host){

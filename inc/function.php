@@ -2805,9 +2805,11 @@
 		public function __construct($db_setting){
 			if (MYSQL_LIB == 'mysqli') {
 				$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
+				$this->error = mysqli_connect_error();
 			}else{
 				$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
 				mysql_select_db($db_setting['name'],$this->link);
+				$this->error = mysql_error();
 			}
 		}
 
@@ -2847,6 +2849,13 @@
 			return mysql_num_fields($result);
 		}
 
+		public function fetch_field($result){
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_fetch_field($result);
+			}
+			return mysql_fetch_field($result);
+		}
+		
 		public function error(){
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_error($this->link);
@@ -2862,6 +2871,9 @@
 		}
 
 		public function stat(){
+			if ($this->error) {
+				return false;
+			}
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_stat($this->link);
 			}
