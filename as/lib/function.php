@@ -439,7 +439,7 @@ function get_template($theme_dir,$type){
 		$inited = false;
 		$host = $_POST['host'];
 		if(!$host){
-			return array('message'=>_t('Host name is required'));
+			return array('inited'=>false,'message'=>_t('Host name is required'));
 		}
 		if($host){
 			if(!is_dir(ROOT_DIR.'_sites/'.$host)){

@@ -27,13 +27,13 @@ case 'license':
 break;
 case 'install':
 	if(!is_writable(INCLUDE_DIR)){
-		$message .= SITE_URL._t('inc is not writable,it\'s permissions must be 777.').'<br />';
+		$message .= SITE_URL._t('inc is not writable').'<br />';
 	}
 	if(!is_writable(ROOT_DIR)){
-		$message .= SITE_URL._t('root dir is not writable,it\'s permissions must be 777.').' <br />';
+		$message .= SITE_URL.' '._t('root dir is not writable').' <br />';
 	}
 	if(!is_writable(ROOT_DIR.'attachment')){
-		$message .= SITE_URL._t('attachment is not writable,it\'s permissions must be 777.').'<br />';
+		$message .= SITE_URL._t('attachment is not writable').'<br />';
 	}
 	$message .= $message?_t('Please change the directory\'s permissions.'):'';
 	$main_page = 'install_form.php';
