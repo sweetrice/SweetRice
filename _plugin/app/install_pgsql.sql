@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS "%--%_app_menus" (
   "id" serial,
 	"link_text" text,
 	"link_url" text,
-	"order" int(10),
-	"parent_id" int(10),
+	"order" int,
+	"parent_id" int,
   PRIMARY KEY  ("id")
 );
 
@@ -22,9 +22,9 @@ CREATE TABLE "%--%_app_form" (
 	"id" serial,
 	"name" varchar(255),
 	"fields" text,
-	"method" enum('post','get') DEFAULT 'post',
+	"method" varchar(4),
 	"action" varchar(255),
-	"captcha" int(1),
+	"captcha" int,
 	"template" VARCHAR(255),
 	PRIMARY KEY ("id")
 );
@@ -32,8 +32,8 @@ CREATE TABLE "%--%_app_form" (
 DROP TABLE IF EXISTS "%--%_app_form_data";
 CREATE TABLE "%--%_app_form_data" (
 	"id" serial,
-	"form_id" int(10),
+	"form_id" int,
 	"data" text,
-	"date" int(10),
+	"date" int,
 	PRIMARY KEY ("id")
 );
