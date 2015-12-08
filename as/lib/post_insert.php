@@ -27,10 +27,10 @@
 ?>
 </fieldset>
 <fieldset><legend><?php _e('Slug');?>:</legend>
-<input type="text" name="sys_name" class="input_text slug" value="<?php echo $row['sys_name'];?>"> * <span class="tip"><?php _e('Only a-z,A-Z,0-9,-,_ ,system will create one if empty');?></span>
+<input type="text" name="sys_name" class="input_text slug" value="<?php echo $row['sys_name'];?>"> * <div class="tip"><?php _e('Only a-z,A-Z,0-9,-,_ ,system will create one if empty');?></div>
 <?php
 	if($row['sys_name']){
-echo '<span class="tip">'.SITE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'</span>';
+echo '<div class="tip">'.SITE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']).'</div>';
 	}
 ?>
 </fieldset>
