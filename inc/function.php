@@ -2815,7 +2815,7 @@
 
 		public function real_escape_string($value){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_real_escape_string($GLOBALS['mysqli'],$value);
+				return mysqli_real_escape_string($GLOBALS['mysql_lib']->link,$value);
 			}
 			return mysql_real_escape_string($value);
 		}
