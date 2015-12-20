@@ -178,7 +178,7 @@ function extractZIP($file_name,$dest_dir,$format_filename = false){
 					$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
 				}
 				rename($val,$dest_dir.$tmp_name);
-				$data[] = $dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/'));
+				$data[] = $dest_dir.$tmp_name;
 			}
 			rmdir($dest_dir.$temp_dir);
 		}
