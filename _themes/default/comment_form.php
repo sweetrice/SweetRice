@@ -59,7 +59,7 @@
 			return ;
 		}
 		var website = _('#website').val();
-		if(!website == 'http://'){
+		if (!/http:\/\/.+/.test(website)) {
 			website = '';
 		}
 		var code = _('#code').val();
@@ -82,18 +82,10 @@
 
 		var postID = _('#postID').val();
 		_(this).attr('_ing',1);
-		var query = new Object();
-		query.email = escape(email);
-		query.name = escape(name);
-		query.website = escape(website);
-		query.info = escape(info);
-		query.postID = escape(postID);
-		query.code = escape(code);
-		query.remember = remember;
 		var ajax_dlg = _.dialog({'content':'<img src="images/ajax-loader.gif">','name':'ajax_tip'});
 		_.ajax({
 			'type':'POST',
-			'data':query,
+			'data':{'email':email,'name':name,'website':website,'info':info,'postID':postID,'code':code,'remember':remember},
 			'url':'./?action=comment&mode=insert',
 			'success':function(result){
 					_('.comment_button').removeAttr('_ing');
@@ -107,7 +99,9 @@
 								_('#info').val('');
 								_('#code').val('');
 								_('#captcha').attr('src','images/captcha.png');
-								_.ajax_untip(result['status_code']);
+								_.ajax_untip(result['status_code'],2000,function(){
+									window.location.reload();
+								});
 							break;
 							default:
 								_.ajax_untip('<?php _e('Sorry,connect error,please try later!')?>');
