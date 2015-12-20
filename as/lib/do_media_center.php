@@ -66,14 +66,14 @@ switch($mode){
 					'size' => $_FILES['upload']['size'][$key]
 				);
 				if(substr($tmp['name'],-4) == '.zip' && $_POST['unzip']){
-					extractZIP($tmp['tmp_name'],$dest_dir);
+					extractZIP($tmp['tmp_name'],$dest_dir,true);
 				}else{
 					upload_($tmp,$dest_dir,$tmp['name'],null);
 				}
 			}
 		}else{
 			if(substr($_FILES['upload']['name'],-4) == '.zip' && $_POST['unzip']){
-				extractZIP($_FILES['upload']['tmp_name'],$dest_dir);
+				extractZIP($_FILES['upload']['tmp_name'],$dest_dir,true);
 			}else{
 				upload_($_FILES['upload'],$dest_dir,$_FILES['upload']['name'],null);
 			}

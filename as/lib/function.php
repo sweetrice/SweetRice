@@ -133,7 +133,7 @@ function copyFiles($source,$destination){
 	return true;
 }
 
-function extractZIP($file_name,$dest_dir){
+function extractZIP($file_name,$dest_dir,$format_filename = false){
 	if(substr($dest_dir,-1) != '/'){
 		$dest_dir .= '/';
 	}
@@ -149,7 +149,11 @@ function extractZIP($file_name,$dest_dir){
 							mkdir($dest_dir.zip_entry_name($zip_entry));
 						}
 					}else{
-						$tmp_name = filter_file_name(zip_entry_name($zip_entry));
+						if ($format_filename) {
+							$tmp_name = filter_file_name(zip_entry_name($zip_entry));
+						}else{
+							$tmp_name = zip_entry_name($zip_entry);
+						}
 						$handle = fopen($dest_dir.$tmp_name,'wb');
 						fwrite($handle,$buf);
 						fclose($handle);
@@ -168,9 +172,13 @@ function extractZIP($file_name,$dest_dir){
 			$zip->close();
 			$_data = sweetrice_files($dest_dir.$temp_dir.'/');
 			foreach($_data as $val){
-				$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+				if ($format_filename) {
+					$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+				}else{
+					$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
+				}
 				rename($val,$dest_dir.$tmp_name);
-				$data[] = $dest_dir.$tmp_name;
+				$data[] = $dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/'));
 			}
 			rmdir($dest_dir.$temp_dir);
 		}
@@ -262,6 +270,9 @@ function get_template($theme_dir,$type){
 	exit();
 	}
 	function sweetrice_files($_dir){
+		if (!is_dir($_dir)) {
+			return ;
+		}
 		if(substr($_dir,-1) != '/'){
 			$_dir .= '/';
 		}

@@ -42,7 +42,7 @@
 			);
 			
 			if(substr($tmp['name'],-4) == '.zip'){
-				$data = extractZIP($tmp['tmp_name'],$tmp_dir);
+				$data = extractZIP($tmp['tmp_name'],$tmp_dir,true);
 				foreach($data as $val){
 					$val = str_replace(SITE_HOME,SITE_URL,$val);
 					if($val && !in_array($val,$_SESSION['imgs'])){
@@ -61,7 +61,7 @@
 		_goto('./?type=image');
 	}elseif($_FILES['imgs']['name']){
 		if(substr($_FILES['imgs']['name'],-4) == '.zip'){
-			$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir);
+			$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir,true);
 			foreach($data as $val){
 				$val = str_replace(SITE_DIR,SITE_HOME,$val);
 				if($val && !in_array($val,$_SESSION['imgs'])){
