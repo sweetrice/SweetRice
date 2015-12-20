@@ -312,11 +312,10 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		});
 		_('.dellist').bind('click',function(){
 			if(confirm('<?php _e('Are you sure delete it?');?>')) {
-				deleteAction('media',_(this).attr('link'),_(this).attr('no'));
 				var _this = this;
 				_.ajax({
 					'type':'post',
-					'data':{'file':_(this).attr('link')},
+					'data':{'file':_(this).attr('link'),'no':_(this).attr('no')},
 					'url':'./?type=media&mode=delete',
 					'success':function(result){
 						if (result['status_code'])

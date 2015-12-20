@@ -29,14 +29,17 @@
 		define('SITE_HOME',ROOT_DIR);
 		define('SITE_URL',BASE_URL);
 	}
+	if (function_exists('mysqli_connect')) {
+		define('MYSQL_LIB','mysqli');
+	}else{
+		define('MYSQL_LIB','mysql');
+	}
 	include(INCLUDE_DIR.'function.php');
+	if (file_exists(INCLUDE_DIR.'function_custom.php')) {
+		include(INCLUDE_DIR.'function_custom.php');
+	}
 	register_shutdown_function('error_report');
 	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
-	if (function_exists('mysql_connect')) {
-		define('MYSQL_LIB','mysql');
-	}else{
-		define('MYSQL_LIB','mysqli');
-	}
 	if(file_exists(INCLUDE_DIR.'install.lock.php')){
 		if(file_exists(SITE_HOME.'inc/db.php')){
 			include(SITE_HOME.'inc/db.php');

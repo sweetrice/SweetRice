@@ -149,10 +149,11 @@ function extractZIP($file_name,$dest_dir){
 							mkdir($dest_dir.zip_entry_name($zip_entry));
 						}
 					}else{
-						$handle = fopen($dest_dir.zip_entry_name($zip_entry),'wb');
+						$tmp_name = filter_file_name(zip_entry_name($zip_entry));
+						$handle = fopen($dest_dir.$tmp_name,'wb');
 						fwrite($handle,$buf);
 						fclose($handle);
-						$data[] = $dest_dir.zip_entry_name($zip_entry);
+						$data[] = $dest_dir.$tmp_name;
 					}
 					zip_entry_close($zip_entry);
 				}
@@ -167,8 +168,9 @@ function extractZIP($file_name,$dest_dir){
 			$zip->close();
 			$_data = sweetrice_files($dest_dir.$temp_dir.'/');
 			foreach($_data as $val){
-				rename($val,$dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/')));
-				$data[] = $dest_dir.substr($val,strlen($dest_dir.$temp_dir.'/'));
+				$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+				rename($val,$dest_dir.$tmp_name);
+				$data[] = $dest_dir.$tmp_name;
 			}
 			rmdir($dest_dir.$temp_dir);
 		}

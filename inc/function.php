@@ -2901,4 +2901,12 @@
 			return $type == 'BOTH' ? MYSQL_BOTH : MYSQL_ASSOC;
 		}
 	}
+
+	function filter_file_name($filename){
+		preg_match('|^(.+?)(\.[a-zA-Z]+)$|',$filename,$match);
+		if ($match[1] && $match[2]) {
+			return md5($match[1].time()).$match[2];
+		}
+		return null;
+	}
 ?>

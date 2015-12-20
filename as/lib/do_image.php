@@ -179,15 +179,17 @@ input[type=file]{
 }
 .imgs{max-height:450px;}
 .imgs ul{margin: 10px 0px; padding: 0px;}
-.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:100px;margin-bottom:10px;position:relative;box-shadow: 2px 2px 5px #ccc;margin:1%;text-align:center;padding: 5px 0px;}
-.imgs li img{max-width:98%;max-height:98%;border:1px solid #d8d8d8;}
-.imgs li input[type=checkbox]{position:absolute;right:5px;bottom:5px;}
-.img_delete{position:absolute;left:5px;bottom:5px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
+.imgs li{width:18%;float:left;display:inline;list-style-type:none;height:150px;margin-bottom:10px;position:relative;box-shadow: 2px 2px 5px #ccc;margin:1%;text-align:center;padding: 5px 0px;}
+.imgs li img{max-width:98%;max-height:100px;border:1px solid #d8d8d8;}
+.img_delete{position:absolute;left:5px;top:100px;width:16px;height:16px;line-height:16px;border:1px solid #ccc;text-decoration: none;color:#ccc;background-color: #fff;cursor:pointer;display:none;}
 .clear{clear:both;}
 .form_split{line-height:30px;display:inline;margin:2px 10px;height:30px;}
 input[type=file]{
 	width:250px;
 }
+#imgs,.input_submit{display:none;}
+.img_alt{position:absolute;left:1%;bottom:5px;width:92%;}
+.selected_item{box-shadow: 2px 2px 5px #690 !important;}
 @media (max-width: 640px){
 	.form_split{float:none;margin-left:5px;display:block;height:auto;}
 	.imgs li{width:48%;}
@@ -200,7 +202,7 @@ input[type=file]{
 <body>
 <form method="post" action="" enctype="multipart/form-data" >
 <div class="form_split">
-	<input type="file" name="imgs[]" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple> <input type="submit" value="<?php _e('Upload');?>" class="input_submit"/></div>
+	<input type="file" id="imgs" name="imgs[]" multiple> <input type="button" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" class="btn_choose_file" value="<?php _e('Upload');?>"> <input type="submit" value="<?php _e('Upload');?>" class="input_submit"/></div>
 	<div class="form_split"><?php _e('Supports zip archive');?>
 	<?php _e('all');?> <input type="checkbox" class="ck_item"><input type="button" value="<?php _e('Insert images');?>" class="btn_attach"> <input type="button" value="<?php _e('Reset');?>" class="btn_clean"></div>
 </form>
@@ -208,7 +210,8 @@ input[type=file]{
 <ul>
 <?php 
 foreach($_SESSION['imgs'] as $img):?>
-<li data="<?php echo $img;?>"><img src="<?php echo $img;?>"><input type="checkbox" class="imglist" value="<?php echo $img;?>" /> <a href="javascript:void(0);" class="img_delete">&times;</a></li>
+<li data="<?php echo $img;?>"><img src="<?php echo $img;?>"><a href="javascript:void(0);" class="img_delete">&times;</a>
+<input type="text" class="img_alt" placeholder="<?php _e('Description');?>"></li>
 <?php endforeach;?>
 <div class="clear"></div>
 </ul>
@@ -216,6 +219,12 @@ foreach($_SESSION['imgs'] as $img):?>
 <script type="text/javascript">
 <!--
 	_.ready(function(){
+		_('.btn_choose_file').click(function(){
+			_('#imgs').click();
+		});
+		_('#imgs').change(function(){
+			_('.input_submit').click();
+		});
 		_('.img_delete').click(function(){
 			var _this = this;
 			_.ajax({
@@ -239,11 +248,11 @@ foreach($_SESSION['imgs'] as $img):?>
 				_(this).find('a').hide();
 			}
 		).click(function(){
-			if (_(this).find('.imglist').prop('checked'))
+			if (_(this).hasClass('selected_item'))
 			{
-				_(this).find('.imglist').prop('checked',false);
+				_(this).removeClass('selected_item');
 			}else{
-				_(this).find('.imglist').prop('checked',true);
+				_(this).addClass('selected_item');
 			}
 		});
 		_('.btn_clean').bind('click',function(){
@@ -254,10 +263,10 @@ foreach($_SESSION['imgs'] as $img):?>
 		});
 		_('.btn_attach').bind('click',function(){
 			var str = '';
-			_('.imglist').each(function(){
-				if (_(this).prop('checked'))
+			_('.imgs ul li').each(function(){
+				if (_(this).hasClass('selected_item'))
 				{
-					str += '<p style="text-align:center;"><img src="'+_(this).val()+'" style="max-width:100%;"></p>';
+					str += '<p style="text-align:center;"><img src="'+_(this).attr('data')+'" alt="'+_(this).find('.img_alt').val()+'" style="max-width:100%;"></p>';
 				}
 			});
 			if (!str)
@@ -265,8 +274,7 @@ foreach($_SESSION['imgs'] as $img):?>
 				_.ajax_untip('<?php _e('No image selected');?>');
 				return ;
 			}
-			var ifr_body = parent.window._('.btn_upload').parent().parent().find('iframe').items();
-			ifr_body.contentWindow.document.body.innerHTML = str + ifr_body.contentWindow.document.body.innerHTML;
+			parent.curr_editor.insertContent(str);
 			parent._('.SweetRice_dialog_close').run('click');
 		});
 	});
