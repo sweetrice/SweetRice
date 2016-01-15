@@ -259,7 +259,14 @@ foreach($_SESSION['imgs'] as $img):?>
 			location.href = './?type=image&mode=clean';
 		});
 		_('.ck_item').bind('change',function(){
-			_('.imglist').prop('checked',_(this).prop('checked'));
+			var checked = _(this).prop('checked');
+			_('.imgs ul li').each(function(){
+				if (checked) {
+					_(this).addClass('selected_item');
+				}else{
+					_(this).removeClass('selected_item');
+				}
+			});
 		});
 		_('.btn_attach').bind('click',function(){
 			var str = '';
