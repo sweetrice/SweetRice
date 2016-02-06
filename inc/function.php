@@ -1777,19 +1777,9 @@
 		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page,'page_total'=>$page_total);
 	}
 
-	function generate_slug(){
-		$str = date('y').str_pad(date('z'),3,0,STR_PAD_LEFT);
-		$salt_num = floor((date('Y') - 2000)/100);
-		for($i=0; $i< 3; $i++){
-			switch(rand(0,1)){
-				case 0:
-					$str .= rand(0,9);
-				break;
-				default:
-					$str .= chr(rand(97,122));
-			}
-		}
-		return $str.date('His').floor((date('Y') - 2000)/100);
+	function generate_slug($salt = ''){
+		$tmp = explode(' ', microtime());
+		return $salt.base_convert($tmp[1],10,36).base_convert($tmp[0]*1000000,10,36);
 	}
 
 //API for Post insert
