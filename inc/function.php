@@ -1822,7 +1822,7 @@
 			$createTime = intval($data['createTime']);
 		}
 		if($sys_name){
-			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `sys_name` = '$sys_name' and `id` !='$id' ");
+			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `sys_name` = '$sys_name' and `id` != '$id' ");
 			if($sysname_total > 0){
 				$sys_name = generate_slug();
 			}
@@ -1889,7 +1889,7 @@
 		$id = intval($data['id']);
 		$sys_name = strtolower($data['link']);
 		if($sys_name){
-			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_category` WHERE `link` = '$sys_name' and `id` !='$id' ");
+			$sysname_total = db_total_nocache("SELECT COUNT(*) FROM `".DB_LEFT."_category` WHERE `link` = '$sys_name' and `id` != '$id' ");
 			if($sysname_total > 0){
 				$sys_name = generate_slug();
 			}
