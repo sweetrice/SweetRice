@@ -1008,6 +1008,7 @@
 		};
 
 		this.val = function (v,callback){
+			var _this = this;
 			if (typeof elm != 'object'){
 				return ;
 			}
@@ -1044,8 +1045,9 @@
 							this.value = v;
 						break;
 						case 'select':
+							v = v.split(',');
 							for (var i=0; i < this.options.length; i++ ){
-								if (this.options[i].value == v){
+								if (_this.inArray(v,this.options[i].value)){
 									this.options[i].selected = true;
 								}else{
 									this.options[i].selected = false;
@@ -1107,10 +1109,16 @@
 						value = elm.value;
 					break;
 					case 'select':
+						var tmp = [];
 						for (var i=0; i < elm.options.length; i++ ){
 							if (elm.options[i].selected){
-								value = elm.options[i].value;
+								tmp.push(elm.options[i].value);
 							}
+						}
+						if (!elm.multiple){
+							value = tmp[0];
+						}else{
+							value = tmp;
 						}
 					break;
 				}
