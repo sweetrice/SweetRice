@@ -1386,7 +1386,7 @@
 		}else{
 			var data = param.data;
 			for (var i in data ){
-				query += '&'+i+'='+escape(data[i]);
+				query += '&'+i+'='+encodeURI(data[i]);
 			}
 		}
 		switch (param.type.toUpperCase())
@@ -1686,7 +1686,7 @@
 			y = a[i].substr(a[i].indexOf('=')+1);
 			x = x.replace(/^\s+|\s+$/g,'');
 			if (x == k){
-				return unescape(y);
+				return decodeURI(y);
 			}
 		}
 		return '';
