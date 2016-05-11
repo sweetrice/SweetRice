@@ -501,7 +501,7 @@
 	}
 
 	function js_unescape($str){
-		return urldecode($str);
+		return rawurldecode($str);
 	}
 
 	function sweetrice_cache($cache_link,$data,$cache_type){
