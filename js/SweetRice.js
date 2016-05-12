@@ -1748,7 +1748,7 @@
 		var aut_dlg = _().dialog({'content':str,'name':'ajax_untip'});
 		setTimeout(function(){
 			if (aut_dlg){
-				aut_dlg.remove();
+				aut_dlg.find('.SweetRice_dialog_close').click();
 			}
 			if (typeof callback == 'function')
 			{
