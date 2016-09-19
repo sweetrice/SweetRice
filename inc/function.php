@@ -1125,7 +1125,7 @@
 				$table_array = db_arrays_nocache("SHOW TABLES",'BOTH',$database_type);
 			break;
 			case 'pgsql':
-				$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",$database_type);
+				$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",'BOTH',$database_type);
 			break;
 		}
 		foreach($table_array as $val){
