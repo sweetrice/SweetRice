@@ -29,7 +29,8 @@ _().ready(function(){
 			}
 		}else{
 			if (!!editor[_(this).attr('tid')]){
-				tinyMCE.get(_(this).attr('tid')).hide();
+				editor[_(this).attr('tid')] = false;
+				tinyMCE.get(_(this).attr('tid')).destroy();
 			}
 		}
 	});
