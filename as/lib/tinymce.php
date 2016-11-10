@@ -18,6 +18,7 @@ _().ready(function(){
 	_('.editor_toggle').bind('click',function(){
 		_(this).parent().find('.editor_toggle').removeClass('current_label');
 		_(this).addClass('current_label');
+		var _this = this;
 		if (_(this).attr('data') == 'visual')
 		{
 			if (!!editor[_(this).attr('tid')])
@@ -29,10 +30,12 @@ _().ready(function(){
 			}
 		}else{
 			if (!!editor[_(this).attr('tid')]){
-				editor[_(this).attr('tid')] = false;
-				tinyMCE.get(_(this).attr('tid')).destroy();
+				tinyMCE.get(_(this).attr('tid')).hide();
 			}
 		}
+		_('#'+_(this).attr('tid')).keyup(function(){
+			tinyMCE.get(_(_this).attr('tid')).setContent(_('#'+_(_this).attr('tid')).val());
+		});
 	});
 });
 
