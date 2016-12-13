@@ -1008,7 +1008,6 @@
 		};
 
 		this.val = function (v,callback){
-			var _this = this;
 			if (typeof elm != 'object'){
 				return ;
 			}
@@ -1045,9 +1044,8 @@
 							this.value = v;
 						break;
 						case 'select':
-							v = v.split(',');
 							for (var i=0; i < this.options.length; i++ ){
-								if (_this.inArray(v,this.options[i].value)){
+								if (this.options[i].value == v){
 									this.options[i].selected = true;
 								}else{
 									this.options[i].selected = false;
@@ -1109,16 +1107,10 @@
 						value = elm.value;
 					break;
 					case 'select':
-						var tmp = [];
 						for (var i=0; i < elm.options.length; i++ ){
 							if (elm.options[i].selected){
-								tmp.push(elm.options[i].value);
+								value = elm.options[i].value;
 							}
-						}
-						if (!elm.multiple){
-							value = tmp[0];
-						}else{
-							value = tmp;
 						}
 					break;
 				}
@@ -1386,7 +1378,7 @@
 		}else{
 			var data = param.data;
 			for (var i in data ){
-				query += '&'+i+'='+encodeURIComponent(data[i]);
+				query += '&'+i+'='+escape(data[i]);
 			}
 		}
 		switch (param.type.toUpperCase())
@@ -1583,24 +1575,24 @@
 
 	this.dialog = function(param,callback){
 		var name = param.name || new Date().getTime();
-		var w = param.width || 400;
-		w = _.pageSize().pageWidth > w ? w:_.pageSize().pageWidth - 50;
+		var w = param.width || _.pageSize().windowWidth;
+		w = _.pageSize().pageWidth > w ? w : _.pageSize().pageWidth - 50;
 		var h = param.height || w*9/16;
 		var title = param.title || '';
-		var dlgdiv = document.createElement('div');
-		dlgdiv.id = 'SweetRice_dialog_'+name;		
-		if (_('#'+dlgdiv.id)){
-			_('#'+dlgdiv.id).find('.SweetRice_dialog_close').run('click');
+		var dlgdiv = document.createElement('div');		
+		if (_('#SweetRice_dialog_'+name).size() > 0){
+			_('#SweetRice_dialog_close_'+name).run('click');
 		}
+		_(dlgdiv).attr('id','SweetRice_dialog_'+name);
 		_(document.body).append(dlgdiv);
-		_(dlgdiv).html('<div class="SweetRice_menuBar" style="height:20px;cursor:move;padding:10px;background-color: #fafafa;"><div style="overflow:hidden;float:left;">'+title+'</div><div style="clear:both;height:0px;line-height:0px;"></div></div><a title="CLOSE" class="SweetRice_dialog_close" href="javascript:void(0);" style="float:right;width:25px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;position:absolute;top:10px;right:10px;">&times;</a><div class="SweetRice_dialog_content" style="padding:10px;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 15px 0px rgba(0, 0, 0, 0.35)'});
+		_(dlgdiv).html('<div class="SweetRice_dialog_menuBar" id="SweetRice_dialog_menuBar_'+name+'" style="height:20px;cursor:move;padding:10px;background-color: #fafafa;"><div style="overflow:hidden;float:left;" id="SweetRice_dialog_title_'+name+'">'+title+'</div><div style="clear:both;height:0px;line-height:0px;"></div></div><a title="CLOSE" class="SweetRice_dialog_close" id="SweetRice_dialog_close_'+name+'" href="javascript:void(0);" style="float:right;width:25px;text-align:center;display:inline;border: 1px solid #ccc;border-radius: 5px;color:#555;text-decoration: none;position:absolute;top:10px;right:10px;">&times;</a><div class="SweetRice_dialog_content" id="SweetRice_dialog_content_'+name+'" style="padding:10px;">' + (param.content||'') + '</div>'+(param.button?'<div class="SweetRice_dialog_button" id="SweetRice_dialog_button_'+name+'" style="text-align:right;background-color: #f0f0f0;border-top:1px solid #ccc;"></div>':'')).css({'width':w+'px','min-height':param.height?h+'px':'auto','position':'absolute','top':(_.scrollSize().top+(_.pageSize().windowHeight > param.height?(_.pageSize().windowHeight-param.height)/2:20))+'px','left':(_.pageSize().pageWidth-w)/2+'px','border':'1px solid #ccc','border-radius':'5px','background-color':'#fff','z-index':65535,'box-shadow':'0 0 15px 0px rgba(0, 0, 0, 0.35)'});
 		if (param.button){
 			var btn_str = '',btn;
 			for (var i in param.button){
 				btn = document.createElement('input');
 				btn.type = 'button';
 				btn.value = param.button[i].label;
-				_(dlgdiv).find('.SweetRice_dialog_button').append(btn);
+				_('#SweetRice_dialog_button_'+name).append(btn);
 				_(btn).css({'margin':'3px'});
 				var bind = param.button[i].bind;
 				if (bind){
@@ -1614,45 +1606,50 @@
 		if (param.layer)
 		{
 			var layerdiv = document.createElement('div');
-			layerdiv.id = 'SweetRice_layer_dialog';
+			_(layerdiv).attr('id','SweetRice_dialog_layer_'+name).addClass('SweetRice_dialog_layer');
 			_(document.body).append(layerdiv);
 			_(layerdiv).css({'background-color': '#000000','left':0,'opacity': 0.3,'position':'absolute','top': 0,'z-index':65534}).refillscreen();
 			_(window).bind('resize', function(){_(layerdiv).refillscreen();});
+			_('#SweetRice_dialog_layer_'+name).click(function(){
+				_('#SweetRice_dialog_close_'+name).click();
+			});
 		}
 		_(window).bind('resize', function(){
 			var new_w = _.pageSize().pageWidth > w ? w:_.pageSize().pageWidth - 50;
 			var h = _.pageSize().windowHeight > _(dlgdiv).height() ? _(dlgdiv).height() : _.pageSize().windowHeight - 50;
 			_(dlgdiv).css({'width':new_w+'px','top':(_.scrollSize().top+(_.pageSize().windowHeight - h)/2)+'px','left':((_.pageSize().pageWidth - new_w)/2)+'px'});
 		});
-		_(dlgdiv).find('.SweetRice_dialog_close').bind('click',function(){
-			_(dlgdiv).remove();
-			if (param.layer){
-				_(layerdiv).remove();
-			}
-			if (param.close && typeof param.close == 'function'){
-				param.close();
-			}
+		_('#SweetRice_dialog_close_'+name).bind('click',function(){
+			_('#SweetRice_dialog_'+name).fadeOut(500,function(){
+				_('#SweetRice_dialog_'+name).remove();
+				if (param.layer){
+					_('#SweetRice_dialog_layer_'+name).remove();
+				}
+				if (param.close && typeof param.close == 'function'){
+					param.close();
+				}
+			});
 		});
 
-		_(dlgdiv).find('.SweetRice_menuBar').drag({
+		_('#SweetRice_dialog_menuBar_'+name).drag({
 		type:'none',
 		'start':function(){
-			_(dlgdiv).attr({'left':parseInt(_(dlgdiv).position().left),'top':parseInt(_(dlgdiv).position().top)});
+			_('#SweetRice_dialog_'+name).attr({'left':parseInt(_('#SweetRice_dialog_'+name).position().left),'top':parseInt(_('#SweetRice_dialog_'+name).position().top)});
 		},
 		'move':function(diffX,diffY){
-			var ll = parseInt(_(dlgdiv).attr('left')) + diffX;
-			var lt = parseInt(_(dlgdiv).attr('top')) + diffY;
+			var ll = parseInt(_('#SweetRice_dialog_'+name).attr('left')) + diffX;
+			var lt = parseInt(_('#SweetRice_dialog_'+name).attr('top')) + diffY;
 			if (lt > 0){
-				_(dlgdiv).css({'left':ll+'px','top':lt + 'px'});
+				_('#SweetRice_dialog_'+name).css({'left':ll+'px','top':lt + 'px'});
 			}
 		},
 		'complete':function(){
-			_(dlgdiv).removeAttr('left');
-			_(dlgdiv).removeAttr('top');
+			_('#SweetRice_dialog_'+name).removeAttr('left');
+			_('#SweetRice_dialog_'+name).removeAttr('top');
 		}
 		});
 		if (param.url){
-			_(dlgdiv).find('.SweetRice_dialog_content').load(param.url,function(){
+			_('#SweetRice_dialog_content_'+name).load(param.url,function(){
 				if (param.layer)
 				{
 					_(layerdiv).refillscreen();
@@ -1662,7 +1659,7 @@
 					callback();
 				}
 			});
-		}else	if (typeof callback == 'function'){
+		}else if (typeof callback == 'function'){
 			callback.apply(dlgdiv);
 		}
 		return _(dlgdiv);
@@ -1686,7 +1683,7 @@
 			y = a[i].substr(a[i].indexOf('=')+1);
 			x = x.replace(/^\s+|\s+$/g,'');
 			if (x == k){
-				return decodeURIComponent(y);
+				return unescape(y);
 			}
 		}
 		return '';
@@ -1711,14 +1708,48 @@
 		if(!window.localStorage || !k){
 			return ;
 		}
-		localStorage.setItem(k,v);
+		if (typeof k == 'object' && !v) {
+			for (var i in k) {
+				localStorage.setItem(i,k[i]);
+			}
+		}else if(k && v){
+			localStorage.setItem(k,v);
+		}
 	}
 
 	this.getStorage = function(k){
 		if(!window.localStorage || !k){
 			return ;
 		}
-		return localStorage.getItem(k) || false;
+		if (typeof k == 'object') {
+			var tmp = [];
+			for (var i in k) {
+				tmp[k[i]] = localStorage.getItem(k[i]) || false;
+			}
+		}else{
+			var tmp = localStorage.getItem(k) || false;
+		}
+		return tmp;
+	}
+
+	this.delStorage = function(k){
+		if(!window.localStorage || !k){
+			return ;
+		}
+		if (typeof k == 'object') {
+			for (var i in k) {
+				localStorage.removeItem(i);
+			}
+		}else{
+			localStorage.removeItem(k,v);
+		}
+	}
+
+	this.clearStorage = function(){
+		if(!window.localStorage){
+			return ;
+		}
+		return localStorage.clear();
 	}
 
 	this.items = function(){
@@ -1748,7 +1779,7 @@
 		var aut_dlg = _().dialog({'content':str,'name':'ajax_untip'});
 		setTimeout(function(){
 			if (aut_dlg){
-				aut_dlg.find('.SweetRice_dialog_close').click();
+				aut_dlg.remove();
 			}
 			if (typeof callback == 'function')
 			{
