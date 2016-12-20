@@ -1581,7 +1581,7 @@
 		var title = param.title || '';
 		var dlgdiv = document.createElement('div');		
 		if (_('#SweetRice_dialog_'+name).size() > 0){
-			_('#SweetRice_dialog_close_'+name).run('click');
+			_('#SweetRice_dialog_'+name).remove();
 		}
 		_(dlgdiv).attr('id','SweetRice_dialog_'+name);
 		_(document.body).append(dlgdiv);
