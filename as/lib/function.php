@@ -246,7 +246,7 @@ function get_template($theme_dir,$type){
 		}
 	}
 
-	function completeInsert($yes_url,$no_url,$tip){
+	function completeInsert($yes_url,$no_url,$tip = '' ){
 		if(!$tip){
 			$tip = _t('Create another one?');
 		}
