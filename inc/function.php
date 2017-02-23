@@ -1605,6 +1605,10 @@
 			case 'rawurl':
 				$data['output'] = rawurldecode($data['content']);
 			break;
+			default:
+				if($format){
+					$data = $data[$format];
+				}
 		}
 		return $data;
 	}
