@@ -1348,7 +1348,7 @@
 						submit = true;
 				}
 				if (submit){
-						data += '&'+_(this).attr('name')+'='+_(this).val();
+						data += '&'+_(this).attr('name')+'='+encodeURIComponent(_(this).val());
 				}
 			}
 		});
@@ -1378,7 +1378,7 @@
 		}else{
 			var data = param.data;
 			for (var i in data ){
-				query += '&'+i+'='+escape(data[i]);
+				query += '&'+i+'='+encodeURIComponent(data[i]);
 			}
 		}
 		switch (param.type.toUpperCase())
