@@ -38,6 +38,11 @@
 		_('.backtotop').click(function(){
 			_(document.body).scrollTop(0);
 		});
+		if (_.scrollSize().top > _.pageSize().windowHeight) {
+			_('.backtotop').show();
+		}else{
+			_('.backtotop').hide();
+		}
 		_('.change_theme').bind('change',function(){
 			doTheme(_(this).val());
 		});

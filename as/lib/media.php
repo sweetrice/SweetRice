@@ -302,8 +302,6 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		_('.attlist').bind('click',function(){
 			parent.attach_media.val(_(this).attr('link'));
 			_('#remote').val(_(this).attr('link'));
-		}).bind('dblclick',function(){
-			parent.attach_media.val(_(this).attr('link'));
 			parent._('#SweetRice_dialog_media').find('.SweetRice_dialog_close').run('click');
 		});
 		_('#remote').bind('change',function(){

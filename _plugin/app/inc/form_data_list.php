@@ -26,7 +26,15 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Form Name');?></th><th><?php _e('Data');?></th><th style="width:130px;"><?php _e('Date');?></th><th style="width:30px;"><?php _e('Admin');?></th></tr>
+	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Form Name');?></th>
+	<?php if($form_id > 0):?>
+	<?php foreach($this_form['fields'] as $field):?>
+		<th><?php echo $field['name'];?></th>
+	<?php endforeach;?>
+	<?php else:?>
+		<th><?php _e('Data');?></th>
+	<?php endif;?>
+	<th style="width:130px;"><?php _e('Date');?></th><th style="width:30px;"><?php _e('Admin');?></th></tr>
 </thead>
 <tbody>
 <?php
@@ -39,7 +47,14 @@
 		$fields = unserialize($row['fields']);
 		$form_data = unserialize($row['data']);
 ?>
-<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['form_id']))?>" target="_blank"><?php echo $row['name'];?></a></td><td class="form_data">
+<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['form_id']))?>" target="_blank"><?php echo $row['name'];?></a></td>
+
+	<?php if($form_id > 0):?>
+	<?php foreach($this_form['fields'] as $field):?>
+		<td><?php echo $form_data[$field['name']];?></td>
+	<?php endforeach;?>
+	<?php else:?>
+<td class="form_data">
 <div class="toggle_data">---</div>
 <div class="formdata">
 <?php foreach($fields as $val):
@@ -71,10 +86,12 @@ if($val['type'] == 'file'){
 	echo nl2br($form_data[$val['name']]);
 }
 ?>
-</div>
+</div> 
 <div>
 <?php
-endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
+endforeach;?></td>
+	<?php endif;?>
+<td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 <a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a>
 </td></tr>
 <?php
@@ -89,7 +106,7 @@ endforeach;?></td><td><?php echo date('M d Y H:i',$row['date']);?></td><td>
 <!--
 	_().ready(function(){
 		_('.toggle_data').bind('click',function(){
-			_.dialog({'title':'<?php _e('View form data');?>','content':_(this).parent().find('.formdata').html()});
+			_.dialog({'title':'<?php _e('View form data');?>','content':_(this).parent().find('.formdata').html(),'layer':1});
 			_('.btn_preview').bind('click',function(){
 				_.dialog({'content':'<img src="'+_(this).attr('url')+'" style="width:320px;"></iframe>','width':340});
 			});

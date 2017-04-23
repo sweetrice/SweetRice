@@ -36,13 +36,15 @@ Thank you.
 
 SweetRice change log:
 ======================================
-Change log V1.5.1 12/20/2015
+Change log V1.5.1 04/23/2017
 ======================================
 core update
 	tinyMCE upgrade to 4.3.x
 	support function_custom.php for custom anything
 	change default mysql connect function to mysqli
 	update image upload 
+	update SweetRice.js form database management
+	update media to attachment remove doubleclick event
 ======================================
 Change log V1.5.0 12/06/2015
 core update
