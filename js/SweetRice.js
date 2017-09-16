@@ -1696,12 +1696,13 @@
 		{
 			param.path = '/';
 		}
-		var i = -1;
 		var date = new Date();
-		date.setTime(date.getTime()+i);
-		var str = '';
-		str += param.name+'='+_.getCookie(param.name);
-		str += ';expires='+date.toGMTString()+';path='+param.path;
+		date.setTime(date.getTime()-1);
+		var str = param.name+'=';
+		str += ';expires='+date.toGMTString()+';path='+param.path+';domain=.'+document.domain;
+		document.cookie = str;
+		var str = param.name+'=';
+		str += ';expires='+date.toGMTString()+';path='+param.path+';domain='+document.domain;
 		document.cookie = str;
 	};
 	this.setStorage = function(k,v){
