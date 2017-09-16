@@ -1694,7 +1694,10 @@
 		}
 		if (!param.path)
 		{
-			param.path = '/';
+			param.path = location.href.split('//')[1].split('?')[0].replace(document.domain,'');
+			if (param.path.substring(param.path.length-1,param.path.length) == '/') {
+				param.path = param.path.substring(0,param.path.length-1);
+			}
 		}
 		var date = new Date();
 		date.setTime(date.getTime()-1);
