@@ -68,7 +68,7 @@ imagefilledrectangle($im, 0, 0, 100, 30, $white);
 imageline($im,rand(0,5),rand(0,8),rand(90,100),rand(20,30),$black);
 imageline($im,rand(0,5),rand(8,18),rand(90,100),rand(0,8),$black);
 imageline($im,rand(0,5),rand(20,30),rand(90,100),rand(8,18),$black);
-$font = '../inc/font/arial.ttf';
+$font = '../inc/font/captcha.ttf';
 $code = rand_code($im,$black, $font);
 $_SESSION["hashcode"] = md5(str_replace(' ','',$code));
 imagepng($im);
