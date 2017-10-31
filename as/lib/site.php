@@ -104,7 +104,7 @@
 <img src="<?php echo $global_setting['logo']?'../'.ATTACHMENT_DIR.$global_setting['logo']:'../images/logo.png';?>">
 <input type="file" name="logo" class="input_text_tip" > <span class="tip"><?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></span></fieldset>
 <fieldset><legend><?php _e('Theme');?></legend>
-<select name="theme">
+<select name="global_setting[theme]">
 	<option value=""><?php _e('Default');?></option>
 <?php
 	foreach($themes as $val){

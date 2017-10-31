@@ -78,7 +78,7 @@
 </fieldset>
 <?php if($lastest_update):?>
 <fieldset><legend></legend>
-<a href="./?type=update">SweetRice <?php echo $lastest_update.' '._t('released');?></a><?php _e('Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.');?>
+<a href="./?type=update">SweetRice <?php echo $lastest_update.' '._t('released');?></a> <?php _e('Please upgrade SweetRice.Important: before upgrading, please <a href="./?type=data&mode=db_backup">backup your database</a> and files.');?>
 </fieldset>
 <?php endif;?>
 </div>
