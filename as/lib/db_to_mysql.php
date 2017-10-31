@@ -28,8 +28,8 @@
 				}
 			}
 		}
-		$GLOBALS['mysql_lib_to'] = new mysql_lib(array('url'=>$to_db_url,'port'=>$to_db_port,'username'=>$to_db_username,'passwd'=>$to_db_passwd,'name'=>$to_db_name,'newlink'=>true));
-		if(!$GLOBALS['mysql_lib']->stat()){
+		$GLOBALS['to_db_lib'] = new mysql_lib(array('url'=>$to_db_url,'port'=>$to_db_port,'username'=>$to_db_username,'passwd'=>$to_db_passwd,'name'=>$to_db_name,'newlink'=>true));
+		if(!$GLOBALS['to_db_lib']->stat()){
 			$message .= _t('Database error!').' <br>';
 		}else{
 			$sql = file_get_contents('lib/app.sql');
@@ -37,8 +37,8 @@
 			$sql = explode(';',$sql);
 			foreach($sql as $key=>$val){
 				if(trim($val)){
-					if(!$GLOBALS['mysql_lib_to']->query($val)){
-						$message .= $val.' : '.$GLOBALS['mysql_lib_to']->error().'<br>';
+					if(!$GLOBALS['to_db_lib']->query($val)){
+						$message .= $val.' : '.$GLOBALS['to_db_lib']->error().'<br>';
 						break;
 					}
 				}
@@ -49,8 +49,8 @@
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							if(!$GLOBALS['mysql_lib_to']->query($val)){
-								$message .= $val.' : '.$GLOBALS['mysql_lib_to']->error().'<br>';
+							if(!$GLOBALS['to_db_lib']->query($val)){
+								$message .= $val.' : '.$GLOBALS['to_db_lib']->error().'<br>';
 								break;
 							}
 						}
@@ -60,7 +60,7 @@
 				case 'sqlite':
 					foreach($tablelist as $val){
 						$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
-						$field_list = '';
+						$field_list = array();
 						$rows = db_arrays("SELECT * FROM `".$val."`");
 						$fields = db_arrays("PRAGMA table_info(".$val.")");
 						foreach($fields as $field){
@@ -79,8 +79,8 @@
 								$comma = ",";
 							}
 							$tabledump .= ");";
-							if(!$GLOBALS['mysql_lib_to']->query($tabledump)){
-								$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib_to']->error().'<br>';
+							if(!$GLOBALS['to_db_lib']->query($tabledump)){
+								$db_error .= $tabledump.' : '.$GLOBALS['to_db_lib']->error().'<br>';
 								break;
 							}
 						}
@@ -94,9 +94,9 @@
 				case 'mysql':
 					foreach($tablelist as $val){
 						$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
-						$res = $GLOBALS['mysql_lib']->query("SELECT * FROM `".$val."`");
-						$numfields = $GLOBALS['mysql_lib']->num_fields($res);
-						while ($row = $GLOBALS['mysql_lib']->fetch_row($res)){
+						$res = $GLOBALS['db_lib']->query("SELECT * FROM `".$val."`");
+						$numfields = $GLOBALS['db_lib']->num_fields($res);
+						while ($row = $GLOBALS['db_lib']->fetch_row($res)){
 							$comma = "";
 							$tabledump = "INSERT INTO `".$to_val."` VALUES(";
 							for($i = 0; $i < $numfields; $i++){
@@ -109,8 +109,8 @@
 								$comma = ",";
 							}
 							$tabledump .= ");";
-							if(!$GLOBALS['mysql_lib_to']->query($tabledump){
-								$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib_to']->error().'<br>';
+							if(!$GLOBALS['to_db_lib']->query($tabledump)){
+								$db_error .= $tabledump.' : '.$GLOBALS['to_db_lib']->error().'<br>';
 							}
 						}
 					}
@@ -123,9 +123,9 @@
 				case 'pgsql':
 					foreach($tablelist as $val){
 						$to_val = $to_db_left.substr($val,strlen(DB_LEFT));
-						$res = pg_query("SELECT * FROM \"".$val."\"");
-						$numfields = pg_num_fields($res);
-						while ($row = pg_fetch_row($res)){
+						$res = $GLOBALS['db_lib']->query("SELECT * FROM \"".$val."\"");
+						$numfields = $GLOBALS['db_lib']->num_fields($res);
+						while ($row = $GLOBALS['db_lib']->fetch_row($res)){
 							$comma = "";
 							$tabledump = "INSERT INTO `".$to_val."` VALUES(";
 							for($i = 0; $i < $numfields; $i++){
@@ -138,8 +138,8 @@
 								$comma = ",";
 								}
 								$tabledump .= ");";
-								if(!$GLOBALS['mysql_lib_to']->query($tabledump)){
-									$db_error .= $tabledump.' : '.$GLOBALS['mysql_lib_to']->error().'<br>';
+								if(!$GLOBALS['to_db_lib']->query($tabledump)){
+									$db_error .= $tabledump.' : '.$GLOBALS['to_db_lib']->error().'<br>';
 								}
 						}
 					}
@@ -168,9 +168,9 @@
 			$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 			$db_str .= "?>";
 			file_put_contents(SITE_HOME.'inc/db.php',$db_str);
-			$GLOBALS['mysql_lib_to']->close();
+			$GLOBALS['to_db_lib']->close();
 			if(DATABASE_TYPE == 'sqlite'){
-				$db = null;
+				$GLOBALS['db_lib']->close();
 				unlink(SITE_HOME.'inc/'.$db_name.'.db');
 			}
 			output_json(array('status'=>1,'status_code'=>_t('Database convert successfully!')));

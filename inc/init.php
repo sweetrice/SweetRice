@@ -5,7 +5,7 @@
  * @package SweetRice
  * @since 1.2.5
  */
-	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
 	session_name('sweetrice');
 	session_start();
 	define('VALID_INCLUDE',true);
@@ -29,41 +29,47 @@
 		define('SITE_HOME',ROOT_DIR);
 		define('SITE_URL',BASE_URL);
 	}
-	if (function_exists('mysqli_connect')) {
-		define('MYSQL_LIB','mysqli');
-	}else{
-		define('MYSQL_LIB','mysql');
-	}
 	include(INCLUDE_DIR.'function.php');
 	if (file_exists(INCLUDE_DIR.'function_custom.php')) {
 		include(INCLUDE_DIR.'function_custom.php');
 	}
 	register_shutdown_function('error_report');
-	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
+	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
 	if(file_exists(INCLUDE_DIR.'install.lock.php')){
 		if(file_exists(SITE_HOME.'inc/db.php')){
 			include(SITE_HOME.'inc/db.php');
 			define('DB_LEFT',$db_left);
 			define('DB_LEFT_PLUGIN',DB_LEFT.'_plugin');
 			define('DATABASE_TYPE',$database_type);
+			if (function_exists('mysql_connect')) {
+				define('MYSQL_LIB','mysql');
+			}else{
+				define('MYSQL_LIB','mysqli');
+			}
 			$db_left_plugin = DB_LEFT_PLUGIN;
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					$dbname = SITE_HOME.'inc/'.$db_name.'.db';
-					$db = sqlite_dbhandle($dbname);
+					if (is_file($dbname)) {
+						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+					}
 				break;
 				case 'pgsql':
-					$conn = pg_connect('host='.$db_url.' port='.$db_port.' dbname='.$db_name.' user='.$db_username.' password='.$db_passwd);
+					$GLOBALS['db_lib'] = new pgsql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 				break;
 				case 'mysql':
-					$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
+					$GLOBALS['db_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 				break;
+			}
+			if (!$GLOBALS['db_lib']->link) {
+				header('HTTP/1.1 404 Page Not Found');
+				die('db error');
 			}
 		}
 		define('INSTALLED',true);
 		$global_setting = getOption('global_setting');
-		define('SETTING_UPDATE',$global_setting['date']);
 		$global_setting = unserialize(clean_quotes($global_setting['content']));
+		define('SETTING_UPDATE',$global_setting['date']);
 		$global_setting['nums_setting'] = initNumsSetting($global_setting['nums_setting']);
 		define('URL_REWRITE',$global_setting['url_rewrite']);
 		if(defined('DASHABOARD')){

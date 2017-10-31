@@ -32,64 +32,11 @@
 		}	
 	}
 	function db_escape($str){
-		switch(DATABASE_TYPE){
-			case 'sqlite':
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = sqlite_escape_string($val);
-					}
-					return $str;
-				}
-				return sqlite_escape_string($str);
-			break;
-			case 'pgsql':
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = pg_escape_string($val);
-					}
-					return $str;
-				}
-				return pg_escape_string($str);
-			break;
-			default:
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = $GLOBALS['mysql_lib']->real_escape_string($val);
-					}
-					return $str;
-				}
-				return $GLOBALS['mysql_lib']->real_escape_string($str);
-		}
+		return $GLOBALS['db_lib']->db_escape($str);
 	}
+
 	function db_unescape($str){
-		switch(DATABASE_TYPE){
-			case 'sqlite':
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = str_replace('\'\'','\'',$val);
-					}
-					return $str;
-				}
-				return str_replace('\'\'','\'',$str);
-			break;
-			case 'pgsql':
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$val);
-					}
-					return $str;
-				}
-				return str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$str);
-			break;
-			default:
-				if(is_array($str)){
-					foreach($str as $key=>$val){
-						$str[$key] = stripslashes($val);
-					}
-					return $str;
-				}
-				return stripslashes($str);
-		}
+		return $GLOBALS['db_lib']->db_unescape($str);
 	}
 	if (!function_exists('htmlspecialchars_decode')) {
 		function htmlspecialchars_decode($str,$quote_style){
@@ -139,7 +86,6 @@
 					}
 				}
 				return $data;
-				break;
 			}
 		}
 	}
@@ -508,6 +454,9 @@
 		global $global_setting;
 		if(!$global_setting['cache']){return ;}
 		switch(true){
+			case extension_loaded('redis') && $global_setting['redis_setting']['enable']:
+				return redis_cache($cache_link,$data,$cache_type);
+			break;
 			case extension_loaded('leveldb'):
 				return leveldb_cache($cache_link,$data,$cache_type);
 			break;
@@ -527,6 +476,9 @@
 		global $global_setting;
 		if(!$global_setting['cache']){return false;}
 		switch(true){
+			case extension_loaded('redis') && $global_setting['redis_setting']['enable']:
+				return redis_cached($cache_link,$cache_type);
+			break;
 			case extension_loaded('leveldb'):
 				return leveldb_cached($cache_link,$cache_type);
 			break;
@@ -653,261 +605,91 @@
 	}
 
 	
-
-	function db_insert($table,$_id,$_key,$_val,$return_no=false,$database_type=false){
-		$_key = db_escape($_key);
-		$_val = db_escape($_val);
-		$_id[1] = intval($_id[1]);
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
-		}
-		switch($database_type){
-			case 'sqlite':
-				$_key = '"'.implode('","',$_key).'"';
-				$_val = "'".implode("','",$_val)."'";
-				if($_id[0]&&$_id[1]>0){
-					$sql = "REPLACE INTO \"".$table."\" (\"".$_id[0]."\",".$_key.")VALUES('".$_id[1]."',".$_val.")";
-				}elseif($_id[0]){
-					$sql = "REPLACE INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES(NULL,".$_val.")";
-				}else{
-					$sql = "REPLACE INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
-				}
-				global $db;
-				return sqlite_dbinsert($db,$sql,$_id[0]);
-			break;
-			case 'pgsql':
-				if($_id[0]&&$_id[1]>0){
-					$total = db_total_nocache("SELECT COUNT(*) FROM \"".$table."\" WHERE \"".$_id[0]."\" = '".$_id[1]."'",$database_type);
-					if($total==1){
-						$_sql = " SET ";
-						for($i=0; $i<count($_key); $i++){
-							if($i==0){
-								$_sql .= " \"".$_key[$i]."\" = '".$_val[$i]."' ";
-							}else{
-								$_sql .= " , \"".$_key[$i]."\" = '".$_val[$i]."' ";
-							}
-						}
-						$sql = "UPDATE \"".$table."\" ".$_sql." WHERE \"".$_id[0]."\" = '".$_id[1]."'";
-					}else{
-						$_key = '"'.implode('","',$_key).'"';
-						$_val = "'".implode("','",$_val)."'";
-						$sql = "INSERT INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES('".$_id[1]."',".$_val.")";	
-					}
-					pg_query($sql);
-					return $_id[1];
-				}else{
-					$_key = '"'.implode('","',$_key).'"';
-					$_val = "'".implode("','",$_val)."'";
-					if($_id[0]){
-						$last_id = db_array_nocache("SELECT \"".$_id[0]."\" FROM \"".$table."\" ORDER BY \"".$_id[0]."\" DESC LIMIT 1 ",'ASSOC',$database_type);
-						$last_id = $last_id[$_id[0]] + 1;
-						$sql = "INSERT INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES('$last_id',".$_val.")";
-					}else{
-						$tindex = db_array_nocache("SELECT pg_constraint.conname AS pk_name,pg_attribute.attname AS colname FROM pg_constraint INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid INNER JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = pg_constraint.conkey[1] WHERE pg_class.relname = '".$table."' AND pg_constraint.contype='p'",'ASSOC',$database_type);
-						if($tindex['colname']){
-							$n_key = array_flip($_key);
-							$nindex = $n_key[$tindex['colname']];
-							$total = db_total_nocache("SELECT COUNT(*) FROM \"$table\" WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'",$database_type);
-							if($total){
-								$_sql = " SET ";
-								for($i=0; $i<count($_key); $i++){
-									if($i==0){
-										$_sql .= " \"".$_key[$i]."\" = '".$_val[$i]."' ";
-									}else{
-										$_sql .= " , \"".$_key[$i]."\" = '".$_val[$i]."' ";
-									}
-								}
-								$sql = "UPDATE \"".$table."\" ".$_sql." WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'";
-							}else{
-								$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
-							}
-						}else{
-							$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
-						}
-					}
-					pg_query($sql);
-					if(!$return_no&&$_id[0]){
-						$row = db_array_nocache("SELECT \"".$_id[0]."\" FROM \"".$table."\" ORDER BY \"".$_id[0]."\" DESC LIMIT 1 ",'ASSOC',$database_type);
-						return $row[$_id[0]];
-					}else{
-						return true;
-					}
-				}
-			break;
-			default:
-				$_key = '`'.implode('`,`',$_key).'`';
-				$_val = "'".implode("','",$_val)."'";
-				if($_id[0] && $_id[1] > 0){
-					$sql = "REPLACE INTO `".$table."`(`".$_id[0]."`,".$_key.")VALUES('".$_id[1]."',".$_val.")";
-				}else{
-					$sql = "REPLACE INTO `".$table."`(".$_key.")VALUES(".$_val.")";
-				}
-				$GLOBALS['mysql_lib']->query($sql);
-				if($_id[0]){
-					$insert_id = $GLOBALS['mysql_lib']->insert_id();
-					return $insert_id > 0 ? $insert_id:$_id[1];
-				}else{
-					return true;
-				}
-		}
+ 	function init_redis($param = array('server' => '127.0.0.1','port' => 6379,'passwd' => '')){
+		$redis = new Redis();
+		$redis->pconnect($param['server'], $param['port']);
+		$redis->auth($param['passwd']);
+		return $redis;
 	}
 
-	function db_error($database_type = false,$check_conn = false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
+	function redis_cache($cache_link,$data,$cache_type){
+		global $global_setting;
+		if(!extension_loaded('redis') || !$global_setting['redis_setting']['enable']){
+			return ;
 		}
-		switch($database_type){
-			case 'sqlite':
-				global $sqlite_driver,$db;
-				if(!$db){
-					return _t('No SQLite Connected');
-				}
-				switch($sqlite_driver){
-					case 'pdo_sqlite':
-						$error = $db->errorInfo();
-						if($error[0] != '0000'){
-							return $error[2];
-						}else{
-							return '';
-						}
-					break;
-					case 'sqlite3':
-						return $db->lastErrorMsg();
-					break;
-					case 'sqlite':
-						return sqlite_error_string(sqlite_last_error($db));
-					break;				
-				}
-			break;
-			case 'pgsql':
-				if($check_conn){
-					if(!pg_version()){
-						return _t('No PostgreSQL Connected');
-					}
-				}
-				return pg_last_error();
-			break;
-			default:
-				if($check_conn){
-					if(!$GLOBALS['mysql_lib']->stat()){
-						return _t('No Mysql Connected');
-					}
-				}
-				return $GLOBALS['mysql_lib']->error();
+		$redis = init_redis($global_setting['redis_setting']);
+		$cache_data = $redis->get($cache_link);
+		if ($cache_data) {
+			return ;
 		}
+		if ($global_setting['cache_expired'] > 0) {
+			$redis->setex($cache_link,$global_setting['cache_expired'],data2cache($data,$cache_type));
+		}else{
+			$redis->set($cache_link,data2cache($data,$cache_type));
+		}
+		return ;
 	}
 
-	function db_query($sql,$database_type=false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
+	function redis_cached($cache_link,$cache_type){
+		global $global_setting;
+		if(!extension_loaded('redis') || !$global_setting['redis_setting']['enable']){
+			return false;
 		}
-		switch($database_type){
-			case 'sqlite':
-				$sql = str_replace('`','"',$sql);
-				global $db;
-				return sqlite_dbquery($db,$sql);
-			break;
-			case 'pgsql':
-				$sql = str_replace('`','"',$sql);
-				$res = pg_query($sql);
-				return pg_last_error();
-			break;
-			default:
-				$GLOBALS['mysql_lib']->query($sql);
-				return $GLOBALS['mysql_lib']->error();
+		$redis = init_redis($global_setting['redis_setting']);
+		$cache_data = $redis->get($cache_link);
+		if ($cache_data) {
+			$cache_data = cache2data($cache_data,$cache_type);
 		}
+		return isset($cache_data)?$cache_data:false;
 	}
 
-	function db_arrays($sql,$type = 'ASSOC',$database_type=false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
+	function db_insert($table,$_id,$_key,$_val){
+		return $GLOBALS['db_lib']->db_insert($table,$_id,$_key,$_val);
+	}
+
+	function db_error(){
+		return $GLOBALS['db_lib']->error();
+	}
+
+	function db_query($sql,$return_result = false){
+		if ($return_result) {
+			return $GLOBALS['db_lib']->query($sql);
 		}
+		$GLOBALS['db_lib']->query($sql);
+		return db_error();
+	}
+
+	function db_arrays($sql,$type = 'ASSOC'){
 		$cache_link = 'db_arrays_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_arrays');
 		if($cache_data){
 			return $cache_data;
 		}else{
-			switch($database_type){
-				case 'sqlite':
-					$sql = str_replace('`','"',$sql);
-					global $db;
-					$rows = sqlite_dbarrays($db,$sql,$type);
-				break;
-				case 'pgsql':
-					$sql = str_replace('`','"',$sql);
-					$res = pg_query($sql);
-					while($row = pg_fetch_array($res,null,$type=='BOTH'?PGSQL_BOTH:PGSQL_ASSOC)){
-						$rows[] = $row;
-					}
-					pg_free_result($res);
-				break;
-				default:
-					$res = $GLOBALS['mysql_lib']->query($sql);
-					while($row = $GLOBALS['mysql_lib']->fetch_array($res,$type)){
-						$rows[] = $row;
-					}
-					$GLOBALS['mysql_lib']->free_result($res);
-			}
+			$rows = $GLOBALS['db_lib']->db_arrays($sql,$type);
 			sweetrice_cache($cache_link,$rows,'db_arrays');
 			return is_array($rows)?$rows:array();
 		}
 	}
 
-	function db_array($sql,$type = 'ASSOC',$database_type=false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
-		}
+	function db_array($sql,$type = 'ASSOC'){
 		$cache_link = 'db_array_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_array');
 		if($cache_data){
 			return $cache_data;
 		}else{
-			switch($database_type){
-				case 'sqlite':
-					$sql = str_replace('`','"',$sql);
-					global $db;
-					$row = sqlite_dbarray($db,$sql,$type);
-				break;
-				case 'pgsql':
-					$sql = str_replace('`','"',$sql);
-					$res = pg_query($sql);
-					$row = pg_fetch_array($res,null,$type=='BOTH'?PGSQL_BOTH:PGSQL_ASSOC);
-					pg_free_result($res);
-				break;
-				default:
-					$res = $GLOBALS['mysql_lib']->query($sql);
-					$row = $GLOBALS['mysql_lib']->fetch_array($res,$type);
-					$GLOBALS['mysql_lib']->free_result($res);
-			}
+			$row = $GLOBALS['db_lib']->db_array($sql,$type);
 			sweetrice_cache($cache_link,$row,'db_array');
 			return is_array($row)?$row:array();
 		}
 	}
 
-	function db_total($sql,$database_type=false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
-		}
+	function db_total($sql){
 		$cache_link = 'db_total_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_total');
 		if($cache_data){
 			return $cache_data;
 		}else{
-			switch($database_type){
-				case 'sqlite':
-					$sql = str_replace('`','"',$sql);
-					global $db;
-					$total = sqlite_dbtotal($db,$sql);
-				break;
-				case 'pgsql':
-					$sql = str_replace('`','"',$sql);
-					$row = pg_fetch_row(pg_query($sql));
-					$total = $row[0];
-				break;
-				default:
-					$row = $GLOBALS['mysql_lib']->fetch_row($GLOBALS['mysql_lib']->query($sql));
-					$total = $row[0];
-			}
+			$total = $GLOBALS['db_lib']->db_total($sql);
 			sweetrice_cache($cache_link,$total,'db_total');
 			return $total;			
 		}
@@ -961,142 +743,7 @@
 		return db_fetch($param);
 	}
 
-	function sqlite_dbhandle($dbname){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				if(!is_file($dbname)){
-					touch($dbname);
-				}
-				$db = new PDO('sqlite:'.$dbname);
-			break;
-			case 'sqlite3':
-				class db extends SQLite3{
-					function __construct($dbname){
-						$this->open($dbname);
-					}
-				}
-				$db = new db($dbname);
-			break;
-			case 'sqlite':
-				$db = sqlite_open($dbname);
-			break;
-		}
-		return $db;
-	}
-
-	function sqlite_dbinsert($db,$sql,$id){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				$db->query($sql);
-				if($id){
-					return $db->lastInsertId();
-				}else{
-					return true;
-				}
-			break;
-			case 'sqlite3':
-				$db->exec($sql);
-				if($id){
-					return $db->lastInsertRowID();
-				}
-			break;
-			case 'sqlite':
-				if($id){
-					return sqlite_last_insert_rowid($db);
-				}
-			break;
-		}
-	}
-
-	function sqlite_dbquery($db,$sql){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				$db->query($sql);
-				$error = $db->errorInfo();
-				if($error[0]!='0000'){
-					return $error[2];
-				}else{
-					return '';
-				}
-			break;
-			case 'sqlite3':
-				if(!$db->exec($sql)){
-					return $db->lastErrorMsg();
-				}else{
-					return '';
-				}
-			break;
-			case 'sqlite':
-				sqlite_query($db,$sql,null,$error);
-				if($error){
-					return $error;
-				}else{
-					return '';
-				}		
-			break;
-		}
-	}
-
-	function sqlite_dbarray($db,$sql,$type){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				$row = $db->query($sql)->fetchAll();
-				return $row[0];
-			break;
-			case 'sqlite3':
-				return $db->querySingle($sql,true);
-			break;
-			case 'sqlite':
-				return clean_dbData(sqlite_fetch_array(sqlite_query($db,$sql),$type=='BOTH'?SQLITE_BOTH:SQLITE_ASSOC));
-			break;
-		}
-	}
-
-	function sqlite_dbarrays($db,$sql,$type=null){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				foreach($db->query($sql)->fetchAll() AS $row){
-					$rows[] = clean_dbData($row);
-				}
-			break;
-			case 'sqlite3':
-				$results = $db->query($sql);
-				while ($row = $results->fetchArray()) {
-						$rows[] = clean_dbData($row);
-				}
-			break;
-			case 'sqlite':
-				$res = sqlite_query($db,$sql);
-				while($row = sqlite_fetch_array($res,$type=='BOTH'?SQLITE_BOTH:SQLITE_ASSOC)){
-					$rows[] = clean_dbData($row);
-				}
-			break;
-		}
-		return $rows;
-	}
-
-	function sqlite_dbtotal($db,$sql){
-		global $sqlite_driver;
-		switch($sqlite_driver){
-			case 'pdo_sqlite':
-				$row = $db->query($sql)->fetchAll();
-				$total = $row[0][0];	
-				return $total;
-			break;
-			case 'sqlite3':
-				return $db->querySingle($sql);
-			break;
-			case 'sqlite':
-				$row = sqlite_fetch_array(sqlite_query($db,$sql));
-				return $row[0];
-			break;
-		}
-	}
+	
 
 	function clean_dbData($row){
 		if(!$row){
@@ -1112,28 +759,9 @@
 		}
 		return $rows;
 	}
-
+	
 	function db_list($database_type = false){
-		if(!$database_type){
-			$database_type = DATABASE_TYPE;
-		}
-		switch($database_type){
-			case 'sqlite':
-				$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH',$database_type);
-			break;
-			case 'mysql':
-				$table_array = db_arrays_nocache("SHOW TABLES",'BOTH',$database_type);
-			break;
-			case 'pgsql':
-				$table_array = db_arrays_nocache("SELECT tablename FROM pg_tables  WHERE tablename LIKE '".DB_LEFT."_%' ;",'BOTH',$database_type);
-			break;
-		}
-		foreach($table_array as $val){
-			if(substr($val[0],0,(strlen(DB_LEFT)+1))==DB_LEFT.'_'){
-				$table_list[] = $val[0];
-			}
-		}
-		return $table_list;
+		return $GLOBALS['db_lib']->db_list();
 	}
 	
 	function createTable($table,$sql,$replace = false){
@@ -1161,38 +789,38 @@
 		}
 	}
 
-	function db_total_nocache($sql,$database_type = false){
+	function db_total_nocache($sql){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_total($sql,$database_type);
+			return db_total($sql);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$total = db_total($sql,$database_type);
+		$total = db_total($sql);
 		$global_setting['cache'] = $cache;
 		return $total;
 	}
 
-	function db_array_nocache($sql,$type = 'ASSOC',$database_type = false){
+	function db_array_nocache($sql,$type = 'ASSOC'){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_array($sql,$type,$database_type);
+			return db_array($sql,$type);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$row = db_array($sql,$type,$database_type);
+		$row = db_array($sql,$type);
 		$global_setting['cache'] = $cache;
 		return $row;
 	}
 	
-	function db_arrays_nocache($sql,$type = 'ASSOC',$database_type = false){
+	function db_arrays_nocache($sql,$type = 'ASSOC'){
 		global $global_setting;
 		if(!$global_setting['cache']){
-			return db_arrays($sql,$type,$database_type);
+			return db_arrays($sql,$type);
 		}
 		$cache = $global_setting['cache'];
 		$global_setting['cache'] = false;
-		$rows = db_arrays($sql,$type,$database_type);
+		$rows = db_arrays($sql,$type);
 		$global_setting['cache'] = $cache;
 		return $rows;
 	}
@@ -1261,15 +889,17 @@
 		}
 		return $mod_date;
 	}
+
 	function init_browsers($t=1){
-		$browsers = array('MSIE 10.0','MSIE 9.0','MSIE 8.0','MSIE 7.0','MSIE 6.0','Firefox','Opera','Chrome','Safari','Google','Yahoo','Bing','Baidu','Other');
-		$bg_browsers = array('#2800fc','#2896fc','#286ea2','#285880','#0a9682','#ee7907','#e11625','#6aa0c8','#63b143','#009900','#ff11dd','#FF9900','#6655ff','#648282');
+		$browsers = array('Edge','MSIE 11.0','MSIE 10.0','MSIE 9.0','MSIE 8.0','MSIE 7.0','MSIE 6.0','Firefox','Opera','Chrome','Safari','Google','Yahoo','Bing','Baidu','Other');
+		$bg_browsers = array('#280f0c','#280cfc','#2896fc','#286ea2','#285880','#0a9682','#ee7907','#e11625','#6aa0c8','#63b143','#009900','#ff11dd','#FF9900','#6655ff','#648282');
 		if($t==2){
 			return $bg_browsers;
 		}else{
 			return $browsers;
 		}
 	}
+
 	function user_track(){
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$user_from = $_SERVER['HTTP_REFERER'];
@@ -1277,7 +907,7 @@
 		$user_browser = $_SERVER['HTTP_USER_AGENT'];
 		$browsers = init_browsers(1);
 		foreach($browsers as $val){
-			if(strpos(strtoupper($user_browser),strtoupper($val))!==false){
+			if(strpos(strtoupper($user_browser),strtoupper($val)) !== false){
 				$user_browser = $val;
 				$is_browser = true;
 				break;
@@ -1286,7 +916,6 @@
 		if(!$is_browser){
 			$user_browser = 'Other';
 		}
-		
 		if($user_from==''){
 			$user_from = 'Directly access';
 		}
@@ -1294,14 +923,16 @@
 		if(!file_exists($dbname)){
 			$new_track = true;
 		}
-		$db_track = sqlite_dbhandle($dbname);
+		global $sqlite_driver;
+		$db_track = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
 		if($new_track){
-			sqlite_dbquery($db_track,"CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
-			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
+			$db_track->query("CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
+			$db_track->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
-		sqlite_dbquery($db_track,"INSERT INTO user_agent (id,ip,user_from,this_page,user_browser,time)VALUES(NULL,'$ip','$user_from','$this_page','$user_browser','".time()."')");
+		$db_track->db_insert('user_agent',array('id',null),array('ip','user_from','this_page','user_browser','time'),array($ip,$user_from,$this_page,$user_browser,time()));
 		return ;
 	}
+
 	function get_limit_sql($page_start,$page_limit){
 		if(DATABASE_TYPE=='pgsql'){
 			return "LIMIT $page_limit OFFSET $page_start";
@@ -1309,6 +940,7 @@
 			return "LIMIT $page_start , $page_limit ";
 		}
 	}
+
 	function get_page_themes(){
 		$theme = file(THEME_DIR.'theme.config');
 		foreach($theme as $key=>$val){
@@ -1320,7 +952,7 @@
 		return $page_theme;
 	}
 
- function filesize2print($filename){
+ 	function filesize2print($filename){
 		if(substr($filename,0,strlen(SITE_URL)) != SITE_URL && preg_match('/https?:\/\/.+/',$filename)){
 			return _t('Remote File');
 		}
@@ -1849,7 +1481,7 @@
 			db_query("UPDATE `".DB_LEFT."_comment` SET `post_cat` = '".$categories[$category]['link']."',`post_slug` = '$sys_name' WHERE `post_id` = '$post_id'");
 		}else{
 			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
-		}
+		}/*
 		if(!$without_attachment){
 			$attNos = $data['no'];
 			$inlist = array();
@@ -1859,13 +1491,14 @@
 					$inlist[] = db_insert(DB_LEFT.'_attachment',array('id',$attid),array('post_id','file_name','date','downloads'),array($post_id,str_replace(BASE_URL.ATTACHMENT_DIR,ATTACHMENT_DIR,$data['att_'.$i]),$data['attdate_'.$i]?intval($data['attdate_'.$i]):time(),intval($data['atttimes_'.$i])));
 				}
 			}
-			db_query("DELETE FROM `".DB_LEFT."_attachment` WHERE `id` NOT IN (".implode(',',$inlist).") AND `post_id` = '$post_id'");
+			if (count($inlist) > 0) {
+				db_query("DELETE FROM `".DB_LEFT."_attachment` WHERE `id` NOT IN (".implode(',',$inlist).") AND `post_id` = '$post_id'");
+			}
 		}
 
 		if(!$without_custom_field){
 			save_custom_field($data,'post',$post_id);
-		}
-
+		}*/
 		return array('post_id'=>$post_id,'sys_name'=>$sys_name);
 	}
 
@@ -2149,76 +1782,76 @@
 	}
 
 	function curl_exec_follow($ch,$maxredirect) {
-    $mr = max(5,intval($maxredirect));
-    if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $mr > 0);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, $mr);
-    } else {
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
-        if ($mr > 0) {
-            $newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-            $rch = curl_copy_handle($ch);
-            curl_setopt($rch, CURLOPT_HEADER, true);
-            curl_setopt($rch, CURLOPT_NOBODY, true);
-            curl_setopt($rch, CURLOPT_FORBID_REUSE, false);
-            curl_setopt($rch, CURLOPT_RETURNTRANSFER, true);
-            do {
-                curl_setopt($rch, CURLOPT_URL, $newurl);
-                $header = curl_exec($rch);
-                if (curl_errno($rch)) {
-                    $code = 0;
-                } else {
-                    $code = curl_getinfo($rch, CURLINFO_HTTP_CODE);
-                    if ($code == 301 || $code == 302) {
-                        preg_match('/Location:(.*?)\n/i', $header, $matches);
-                        $newurl = trim(array_pop($matches));
-                    } else {
-                        $code = 0;
-                    }
-                }
-            } while ($code && --$mr);
-            curl_close($rch);
-						if($newurl){
-							curl_setopt($ch, CURLOPT_URL, $newurl);
-						}else{
-							return false;
-						}
-        }
-    }
-    return curl_exec($ch);
+	    $mr = max(5,intval($maxredirect));
+	    if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $mr > 0);
+	        curl_setopt($ch, CURLOPT_MAXREDIRS, $mr);
+	    } else {
+	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+	        if ($mr > 0) {
+	            $newurl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+	            $rch = curl_copy_handle($ch);
+	            curl_setopt($rch, CURLOPT_HEADER, true);
+	            curl_setopt($rch, CURLOPT_NOBODY, true);
+	            curl_setopt($rch, CURLOPT_FORBID_REUSE, false);
+	            curl_setopt($rch, CURLOPT_RETURNTRANSFER, true);
+	            do {
+	                curl_setopt($rch, CURLOPT_URL, $newurl);
+	                $header = curl_exec($rch);
+	                if (curl_errno($rch)) {
+	                    $code = 0;
+	                } else {
+	                    $code = curl_getinfo($rch, CURLINFO_HTTP_CODE);
+	                    if ($code == 301 || $code == 302) {
+	                        preg_match('/Location:(.*?)\n/i', $header, $matches);
+	                        $newurl = trim(array_pop($matches));
+	                    } else {
+	                        $code = 0;
+	                    }
+	                }
+	            } while ($code && --$mr);
+	            curl_close($rch);
+				if($newurl){
+					curl_setopt($ch, CURLOPT_URL, $newurl);
+				}else{
+					return false;
+				}
+	        }
+	    }
+	    return curl_exec($ch);
 	} 
 
 	function fsockopen_follow($url,$mr=5,$cr=0){
-			if($cr >= $mr){
-				return false;
-			}else{
-				$cr += 1;
-			}
-			$url = str_replace('http://','',$url);
-			$urls = explode('/',$url);
-			$url_str = substr($url,strlen($urls[0]));
-			$fp = fsockopen($urls[0], 80, $errno, $errstr, 120);
-			if (!$fp) {
-					echo "$errstr ($errno)<br />\n";
-			} else {
-					$out = "GET ".$url_str." HTTP/1.1\r\n";
-					$out .= "Host: ".$urls[0]."\r\n";
-					$out .= "Connection: Close\r\n\r\n";
-					fwrite($fp, $out);
-					while (!feof($fp)) {
-							$data .= fgets($fp, 1024);
-					}
-					fclose($fp);
-			}
-			if(preg_match("|HTTP/1.1\s302.*\n|i", $data)||preg_match("|HTTP/1.1\s301.*\n|i", $data)){
-				preg_match('/Location:(.*?)\n/i', $data, $matches);
-        $newurl = trim(array_pop($matches));
-				return fsockopen_follow($newurl,$mr,$cr);
-			}else{
-				preg_match("/\r\n\r\n(.+)/is", $data, $out);
-				$output = $out[1];
-				return $output;
-			}
+		if($cr >= $mr){
+			return false;
+		}else{
+			$cr += 1;
+		}
+		$url = str_replace('http://','',$url);
+		$urls = explode('/',$url);
+		$url_str = substr($url,strlen($urls[0]));
+		$fp = fsockopen($urls[0], 80, $errno, $errstr, 120);
+		if (!$fp) {
+				echo "$errstr ($errno)<br />\n";
+		} else {
+				$out = "GET ".$url_str." HTTP/1.1\r\n";
+				$out .= "Host: ".$urls[0]."\r\n";
+				$out .= "Connection: Close\r\n\r\n";
+				fwrite($fp, $out);
+				while (!feof($fp)) {
+						$data .= fgets($fp, 1024);
+				}
+				fclose($fp);
+		}
+		if(preg_match("|HTTP/1.1\s302.*\n|i", $data)||preg_match("|HTTP/1.1\s301.*\n|i", $data)){
+			preg_match('/Location:(.*?)\n/i', $data, $matches);
+    $newurl = trim(array_pop($matches));
+			return fsockopen_follow($newurl,$mr,$cr);
+		}else{
+			preg_match("/\r\n\r\n(.+)/is", $data, $out);
+			$output = $out[1];
+			return $output;
+		}
 	}
 
 	function alert($str,$to=false){
@@ -2384,14 +2017,15 @@
 		return $actions;
 	}
 
-	function getCategoryPosts($limit=10,$offset=0){
+	function getCategoryPosts($limit=10,$offset=0,$post_type = 'show'){
 		$category_list = array();
 		foreach(subCategory() as $cs){
 			$data = getPosts(array(
 				'category_ids' => $cs['id'],
 				'limit' => array($offset,$limit),
 				'order' => ' ps.`id` DESC ',
-				'custom_field' => true
+				'custom_field' => true,
+				'post_type' => $post_type
 			));
 			$post_rows = $data['rows'];
 			$total_post = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `in_blog` = 1 AND `category` = '".$cs['id']."'");
@@ -2400,13 +2034,14 @@
 		return $category_list;
 	}
 
-	function getUncategoryPosts($limit=20,$offset=0){
+	function getUncategoryPosts($limit=20,$offset=0,$post_type = 'show'){
 		$data = getPosts(array(
 			'field' => 'ps.`id`,ps.`sys_name`,ps.`name`,ps.`category`',
 			'category_ids' => 0,
 			'limit' => array($offset,$limit),
 			'order' => ' ps.`id` DESC ',
-			'custom_field' => true
+			'custom_field' => true,
+			'post_type' => $post_type
 		));
 		$total_post = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_posts` WHERE `in_blog` = 1 AND `category` = '0'");
 		$data['total_post'] = $total_post;
@@ -2752,15 +2387,15 @@
 	}
 
 	function download_file($entry){
-			$data = file_get_contents($entry);
-			ob_end_clean();
-			header('Content-Encoding: none');
-			header('Content-Type: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
-			header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="'.basename($entry).'"');
-			header('Content-Length: '.strlen($data));
-			header('Pragma: no-cache');
-			header('Expires: 0');
-			die($data);
+		$data = file_get_contents($entry);
+		ob_end_clean();
+		header('Content-Encoding: none');
+		header('Content-Type: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'application/octetstream' : 'application/octet-stream'));
+		header('Content-Disposition: '.(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? 'inline; ' : 'attachment; ').'filename="'.basename($entry).'"');
+		header('Content-Length: '.strlen($data));
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		die($data);
 	}
 
 	function output_content($content,$return_data = false){
@@ -2781,20 +2416,34 @@
 	}
 
 	class mysql_lib{
-		public function __construct($db_setting){
+		public function __construct($db_setting = false){
+			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['name'] || !$db_setting['username']) {
+				return false;
+			}
+			$this->db_setting = $db_setting;
 			if (MYSQL_LIB == 'mysqli') {
 				$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
-				$this->error = mysqli_connect_error();
+				$this->connect_error = mysqli_connect_error($this->link);
 			}else{
 				$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
 				mysql_select_db($db_setting['name'],$this->link);
-				$this->error = mysql_error();
+				$this->connect_error = $this->error();
 			}
+		}
+
+		public function error(){
+			if (!$this->stat()) {
+				return _t('No MySQL Connected');
+			}
+			if (MYSQL_LIB == 'mysqli') {
+				return mysqli_error($this->link);
+			}
+			return mysql_error($this->link);
 		}
 
 		public function real_escape_string($value){
 			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_real_escape_string($GLOBALS['mysql_lib']->link,$value);
+				return mysqli_real_escape_string($GLOBALS['db_lib']->link,$value);
 			}
 			return mysql_real_escape_string($value);
 		}
@@ -2806,13 +2455,12 @@
 			return mysql_query($sql);
 		}
 
-		public function fetch_array($result,$result_type){
+		public function fetch_array($result,$result_type = null){
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_fetch_array($result,$this->result_type($result_type));
 			}
 			return mysql_fetch_array($result,$this->result_type($result_type));
 		}
-
 
 		public function fetch_row($result){
 			if (MYSQL_LIB == 'mysqli') {
@@ -2835,14 +2483,7 @@
 			return mysql_fetch_field($result);
 		}
 		
-		public function error(){
-			if (MYSQL_LIB == 'mysqli') {
-				return mysqli_error($this->link);
-			}
-			return mysql_error();
-		}
-		
-		public function free_result($result){
+		public function free_result(&$result){
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_free_result($result);
 			}
@@ -2850,20 +2491,20 @@
 		}
 
 		public function stat(){
-			if ($this->error) {
+			if ($this->connect_error) {
 				return false;
 			}
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_stat($this->link);
 			}
-			return mysql_stat();		
+			return mysql_stat($this->link);		
 		}
 
 		public function close(){
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_close($this->link);
 			}
-			return mysql_close();		
+			return mysql_close($this->link);		
 		}
 
 		public function insert_id(){
@@ -2878,6 +2519,472 @@
 				return $type == 'BOTH' ? MYSQLI_BOTH : MYSQLI_ASSOC;
 			}
 			return $type == 'BOTH' ? MYSQL_BOTH : MYSQL_ASSOC;
+		}
+
+		public function db_total($sql){
+			$res = $this->query($sql);
+			$row = $this->fetch_row($res);
+			$this->free_result($res);
+			return $row[0];
+		}
+
+		public function db_array($sql,$result_type = null){		
+			$res = $this->query($sql);
+			$row = $this->fetch_array($res,$this->result_type($result_type));
+			$this->free_result($res);
+			return $row;
+		}
+
+		public function db_arrays($sql,$result_type = null){		
+			$res = $this->query($sql);
+			while($row = $this->fetch_array($res,null,$this->result_type($result_type))){
+				$rows[] = $row;
+			}
+			$this->free_result($res);
+			return $rows;
+		}
+
+		public function db_insert($table,$_id,$_key,$_val){		
+			$_key = '`'.implode('`,`',$_key).'`';
+			$_val = "'".implode("','",$_val)."'";
+			if($_id[0] && $_id[1] > 0){
+				$sql = "REPLACE INTO `".$table."`(`".$_id[0]."`,".$_key.")VALUES('".$_id[1]."',".$_val.")";
+			}else{
+				$sql = "REPLACE INTO `".$table."`(".$_key.")VALUES(".$_val.")";
+			}
+			$this->query($sql);
+			if($_id[0]){
+				$insert_id = $this->insert_id();
+				return $insert_id > 0 ? $insert_id : $_id[1];
+			}else{
+				return true;
+			}
+		}
+
+		public function db_escape($str){
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = $this->real_escape_string($val);
+				}
+				return $str;
+			}
+			return $this->real_escape_string($str);
+		}
+
+		public function db_unescape($str){
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = stripslashes($val);
+				}
+				return $str;
+			}
+			return stripslashes($str);
+		}
+
+		public function db_list(){
+			$table_array = db_arrays_nocache("SHOW TABLES",'BOTH');
+			foreach($table_array as $val){
+				$val = current($val);
+				if(substr($val,0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
+					$table_list[] = $val;
+				}
+			}
+			return $table_list;
+		}
+	}
+
+
+	class pgsql_lib{
+		public function __construct($db_setting = false){
+			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['name'] || !$db_setting['username']) {
+				return false;
+			}
+			$this->db_setting = $db_setting;
+			$this->link = pg_connect('host='.$db_setting['url'].' port='.$db_setting['port'].' dbname='.$db_setting['name'].' user='.$db_setting['username'].' password='.$db_setting['passwd']);
+			$this->connect_error = pg_last_error($this->link);
+		}
+
+		public function error(){
+			if (!$this->stat()) {
+				return _t('No PostgreSQL Connected');
+			}
+			return pg_last_error($this->link);
+		}
+
+		public function query($sql){
+			$sql = str_replace('`','"',$sql);
+			return pg_query($this->link,$sql);
+		}
+
+		public function fetch_array($result,$result_type = null){
+			return pg_fetch_array($result,null,$this->result_type($result_type));
+		}
+
+		public function fetch_row($result){
+			return pg_fetch_row($result);
+		}
+
+		public function num_fields($result){
+			return pg_num_fields($result);
+		}
+		
+		public function free_result(&$result){
+			return pg_free_result($result);
+		}
+
+		public function stat(){
+			if ($this->connect_error) {
+				return false;
+			}
+			return pg_version($this->link)?true:false;
+		}
+
+		public function close(){
+			return pg_close($this->link);	
+		}
+
+		public function result_type($type = null){
+			return $type == 'BOTH' ? PGSQL_BOTH : PGSQL_ASSOC;
+		}
+
+		public function db_total($sql){	
+			$res = $this->query($sql);
+			$row = $this->fetch_row($res);
+			$this->free_result($res);
+			return $row[0];
+		}
+
+		public function db_array($sql,$result_type = null){
+			$res = $this->query($sql);
+			$row = $this->fetch_array($res,$this->result_type($result_type));
+			$this->free_result($res);
+			return $row;
+		}
+
+		public function db_arrays($sql,$result_type = null){
+			$res = $this->query($sql);
+			while($row = $this->fetch_array($res,$this->result_type($result_type))){
+				$rows[] = $row;
+			}
+			$this->free_result($res);
+			return $rows;
+		}
+
+		public function db_insert($table,$_id,$_key,$_val){
+			if($_id[0] && $_id[1] > 0){
+				$total = db_total_nocache("SELECT COUNT(*) FROM \"".$table."\" WHERE \"".$_id[0]."\" = '".$_id[1]."'");
+				if($total == 1){
+					$_sql = " SET ";
+					for($i = 0; $i < count($_key); $i++){
+						if($i==0){
+							$_sql .= " \"".$_key[$i]."\" = '".$_val[$i]."' ";
+						}else{
+							$_sql .= " , \"".$_key[$i]."\" = '".$_val[$i]."' ";
+						}
+					}
+					$sql = "UPDATE \"".$table."\" ".$_sql." WHERE \"".$_id[0]."\" = '".$_id[1]."'";
+				}else{
+					$_key = '"'.implode('","',$_key).'"';
+					$_val = "'".implode("','",$_val)."'";
+					$sql = "INSERT INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES('".$_id[1]."',".$_val.")";	
+				}
+				if (!$db_conn) {
+					$db_conn = $GLOBALS['pgsql_lib'];
+				}
+				$this->query($sql);
+				return $_id[1];
+			}else{
+				$_key = '"'.implode('","',$_key).'"';
+				$_val = "'".implode("','",$_val)."'";
+				if($_id[0]){
+					$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.") RETURNING ".$_id[0];
+				}else{
+					$tindex = db_array_nocache("SELECT pg_constraint.conname AS pk_name,pg_attribute.attname AS colname FROM pg_constraint INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid INNER JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = pg_constraint.conkey[1] WHERE pg_class.relname = '".$table."' AND pg_constraint.contype='p'",'ASSOC');
+					if($tindex['colname']){
+						$n_key = array_flip($_key);
+						$nindex = $n_key[$tindex['colname']];
+						$total = db_total_nocache("SELECT COUNT(*) FROM \"$table\" WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'",$database_type);
+						if($total){
+							$_sql = " SET ";
+							for($i=0; $i<count($_key); $i++){
+								if($i==0){
+									$_sql .= " \"".$_key[$i]."\" = '".$_val[$i]."' ";
+								}else{
+									$_sql .= " , \"".$_key[$i]."\" = '".$_val[$i]."' ";
+								}
+							}
+							$sql = "UPDATE \"".$table."\" ".$_sql." WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'";
+						}else{
+							$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
+						}
+					}else{
+						$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
+					}
+				}
+				$row = $this->db_array($sql,'ASSOC');
+				if($_id[0]){
+					return $row[$_id[0]];
+				}else{
+					return true;
+				}
+			}
+		}
+
+		public function db_escape($str){
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = pg_escape_string($val);
+				}
+				return $str;
+			}
+			return pg_escape_string($str);
+		}
+
+		public function db_unescape($str){
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$val);
+				}
+				return $str;
+			}
+			return str_replace(array('\\\'','\\"','\\\\','\'\''),array('\'','"','\\','\''),$str);
+		}
+
+		public function db_list(){
+			$table_array = db_arrays_nocache("SELECT `tablename` FROM `pg_tables`  WHERE `tablename` LIKE '".DB_LEFT."_%' ;",$database_type);
+			foreach($table_array as $val){
+				$val = current($val);
+				if(substr($val,0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
+					$table_list[] = $val;
+				}
+			}
+			return $table_list;
+		}
+	}
+
+	class sqlite_lib{
+		public function __construct($db_setting = false){
+			if (!$db_setting['name']) {
+				return false;
+			}
+			$this->db_setting = $db_setting;
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					if(!is_file($db_setting['name'])){
+						touch($db_setting['name']);
+					}
+					$this->link = new PDO('sqlite:'.$db_setting['name']);
+				break;
+				case 'sqlite3':
+					$this->link = new SQLite3($db_setting['name']);
+				break;
+				case 'sqlite':
+					$this->link = sqlite_open($db_setting['name']);
+				break;
+			}
+			$this->connect_error = $this->error();
+		}
+
+		public function error(){
+			if (!$this->stat()) {
+				return _t('No SQLite Connected');
+			}
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$error = $this->link->errorInfo();
+					if($error[0] != '0000'){
+						return $error[2];
+					}else{
+						return '';
+					}
+				break;
+				case 'sqlite3':
+					return $this->link->lastErrorMsg();
+				break;
+				case 'sqlite':
+					return sqlite_error_string(sqlite_last_error($this->link));
+				break;				
+			}
+		}
+
+		public function query($sql){
+			$sql = str_replace('`','"',$sql);
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$this->link->query($sql);
+					$error = $this->link->errorInfo();
+					if(trim($error[0],'0')){
+						return $error[2];
+					}else{
+						return '';
+					}
+				break;
+				case 'sqlite3':
+					if(!$this->link->exec($sql)){
+						return $this->link->lastErrorMsg();
+					}else{
+						return '';
+					}
+				break;
+				case 'sqlite':
+					sqlite_query($this->link,$sql,null,$error);
+					if($error){
+						return $error;
+					}else{
+						return '';
+					}		
+				break;
+			}
+		}
+
+		public function free_result(&$result){
+			$result = null;
+			return ;
+		}
+
+		public function stat(){
+			return $this->connect_error ? false:true;
+		}
+
+		public function close(){
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$this->link = null;
+				break;
+				case 'sqlite3':
+					return $this->link->colse();
+				break;
+				case 'sqlite':
+					return sqlite_close($this->link);
+				break;
+			}
+		}
+
+		public function result_type($type = null){
+			return $type == 'BOTH' ? SQLITE_BOTH : SQLITE_ASSOC;
+		}
+
+		public function db_total($sql){
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$row = $this->link->query($sql)->fetchAll();
+					$total = $row[0][0];	
+					return $total;
+				break;
+				case 'sqlite3':
+					return $this->link->querySingle($sql);
+				break;
+				case 'sqlite':
+					$row = sqlite_fetch_array(sqlite_query($this->link,$sql));
+					return $row[0];
+				break;
+			}			
+		}
+
+		public function db_array($sql,$result_type = 'null'){
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$row = $this->link->query($sql)->fetchAll();
+					return $row[0];
+				break;
+				case 'sqlite3':
+					return $this->link->querySingle($sql,true);
+				break;
+				case 'sqlite':
+					$res = $this->query($sql);
+					$row = clean_dbData(sqlite_fetch_array($res,$this->result_type($result_type)));
+					$this->free_result($res);
+					return $row;
+				break;
+			}
+		}
+
+		public function db_arrays($sql,$result_type = null){
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					foreach($this->link->query($sql)->fetchAll() AS $row){
+						$rows[] = clean_dbData($row);
+					}
+				break;
+				case 'sqlite3':
+					$res = $this->link->query($sql);
+					while ($row = $res->fetchArray()) {
+						$rows[] = clean_dbData($row);
+					}
+				break;
+				case 'sqlite':
+					$res = sqlite_query($this->link,$sql);
+					while($row = sqlite_fetch_array($res,$this->result_type($result_type))){
+						$rows[] = clean_dbData($row);
+					}
+					$this->free_result($res);
+				break;
+			}
+			return $rows;
+		}
+
+		public function db_insert($table,$_id,$_key,$_val){	
+			$_key = '"'.implode('","',$_key).'"';
+			$_val = "'".implode("','",$_val)."'";
+			if($_id[0]&&$_id[1]>0){
+				$sql = "REPLACE INTO \"".$table."\" (\"".$_id[0]."\",".$_key.")VALUES('".$_id[1]."',".$_val.")";
+			}elseif($_id[0]){
+				$sql = "REPLACE INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES(NULL,".$_val.")";
+			}else{
+				$sql = "REPLACE INTO \"".$table."\"(".$_key.")VALUES(".$_val.")";
+			}
+			switch($this->db_setting['sqlite_driver']){
+				case 'pdo_sqlite':
+					$this->link->query($sql);
+					if($_id[0]){
+						return $this->link->lastInsertId();
+					}else{
+						return true;
+					}
+				break;
+				case 'sqlite3':
+					$this->link->exec($sql);
+					if($_id[0]){
+						return $this->link->lastInsertRowID();
+					}
+				break;
+				case 'sqlite':
+					sqlite_query($this->link,$sql);
+					if($_id[0]){
+						return sqlite_last_insert_rowid($this->link);
+					}
+				break;
+			}
+		}
+
+		public function db_escape($str){		
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = sqlite_escape_string($val);
+				}
+				return $str;
+			}
+			return sqlite_escape_string($str);
+		}
+
+		public function db_unescape($str){
+			if(is_array($str)){
+				foreach($str as $key=>$val){
+					$str[$key] = str_replace('\'\'','\'',$val);
+				}
+				return $str;
+			}
+			return str_replace('\'\'','\'',$str);
+		}
+
+		public function db_list(){
+			$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH');
+			foreach($table_array as $val){
+				if(substr($val[0],0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
+					$table_list[] = $val[0];
+				}
+			}
+			return $table_list;
 		}
 	}
 

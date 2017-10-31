@@ -74,12 +74,12 @@
 						$sql .= "`in_blog` = '$in_blog',";
 					}
 					$allow_comment = intval($_POST["allow_comment"]);
-					if($allow_comment!=3){
-						$sql .= "`allow_comment` = '$allow_comment' ";
+					if($allow_comment != 3){
+						$sql .= "`allow_comment` = '$allow_comment',";
 					}
 					$template = $_POST['template'];
 					if($template){
-						$sql .= "`template` = '$template' ";
+						$sql .= "`template` = '$template',";
 					}
 					$sql = trim(trim($sql,' '),',');
 					db_query("UPDATE `".DB_LEFT."_posts` SET ".$sql." WHERE `id` IN ($ids)");

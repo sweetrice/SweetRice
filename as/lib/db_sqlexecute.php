@@ -35,7 +35,15 @@
 			'data':{'sql_content':_('#sql_content').val()},
 			'url':'./?type=data&mode=sql_execute&form_mode=yes',
 			'success':function(result){
-				_.dialog({'content':result.status_code});
+				var rows = result['rows'],html = '';
+				for(var i in rows){
+					html += '<ol style="margin-left:20px;">';
+					for(var j in rows[i]){
+						html += '<li><fieldset style="word-break: break-all;"><legend>'+j+'</legend>'+rows[i][j]+'</fieldset></li>';
+					}
+					html += '</ol>';
+				}
+				_.dialog({'title':result['status_code'],'content':html?html:result['status_code'],'layer':1});
 			}
 			});
 		});

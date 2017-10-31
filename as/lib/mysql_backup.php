@@ -10,15 +10,15 @@
 	function sql2data($table){
 		$bk_table = '%--%'.substr($table,strlen(DB_LEFT));
 		$tabledump[] = "DROP TABLE IF EXISTS `$bk_table`;";
-		$create = $GLOBALS['mysql_lib']->fetch_row($GLOBALS['mysql_lib']->query("SHOW CREATE TABLE `$table`"));
+		$create = $GLOBALS['db_lib']->fetch_row($GLOBALS['db_lib']->query("SHOW CREATE TABLE `$table`"));
 		$tabledump[] = str_replace($table,$bk_table,$create[1]).";";
-		$rows = $GLOBALS['mysql_lib']->query("SELECT * FROM `$table`");
-		$numfields = $GLOBALS['mysql_lib']->num_fields($rows);
-		while ($row = $GLOBALS['mysql_lib']->fetch_row($rows)){
+		$res = $GLOBALS['db_lib']->query("SELECT * FROM `$table`");
+		$numfields = $GLOBALS['db_lib']->num_fields($res);
+		while ($row = $GLOBALS['db_lib']->fetch_row($res)){
 		  $comma = "";
 		  $tmp = "INSERT INTO `$bk_table` VALUES(";
 		  for($i = 0; $i < $numfields; $i++){
-		   $tmp .= $comma."'".$GLOBALS['mysql_lib']->real_escape_string($row[$i])."'";
+		   $tmp .= $comma."'".$GLOBALS['db_lib']->real_escape_string($row[$i])."'";
 		   $comma = ",";
 		  }
 		  $tmp .= ");";

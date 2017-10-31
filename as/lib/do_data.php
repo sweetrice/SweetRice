@@ -116,16 +116,18 @@
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					foreach($table_list as $val){
-						if(!db_query('vacuum '.$val)){
+						db_query('vacuum "'.$val.'"');
+						if(!db_error()){
 							$message .= $val.'<span>'._t('Successfully').'</span>';
 						}else{
-							$message .= $val.'<span class="failed">'._t('Failed').'</span>';
+							$message .= $val.'<span class="failed">'._t('Failed').':'.db_error().'</span>';
 						}
 					}
 				break;
 				case 'pgsql':
 					foreach($table_list as $val){
-						if(!db_query('vacuum analyze '.$val)){
+						db_query('vacuum analyze '.$val);
+						if(!db_error()){
 							$message .= $val.'<span>'._t('Successfully').'</span>';
 						}else{
 							$message .= $val.'<span class="failed">'._t('Failed').'</span>';
@@ -134,7 +136,8 @@
 				break;
 				case 'mysql':
 					foreach($table_list as $val){
-						if(!db_query('optimize table '.$val)){
+						db_query('optimize table '.$val);
+						if(!db_error()){
 							$message .= $val.'<span>'._t('Successfully').'</span>';
 						}else{
 							$message .= $val.'<span class="failed">'._t('Failed').'</span>';
@@ -153,8 +156,9 @@
 		if($form_mode == 'yes'){
 			$sql_content = str_replace('%--%',DB_LEFT,$_POST['sql_content']);
 			if($sql_content){
-				$message = db_query($sql_content);
-				output_json(array('status'=>!$message?1:0,'status_code'=>!$message?_t('SQL Execute Success'):$message));
+				$rows = db_arrays($sql_content);
+				$message = db_error();
+				output_json(array('status'=>!$message?1:0,'status_code'=>!$message?_t('SQL Execute Success'):$message,'rows'=>$rows));
 			}
 		}
 		$top_word = _t('SQL Execute');

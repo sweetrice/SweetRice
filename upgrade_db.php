@@ -1,6 +1,6 @@
 <?php
 	define('VALID_INCLUDE',true);
-	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT ^ E_ERROR);
+	error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
 	$base_url = 'http://'.$_SERVER["HTTP_HOST"].str_replace('//','/',dirname($_SERVER["PHP_SELF"]).'/');
 	define('BASE_URL',$base_url);
 	$root_dir = dirname(__FILE__).'/';
@@ -20,18 +20,29 @@
 		$sqlite_driver = 'sqlite';
 	}
 	$global_setting['cache'] = false;
-	include("inc/function.php");
-	switch(DATABASE_TYPE){
+	include("inc/function.php");	
+	if (function_exists('mysql_connect')) {
+		define('MYSQL_LIB','mysql');
+	}else{
+		define('MYSQL_LIB','mysqli');
+	}
+	switch($database_type){
 		case 'sqlite':
-			$dbname = INCLUDE_DIR.$db_name.'.db';
-			$db = sqlite_dbhandle($dbname);
+			$dbname = 'inc/'.$db_name.'.db';
+			if (is_file($dbname)) {
+				$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+			}
 		break;
 		case 'pgsql':
-			$conn = pg_connect("host=".$db_url." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_passwd);
+			$GLOBALS['db_lib'] = new pgsql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 		break;
 		case 'mysql':
-			$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
+			$GLOBALS['db_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 		break;
+	}
+	if (!$GLOBALS['db_lib']->link) {
+		header('HTTP/1.1 404 Page Not Found');
+		die('db error');
 	}
 	function db_123(){
 		$rows = db_arrays_nocache("SELECT `id`,`file_name` FROM `".DB_LEFT."_attachment`");
@@ -239,9 +250,7 @@
 	}
 
 	function sites_133(){
-		global $db,$conn;
-		$db_root = $db;
-		$GLOBALS['mysql_lib_root'] = $GLOBALS['mysql_lib'];
+		$GLOBALS['db_lib_root'] = $GLOBALS['db_lib'];
 		$site_home = ROOT_DIR.'_sites/';
 		if(!is_dir($site_home)){
 			return ;
@@ -252,17 +261,19 @@
 				include($site_home.$entry.'/inc/db.php');
 				switch($database_type){
 					case 'sqlite':
-						$dbname = $site_home.$entry.'/inc/'.$db_name.'.db';
-						$db = sqlite_dbhandle($dbname);
+						$dbname = $site_home.$entry.'inc/'.$db_name.'.db';
+						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
 					break;
 					case 'pgsql':
-						$conn = pg_connect("host=".$db_url." port=".$db_port." dbname=".$db_name." user=".$db_username." password=".$db_passwd);
+						$GLOBALS['db_lib'] = new pgsql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 					break;
 					case 'mysql':
-						$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
+						$GLOBALS['db_lib'] = new mysql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
 					break;
-					default:
-						continue;
+				}
+				if (!$GLOBALS['db_lib']->link) {
+					header('HTTP/1.1 404 Page Not Found');
+					die('db error');
 				}
 				$plugin_installed = $plugin_installeds = array();
 				$optionRow = db_array("SELECT * FROM `".$db_left."_options` WHERE `name` = 'plugin_installed'",'ASSOC',$database_type);
@@ -292,8 +303,7 @@
 			}
 		}
 		$d->close();
-		$db = $db_root;
-		$GLOBALS['mysql_lib'] = $GLOBALS['mysql_lib_root'];
+		$GLOBALS['db_lib'] = $GLOBALS['db_lib_root'];
 		return ;
 	}
 
@@ -369,10 +379,17 @@
 		setOption('tag_posts',serialize($tag_posts));
 	}
 
+	function db_151(){
+
+	}
+
 	function upgrade_db(){
-		$upgrade_funs = array(123,124,125,130,132,133,140,141,150);
+		$upgrade_funs = array(123,124,125,130,132,133,140,141,150,151);
 		$installed_version = str_replace('.','',file_get_contents('inc/lastest.txt'));
 		$update_db = '';
+		if (floatval($installed_version) < 151) {
+			return 'Please upgrade to 1.5.1 before upgrade to 1.6.0';
+		}
 		foreach($upgrade_funs as $val){
 			if($val >= $installed_version){
 				$update_db .= call_user_func('db_'.$val);

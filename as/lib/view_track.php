@@ -11,7 +11,7 @@
 	if(!file_exists($dbname)){
 		$new_track = true;
 	}
-	$db_track = sqlite_dbhandle($dbname);
+	$GLOBALS['db_lib_track'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
 	$y = $_GET['y'];
 	if($y ==''){
 		$y = date('Y');
@@ -28,26 +28,26 @@
 		$browsers = init_browsers(1);
 		$bg_browsers = init_browsers(2);
 		if($new_track){
-			sqlite_dbquery($db_track,"CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
-			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
+			$GLOBALS['db_lib_track']->query("CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
+			$GLOBALS['db_lib_track']->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
-		$month_table = sqlite_dbtotal($db_track,"SELECT COUNT(*) FROM sqlite_master WHERE name='agent_month'");
+		$month_table = $GLOBALS['db_lib_track']->db_total("SELECT COUNT(*) FROM sqlite_master WHERE name='agent_month'");
 		if(!$month_table){
-			sqlite_dbquery($db_track,"CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
+			$GLOBALS['db_lib_track']->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
-		sqlite_dbquery($db_track,"DELETE FROM user_agent WHERE time < '".(time()-5184000)."'");
-		sqlite_dbquery($db_track,'vacuum user_agent');
+		$GLOBALS['db_lib_track']->query("DELETE FROM user_agent WHERE time < '".(time()-5184000)."'");
+		$GLOBALS['db_lib_track']->query('vacuum user_agent');
 		$max_month = array();
 		for($i=1; $i<=$d; $i++){
 			$day_start = mktime(0,0,1,$m,$i,$y);
 			$day_end = mktime(23,59,59,$m,$i,$y);
 			foreach($browsers as $key=>$val){
 				$this_date = $y.'-'.str_pad($m,2,0,STR_PAD_LEFT).'-'.str_pad($i,2,0,STR_PAD_LEFT);
-				$row = sqlite_dbarray($db_track,"SELECT `id`,`total` FROM agent_month WHERE record_date = '$this_date' AND user_browser = '$val'",false);
+				$row = $GLOBALS['db_lib_track']->db_array("SELECT `id`,`total` FROM agent_month WHERE record_date = '$this_date' AND user_browser = '$val'",false);
 				if(!$row['id']&&$day_end<$today_start)
 				{
-					$total = sqlite_dbtotal($db_track,"SELECT COUNT(*) FROM user_agent WHERE time >= '$day_start' and time <= '$day_end' AND user_browser = '$val'",false);
-					sqlite_dbquery($db_track,"INSERT INTO agent_month(id,user_browser,record_date,total)VALUES(null,'$val','$this_date','$total')");
+					$total = $GLOBALS['db_lib_track']->db_total("SELECT COUNT(*) FROM user_agent WHERE time >= '$day_start' and time <= '$day_end' AND user_browser = '$val'",false);
+					$GLOBALS['db_lib_track']->query("INSERT INTO agent_month(id,user_browser,record_date,total)VALUES(null,'$val','$this_date','$total')");
 					$row['total'] = $total;
 				}
 				$total_browser[$key][$i] = $row['total'];
@@ -83,16 +83,16 @@
 		$width = 6;
 		$l_x = $x*$d+$padding_left+20;
 		$doCanvas = 1;
-		$top_pages = sqlite_dbarrays($db_track,"SELECT this_page,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page ORDER by total DESC LIMIT 0,10;");
-		$total_pages = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page )");
-		$top_froms = sqlite_dbarrays($db_track,"SELECT user_from,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from ORDER by total DESC LIMIT 0,10;");
-		$total_froms = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from )");
-		$total_ips = sqlite_dbtotal($db_track,"SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip )");
-		$top_ips = sqlite_dbarrays($db_track,"SELECT ip,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip ORDER by total DESC LIMIT 0,10;");
+		$top_pages = $GLOBALS['db_lib_track']->db_arrays("SELECT this_page,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page ORDER by total DESC LIMIT 0,10;");
+		$total_pages = $GLOBALS['db_lib_track']->db_total("SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY this_page )");
+		$top_froms = $GLOBALS['db_lib_track']->db_arrays("SELECT user_from,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from ORDER by total DESC LIMIT 0,10;");
+		$total_froms = $GLOBALS['db_lib_track']->db_total("SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY user_from )");
+		$total_ips = $GLOBALS['db_lib_track']->db_total("SELECT COUNT(*) from (SELECT COUNT(*) from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip )");
+		$top_ips = $GLOBALS['db_lib_track']->db_arrays("SELECT ip,COUNT(*) AS total from user_agent WHERE time >= '$month_start' and time < '$month_end' GROUP BY ip ORDER by total DESC LIMIT 0,10;");
 	}else{
 		$doCanvas = 0;
 	}
-	$start_record = sqlite_dbarray($db_track,"SELECT time from user_agent ORDER by time ASC LIMIT 0,1;");
+	$start_record = $GLOBALS['db_lib_track']->db_array("SELECT time from user_agent ORDER by time ASC LIMIT 0,1;");
 ?>
 <fieldset><legend><?php echo _t('Track').' - '._t('Chart').' - '._t('Click the date to show chart.');?></legend>
 <select class="dy">
@@ -148,14 +148,14 @@
 <script type="text/javascript" src="../js/excanvas.compiled.js"></script>
 <script type="text/javascript">
 <!--
-function getTotalByD(b,d,r){
-	var dTotal = r[b].split(',');
-	return parseInt(dTotal[d-1]);
-}
-function getLastTotalByD(b,d,r){
-	var dTotal = r[b].split(',');
-	return parseInt(dTotal[d-2]);
-}
+	function getTotalByD(b,d,r){
+		var dTotal = r[b].split(',');
+		return parseInt(dTotal[d-1]);
+	}
+	function getLastTotalByD(b,d,r){
+		var dTotal = r[b].split(',');
+		return parseInt(dTotal[d-2]);
+	}
 	function drawCanvas(){
 		var doCanvas = <?php echo $doCanvas;?>;
 		if(!doCanvas){

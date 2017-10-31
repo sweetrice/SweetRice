@@ -37,31 +37,17 @@
 		}
 		$logo = upload_($_FILES['logo'],'../'.ATTACHMENT_DIR,$_FILES['logo']['name'],$_POST['old_logo']);
 		$passwd = $_POST['passwd']?md5($_POST['passwd']):$_POST['old_passwd'];
-		foreach($_POST['nums_setting'] as $key=>$val){
-			$nums_setting[$key] = intval($val);
-		}
-		$setting = serialize(array('name'=>escape_string($_POST['name']) , 'author'=>escape_string($_POST['author']) ,'title'=>escape_string($_POST['title']) , 'keywords'=>escape_string($_POST['keyword']) , 'description'=>escape_string($_POST['description']) ,
-		'admin_priority' => intval($_POST['admin_priority']),
-		'admin'=>$_POST['admin'] , 
-		'passwd'=>$passwd,
-		'close'=>intval($_POST['close']) ,
-		'close_tip'=>toggle_attachment($_POST['close_tip']),
-		'cache'=>intval($_POST['cache']),
-		'cache_expired'=>intval($_POST['cache_expired']),	
-		'header_304'=>intval($_POST['header_304']),
-		'user_track'=>intval($_POST['user_track']),
-		'url_rewrite'=>intval($_POST['url_rewrite']),
-		'pagebreak'=>intval($_POST['pagebreak']),
-		'logo'=>$logo,
-		'theme'=>$_POST['theme'],
-		'lang'=>$_POST['lang'],
-		'theme_lang'=>$_POST['theme_lang'],
-		'admin_email'=>$_POST['admin_email'],
-		'last_setting'=>time(),
-		'timeZone'=>$_POST['timeZone'],
-		'nums_setting'=>$nums_setting
-		));
-		setOption('global_setting',$setting);
+		$setting = $_POST['global_setting'];
+		$setting['log'] = $logo;
+		$setting['passwd'] = $passwd;
+		$setting['last_setting'] = time();
+		$setting['close_tip'] = toggle_attachment($setting['close_tip']);
+		$setting['name'] = escape_string($setting['name']);
+		$setting['author'] = escape_string($setting['author']);
+		$setting['title'] = escape_string($setting['title']);
+		$setting['keywords'] = escape_string($setting['keywords']);
+		$setting['description'] = escape_string($setting['description']);
+		setOption('global_setting',serialize($setting));
 		save_custom_field($_POST,'setting',1);
 		_goto(BASE_URL.($dashboard_dirs?$dashboard_dirs:DASHBOARD_DIR).'/?type=setting');
 	break;
@@ -99,7 +85,7 @@
 		output_json(array('status'=>1));
 	break;
 	default:
-	 define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
+		define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
 		$themes = getThemeTypes();
 		$s_theme[$global_setting['theme']] = 'selected';
 		$lang = getLangTypes(INCLUDE_DIR.'lang/');

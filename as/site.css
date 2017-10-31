@@ -667,6 +667,7 @@ thead tr{
 .setting_label{border:1px solid #ccc;margin:5px;border-radius:5px;padding:0px 5px;cursor:pointer;}
 .setting_label:hover{background-color:#ddd;}
 .current{background-color:#ccc;}
+.label_list label{width:50%;display: inline-block;background-color: transparent;}
 .req_list dl,.ns_list dl{
 	clear:both;
 }

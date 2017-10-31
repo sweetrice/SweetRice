@@ -77,18 +77,18 @@
 	_.ready(function(){
 		bind_checkall('#checkall','.ck_item');
 		_('.totype').bind('change',function(){
-		var t = _(this).val();
-		if(t == 'sqlite'){
-			_('#database_type').hide();
-		}else{
-			_('#database_type').show();
-			if(t == 'mysql'){
-				_('#to_db_port').val(3306);
+			var t = _(this).val();
+			if(t == 'sqlite'){
+				_('#database_type').hide();
+			}else{
+				_('#database_type').show();
+				if(t == 'mysql'){
+					_('#to_db_port').val(3306);
+				}
+				if(t == 'pgsql'){
+					_('#to_db_port').val(5432);
+				}
 			}
-			if(t == 'pgsql'){
-				_('#to_db_port').val(5432);
-			}
-		}
 		});
 		_('#convert_form').submit(function(event){
 			_.stopevent(event);
@@ -106,7 +106,12 @@
 				'form':this,
 				'success':function(result){
 					if (result['status'] == 1) {
-						_.ajax_untip(result['status_code'],2000,function(){
+						<?php if(DATABASE_TYPE == 'sqlite'): ?>
+						var iframe = document.createElement('iframe');
+						_(iframe).attr({'src':'../'}).css({'width':'1px','height':'1px'});
+						_(document.body).append(iframe);
+						<?php endif; ?>
+						_.ajax_untip(result['status_code'],3000,function(){
 							location.href = './';
 						});
 					}else{

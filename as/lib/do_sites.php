@@ -9,7 +9,6 @@
  defined('VALID_INCLUDE') or die();
  $mode = $_GET['mode'];
  if($mode == 'save'){
-	$conn = $db = null;
 	$status = initSiteDB();
 	if(!$status['inited']){
 		output_json(array('status'=>0,'status_code'=>$status['error_db'].' '.$status['message']));

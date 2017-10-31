@@ -6,187 +6,187 @@
  * @SweetRice core.
  * @since 1.0.0
  */
- defined('VALID_INCLUDE') or die();
-function sweetrice_version(){
-	$lastest = trim(get_data_from_url('http://www.basic-cms.org/lastest.html'));
-	return $lastest;
-}
+	defined('VALID_INCLUDE') or die();
+	function sweetrice_version(){
+		$lastest = trim(get_data_from_url('http://www.basic-cms.org/lastest.html'));
+		return $lastest;
+	}
 
-function update_automatically($upgrade_dir){
-	eval("\$str = '<p>"._t('Update')." SweetRice</p>';");
-	$content = get_data_from_url('http://www.basic-cms.org/download/17/');
-	if($content){
-		file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
-		eval("\$str .= '<p>"._t('Download')." SweetRice_core.zip ("._t('File size:')." ".filesize(ROOT_DIR.'SweetRice_core.zip').") "._t('successfully')."</p>';");
-	}else{
-		eval("\$str .= '<p>"._t('Update failed - cannot connect update server.')."</p>';");
-		return $str;
-	}
-	if(!file_exists(ROOT_DIR.$upgrade_dir)){
-		mkdir(ROOT_DIR.$upgrade_dir);
-	}
-	if(extractZIP(ROOT_DIR.'SweetRice_core.zip',ROOT_DIR.$upgrade_dir.'/')){
-		eval("\$str .= '<p>"._t('Extract')." SweetRice_core.zip "._t('successfully')."</p>';");
-	}else{
-		eval("\$str .= '<p>"._t('Extract').". SweetRice_core.zip "._t('Failed')."</p>';");
-		return $str;
-	}
-	$sweetrice_files = sweetrice_files(ROOT_DIR.$upgrade_dir.'/');
-	foreach($sweetrice_files as $val){
-		$target_entry = str_replace(ROOT_DIR.$upgrade_dir.'/',ROOT_DIR,$val);
-		$target_entry = str_replace(ROOT_DIR.'as/',ROOT_DIR.DASHBOARD_DIR.'/',$target_entry);
-		if($target_entry == ROOT_DIR.'as'){
-			$target_entry = ROOT_DIR.DASHBOARD_DIR;
-		}
-		if(is_dir($val)){
-			if(!is_dir($target_entry)&&!mkdir($target_entry)){
-				eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
-				return $str;
-			}
+	function update_automatically($upgrade_dir){
+		eval("\$str = '<p>"._t('Update')." SweetRice</p>';");
+		$content = get_data_from_url('http://www.basic-cms.org/download/17/');
+		if($content){
+			file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
+			eval("\$str .= '<p>"._t('Download')." SweetRice_core.zip ("._t('File size:')." ".filesize(ROOT_DIR.'SweetRice_core.zip').") "._t('successfully')."</p>';");
 		}else{
-			if(is_file($target_entry)){
-				if(md5_file($val) != md5_file($target_entry)&&!copy($val,$target_entry)){
+			eval("\$str .= '<p>"._t('Update failed - cannot connect update server.')."</p>';");
+			return $str;
+		}
+		if(!file_exists(ROOT_DIR.$upgrade_dir)){
+			mkdir(ROOT_DIR.$upgrade_dir);
+		}
+		if(extractZIP(ROOT_DIR.'SweetRice_core.zip',ROOT_DIR.$upgrade_dir.'/')){
+			eval("\$str .= '<p>"._t('Extract')." SweetRice_core.zip "._t('successfully')."</p>';");
+		}else{
+			eval("\$str .= '<p>"._t('Extract').". SweetRice_core.zip "._t('Failed')."</p>';");
+			return $str;
+		}
+		$sweetrice_files = sweetrice_files(ROOT_DIR.$upgrade_dir.'/');
+		foreach($sweetrice_files as $val){
+			$target_entry = str_replace(ROOT_DIR.$upgrade_dir.'/',ROOT_DIR,$val);
+			$target_entry = str_replace(ROOT_DIR.'as/',ROOT_DIR.DASHBOARD_DIR.'/',$target_entry);
+			if($target_entry == ROOT_DIR.'as'){
+				$target_entry = ROOT_DIR.DASHBOARD_DIR;
+			}
+			if(is_dir($val)){
+				if(!is_dir($target_entry)&&!mkdir($target_entry)){
 					eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
 					return $str;
 				}
 			}else{
-				if(!copy($val,$target_entry)){
-					eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
-					return $str;
+				if(is_file($target_entry)){
+					if(md5_file($val) != md5_file($target_entry)&&!copy($val,$target_entry)){
+						eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
+						return $str;
+					}
+				}else{
+					if(!copy($val,$target_entry)){
+						eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
+						return $str;
+					}
 				}
 			}
 		}
-	}
-	eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('successfully')."</p>';");
-	if(file_exists(ROOT_DIR.$upgrade_dir.'/upgrade_db.php')){
-		if(!file_exists(ROOT_DIR.'upgrade_db.php')){
-			copy(ROOT_DIR.$upgrade_dir.'/upgrade_db.php',ROOT_DIR.'/upgrade_db.php');
-		}
-		$upgrade_db = get_data_from_url(BASE_URL.'upgrade_db.php');
-		if($upgrade_db == 'Successfully'){
-			eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('successfully')."</p>';");
-			if(file_exists(ROOT_DIR.'upgrade_db.php')){
-				unlink(ROOT_DIR.'upgrade_db.php');
+		eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('successfully')."</p>';");
+		if(file_exists(ROOT_DIR.$upgrade_dir.'/upgrade_db.php')){
+			if(!file_exists(ROOT_DIR.'upgrade_db.php')){
+				copy(ROOT_DIR.$upgrade_dir.'/upgrade_db.php',ROOT_DIR.'/upgrade_db.php');
 			}
-		}else{
-			eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('Failed')." </p><p>$upgrade_db</p>';");
+			$upgrade_db = get_data_from_url(BASE_URL.'upgrade_db.php');
+			if($upgrade_db == 'Successfully'){
+				eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('successfully')."</p>';");
+				if(file_exists(ROOT_DIR.'upgrade_db.php')){
+					unlink(ROOT_DIR.'upgrade_db.php');
+				}
+			}else{
+				eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('Failed')." </p><p>$upgrade_db</p>';");
+			}
 		}
-	}
-	if(file_exists(ROOT_DIR.'inc/lastest_update.txt')){
-		rename(ROOT_DIR.'inc/lastest_update.txt',ROOT_DIR.'inc/lastest.txt');
-		$lastest = file_get_contents(ROOT_DIR.'inc/lastest.txt');
-	}else{
-		$lastest = sweetrice_version();
-		file_put_contents(ROOT_DIR.'inc/lastest.txt',$lastest);
-	}
-	if(un_(ROOT_DIR.$upgrade_dir.'/')&&unlink(ROOT_DIR.'SweetRice_core.zip')){
-		eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('successfully')."</p>';");
-	}else{
-		eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('Failed')."</p>';");
+		if(file_exists(ROOT_DIR.'inc/lastest_update.txt')){
+			rename(ROOT_DIR.'inc/lastest_update.txt',ROOT_DIR.'inc/lastest.txt');
+			$lastest = file_get_contents(ROOT_DIR.'inc/lastest.txt');
+		}else{
+			$lastest = sweetrice_version();
+			file_put_contents(ROOT_DIR.'inc/lastest.txt',$lastest);
+		}
+		if(un_(ROOT_DIR.$upgrade_dir.'/')&&unlink(ROOT_DIR.'SweetRice_core.zip')){
+			eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('successfully')."</p>';");
+		}else{
+			eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('Failed')."</p>';");
+			return $str;
+		}
+		eval("\$str .= '<p>"._t('Upgrade')." SweetRice to $lastest "._t('successfully')."</p>';");
 		return $str;
 	}
-	eval("\$str .= '<p>"._t('Upgrade')." SweetRice to $lastest "._t('successfully')."</p>';");
-	return $str;
-}
-function un_($_dir,$_rmdir = true){
-	if(!is_dir($_dir)){
+	function un_($_dir,$_rmdir = true){
+		if(!is_dir($_dir)){
+			return true;
+		}
+		if(substr($_dir,-1) != '/'){
+			$_dir .= '/';
+		}
+		$d = dir($_dir);
+		while (false !== ($entry = $d->read())) {
+			if($entry!='.'&&$entry!='..'){
+				if(is_dir($_dir.$entry)){
+					un_($_dir.$entry.'/');
+				}else{
+					unlink($_dir.$entry);
+				}
+			} 
+		}
+		$d->close();
+		if($_rmdir){
+			rmdir(substr($_dir,0,-1));
+		}
 		return true;
 	}
-	if(substr($_dir,-1) != '/'){
-		$_dir .= '/';
-	}
-	$d = dir($_dir);
-	while (false !== ($entry = $d->read())) {
-		if($entry!='.'&&$entry!='..'){
-			if(is_dir($_dir.$entry)){
-				un_($_dir.$entry.'/');
-			}else{
-				unlink($_dir.$entry);
-			}
-		} 
-	}
-	$d->close();
-	if($_rmdir){
-		rmdir(substr($_dir,0,-1));
-	}
-	return true;
-}
 
-function copyFiles($source,$destination){
-	if(!is_dir($source)){
-		return false;
-	}
-	if(!is_dir($destination)){
-		mkdir($destination);
-	}
-	$d = dir($source);
-	while($entry = $d->read()) {
-		if($entry != '.' && $entry != '..' ){
-			if(is_dir($source.'/'.$entry)){
-				copyFiles($source.'/'.$entry,$destination.'/'.$entry);
-			}else{
-				copy($source.'/'.$entry,$destination.'/'.$entry);
-			}
+	function copyFiles($source,$destination){
+		if(!is_dir($source)){
+			return false;
 		}
-	}
-	$d->close();
-	return true;
-}
-
-function extractZIP($file_name,$dest_dir,$format_filename = false){
-	if(substr($dest_dir,-1) != '/'){
-		$dest_dir .= '/';
-	}
-	$data = array();
-	if((extension_loaded('zlib')||extension_loaded('ZZIPlib')) && 1>1){
-		$zip = zip_open($file_name);
-		if (is_resource($zip)){
-			while ($zip_entry = zip_read($zip)) {
-				if (zip_entry_open($zip, $zip_entry, 'r')) {
-					$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-					if(substr(zip_entry_name($zip_entry),-1)=='/'){
-						if(!file_exists($dest_dir.zip_entry_name($zip_entry))){
-							mkdir($dest_dir.zip_entry_name($zip_entry));
-						}
-					}else{
-						if ($format_filename) {
-							$tmp_name = filter_file_name(zip_entry_name($zip_entry));
-						}else{
-							$tmp_name = zip_entry_name($zip_entry);
-						}
-						$handle = fopen($dest_dir.$tmp_name,'wb');
-						fwrite($handle,$buf);
-						fclose($handle);
-						$data[] = $dest_dir.$tmp_name;
-					}
-					zip_entry_close($zip_entry);
-				}
-			}
-			zip_close($zip);
+		if(!is_dir($destination)){
+			mkdir($destination);
 		}
-	}else{
-		$zip = new ZipArchive();
-		if ($zip->open($file_name) === TRUE) {
-			$temp_dir = 'temp'.time().rand(1000,9999);
-			$zip->extractTo($dest_dir.$temp_dir.'/');
-			$zip->close();
-			$_data = sweetrice_files($dest_dir.$temp_dir.'/');
-			foreach($_data as $val){
-				if ($format_filename) {
-					$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+		$d = dir($source);
+		while($entry = $d->read()) {
+			if($entry != '.' && $entry != '..' ){
+				if(is_dir($source.'/'.$entry)){
+					copyFiles($source.'/'.$entry,$destination.'/'.$entry);
 				}else{
-					$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
+					copy($source.'/'.$entry,$destination.'/'.$entry);
 				}
-				rename($val,$dest_dir.$tmp_name);
-				$data[] = $dest_dir.$tmp_name;
 			}
-			rmdir($dest_dir.$temp_dir);
 		}
+		$d->close();
+		return true;
 	}
-	return count($data)?$data:false;
-}
 
-function get_template($theme_dir,$type){
+	function extractZIP($file_name,$dest_dir,$format_filename = false){
+		if(substr($dest_dir,-1) != '/'){
+			$dest_dir .= '/';
+		}
+		$data = array();
+		if((extension_loaded('zlib')||extension_loaded('ZZIPlib')) && 1>1){
+			$zip = zip_open($file_name);
+			if (is_resource($zip)){
+				while ($zip_entry = zip_read($zip)) {
+					if (zip_entry_open($zip, $zip_entry, 'r')) {
+						$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
+						if(substr(zip_entry_name($zip_entry),-1)=='/'){
+							if(!file_exists($dest_dir.zip_entry_name($zip_entry))){
+								mkdir($dest_dir.zip_entry_name($zip_entry));
+							}
+						}else{
+							if ($format_filename) {
+								$tmp_name = filter_file_name(zip_entry_name($zip_entry));
+							}else{
+								$tmp_name = zip_entry_name($zip_entry);
+							}
+							$handle = fopen($dest_dir.$tmp_name,'wb');
+							fwrite($handle,$buf);
+							fclose($handle);
+							$data[] = $dest_dir.$tmp_name;
+						}
+						zip_entry_close($zip_entry);
+					}
+				}
+				zip_close($zip);
+			}
+		}else{
+			$zip = new ZipArchive();
+			if ($zip->open($file_name) === TRUE) {
+				$temp_dir = 'temp'.time().rand(1000,9999);
+				$zip->extractTo($dest_dir.$temp_dir.'/');
+				$zip->close();
+				$_data = sweetrice_files($dest_dir.$temp_dir.'/');
+				foreach($_data as $val){
+					if ($format_filename) {
+						$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+					}else{
+						$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
+					}
+					rename($val,$dest_dir.$tmp_name);
+					$data[] = $dest_dir.$tmp_name;
+				}
+				rmdir($dest_dir.$temp_dir);
+			}
+		}
+		return count($data)?$data:false;
+	}
+
+	function get_template($theme_dir,$type){
 		$theme_config = file($theme_dir.'theme.config');
 		foreach($theme_config as $val){
 			if(trim($val)){
@@ -447,7 +447,7 @@ function get_template($theme_dir,$type){
 	}
 
 	function initSiteDB(){
-		global $conn,$db,$global_setting;
+		global $global_setting;
 		$site_config = $_POST['site_config'];
 		$inited = false;
 		$host = $_POST['host'];
@@ -505,9 +505,9 @@ function get_template($theme_dir,$type){
 					if(file_exists($dbname)){
 						unlink($dbname);
 					}
-					$db = sqlite_dbhandle($dbname);
+					$GLOBALS['db_lib_site'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
 				}
-				if(!$db){
+				if(!$GLOBALS['db_lib_site']->link){
 					$error_db = true;
 				}else{
 					$sql = file_get_contents('./lib/app_sqlite.sql');
@@ -515,7 +515,7 @@ function get_template($theme_dir,$type){
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							$error = sqlite_dbquery($db,trim($val));
+							$error = $GLOBALS['db_lib_site']->query(trim($val));
 							if($error){
 								$message .= $error.'<br>';
 							}
@@ -534,15 +534,15 @@ function get_template($theme_dir,$type){
 				}
 			break;
 			case 'pgsql':
-				$conn  = pg_connect('host='.$site_config['db_url'].' port='.$site_config['db_port'].' dbname='.$site_config['db_name'].' user='.$site_config['db_username'].' password='.$site_config['db_passwd']);
-				if($conn){
+				$GLOBALS['db_lib_site'] = new pgsql_lib(array('url'=>$site_config['db_url'],'port'=>$site_config['db_port'],'username'=>$site_config['db_username'],'passwd'=>$site_config['db_passwd'],'name'=>$site_config['db_name']));
+				if($GLOBALS['db_lib_site']->stat()){
 					$sql = file_get_contents('./lib/app_pgsql.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							if(!pg_query($val)){
-								$message .= pg_last_error().'<br>';
+							if(!$GLOBALS['db_lib_site']->query($val)){
+								$message .= $GLOBALS['db_lib_site']->error().'<br>';
 							}
 						}
 					}
@@ -566,16 +566,16 @@ function get_template($theme_dir,$type){
 				}
 			break;
 			default:
-				$GLOBALS['mysql_lib'] = new mysql_lib(array('url'=>$site_config['db_url'],'port'=>$site_config['db_port'],'username'=>$site_config['db_username'],'passwd'=>$site_config['db_passwd'],'name'=>$site_config['db_name'],'newlink'=>true));
-				if($GLOBALS['mysql_lib']->stat()){
+				$GLOBALS['db_lib_site'] = new mysql_lib(array('url'=>$site_config['db_url'],'port'=>$site_config['db_port'],'username'=>$site_config['db_username'],'passwd'=>$site_config['db_passwd'],'name'=>$site_config['db_name'],'newlink'=>true));
+				if($GLOBALS['db_lib_site']->stat()){
 					$sql = file_get_contents('./lib/app.sql');
 					$sql = str_replace('%--%',$site_config['db_left'],$sql);
 					$sql = explode(';',$sql);
 					foreach($sql as $key=>$val){
 						if(trim($val)){
-							$GLOBALS['mysql_lib']->query($val);
-							if($GLOBALS['mysql_lib']->error()){
-								$message .= $GLOBALS['mysql_lib']->error().'<br>';
+							$GLOBALS['db_lib_site']->query($val);
+							if($GLOBALS['db_lib_site']->error()){
+								$message .= $GLOBALS['db_lib_site']->error().'<br>';
 							}
 						}
 					}
@@ -600,18 +600,19 @@ function get_template($theme_dir,$type){
 		}
 		if($inited){
 			$setting = serialize(array('name'=>escape_string($global_setting['name']), 'author'=>escape_string($global_setting['author']) ,'title'=>escape_string($global_setting['title']) , 'keywords'=>escape_string($global_setting['keywords']) , 'description'=>escape_string($global_setting['description']) ,  'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>'','admin_email'=>''));
-			$setting_id = db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('global_setting',db_escape($setting),time()),false,$db_type);
+			$setting_id = $GLOBALS['db_lib_site']->db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('global_setting',db_escape($setting),time()),false,$db_type);
 			if(!$setting_id){
-				$message .= db_error().'<br />';
+				$message .= $GLOBALS['db_lib_site']->error().'<br />';
 			}
-			$categories_id = db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('categories','',time()),false,$db_type);
+			$categories_id = $GLOBALS['db_lib_site']->db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('categories','',time()),false,$db_type);
 			if(!$categories_id){
-				$message .= db_error().'<br />';
+				$message .= $GLOBALS['db_lib_site']->error().'<br />';
 			}
-			$links_id = db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('links','',time()),false,$db_type);
+			$links_id = $GLOBALS['db_lib_site']->db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('links','',time()),false,$db_type);
 			if(!$links_id){
-				$message .= db_error().'<br />';
+				$message .= $GLOBALS['db_lib_site']->error().'<br />';
 			}
+			$GLOBALS['db_lib_site']->close();
 			return array('inited'=>true);
 		}
 		return array('inited'=>$inited,'error_db'=>$error_db?_t('Database Error'):'','message'=>$message);
