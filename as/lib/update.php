@@ -102,6 +102,9 @@
 			_.ajax({
 				'type':'get',
 				'url':_(this).attr('url'),
+				'fnTimeout':function(){
+					location.reload();
+				},
 				'success':function(result){
 					_.ajax_untip(result['status_code'],3000,function(){
 						if (result['status'] == 1) {

@@ -118,13 +118,13 @@
 				}
 		}
 		$top_word = _t('Update SweetRice');
-	}elseif($mode=='automatically'){
+	}elseif($mode == 'automatically'){
 		$curr_ = '1'.str_replace('.','',SR_VERSION);
 		if (SR_VERSION >= 1150) {
 			output_json(array('status'=>1,'status_code'=>$str));
 		}
 		$str = update_automatically('SweetRice_upgrade');
-		$top_word = _t('Update SweetRice Automatically');
+		output_json(array('status'=>1,'status_code'=>$str));
 	}else{
 		$lastest_ = sweetrice_version();
 		$current_ = SR_VERSION;
