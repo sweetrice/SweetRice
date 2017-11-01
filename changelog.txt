@@ -42,6 +42,7 @@ core update
 	update SweetRice.js
 	update inc/function.php database connection class
 	add redis cache support
+	fix some bugs
 ======================================
 Change log V1.5.1 04/23/2017
 ======================================
