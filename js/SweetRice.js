@@ -1683,7 +1683,7 @@
 			y = a[i].substr(a[i].indexOf('=')+1);
 			x = x.replace(/^\s+|\s+$/g,'');
 			if (x == k){
-				return unescape(y);
+				return decodeURIComponent(y);
 			}
 		}
 		return '';
