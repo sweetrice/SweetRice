@@ -644,6 +644,8 @@
 	}
 
 	function db_insert($table,$_id,$_key,$_val){
+		$_key = db_escape($_key);
+		$_val = db_escape($_val);
 		return $GLOBALS['db_lib']->db_insert($table,$_id,$_key,$_val);
 	}
 
