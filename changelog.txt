@@ -43,6 +43,7 @@ core update
 	update inc/function.php database connection class
 	add redis cache support
 	fix some bugs
+	PostgreSQL insert data returning SERIAL FILED for last insert id
 ======================================
 Change log V1.5.1 04/23/2017
 ======================================

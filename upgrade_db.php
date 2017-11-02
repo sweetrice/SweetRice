@@ -380,7 +380,22 @@
 	}
 
 	function db_151(){
-
+		switch (DATABASE_TYPE) {
+			case 'pgsql':
+				$tablelist = db_list();
+				foreach($tablelist as $table){
+					$rows = db_arrays("SELECT attnum,attname , typname , atttypmod-4 , attnotnull ,atthasdef ,adsrc AS def FROM pg_attribute, pg_class, pg_type, pg_attrdef WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum>0 AND pg_class.oid=adrelid AND adnum=attnum AND atthasdef='t' AND lower(relname)='$table' UNION SELECT attnum,attname , typname , atttypmod-4 , attnotnull , atthasdef ,'' AS def FROM pg_attribute, pg_class, pg_type WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum > 0 AND atthasdef='f' AND lower(relname)='$table' order by attnum"); 
+					foreach($rows as $r){
+						if(preg_match('/nextval\(\''.$table.'_.+_seq\'::regclass\).*/',$r['def'])){
+							$serial_field = $r['attname'];
+							$update_db .= db_query("SELECT setval('".$table."_".$serial_field."_seq', (SELECT MAX(".$serial_field.") FROM ".$table.")+1);");
+							break;			
+						}
+					}
+				}
+				return $update_db;
+			break;
+		}
 	}
 
 	function upgrade_db(){
