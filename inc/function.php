@@ -1481,7 +1481,7 @@
 			db_query("UPDATE `".DB_LEFT."_comment` SET `post_cat` = '".$categories[$category]['link']."',`post_slug` = '$sys_name' WHERE `post_id` = '$post_id'");
 		}else{
 			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
-		}/*
+		}
 		if(!$without_attachment){
 			$attNos = $data['no'];
 			$inlist = array();
@@ -1498,7 +1498,7 @@
 
 		if(!$without_custom_field){
 			save_custom_field($data,'post',$post_id);
-		}*/
+		}
 		return array('post_id'=>$post_id,'sys_name'=>$sys_name);
 	}
 
