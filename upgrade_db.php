@@ -431,9 +431,6 @@
 		$upgrade_funs = array(123,124,125,130,132,133,140,141,150,151);
 		$installed_version = str_replace('.','',file_get_contents('inc/lastest.txt'));
 		$update_db = '';
-		if (floatval($installed_version) < 151) {
-			return 'Please upgrade to 1.5.1 before upgrade to 1.6.0';
-		}
 		foreach($upgrade_funs as $val){
 			if($val >= $installed_version){
 				$update_db .= call_user_func('db_'.$val);
