@@ -393,6 +393,35 @@
 						}
 					}
 				}
+				$site_home = ROOT_DIR.'_sites/';
+				if(is_dir($site_home)){
+					$GLOBALS['db_lib_root'] = $GLOBALS['db_lib'];
+					$d = dir($site_home);
+					while (false !== ($entry = $d->read())){
+						if($entry !='.' && $entry !='..' && file_exists($site_home.$entry.'/inc/db.php')){
+							include($site_home.$entry.'/inc/db.php');
+							switch($database_type){
+								case 'pgsql':
+									$GLOBALS['db_lib'] = new pgsql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));
+									$tablelist = db_list();
+									foreach($tablelist as $table){
+										$table = str_replace(DB_LEFT.'_',$db_left.'_',$table);
+										$rows = db_arrays("SELECT attnum,attname , typname , atttypmod-4 , attnotnull ,atthasdef ,adsrc AS def FROM pg_attribute, pg_class, pg_type, pg_attrdef WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum>0 AND pg_class.oid=adrelid AND adnum=attnum AND atthasdef='t' AND lower(relname)='$table' UNION SELECT attnum,attname , typname , atttypmod-4 , attnotnull , atthasdef ,'' AS def FROM pg_attribute, pg_class, pg_type WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum > 0 AND atthasdef='f' AND lower(relname)='$table' order by attnum"); 
+										foreach($rows as $r){
+											if(preg_match('/nextval\(\''.$table.'_.+_seq\'::regclass\).*/',$r['def'])){
+												$serial_field = $r['attname'];
+												$update_db .= db_query("SELECT setval('".$table."_".$serial_field."_seq', (SELECT MAX(".$serial_field.") FROM ".$table.")+1);");
+												break;			
+											}
+										}
+									}
+								break;
+							}
+						}
+					}
+					$d->close();
+					$GLOBALS['db_lib'] = $GLOBALS['db_lib_root'];
+				}
 				return $update_db;
 			break;
 		}
