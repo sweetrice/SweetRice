@@ -745,8 +745,6 @@
 		return db_fetch($param);
 	}
 
-	
-
 	function clean_dbData($row){
 		if(!$row){
 			$row = array();
@@ -2753,7 +2751,7 @@
 		}
 
 		public function db_list(){
-			$table_array = db_arrays_nocache("SELECT `tablename` FROM `pg_tables`  WHERE `tablename` LIKE '".DB_LEFT."_%' ;",$database_type);
+			$table_array = db_arrays_nocache("SELECT `tablename` FROM `pg_tables`  WHERE `tablename` LIKE '".DB_LEFT."_%' ;");
 			foreach($table_array as $val){
 				$val = current($val);
 				if(substr($val,0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
