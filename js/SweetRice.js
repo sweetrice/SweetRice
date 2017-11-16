@@ -1668,12 +1668,24 @@
 		if (!param.name){
 			return ;
 		}
+		if (!param.path)
+		{
+			param.path = location.href.split('//')[1].split('?')[0].replace(document.domain,'');
+			if (param.path.substring(param.path.length-1,param.path.length) == '/') {
+				param.path = param.path.substring(0,param.path.length-1);
+			}
+		}
+		if (!param.domain) {
+			param.domain = document.domain;
+		}
 		var i = param.expired || 30*3600*1000*24;
 		var date = new Date();
 		date.setTime(date.getTime()+i);
-		var str = '';
-		str += param.name+'='+param.value;
-		str += ';expires='+date.toGMTString();
+		var str = param.name+'='+param.value;
+		str += ';expires='+date.toGMTString()+';path='+param.path+';domain='+param.domain;
+		document.cookie = str;
+		str = param.name+'='+param.value;
+		str += ';expires='+date.toGMTString()+';path='+param.path+';domain=.'+param.domain;
 		document.cookie = str;
 	};
 	this.getCookie = function(k){
@@ -1704,7 +1716,7 @@
 		var str = param.name+'=';
 		str += ';expires='+date.toGMTString()+';path='+param.path+';domain=.'+document.domain;
 		document.cookie = str;
-		var str = param.name+'=';
+		str = param.name+'=';
 		str += ';expires='+date.toGMTString()+';path='+param.path+';domain='+document.domain;
 		document.cookie = str;
 	};
