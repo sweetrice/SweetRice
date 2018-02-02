@@ -1044,11 +1044,22 @@
 							this.value = v;
 						break;
 						case 'select':
-							for (var i=0; i < this.options.length; i++ ){
-								if (this.options[i].value == v){
-									this.options[i].selected = true;
-								}else{
-									this.options[i].selected = false;
+							if (!this.multiple) {
+								for (var i=0; i < this.options.length; i++ ){
+									if (this.options[i].value == v){
+										this.options[i].selected = true;
+									}else{
+										this.options[i].selected = false;
+									}
+								}
+							}else{
+								v = _this.isArray(v)?v:v.split(',');
+								for (var i=0; i < this.options.length; i++ ){
+									if (_this.inArray(v,this.options[i].value)){
+										this.options[i].selected = true;
+									}else{
+										this.options[i].selected = false;
+									}
 								}
 							}
 						break;
@@ -1107,9 +1118,18 @@
 						value = elm.value;
 					break;
 					case 'select':
-						for (var i=0; i < elm.options.length; i++ ){
-							if (elm.options[i].selected){
-								value = elm.options[i].value;
+						if(!elm.multiple){
+							for (var i=0; i < elm.options.length; i++ ){
+								if (elm.options[i].selected){
+									value = elm.options[i].value;
+								}
+							}
+						}else{
+							value = [];
+							for (var i=0; i < elm.options.length; i++ ){
+								if (elm.options[i].selected){
+									value.push(elm.options[i].value);
+								}
 							}
 						}
 					break;
