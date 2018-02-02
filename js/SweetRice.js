@@ -380,8 +380,11 @@
 			return _(obj).animate({'scrollLeft':dist},speed, callback,animate_fn,animate_complete);
 		}
 
-		this.isArray = function(){
-			return Object.prototype.toString.call( elm ) === '[object Array]';
+		this.isArray = function(obj){
+			if (!obj) {
+				obj = elm;
+			}
+			return Object.prototype.toString.call( obj ) === '[object Array]';
 		};
 		this.each = function(fn,callback){
 				if (typeof fn != 'function'){
