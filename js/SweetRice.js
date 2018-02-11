@@ -1022,13 +1022,6 @@
 						case 'input':
 							switch (this.attributes['type'].value.toLowerCase())
 							{
-								case 'text':
-								case 'password':
-								case 'hidden':
-								case 'file':
-								case 'button':
-									this.value = v;
-								break;
 								case 'checkbox':
 									if (this.value == v){
 										this.checked = true;
@@ -1041,6 +1034,8 @@
 										this.checked = false;
 									}
 								break;
+								default:
+									this.value = v;
 							}
 						break;
 						case 'textarea':
@@ -1098,13 +1093,6 @@
 				switch (elm.nodeName.toLowerCase()){
 					case 'input':
 						switch (elm.attributes['type'].value.toLowerCase()){
-							case 'text':
-							case 'password':
-							case 'hidden':
-							case 'file':
-							case 'button':
-								value = elm.value;
-							break;
 							case 'checkbox':
 								if (elm.checked){
 									value = elm.value;
@@ -1115,6 +1103,8 @@
 									value = elm.value;
 								}
 							break;
+							default:
+								value = elm.value;
 						}
 					break;
 					case 'textarea':
