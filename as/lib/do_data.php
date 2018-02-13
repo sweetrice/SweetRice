@@ -55,7 +55,7 @@
 		$inc = 'db_converter.php';
 	break;
 	case 'db_import':
-		$db_file = $_GET['db_file'];
+		$db_file = str_replace('/','',$_GET['db_file']);
 		$form_mode = $_GET['form_mode'];
 		switch(DATABASE_TYPE){
 			case 'pgsql':
