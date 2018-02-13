@@ -35,17 +35,17 @@
 	}
 	register_shutdown_function('error_report');
 	set_error_handler('sweetrice_debug',E_ALL ^ E_NOTICE ^ E_WARNING ^ E_STRICT);
+	if (function_exists('mysql_connect')) {
+		define('MYSQL_LIB','mysql');
+	}else{
+		define('MYSQL_LIB','mysqli');
+	}
 	if(file_exists(INCLUDE_DIR.'install.lock.php')){
 		if(file_exists(SITE_HOME.'inc/db.php')){
 			include(SITE_HOME.'inc/db.php');
 			define('DB_LEFT',$db_left);
 			define('DB_LEFT_PLUGIN',DB_LEFT.'_plugin');
 			define('DATABASE_TYPE',$database_type);
-			if (function_exists('mysql_connect')) {
-				define('MYSQL_LIB','mysql');
-			}else{
-				define('MYSQL_LIB','mysqli');
-			}
 			$db_left_plugin = DB_LEFT_PLUGIN;
 			switch(DATABASE_TYPE){
 				case 'sqlite':

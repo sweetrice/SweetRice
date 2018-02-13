@@ -69,13 +69,9 @@ function dashboardSignin(){
 		_('#passwd').removeClass('required');
 	}
 	_('#signTip').html('<img src="../images/ajax-loader.gif">');
-	var query = new Object();
-	query.user = escape(user);
-	query.passwd = passwd;
-	query.rememberMe = rememberMe;
 	_.ajax({
 		'type':'POST',
-		'data':query,
+		'data':{'user':user,'passwd':passwd,'rememberme':rememberme,'_tkv_':_('#_tkv_').attr('value')},
 		'url':'./?type=signin',
 		'success':function(result){
 				if (typeof(result) == 'object'){

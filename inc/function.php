@@ -2417,7 +2417,7 @@
 
 	class mysql_lib{
 		public function __construct($db_setting = false){
-			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['name'] || !$db_setting['username']) {
+			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['username']) {
 				return false;
 			}
 			$this->db_setting = $db_setting;
