@@ -14,9 +14,12 @@
 	_e('Server do not supports ZIP');
 	else:?>
 <input type="button" value="<?php _e('Pack website');?>" class="input_submit pack_btn"/>
-<?php if(file_exists(ROOT_DIR.$archive_name)){
-	echo _t('Latest pack at ').date(_t('M d Y H:i'),filemtime(ROOT_DIR.$archive_name)).' '._t('File size').' '.filesize2print(BASE_URL.$archive_name);
-}?>
+<?php if(file_exists(ROOT_DIR.$archive_name)):
+	echo _t('Latest pack at ').date(_t('M d Y H:i'),filemtime(ROOT_DIR.$archive_name)).' '._t('File size').' '.filesize2print(BASE_URL.$archive_name);?>
+	<input type="button" class="btn_clean" value="<?php _e('Delete');?>">
+<?php
+	endif;
+?>
 	<?php endif;?>
 </fieldset>
 <div class="transfer_section">
@@ -44,15 +47,31 @@
 </div>
 <script type="text/javascript">
 <!--
-	_().ready(function(){	
+	_.ready(function(){	
 		<?php if(file_exists(ROOT_DIR.$archive_name)):?>
 			_('.transfer_section').show();
 		<?php endif;?>
+		_('.btn_clean').click(function(){
+			if (!confirm('<?php _e('Are you sure delete it?');?>')){
+				return ;
+			}
+			_.ajax({
+				'type':'post',
+				'data':{'_tkv_':_('#_tkv_').attr('value')},
+				'url':'./?type=data&mode=transfer&form_type=pack_delete',
+				'success':function(result){
+					if (result['status'] == 1)
+					{
+						location.reload();
+					}
+				}
+			});
+		});
 		_('.pack_btn').bind('click',function(){
 			var ajax_dlg = _.dialog({'content':'<img src="../images/loading.gif"> <?php _e('Packing website data maybe take long time,please wait for minutes.');?>'});
 			_.ajax({
-				'type':'get',
-				'data':null,
+				'type':'post',
+				'data':{'_tkv_':_('#_tkv_').attr('value')},
 				'url':'./?type=data&mode=transfer&form_type=pack',
 				'success':function(result){
 					ajax_dlg.remove();
@@ -108,7 +127,7 @@
 			}
 			_.ajax({
 				'type':'post',
-				'data':{'transfer_type':transfer_type,'ftp_server':_('#ftp_server').val(),'ftp_port':_('#ftp_port').val(),'ftp_user':_('#ftp_user').val(),'ftp_password':_('#ftp_password').val(),'ftp_home':_('#ftp_home').val()},
+				'data':{'transfer_type':transfer_type,'ftp_server':_('#ftp_server').val(),'ftp_port':_('#ftp_port').val(),'ftp_user':_('#ftp_user').val(),'ftp_password':_('#ftp_password').val(),'ftp_home':_('#ftp_home').val(),'_tkv_':_('#_tkv_').attr('value')},
 				'url':'./?type=data&mode=transfer',
 				'success':function(result){
 					if (ajax_dlg)

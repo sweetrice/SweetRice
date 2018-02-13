@@ -40,7 +40,7 @@
 			}
 			_.ajax({
 			'type':'post',
-			'data':{'tablelist':tablelist.join(',')},
+			'data':{'tablelist':tablelist.join(','),'_tkv_':_('#_tkv_').attr('value')},
 			'url':'./?type=data&mode=db_optimizer&form_mode=yes',
 			'success':function(result){
 				var dlg = _.dialog({

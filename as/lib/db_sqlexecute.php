@@ -32,7 +32,7 @@
 			}
 			_.ajax({
 			'type':'post',
-			'data':{'sql_content':_('#sql_content').val()},
+			'data':{'sql_content':_('#sql_content').val(),'_tkv_':_('#_tkv_').attr('value')},
 			'url':'./?type=data&mode=sql_execute&form_mode=yes',
 			'success':function(result){
 				var rows = result['rows'],html = '';

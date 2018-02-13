@@ -166,44 +166,52 @@
 	break;
 	case 'transfer':
 		$archive_name = 'SweetRice-transfer.zip';
-		if($_GET['form_type'] == 'pack'){
-			if(!extension_loaded('zlib') && !extension_loaded('ZZIPlib')){
-				alert(_t('Server do not supports ZIP'));
-			}
-			if(file_exists(ROOT_DIR.$archive_name)){
-				unlink(ROOT_DIR.$archive_name);
-			}
-			$archive_folder = ROOT_DIR;
-			$zip = new ZipArchive; 
-			if ($zip -> open(ROOT_DIR.$archive_name, ZipArchive::CREATE) === TRUE) 
-			{
-				$_dir = preg_replace('/[\/]{2,}/', '/', $archive_folder); 
-				$dirs = array($_dir); 
-				while (count($dirs)) 
-				{ 
-					$_dir = current($dirs); 
-					$zip -> addEmptyDir(str_replace(ROOT_DIR,'',$_dir));
-					$d = dir($_dir); 
-					while (false !== ($entry = $d->read())) {
-						if ($entry != '.' && $entry != '..') 
-						{ 
-							if (is_file($_dir.$entry)){ 
-								$zip -> addFile($_dir.$entry, str_replace(ROOT_DIR,'',$_dir.$entry));
-							}
-							elseif (is_dir($_dir.$entry)) {
-								$dirs[] = $_dir.$entry.'/'; 
-							}
+		switch ($_GET['form_type']) {
+			case 'pack':
+				if(!extension_loaded('zlib') && !extension_loaded('ZZIPlib')){
+					alert(_t('Server do not supports ZIP'));
+				}
+				if(file_exists(ROOT_DIR.$archive_name)){
+					unlink(ROOT_DIR.$archive_name);
+				}
+				$archive_folder = ROOT_DIR;
+				$zip = new ZipArchive; 
+				if ($zip -> open(ROOT_DIR.$archive_name, ZipArchive::CREATE) === TRUE) 
+				{
+					$_dir = preg_replace('/[\/]{2,}/', '/', $archive_folder); 
+					$dirs = array($_dir); 
+					while (count($dirs)) 
+					{ 
+						$_dir = current($dirs); 
+						$zip -> addEmptyDir(str_replace(ROOT_DIR,'',$_dir));
+						$d = dir($_dir); 
+						while (false !== ($entry = $d->read())) {
+							if ($entry != '.' && $entry != '..') 
+							{ 
+								if (is_file($_dir.$entry)){ 
+									$zip -> addFile($_dir.$entry, str_replace(ROOT_DIR,'',$_dir.$entry));
+								}
+								elseif (is_dir($_dir.$entry)) {
+									$dirs[] = $_dir.$entry.'/'; 
+								}
+							} 
 						} 
+						$d->close();
+						array_shift($dirs); 
 					} 
-					$d->close();
-					array_shift($dirs); 
-				} 
-				$zip -> close(); 
+					$zip -> close(); 
+					output_json(array('status'=>1));
+				 }else 
+				 { 
+					 output_json(array('status'=>0,'status_code'=>_t('Can\'t create transfer file')));
+				 }
+			break;
+			case 'pack_delete':
+				if(file_exists(ROOT_DIR.$archive_name)){
+					unlink(ROOT_DIR.$archive_name);
+				}
 				output_json(array('status'=>1));
-			 }else 
-			 { 
-				 output_json(array('status'=>0,'status_code'=>_t('Can\'t create transfer file')));
-			 } 
+			break;
 		}
 		switch($_POST['transfer_type']){
 			case 'download':

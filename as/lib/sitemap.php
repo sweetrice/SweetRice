@@ -56,12 +56,9 @@ _().ready(function(){
 		if (!url || !req){
 			return ;
 		}
-		var query = new Object();
-		query.url = escape(url);
-		query.req = req;
 		_.ajax({
 			'type':'POST',
-			'data':query,
+			'data':{'url':url,'req':req,'_tkv_':_('#_tkv_').attr('value')},
 			'url':'./?type=sitemap&mode=make_index',
 			'success':function(result){
 					if (typeof(result) == 'object'){
@@ -73,10 +70,9 @@ _().ready(function(){
 		});
 	});
 	_('.restore_index').bind('click',function(){
-		var query = new Object();
 		_.ajax({
 			'type':'POST',
-			'data':query,
+			'data':{'_tkv_':_('#_tkv_').attr('value')},
 			'url':'./?type=sitemap&mode=restore_index',
 			'success':function(result){
 					if (typeof(result) == 'object'){

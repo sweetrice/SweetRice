@@ -93,7 +93,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 			var _this = this;
 			_.ajax({
 				'type':'post',
-				'data':{'file':_(this).attr('data')},
+				'data':{'file':_(this).attr('data'),'_tkv_':_('#_tkv_').attr('value')},
 				'url':'./?type=media_center&mode=delete',
 				'success':function(result){
 					if (result['status_code'])

@@ -126,6 +126,7 @@ switch($mode){
 		$p_link = './?type=media&referrer='.$referrer.'&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
 		$pager = _pager($total,$page_limit,$p_link);
 		define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
+		$token = $_SESSION['_form_token_'];;
 		include('lib/media.php');
 		exit();
 }

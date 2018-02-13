@@ -268,6 +268,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <?php echo $pager['list_put'];?>
 
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
+<input type="hidden" name="_tkv_" value="<?php echo $token;?>">
 <div class="form_split">
 <?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
 	<input type="file" name="upload[]" id="upload" class="mw180" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
@@ -276,6 +277,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 
 <div class="form_split">
 <form method="post" action="./?type=media&mode=mkdir">
+<input type="hidden" name="_tkv_" value="<?php echo $token;?>">
 <input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
 <?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
 	<input type="text" name="new_dir" class="new_dir mw120"/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
@@ -313,7 +315,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 				var _this = this;
 				_.ajax({
 					'type':'post',
-					'data':{'file':_(this).attr('link'),'no':_(this).attr('no')},
+					'data':{'file':_(this).attr('link'),'no':_(this).attr('no'),'_tkv_':'<?php echo $token;?>'},
 					'url':'./?type=media&mode=delete',
 					'success':function(result){
 						if (result['status_code'])

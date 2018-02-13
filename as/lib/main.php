@@ -90,7 +90,7 @@
 		_('.setting_toggle label').click(function(){
 			_.ajax({
 				'type':'post',
-				'data':{'data':_(this).attr('data')},
+				'data':{'data':_(this).attr('data'),'_tkv_':_('#_tkv_').attr('value')},
 				'url':'./?type=setting&mode=update&submode='+_(this).parent().attr('data'),
 				'success':function(result){
 					if (result['status'] == 1)
