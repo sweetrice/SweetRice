@@ -2184,7 +2184,8 @@
 			'where' => $where,
 			'order' => $order,
 			'limit' => $param['limit'],
-			'pager' => $param['pager']
+			'pager' => $param['pager'],
+			'debug' => $param['debug']
 		));
 		$rows = $data['rows'];
 		if($param['custom_field'] && count($rows)){
@@ -2294,7 +2295,8 @@
 			'where' => $where,
 			'order' => $order,
 			'limit' => $param['limit'],
-			'pager' => $param['pager']
+			'pager' => $param['pager'],
+			'debug' => $param['debug']
 		));
 
 		$rows = $data['rows'];

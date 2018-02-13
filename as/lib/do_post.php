@@ -97,7 +97,7 @@
 		$search = db_escape($_GET['search']);
 		$search_url = '';
 		if($search){
-			$where .= " AND ps.`title` LIKE '%$search%' OR ps.`name` LIKE '%$search%' ";
+			$where .= " AND (ps.`title` LIKE '%$search%' OR ps.`name` LIKE '%$search%' )";
 			$search_url .= '&search='.$_GET['search'];
 		}
 		$category = isset($_GET['category'])? intval($_GET['category']):'all';
