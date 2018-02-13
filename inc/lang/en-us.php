@@ -625,6 +625,7 @@ SweetRice
 	'Choose file' => 'Choose file',
 	'Redis Setting' => 'Redis Setting',
 	'Server' => 'Server',
-	'Port' => 'Port'
+	'Port' => 'Port',
+	'Form session expired' => 'Form session expired'
 );
 ?>

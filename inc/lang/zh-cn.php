@@ -624,6 +624,7 @@ SweetRice
 	'Choose file' => '选择文件',
 	'Redis Setting' => 'Redis设置',
 	'Server' => '服务器',
-	'Port' => '端口'
+	'Port' => '端口',
+	'Form session expired' => '表单数据过期'
 );
 ?>

@@ -9,6 +9,7 @@
 	define('DASHABOARD',true);
 	include('../inc/init.php');
 	include('lib/function.php');
+	check_form_token();
 	if(!defined('INSTALLED')){
 		include('lib/install.php');
 		exit();

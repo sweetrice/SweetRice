@@ -1,7 +1,12 @@
 /*
 	SweetRice dashboard control center
 */
-_().ready(function(){
+_.ready(function(){
+	_('form').each(function(){
+		var input = document.createElement('input');
+		_(input).attr({'name':'_tkv_','type':'hidden'}).val(_('#_tkv_').attr('value'));
+		_(this).append(input);
+	});
 	if (_('.sign_form').size() > 0)
 	{
 		_('#toggle_nav').remove();
