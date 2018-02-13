@@ -2995,4 +2995,12 @@
 		}
 		return null;
 	}
+
+	function check_form_token(){
+		if ($_POST ) {
+			if (!$_POST['_tkv_'] || $_SESSION['_form_token_'] != $_POST['_tkv_']) {
+				die(_t('Form session expired'));
+			}
+		}
+	}
 ?>
