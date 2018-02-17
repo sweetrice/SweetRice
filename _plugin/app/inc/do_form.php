@@ -61,7 +61,7 @@
 			$data = db_fetch(array('table'=>ADB.'_app_form',
 				'field' => '*',
 				'where' => $where,
-				'pager' => array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'form')).$search_url.'&','page_limit'=>intval($_COOKIE['page_limit'])?intval($_COOKIE['page_limit']):10,'pager_function'=>'_pager'),
+				'pager' => array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'form')).$search_url.'&','page_limit'=>page_limit(null,10),'pager_function'=>'_pager'),
 				'debug' => true
 			));
 			$app_inc = 'form_list.php';

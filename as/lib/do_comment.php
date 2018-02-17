@@ -47,7 +47,7 @@
 			'where' => $where,
 			'order' => "`date` DESC",
 			'pager' =>  array('p_link'=>'./?type=comment'.($search?'&search='.$search:'').'&',
-			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
+			'page_limit'=>page_limit(),'pager_function' => '_pager')
 		));
 		$rows = $data['rows'];
 		$pager = $data['pager'];

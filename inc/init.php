@@ -110,5 +110,5 @@
 		define('SR_VERSION',file_get_contents(INCLUDE_DIR.'lastest.txt'));
 	}
 	$_POST = do_data($_POST);
-	$_GET = do_data($_GET);
+	$_GET = do_data($_GET,'strict');
 ?>

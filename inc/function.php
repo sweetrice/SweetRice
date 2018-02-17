@@ -7,10 +7,14 @@
  * @since 0.5.4
  */
 	defined('VALID_INCLUDE') or die();
-	function do_data($a,$filterData='public'){
+	function do_data($a,$filterData = 'public'){
 		foreach($a as $key=>$val){
 			if(!is_array($val)){
-				$a[$key] = trim(clean_quotes($val));
+				if ($filterData == 'strict') {
+					$a[$key] = trim(clean_quotes(htmlspecialchars(strip_tags($val))));
+				}else{
+					$a[$key] = trim(clean_quotes($val));
+				}				
 			}else{
 				$a[$key] = do_data($val,$filterData);
 			}
@@ -1123,7 +1127,10 @@
 
 	function themeLang(){
 		global $global_setting;
-		$lang = $_COOKIE['lang']?$_COOKIE['lang']:$global_setting['theme_lang'];
+		$lang = preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['lang']);
+		if (!$lang) {
+			$lang = $global_setting['theme_lang'];
+		}
 		if(!$lang){
 			$ltmp = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
 			switch(strtolower($ltmp[0])){
@@ -1146,7 +1153,10 @@
 
 	function theme(){
 		global $global_setting;
-		$theme = $_COOKIE['theme']?$_COOKIE['theme']:$global_setting['theme'];
+		$theme = preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['theme']);
+		if (!$theme) {
+			$theme = $global_setting['theme'];
+		}		
 		if(is_dir(SITE_HOME.'_themes/'.$theme)){
 			return $theme;
 		}
@@ -3004,5 +3014,12 @@
 				die(_t('Form session expired'));
 			}
 		}
+	}
+
+	function page_limit($cookie_name = 'page_limit',$default = 30){
+		if (!$cookie_name) {
+			$cookie_name = 'page_limit';
+		}
+		return intval($_COOKIE[$cookie_name]) > 0?intval($_COOKIE[$cookie_name]):30;
 	}
 ?>

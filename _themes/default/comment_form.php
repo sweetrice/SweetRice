@@ -12,8 +12,8 @@
 <input type="hidden" id="postID" value="<?php echo $row['id'];?>" />
 <div id="comment_body">
 <fieldset><legend><?php _e('Your name');?> 
-<input type="text" id="name" value="<?php echo $_COOKIE['cname'];?>"/> * 
-<input type="checkbox" id="remember" value="1" <?php echo $_COOKIE['cname']?'checked':''?>/> <?php _e('Remember Me');?> </legend>
+<input type="text" id="name" value="<?php echo do_data($_COOKIE['cname'],'strict');?>"/> * 
+<input type="checkbox" id="remember" value="1" <?php echo do_data($_COOKIE['cname'],'strict')?'checked':''?>/> <?php _e('Remember Me');?> </legend>
 <?php
 	if($user_info['email']){
 ?>
@@ -25,7 +25,7 @@
 <?php
 	}
 ?>
-<label><?php _e('Your Website');?> <input type="text" id="website" value="<?php echo $_COOKIE['cwebsite']?$_COOKIE['cwebsite']:'http://';?>"></label>
+<label><?php _e('Your Website');?> <input type="text" id="website" value="<?php echo do_data($_COOKIE['cwebsite'],'strict')?do_data($_COOKIE['cwebsite'],'strict'):'http://';?>"></label>
 <div><textarea id="info" class="comment_text"></textarea></div>
 <div><?php _e('Verification Code');?> 
 <input type="text" id="code" size="6" maxlength="5"/> * <img id="captcha" src="images/captcha.png" align="absmiddle" title="Click to get"/> <input type="button" class="comment_button" value=" <?php _e('Leave Comment');?> "/></div>

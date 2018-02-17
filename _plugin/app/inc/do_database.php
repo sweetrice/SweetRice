@@ -56,7 +56,7 @@
 				'field' => "*",
 				'where' => $where,
 				'pager' =>  array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'database')).$url_search.'&',
-				'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
+				'page_limit'=>page_limit(),'pager_function' => '_pager')
 			));		
 			$location = parse_url($_SERVER['REQUEST_URI']);
 			preg_match('/&p=([0-9]+)/',$location['query'],$matches);

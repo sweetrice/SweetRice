@@ -442,7 +442,7 @@
 		} elseif ($page > 1 && $page < $page_total) {
 			 $list_put='<a href="'.$p_link.'p='.($page-1).'" >&laquo;'._t('Previous').'</a> <a href="'.$p_link.'p=1">1</a><a href="'.$p_link.'p='.$page.'" class="pageCurrent">'.$page.'</a><a href="'.$p_link.'p='.$page_total.'">'.$page_total.'</a> <a href="'.$p_link.'p='.($page+1).'">'._t('Next').'&raquo; </a>';
 		}
-		$list_put = '<div class="PageList">'.($list_put?$list_put.' ':'')._t('Page Limit').': <input type="text" class="page_limit" value="'.$_COOKIE['page_limit'].'"/> <input type="button" value="'._t('Done').'" class="btn_limit"></div><script type="text/javascript">_(\'.page_limit\').bind(\'keydown\',function(event){event = event || window.event;if(event.keyCode == 13){_(this).parent().find(\'.btn_limit\').run(\'click\');}});_(\'.btn_limit\').bind(\'click\',function(){_.setCookie({name:\'page_limit\',value:_(this).parent().find(\'.page_limit\').val()});location.href="'.$p_link.'";});</script>';
+		$list_put = '<div class="PageList">'.($list_put?$list_put.' ':'')._t('Page Limit').': <input type="text" class="page_limit" value="'.page_limit().'"/> <input type="button" value="'._t('Done').'" class="btn_limit"></div><script type="text/javascript">_(\'.page_limit\').bind(\'keydown\',function(event){event = event || window.event;if(event.keyCode == 13){_(this).parent().find(\'.btn_limit\').run(\'click\');}});_(\'.btn_limit\').bind(\'click\',function(){_.setCookie({name:\'page_limit\',value:_(this).parent().find(\'.page_limit\').val()});location.href="'.$p_link.'";});</script>';
 		return array('page_start'=>$page_start,'list_put'=>$list_put);
 	}
 

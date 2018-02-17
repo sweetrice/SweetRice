@@ -83,7 +83,7 @@
 					'where' => $where,
 					'order' => "`url` ASC",
 					'pager' =>  array('p_link'=>'./?type=permalinks&mode=custom'.($search?'&search='.$search:'').'&',
-					'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:20,
+					'page_limit'=>page_limit(null,20),
 					'pager_function' => '_pager'
 					)
 				));

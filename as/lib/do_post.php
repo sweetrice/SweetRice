@@ -109,7 +109,7 @@
 			'field' => "ps.*",
 			'where'=>$where,
 			'pager' =>  array('p_link'=>'./?type=post'.$search_url.'&',
-			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
+			'page_limit'=>page_limit(),'pager_function' => '_pager')
 		));
 		$pager = $data['pager'];
 		$rows = $data['rows'];

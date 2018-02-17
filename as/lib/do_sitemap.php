@@ -51,7 +51,7 @@
 		}
 		$lList = array();
 		$mode = $_GET['mode'];
-		$pager = array('p_link'=>'./?type=sitemap&mode='.$mode.'&','page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager');
+		$pager = array('p_link'=>'./?type=sitemap&mode='.$mode.'&','page_limit'=>page_limit(),'pager_function' => '_pager');
 		switch($mode){
 			case 'custom':
 				$data = db_fetch(array('table' => "`".DB_LEFT."_links`",

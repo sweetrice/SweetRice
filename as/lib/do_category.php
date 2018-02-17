@@ -68,7 +68,7 @@
 			'field' => "c.*",
 			'where'=>$where,
 			'pager' =>  array('p_link'=>'./?type=category'.$search_url.'&',
-			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:30,'pager_function' => '_pager')
+			'page_limit'=>page_limit(),'pager_function' => '_pager')
 		));
 		$top_word = _t('Category List');
 		$inc = 'category.php';

@@ -132,7 +132,7 @@ switch($mode){
 		}
 		$files = $_files;
 		$total = count($files);
-		$page_limit = $_COOKIE['page_limit']?$_COOKIE['page_limit']:30;
+		$page_limit = page_limit();
 		$p_link = './?type=media_center&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
 		$pager = _pager($total,$page_limit,$p_link);
 		$top_word = _t('Media Center');

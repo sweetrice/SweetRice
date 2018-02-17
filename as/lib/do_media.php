@@ -122,7 +122,7 @@ switch($mode){
 		$files = $_files;
 		$referrer = $_GET['referrer'];
 		$total = count($files);
-		$page_limit = $_COOKIE['page_limit']?$_COOKIE['page_limit']:15;
+		$page_limit = page_limit(null,15);
 		$p_link = './?type=media&referrer='.$referrer.'&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
 		$pager = _pager($total,$page_limit,$p_link);
 		define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));

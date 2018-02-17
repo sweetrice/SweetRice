@@ -19,7 +19,7 @@
 		'where' => $where,
 		'order' => "`date` DESC",
 		'pager' =>  array('p_link'=>'./?type=attachment'.($search?'&search='.$search:'').'&',
-			'page_limit'=>$_COOKIE['page_limit']?$_COOKIE['page_limit']:20,'pager_function' => '_pager')
+			'page_limit'=>page_limit(null,20),'pager_function' => '_pager')
 	));
 	$rows = $data['rows'];
 	$pager = $data['pager'];

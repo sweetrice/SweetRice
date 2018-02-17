@@ -42,7 +42,7 @@
 				'field' => 'afd.*,af.name,af.fields',
 				'where' => $where,
 				'order' => 'afd.date DESC',
-				'pager' => array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'form_data')).$search_url.'&','page_limit'=>intval($_COOKIE['page_limit'])?intval($_COOKIE['page_limit']):10,'pager_function'=>'_pager')
+				'pager' => array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'form_data')).$search_url.'&','page_limit'=>page_limit(null,10),'pager_function'=>'_pager')
 			));
 			$app_inc = 'form_data_list.php';
 	}
