@@ -315,7 +315,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 				var _this = this;
 				_.ajax({
 					'type':'post',
-					'data':{'file':_(this).attr('link'),'no':_(this).attr('no'),'_tkv_':'<?php echo $token;?>'},
+					'data':{'file':_(this).attr('link'),'no':_(this).attr('no'),'_tkv_':'_tkv_':_('#_tkv_').attr('value')},
 					'url':'./?type=media&mode=delete',
 					'success':function(result){
 						if (result['status_code'])
