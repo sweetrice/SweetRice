@@ -7,8 +7,6 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
- $token = generate_slug();
- $_SESSION['_form_token_'] = $token;
  $top_height = in_array($_COOKIE['top_height'],array('small','normal'))?$_COOKIE['top_height']:'';
 ?>
 <!DOCTYPE html>
@@ -16,7 +14,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
-<meta id="_tkv_" value="<?php echo $token;?>">
+<meta id="_tkv_" value="<?php echo session_get('_form_token_');?>">
 <title><?php echo ($top_word?$top_word:_t('Welcome to SweetRice!')),' - ',_t('Dashboard');?></title>
 <link rel="stylesheet" type="text/css" href="site.css">
 <script type="text/javascript" src="../js/SweetRice.js"></script>

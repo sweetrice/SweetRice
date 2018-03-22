@@ -3010,7 +3010,7 @@
 
 	function check_form_token(){
 		if ($_POST ) {
-			if (!$_POST['_tkv_'] || $_SESSION['_form_token_'] != $_POST['_tkv_']) {
+			if (!$_POST['_tkv_'] || session_get('_form_token_') != $_POST['_tkv_']) {
 				die(_t('Form session expired'));
 			}
 		}
@@ -3022,4 +3022,25 @@
 		}
 		return intval($_COOKIE[$cookie_name]) > 0?intval($_COOKIE[$cookie_name]):30;
 	}
+
+    function session_set($name, $data, $expire = 0){
+    	if (!$expire) {
+    		$expire = ini_get('session.gc_maxlifetime');
+    	}
+        $session_data = array();  
+        $session_data['data'] = $data;  
+        $session_data['expire'] = time()+$expire;  
+        $_SESSION[$name] = $session_data;  
+    }
+   
+    function session_get($name){  
+        if(isset($_SESSION[$name])){  
+            if($_SESSION[$name]['expire'] > time()){  
+                return $_SESSION[$name]['data'];  
+            }else{  
+                unset($_SESSION[$name]);  
+            }  
+        }  
+        return false;  
+    }
 ?>

@@ -10,6 +10,9 @@
 	include('../inc/init.php');
 	include('lib/function.php');
 	check_form_token();
+	if (!session_get('_form_token_')) {
+		session_set('_form_token_',generate_slug());
+	}
 	if(!defined('INSTALLED')){
 		include('lib/install.php');
 		exit();

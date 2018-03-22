@@ -77,7 +77,6 @@
 		_goto('./?type=image');
 	}
 	define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
-	$token = $_SESSION['_form_token_'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -202,7 +201,7 @@ input[type=file]{
 </head>
 <body>
 <form method="post" action="" enctype="multipart/form-data" >
-<input type="hidden" name="_tkv_" value="<?php echo $token;?>">
+<input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_');?>">
 <div class="form_split">
 	<input type="file" id="imgs" name="imgs[]" multiple> <input type="button" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" class="btn_choose_file" value="<?php _e('Upload');?>"> <input type="submit" value="<?php _e('Upload');?>" class="input_submit"/></div>
 	<div class="form_split"><?php _e('Supports zip archive');?>
@@ -231,7 +230,7 @@ foreach($_SESSION['imgs'] as $img):?>
 			var _this = this;
 			_.ajax({
 				'type':'post',
-				'data':{'img':_(this).parent().attr('data'),'_tkv_':'<?php echo $token;?>'},
+				'data':{'img':_(this).parent().attr('data'),'_tkv_':'<?php echo session_get('_form_token_');?>'},
 				'url':'./?type=image&mode=delete',
 				'success':function(result){
 					if (result['status'] == 1)
