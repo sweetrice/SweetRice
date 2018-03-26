@@ -1805,11 +1805,9 @@
 	}
 
 	this.ajax_untip = function(str,timeout,callback){
-		var aut_dlg = _().dialog({'content':str,'name':'ajax_untip'});
+		_.dialog({'content':str,'name':'ajax_untip','layer':1});
 		setTimeout(function(){
-			if (aut_dlg){
-				aut_dlg.remove();
-			}
+			_('#SweetRice_dialog_close_ajax_untip').click();
 			if (typeof callback == 'function')
 			{
 				callback();
