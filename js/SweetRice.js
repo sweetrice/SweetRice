@@ -1805,7 +1805,7 @@
 	}
 
 	this.ajax_untip = function(str,timeout,callback){
-		_.dialog({'content':str,'name':'ajax_untip','layer':1});
+		_.dialog({'content':str,'name':'ajax_untip'});
 		setTimeout(function(){
 			_('#SweetRice_dialog_close_ajax_untip').click();
 			if (typeof callback == 'function')
