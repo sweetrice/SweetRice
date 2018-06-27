@@ -188,11 +188,6 @@
 		}
 
 		if($do_db){
-			if(extension_loaded('pdo_sqlite')){
-				$sqlite_driver = 'pdo_sqlite';
-			}else{
-				$sqlite_driver = 'sqlite';
-			}
 			$db_str = "<?php\n";
 			$db_str .= '$database_type = \'pgsql\';'."\n";
 			$db_str .= '$db_left = \''.$to_db_left.'\';'."\n";
@@ -201,7 +196,6 @@
 			$db_str .= '$db_name = \''.$to_db_name.'\';'."\n";
 			$db_str .= '$db_username = \''.$to_db_username.'\';'."\n";
 			$db_str .= '$db_passwd = \''.$to_db_passwd.'\';'."\n";
-			$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 			$db_str .= "?>";
 			file_put_contents(SITE_HOME.'inc/db.php',$db_str);
 			$GLOBALS['to_db_lib']->close();

@@ -14,11 +14,6 @@
 	}
 	define('DB_LEFT',$db_left);
 	define('DATABASE_TYPE',$database_type);
-	if(extension_loaded('pdo_sqlite')){
-		$sqlite_driver = 'pdo_sqlite';
-	}else{
-		$sqlite_driver = 'sqlite';
-	}
 	$global_setting['cache'] = false;
 	include("inc/function.php");	
 	if (function_exists('mysql_connect')) {
@@ -30,7 +25,7 @@
 		case 'sqlite':
 			$dbname = 'inc/'.$db_name.'.db';
 			if (is_file($dbname)) {
-				$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+				$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname));
 			}
 		break;
 		case 'pgsql':
@@ -57,7 +52,7 @@
 		return ;
 	}
 	function db_125(){
-		global $sqlite_driver,$db_name,$db_url,$db_port,$db_name,$db_username,$db_passwd;
+		global $db_name,$db_url,$db_port,$db_name,$db_username,$db_passwd;
 		$comments = db_arrays_nocache("SELECT * FROM `".DB_LEFT."_comment`");
 		switch(DATABASE_TYPE){
 			case 'sqlite':
@@ -72,7 +67,6 @@
 				$db_str .= '$database_type = \'sqlite\';'."\n";
 				$db_str .= '$db_left = \''.DB_LEFT.'\';'."\n";
 				$db_str .= '$db_name = \''.$db_name.'\';'."\n";
-				$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 				$db_str .= "?>";		
 				file_put_contents(ROOT_DIR.'inc/db.php',$db_str);
 			break;
@@ -92,7 +86,6 @@
 				$db_str .= '$db_name = \''.$db_name.'\';'."\n";
 				$db_str .= '$db_username = \''.$db_username.'\';'."\n";
 				$db_str .= '$db_passwd = \''.$db_passwd.'\';'."\n";
-				$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 				$db_str .= "?>";
 				file_put_contents(ROOT_DIR.'inc/db.php',$db_str);
 			break;
@@ -115,7 +108,6 @@
 				$db_str .= '$db_name = \''.$db_name.'\';'."\n";
 				$db_str .= '$db_username = \''.$db_username.'\';'."\n";
 				$db_str .= '$db_passwd = \''.$db_passwd.'\';'."\n";
-				$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 				$db_str .= "?>";
 				file_put_contents(ROOT_DIR.'inc/db.php',$db_str);
 		}
@@ -262,7 +254,7 @@
 				switch($database_type){
 					case 'sqlite':
 						$dbname = $site_home.$entry.'inc/'.$db_name.'.db';
-						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname));
 					break;
 					case 'pgsql':
 						$GLOBALS['db_lib'] = new pgsql_lib(array('url'=>$db_url,'port'=>$db_port,'username'=>$db_username,'passwd'=>$db_passwd,'name'=>$db_name));

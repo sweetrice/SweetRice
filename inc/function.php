@@ -927,8 +927,7 @@
 		if(!file_exists($dbname)){
 			$new_track = true;
 		}
-		global $sqlite_driver;
-		$db_track = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+		$db_track = new sqlite_lib(array('name'=>$dbname));
 		if($new_track){
 			$db_track->query("CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
 			$db_track->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
@@ -1762,7 +1761,7 @@
 				if($entry !='.' && $entry !='..' && file_exists(ROOT_DIR.'_sites/'.$entry.'/inc/db.php')){
 					$site_config = array();
 					include(ROOT_DIR.'_sites/'.$entry.'/inc/db.php');
-					$site_list[$entry] = array('database_type'=>$database_type,'db_url'=>$db_url,'db_name'=>$db_name,'db_left'=>$db_left,'sqlite_driver'=>$sqlite_driver,'db_user'=>$db_username,'db_passwd'=>$db_passwd,'db_port'=>$db_port);		
+					$site_list[$entry] = array('database_type'=>$database_type,'db_url'=>$db_url,'db_name'=>$db_name,'db_left'=>$db_left,'db_user'=>$db_username,'db_passwd'=>$db_passwd,'db_port'=>$db_port);		
 				}
 			}
 			$d->close();			
@@ -2778,6 +2777,15 @@
 		public function __construct($db_setting = false){
 			if (!$db_setting['name']) {
 				return false;
+			}
+			if (!$db_setting['sqlite_driver']) {
+				if(extension_loaded('pdo_sqlite')){
+					$db_setting['sqlite_driver'] = 'pdo_sqlite';
+				}elseif(class_exists('SQLite3')){
+					$db_setting['sqlite_driver'] = 'sqlite3';
+				}elseif(function_exists('sqlite_open')){
+					$db_setting['sqlite_driver'] = 'sqlite';
+				}
 			}
 			$this->db_setting = $db_setting;
 			switch($this->db_setting['sqlite_driver']){

@@ -497,15 +497,10 @@
 			case 'sqlite':
 				if($site_config['db_name']){
 					$dbname = $site_root.'inc/'.$site_config['db_name'].'.db';
-					if(extension_loaded('pdo_sqlite')){
-						$sqlite_driver = 'pdo_sqlite';
-					}else{
-						$sqlite_driver = 'sqlite';
-					}
 					if(file_exists($dbname)){
 						unlink($dbname);
 					}
-					$GLOBALS['db_lib_site'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+					$GLOBALS['db_lib_site'] = new sqlite_lib(array('name'=>$dbname));
 				}
 				if(!$GLOBALS['db_lib_site']->link){
 					$error_db = true;
@@ -526,7 +521,6 @@
 						$db_str .= '$database_type = \''.$site_config['db_type'].'\';'."\n";
 						$db_str .= '$db_left = \''.$site_config['db_left'].'\';'."\n";
 						$db_str .= '$db_name = \''.$site_config['db_name'].'\';'."\n";
-						$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 						$db_str .= '?>';
 						file_put_contents($site_root.'inc/db.php',$db_str);
 						$inited = true;

@@ -44,6 +44,6 @@
 	if(!file_exists($db_backup_dir)){
 		mkdir($db_backup_dir);
 	}
-	$bak_name = 'sqlite_bakup_'.date('YmdHis').'-'.SR_VERSION.'-'.$sqlite_driver.'.sql';
+	$bak_name = 'sqlite_bakup_'.date('YmdHis').'-'.SR_VERSION.'.sql';
 	file_put_contents($db_backup_dir.'/'.$bak_name,'<?php return '.var_export($data,true).';?>');
 ?>

@@ -47,17 +47,10 @@ switch($action){
 				case 'sqlite':
 					if($_POST['db_name']){
 						$dbname = INCLUDE_DIR.$_POST['db_name'].'.db';
-						if(extension_loaded('pdo_sqlite')){
-							$sqlite_driver = 'pdo_sqlite';
-						}elseif(class_exists('SQLite3')){
-							$sqlite_driver = 'sqlite3';
-						}elseif(function_exists('sqlite_open')){
-							$sqlite_driver = 'sqlite';
-						}
 						if(is_file($dbname)){
 							unlink($dbname);
 						}
-						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));				
+						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname));
 					}
 					if(!$GLOBALS['db_lib']->stat()){
 						$error_db = true;
@@ -85,7 +78,6 @@ switch($action){
 						$db_str .= '$database_type = \''.$_POST['database_type'].'\';'."\n";
 						$db_str .= '$db_left = \''.$_POST['db_left'].'\';'."\n";
 						$db_str .= '$db_name = \''.$_POST['db_name'].'\';'."\n";
-						$db_str .= '$sqlite_driver = \''.$sqlite_driver.'\';'."\n";
 						$db_str .= "?>";
 						file_put_contents('../inc/db.php',$db_str);
 					}

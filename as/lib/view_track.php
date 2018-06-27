@@ -11,7 +11,7 @@
 	if(!file_exists($dbname)){
 		$new_track = true;
 	}
-	$GLOBALS['db_lib_track'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+	$GLOBALS['db_lib_track'] = new sqlite_lib(array('name'=>$dbname));
 	$y = $_GET['y'];
 	if($y ==''){
 		$y = date('Y');

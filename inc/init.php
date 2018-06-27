@@ -51,7 +51,7 @@
 				case 'sqlite':
 					$dbname = SITE_HOME.'inc/'.$db_name.'.db';
 					if (is_file($dbname)) {
-						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname,'sqlite_driver'=>$sqlite_driver));
+						$GLOBALS['db_lib'] = new sqlite_lib(array('name'=>$dbname));
 					}
 				break;
 				case 'pgsql':
