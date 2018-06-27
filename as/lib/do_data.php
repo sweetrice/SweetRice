@@ -115,13 +115,11 @@
 			$table_list = explode(',',$_POST['tablelist']);
 			switch(DATABASE_TYPE){
 				case 'sqlite':
-					foreach($table_list as $val){
-						db_query('vacuum "'.$val.'"');
-						if(!db_error()){
-							$message .= $val.'<span>'._t('Successfully').'</span>';
-						}else{
-							$message .= $val.'<span class="failed">'._t('Failed').':'.db_error().'</span>';
-						}
+					db_query('vacuum;');
+					if(!db_error()){
+						$message .= '<span>'._t('Successfully').'</span>';
+					}else{
+						$message .= '<span class="failed">'._t('Failed').':'.db_error().'</span>';
 					}
 				break;
 				case 'pgsql':
