@@ -350,10 +350,10 @@
 	}
 
 	function postPreview($content){
-		preg_match_all("/.*(<p ?.*>(.+)<\/p>)+.*/",$content,$matchs);
+		preg_match_all("/(<p[^>]*>([^<]+)<\/p>).*/",$content,$matchs);
 		foreach($matchs[1] as $key=>$val){
-			if($val!='<p>&nbsp;</p>'&&$val!='<p></p>'){
-				preg_match("/<p ?[^>]*>(.+)<\/p>/",$val,$out);
+			if($val !='<p>&nbsp;</p>' && $val!='<p></p>'){
+				preg_match("/<p[^>]*>([^<]+)<\/p>/",$val,$out);
 				$previewContent = $out[1];
 				break;
 			}
@@ -830,8 +830,8 @@
 	}
 
 	function _out(){
-		if(!headers_sent()&&extension_loaded('zlib')&&strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip')!==false){
-			ob_start(ob_start('ob_gzhandler'));
+		if(!headers_sent()&&extension_loaded('zlib') && strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip')!==false){
+			ob_start('ob_gzhandler');
 		}else{
 			ob_start();
 		}
@@ -3016,11 +3016,36 @@
 		return null;
 	}
 
-	function check_form_token(){
-		if ($_POST ) {
-			if (!$_POST['_tkv_'] || session_get('_form_token_') != $_POST['_tkv_']) {
-				die(_t('Form session expired'));
+	function form_token($form_name = '',$value = '',$output_type = null){
+		if (!session_get('_form_token_'.$form_name)) {
+			if (!$value) {
+				$value = generate_slug();
 			}
+			session_set('_form_token_'.$form_name,$value);
+		}else{
+			session_set('_form_token_'.$form_name,session_get('_form_token_'.$form_name));
+		}
+		switch ($output_type) {
+			case 'meta':
+				echo '<meta id="_tkv_" value="'.session_get('_form_token_'.$form_name).'">';
+			break;
+			case 'input':
+				echo '<input type="hidden" name="_tkv_" value="'.session_get('_form_token_'.$form_name).'">';
+			break;
+			default:
+				return session_get('_form_token_'.$form_name);
+		}
+	}
+
+	function check_form_token($form_name = '',$output_type = null){
+		if ($_POST ) {
+			if (!$_POST['_tkv_'.$form_name] || session_get('_form_token_'.$form_name) != $_POST['_tkv_'.$form_name]) {
+				if (!$output_type) {
+					die(_t('Form session expired'));
+				}
+				return false;
+			}
+			return true;
 		}
 	}
 

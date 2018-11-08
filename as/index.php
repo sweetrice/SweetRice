@@ -9,10 +9,14 @@
 	define('DASHABOARD',true);
 	include('../inc/init.php');
 	include('lib/function.php');
-	check_form_token();
-	if (!session_get('_form_token_')) {
-		session_set('_form_token_',generate_slug());
+	$type = $_GET['type'];
+	if ($type == 'form_token') {
+		if ($_POST['_tkv_']) {
+			output_json(array('status' => 1,'form_token'=>form_token('','','return')));
+		}	
 	}
+	check_form_token();
+	form_token();
 	if(!defined('INSTALLED')){
 		include('lib/install.php');
 		exit();
@@ -23,7 +27,6 @@
 	$lang_data = array();
 	init_lang(INCLUDE_DIR.'lang/'.$global_setting['lang']);
 	$inc = null;
-	$type = $_GET['type'];
 	switch($type){
 		case 'signin':
 			dashboardSignin();
