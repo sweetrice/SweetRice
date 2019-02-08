@@ -215,21 +215,22 @@
 			}
 		}	
 		var _this = this;
+
 		this.parent = function(){
-			var p_elm = [];
+			var p_elm = [],_elm;
 			if (this.isArray()){
 				for (var i in elm ){
 					p_elm.push(elm[i].parentNode);
 				}
-				elm = p_elm;
+				_elm = p_elm;
 			}else{
-				elm = elm.parentNode;
+				_elm = elm.parentNode;
 			}
-			return this;
+			return SweetRice(_elm);
 		};
 
 		this.prev = function(){
-			var p_elm = [];
+			var p_elm = [],_elm;
 			if (this.isArray()){
 				for (var i in elm ){
 					if (elm.previousSibling.nodeName == '#text'){
@@ -238,18 +239,18 @@
 						p_elm.push(elm[i].previousSibling);
 					}
 				}
-				elm = p_elm;
+				_elm = p_elm;
 			}else{
-				elm = elm.previousSibling;
-				if (elm.nodeName == '#text'){
-					elm = elm.previousSibling;
+				_elm = elm.previousSibling;
+				if (_elm.nodeName == '#text'){
+					_elm = _elm.previousSibling;
 				}
 			}
-			return this;
+			return SweetRice(_elm);
 		};
 
 		this.next = function(){
-			var p_elm = [];
+			var p_elm = [],_elm;
 			if (this.isArray()){
 				for (var i in elm ){
 					if (elm.nextSibling.nodeName == '#text'){
@@ -258,25 +259,25 @@
 						p_elm.push(elm[i].nextSibling);
 					}
 				}
-				elm = p_elm;
+				_elm = p_elm;
 			}else{
-				elm = elm.nextSibling;
-				if (elm.nodeName == '#text'){
-					elm = elm.nextSibling;
+				_elm = elm.nextSibling;
+				if (_elm.nodeName == '#text'){
+					_elm = _elm.nextSibling;
 				}
 			}
-			return this;
+			return SweetRice(_elm);
 		};
 
 		this.find = function(selector){
 			var _elm;
 			_elm = this.getNode(selector,elm);
 			if (Object.prototype.toString.call( _elm ) === '[object Array]' && _elm.length == 1){
-				elm = _elm[0];
+				_elm = _elm[0];
 			}else{
-				elm = _elm;
+				_elm = _elm;
 			}
-			return this;
+			return new SweetRice(_elm);
 		};
 
 		this.width = function(v){
@@ -693,6 +694,21 @@
 				};
 			}
 			
+			animateFrame = function (handle) {
+				if (window.requestAnimationFrame) {
+					Sweetrice.animate_handle[handle]['timer'] = window.requestAnimationFrame(Sweetrice.animate_frame_function[handle]);
+				}else{
+					Sweetrice.animate_handle[handle]['timer'] = window.setTimeout(Sweetrice.animate_frame_function[handle], 1000 / 60);
+				}
+			};
+
+			animateFrameCancel = function (handle) {
+				if (typeof handle == 'undefined') { return ;}
+				if (window.cancelAnimationFrame) {
+					window.cancelAnimationFrame(Sweetrice.animate_handle[handle]['timer']);
+				}
+			};
+
 			var handle = Sweetrice.animate_handle.length;
 			if (!!_this.attr('_animate_')){
 				_this.attr('_animate_',_this.attr('_animate_')+','+handle);
@@ -700,14 +716,14 @@
 				_this.attr('_animate_',handle);
 			}
 			Sweetrice.animate_handle[handle] = [];
-			Sweetrice.animate_handle[handle]['timer'] = setInterval(function(){
+			Sweetrice.animate_frame_function[handle] = function(){
 				if (!Sweetrice.animate_handle[handle]['start']){
 					Sweetrice.animate_handle[handle]['start'] = new Date().getTime();
 				}
 				Sweetrice.animate_handle[handle]['diff'] = new Date().getTime() - Sweetrice.animate_handle[handle]['start'];
 				if (Sweetrice.animate_handle[handle]['stop'])
 				{
-					window.clearInterval(Sweetrice.animate_handle[handle]['timer']);
+					animateFrameCancel(handle);
 					Sweetrice.animate_handle[handle]['start'] = null;
 					Sweetrice.animate_handle[handle]['diff'] = null;
 					_this.each(function(){
@@ -723,7 +739,7 @@
 					return ;
 				}
 				if (Sweetrice.animate_handle[handle]['diff'] >= speed){
-					window.clearInterval(Sweetrice.animate_handle[handle]['timer']);
+					animateFrameCancel(handle);
 					Sweetrice.animate_handle[handle]['start'] = null;
 					Sweetrice.animate_handle[handle]['diff'] = null;
 					_this.each(function(){
@@ -834,8 +850,10 @@
 						}
 						_(this).css(css);
 					});
+					animateFrame(handle);
 				}
-			},13);
+			};
+			Sweetrice.animate_frame_function[handle]();
 			return this;
 		};
 		
@@ -1880,6 +1898,7 @@
 	Sweetrice.ajaxHandle = [];
 	Sweetrice.fade_handle = [];
 	Sweetrice.animate_handle = [];
+	Sweetrice.animate_frame_function = [];
 	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','pageSize','scrollSize','ready','dialog','stopevent','randomColor','fromColor'];
 	for (var i in _list){
 		eval('Sweetrice.'+_list[i]+' = Sweetrice().'+_list[i]+';');
