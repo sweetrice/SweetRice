@@ -405,7 +405,6 @@
 				}
 				return this;
 		};
-		
 
 		this.html = function(v,callback){
 			if (typeof elm != 'object'){
@@ -596,54 +595,70 @@
 			return this;
 		};
 
+		this.color2Array = function(data){
+			var a = [],color_map = {'ALICEBLUE':'#F0F8FF','ANTIQUEWHITE':'#FAEBD7','AQUA':'#00FFFF','AQUAMARINE':'#7FFFD4','AZURE':'#F0FFFF','BEIGE':'#F5F5DC','BISQUE':'#FFE4C4','BLACK':'#000000','BLANCHEDALMOND':'#FFEBCD','BLUE':'#0000FF','BLUEVIOLET':'#8A2BE2','BROWN':'#A52A2A','BURLYWOOD':'#DEB887','CADETBLUE':'#5F9EA0','CHARTREUSE':'#7FFF00','CHOCOLATE':'#D2691E','CORAL':'#FF7F50','CORNFLOWERBLUE':'#6495ED','CORNSILK':'#FFF8DC','CRIMSON':'#DC143C','CYAN':'#00FFFF','DARKBLUE':'#00008B','DARKCYAN':'#008B8B','DARKGOLDENROD':'#B8860B','DARKGRAY':'#A9A9A9','DARKGREEN':'#006400','DARKKHAKI':'#BDB76B','DARKMAGENTA':'#8B008B','DARKOLIVEGREEN':'#556B2F','DARKORANGE':'#FF8C00','DARKORCHID':'#9932CC','DARKRED':'#8B0000','DARKSALMON':'#E9967A','DARKSEAGREEN':'#8FBC8F','DARKSLATEBLUE':'#483D8B','DARKSLATEGRAY':'#2F4F4F','DARKTURQUOISE':'#00CED1','DARKVIOLET':'#9400D3','DEEPPINK':'#FF1493','DEEPSKYBLUE':'#00BFFF','DIMGRAY':'#696969','DODGERBLUE':'#1E90FF','FELDSPAR':'#D19275','FIREBRICK':'#B22222','FLORALWHITE':'#FFFAF0','FORESTGREEN':'#228B22','FUCHSIA':'#FF00FF','GAINSBORO':'#DCDCDC','GHOSTWHITE':'#F8F8FF','GOLD':'#FFD700','GOLDENROD':'#DAA520','GRAY':'#808080','GREEN':'#008000','GREENYELLOW':'#ADFF2F','HONEYDEW':'#F0FFF0','HOTPINK':'#FF69B4','INDIANRED':'#CD5C5C','INDIGO':'#4B0082','IVORY':'#FFFFF0','KHAKI':'#F0E68C','LAVENDER':'#E6E6FA','LAVENDERBLUSH':'#FFF0F5','LAWNGREEN':'#7CFC00','LEMONCHIFFON':'#FFFACD','LIGHTBLUE':'#ADD8E6','LIGHTCORAL':'#F08080','LIGHTCYAN':'#E0FFFF','LIGHTGOLDENRODYELLOW':'#FAFAD2','LIGHTGREY':'#D3D3D3','LIGHTGREEN':'#90EE90','LIGHTPINK':'#FFB6C1','LIGHTSALMON':'#FFA07A','LIGHTSEAGREEN':'#20B2AA','LIGHTSKYBLUE':'#87CEFA','LIGHTSLATEBLUE':'#8470FF','LIGHTSLATEGRAY':'#778899','LIGHTSTEELBLUE':'#B0C4DE','LIGHTYELLOW':'#FFFFE0','LIME':'#00FF00','LIMEGREEN':'#32CD32','LINEN':'#FAF0E6','MAGENTA':'#FF00FF','MAROON':'#800000','MEDIUMAQUAMARINE':'#66CDAA','MEDIUMBLUE':'#0000CD','MEDIUMORCHID':'#BA55D3','MEDIUMPURPLE':'#9370D8','MEDIUMSEAGREEN':'#3CB371','MEDIUMSLATEBLUE':'#7B68EE','MEDIUMSPRINGGREEN':'#00FA9A','MEDIUMTURQUOISE':'#48D1CC','MEDIUMVIOLETRED':'#C71585','MIDNIGHTBLUE':'#191970','MINTCREAM':'#F5FFFA','MISTYROSE':'#FFE4E1','MOCCASIN':'#FFE4B5','NAVAJOWHITE':'#FFDEAD','NAVY':'#000080','OLDLACE':'#FDF5E6','OLIVE':'#808000','OLIVEDRAB':'#6B8E23','ORANGE':'#FFA500','ORANGERED':'#FF4500','ORCHID':'#DA70D6','PALEGOLDENROD':'#EEE8AA','PALEGREEN':'#98FB98','PALETURQUOISE':'#AFEEEE','PALEVIOLETRED':'#D87093','PAPAYAWHIP':'#FFEFD5','PEACHPUFF':'#FFDAB9','PERU':'#CD853F','PINK':'#FFC0CB','PLUM':'#DDA0DD','POWDERBLUE':'#B0E0E6','PURPLE':'#800080','RED':'#FF0000','ROSYBROWN':'#BC8F8F','ROYALBLUE':'#4169E1','SADDLEBROWN':'#8B4513','SALMON':'#FA8072','SANDYBROWN':'#F4A460','SEAGREEN':'#2E8B57','SEASHELL':'#FFF5EE','SIENNA':'#A0522D','SILVER':'#C0C0C0','SKYBLUE':'#87CEEB','SLATEBLUE':'#6A5ACD','SLATEGRAY':'#708090','SNOW':'#FFFAFA','SPRINGGREEN':'#00FF7F','STEELBLUE':'#4682B4','TAN':'#D2B48C','TEAL':'#008080','THISTLE':'#D8BFD8','TOMATO':'#FF6347','TURQUOISE':'#40E0D0','VIOLET':'#EE82EE','VIOLETRED':'#D02090','WHEAT':'#F5DEB3','WHITE':'#FFFFFF','WHITESMOKE':'#F5F5F5','YELLOW':'#FFFF00','YELLOWGREEN':'#9ACD32'};
+			if (data == 'transparent'){
+				return 'transparent';
+			}
+			if (!/^#[0-9a-zA-Z]{3}/.test(data) && !/^#[0-9a-zA-Z]{6}/.test(data) && !/[a-zA-Z]+/.test(data))
+			{
+				return false;
+			}
+			var is_color_name = false;
+			for (var i in color_map){
+				if (data.toUpperCase().search(new RegExp("\\b" + i + "\\b")) != -1){
+					data = data.toUpperCase().replace(i,color_map[i]);
+					is_color_name = true;
+				}
+			}
+			if (is_color_name){
+				data = data.toLowerCase();
+			}
+			if (/^#[0-9A-Z]{3}$/i.test(data))
+			{
+				a.push(parseInt(data.substring(1,2)+data.substring(1,2),16));
+				a.push(parseInt(data.substring(2,3)+data.substring(2,3),16));
+				a.push(parseInt(data.substring(3,4)+data.substring(3,4),16));
+				return a;
+			}
+			if (/^#[0-9A-Z]{6}$/i.test(data))
+			{
+				a.push(parseInt(data.substring(1,3),16));
+				a.push(parseInt(data.substring(3,5),16));
+				a.push(parseInt(data.substring(5,7),16));
+				return a;
+			}
+			if (/^rgb\([0-9]{1,3},\s*[0-9]{1,3},\s*[0-9]{1,3}\)$/i.test(data))
+			{
+				var t = data.toLowerCase().split(',');
+				a.push(t[0].replace('rgb(',''));
+				a.push(t[1]);
+				a.push(t[2].replace(')',''));
+				return a;
+			}
+			return false;
+		};
+
+		this.animateFrame = function (fn) {
+			if (window.requestAnimationFrame) {
+				return window.requestAnimationFrame(fn);
+			}else{
+				return window.setTimeout(fn, 1000 / 60);
+			}
+		};
+
+		this.animateFrameCancel = function (timer) {
+			if (window.cancelAnimationFrame) {
+				window.cancelAnimationFrame(timer);
+			}else{
+				window.clearTimeout(timer);
+			}
+		};
+
 		this.animate =  function( prop, speed, callback ,animate_fn,animate_complete){				
 			if (typeof speed == 'undefined'){
 				speed = 500;
 			}
-			color2Array = function(data){
-				var a = [];
-				if (data == 'transparent'){
-					return 'transparent';
-				}
-				if (!/^#[0-9a-zA-Z]{3}/.test(data) && !/^#[0-9a-zA-Z]{6}/.test(data) && !/[a-zA-Z]+/.test(data))
-				{
-					return false;
-				}
-				var is_color_name = false;
-				var color_map = {'ALICEBLUE':'#F0F8FF','ANTIQUEWHITE':'#FAEBD7','AQUA':'#00FFFF','AQUAMARINE':'#7FFFD4','AZURE':'#F0FFFF','BEIGE':'#F5F5DC','BISQUE':'#FFE4C4','BLACK':'#000000','BLANCHEDALMOND':'#FFEBCD','BLUE':'#0000FF','BLUEVIOLET':'#8A2BE2','BROWN':'#A52A2A','BURLYWOOD':'#DEB887','CADETBLUE':'#5F9EA0','CHARTREUSE':'#7FFF00','CHOCOLATE':'#D2691E','CORAL':'#FF7F50','CORNFLOWERBLUE':'#6495ED','CORNSILK':'#FFF8DC','CRIMSON':'#DC143C','CYAN':'#00FFFF','DARKBLUE':'#00008B','DARKCYAN':'#008B8B','DARKGOLDENROD':'#B8860B','DARKGRAY':'#A9A9A9','DARKGREEN':'#006400','DARKKHAKI':'#BDB76B','DARKMAGENTA':'#8B008B','DARKOLIVEGREEN':'#556B2F','DARKORANGE':'#FF8C00','DARKORCHID':'#9932CC','DARKRED':'#8B0000','DARKSALMON':'#E9967A','DARKSEAGREEN':'#8FBC8F','DARKSLATEBLUE':'#483D8B','DARKSLATEGRAY':'#2F4F4F','DARKTURQUOISE':'#00CED1','DARKVIOLET':'#9400D3','DEEPPINK':'#FF1493','DEEPSKYBLUE':'#00BFFF','DIMGRAY':'#696969','DODGERBLUE':'#1E90FF','FELDSPAR':'#D19275','FIREBRICK':'#B22222','FLORALWHITE':'#FFFAF0','FORESTGREEN':'#228B22','FUCHSIA':'#FF00FF','GAINSBORO':'#DCDCDC','GHOSTWHITE':'#F8F8FF','GOLD':'#FFD700','GOLDENROD':'#DAA520','GRAY':'#808080','GREEN':'#008000','GREENYELLOW':'#ADFF2F','HONEYDEW':'#F0FFF0','HOTPINK':'#FF69B4','INDIANRED':'#CD5C5C','INDIGO':'#4B0082','IVORY':'#FFFFF0','KHAKI':'#F0E68C','LAVENDER':'#E6E6FA','LAVENDERBLUSH':'#FFF0F5','LAWNGREEN':'#7CFC00','LEMONCHIFFON':'#FFFACD','LIGHTBLUE':'#ADD8E6','LIGHTCORAL':'#F08080','LIGHTCYAN':'#E0FFFF','LIGHTGOLDENRODYELLOW':'#FAFAD2','LIGHTGREY':'#D3D3D3','LIGHTGREEN':'#90EE90','LIGHTPINK':'#FFB6C1','LIGHTSALMON':'#FFA07A','LIGHTSEAGREEN':'#20B2AA','LIGHTSKYBLUE':'#87CEFA','LIGHTSLATEBLUE':'#8470FF','LIGHTSLATEGRAY':'#778899','LIGHTSTEELBLUE':'#B0C4DE','LIGHTYELLOW':'#FFFFE0','LIME':'#00FF00','LIMEGREEN':'#32CD32','LINEN':'#FAF0E6','MAGENTA':'#FF00FF','MAROON':'#800000','MEDIUMAQUAMARINE':'#66CDAA','MEDIUMBLUE':'#0000CD','MEDIUMORCHID':'#BA55D3','MEDIUMPURPLE':'#9370D8','MEDIUMSEAGREEN':'#3CB371','MEDIUMSLATEBLUE':'#7B68EE','MEDIUMSPRINGGREEN':'#00FA9A','MEDIUMTURQUOISE':'#48D1CC','MEDIUMVIOLETRED':'#C71585','MIDNIGHTBLUE':'#191970','MINTCREAM':'#F5FFFA','MISTYROSE':'#FFE4E1','MOCCASIN':'#FFE4B5','NAVAJOWHITE':'#FFDEAD','NAVY':'#000080','OLDLACE':'#FDF5E6','OLIVE':'#808000','OLIVEDRAB':'#6B8E23','ORANGE':'#FFA500','ORANGERED':'#FF4500','ORCHID':'#DA70D6','PALEGOLDENROD':'#EEE8AA','PALEGREEN':'#98FB98','PALETURQUOISE':'#AFEEEE','PALEVIOLETRED':'#D87093','PAPAYAWHIP':'#FFEFD5','PEACHPUFF':'#FFDAB9','PERU':'#CD853F','PINK':'#FFC0CB','PLUM':'#DDA0DD','POWDERBLUE':'#B0E0E6','PURPLE':'#800080','RED':'#FF0000','ROSYBROWN':'#BC8F8F','ROYALBLUE':'#4169E1','SADDLEBROWN':'#8B4513','SALMON':'#FA8072','SANDYBROWN':'#F4A460','SEAGREEN':'#2E8B57','SEASHELL':'#FFF5EE','SIENNA':'#A0522D','SILVER':'#C0C0C0','SKYBLUE':'#87CEEB','SLATEBLUE':'#6A5ACD','SLATEGRAY':'#708090','SNOW':'#FFFAFA','SPRINGGREEN':'#00FF7F','STEELBLUE':'#4682B4','TAN':'#D2B48C','TEAL':'#008080','THISTLE':'#D8BFD8','TOMATO':'#FF6347','TURQUOISE':'#40E0D0','VIOLET':'#EE82EE','VIOLETRED':'#D02090','WHEAT':'#F5DEB3','WHITE':'#FFFFFF','WHITESMOKE':'#F5F5F5','YELLOW':'#FFFF00','YELLOWGREEN':'#9ACD32'};
-				for (var i in color_map){
-					if (data.toUpperCase().search(new RegExp("\\b" + i + "\\b")) != -1){
-						data = data.toUpperCase().replace(i,color_map[i]);
-						is_color_name = true;
-					}
-				}
-				if (is_color_name){
-					data = data.toLowerCase();
-				}
-				if (/^#[0-9A-Z]{3}$/i.test(data))
-				{
-					a.push(parseInt(data.substring(1,2)+data.substring(1,2),16));
-					a.push(parseInt(data.substring(2,3)+data.substring(2,3),16));
-					a.push(parseInt(data.substring(3,4)+data.substring(3,4),16));
-					return a;
-				}
-				if (/^#[0-9A-Z]{6}$/i.test(data))
-				{
-					a.push(parseInt(data.substring(1,3),16));
-					a.push(parseInt(data.substring(3,5),16));
-					a.push(parseInt(data.substring(5,7),16));
-					return a;
-				}
-				if (/^rgb\([0-9]{1,3},\s*[0-9]{1,3},\s*[0-9]{1,3}\)$/i.test(data))
-				{
-					var t = data.toLowerCase().split(',');
-					a.push(t[0].replace('rgb(',''));
-					a.push(t[1]);
-					a.push(t[2].replace(')',''));
-					return a;
-				}
-				return false;
-			};
 			if (typeof animate_fn != 'function'){
 				animate_fn = function(cv,ev,diff,speed){
 					return parseFloat(cv + (ev - cv) * parseFloat(diff/speed,10),10);
@@ -654,7 +669,7 @@
 				animate_complete = function(obj,prop,handle){
 					for (var i in prop ){
 						var cv_list = [],ev_list = [];
-						var evs = color2Array(prop[i]);
+						var evs = _this.color2Array(prop[i]);
 						if (!!evs)
 						{
 							if (evs == 'transparent')
@@ -693,21 +708,6 @@
 					}
 				};
 			}
-			
-			animateFrame = function (handle) {
-				if (window.requestAnimationFrame) {
-					Sweetrice.animate_handle[handle]['timer'] = window.requestAnimationFrame(Sweetrice.animate_frame_function[handle]);
-				}else{
-					Sweetrice.animate_handle[handle]['timer'] = window.setTimeout(Sweetrice.animate_frame_function[handle], 1000 / 60);
-				}
-			};
-
-			animateFrameCancel = function (handle) {
-				if (typeof handle == 'undefined') { return ;}
-				if (window.cancelAnimationFrame) {
-					window.cancelAnimationFrame(Sweetrice.animate_handle[handle]['timer']);
-				}
-			};
 
 			var handle = Sweetrice.animate_handle.length;
 			if (!!_this.attr('_animate_')){
@@ -723,7 +723,7 @@
 				Sweetrice.animate_handle[handle]['diff'] = new Date().getTime() - Sweetrice.animate_handle[handle]['start'];
 				if (Sweetrice.animate_handle[handle]['stop'])
 				{
-					animateFrameCancel(handle);
+					_this.animateFrameCancel(Sweetrice.animate_handle[handle]['timer']);
 					Sweetrice.animate_handle[handle]['start'] = null;
 					Sweetrice.animate_handle[handle]['diff'] = null;
 					_this.each(function(){
@@ -733,13 +733,14 @@
 						animate_complete(this,prop,handle);
 					},function(){
 						if (typeof callback == 'function'){
-							callback.apply(elm);
+							_this.animateFrame(function(){
+								callback.apply(elm);
+							});
 						}
 					});
 					return ;
 				}
 				if (Sweetrice.animate_handle[handle]['diff'] >= speed){
-					animateFrameCancel(handle);
 					Sweetrice.animate_handle[handle]['start'] = null;
 					Sweetrice.animate_handle[handle]['diff'] = null;
 					_this.each(function(){
@@ -760,17 +761,20 @@
 						}
 						_(this).css(css);
 						animate_complete(this,prop,handle);
+						_this.animateFrameCancel(Sweetrice.animate_handle[handle]['timer']);
 					},function(){
 						if (typeof callback == 'function'){
-							callback.apply(elm);
+							_this.animateFrame(function(){
+								callback.apply(elm);
+							});
 						}
 					});
 				}else{
 					_this.each(function(){
 						var css = [],pos = [],cv,ev,add,pix,attr = [];
 						for (var i in prop ){
-							var cvs = color2Array(_(this).css(i));
-							var evs = color2Array(prop[i]);
+							var cvs = _this.color2Array(_(this).css(i));
+							var evs = _this.color2Array(prop[i]);
 							if (evs && !cvs)
 							{
 								cvs = 'transparent';
@@ -850,7 +854,7 @@
 						}
 						_(this).css(css);
 					});
-					animateFrame(handle);
+					Sweetrice.animate_handle[handle]['timer'] = _this.animateFrame(Sweetrice.animate_frame_function[handle]);
 				}
 			};
 			Sweetrice.animate_frame_function[handle]();
@@ -1441,25 +1445,26 @@
 			var me = _(this);
 			me.unbind('mousedown').bind('mousedown',function(event){
 				var event = event || window.event;
-				me.attr({'x':event.clientX,'y':event.clientY,'left':parseInt(me.css('left') || me.position().left),'top':parseInt(me.css('top') || me.position().top)});
+				_(this).stopevent(event);
+				me.attr({'x':event.clientX,'y':event.clientY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)});
 				if (typeof param.start == 'function')
 				{
 					param.start(me);
 				}
-				_(this).stopevent(event);
 			}).unbind('touchstart').bind('touchstart',function(event){
 				var event = event || window.event;
-				me.attr({'x':event.clientX||event.touches[0].pageX,'y':event.clientY||event.touches[0].pageY,'left':parseInt(me.css('left') || me.position().left),'top':parseInt(me.css('top') || me.position().top)});
+				me.attr({'x':event.clientX||event.touches[0].pageX,'y':event.clientY||event.touches[0].pageY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)});
 				if (typeof param.start == 'function')
 				{
 					param.start(me);
 				}
-				_(this).stopevent(event);
 			}).bind('touchmove',function(event){
 				var event = event || window.event;
+				_(this).stopevent(event);
 				if (me.attr('x') > 0)
 				{
 					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
+					me.attr({diffx:diffX,diffy:diffY});
 					switch (param.type)
 					{
 						case 'none':
@@ -1478,23 +1483,27 @@
 					{
 						param.move(diffX,diffY,me);
 					}
-					_(this).stopevent(event);
 				}
 			}).bind('touchend',function(event){
-				me.removeAttr('x');
-				me.removeAttr('y');
-				me.removeAttr('left');
-				me.removeAttr('top');
+				var event = event || window.event;
 				if (typeof param.complete == 'function')
 				{
 					param.complete(me);
 				}
+				me.removeAttr('x');
+				me.removeAttr('y');
+				me.removeAttr('left');
+				me.removeAttr('top');
+				me.removeAttr('diffx');
+				me.removeAttr('diffy');
 			});
-			_(document).bind('mousemove',function(event){
+			me.bind('mousemove',function(event){
 				var event = event || window.event;
+				_(this).stopevent(event);
 				if (me.attr('x') > 0)
 				{
 					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
+					me.attr({diffx:diffX,diffy:diffY});
 					switch (param.type)
 					{
 						case 'none':
@@ -1513,18 +1522,54 @@
 					{
 						param.move(diffX,diffY,me);
 					}
-					_(this).stopevent(event);
 				}
 			});
-			_(document).bind('mouseup',function(event){
-				me.removeAttr('x');
-				me.removeAttr('y');
-				me.removeAttr('left');
-				me.removeAttr('top');
+			me.bind('mouseup',function(event){
+				var event = event || window.event;
+				_(this).stopevent(event);
+				if (parseInt(me.attr('diffx') || 0) != 0 || parseInt(me.attr('diffy') || 0) != 0 ) {
+					me.find('*').bind('click',function(event){
+						if (_(this).hasClass('_stopevent')) {
+							_this.stopevent(event);
+						}
+					}).addClass('_stopevent');
+				}else{
+					me.find('*').removeClass('_stopevent');
+				}
 				if (typeof param.complete == 'function')
 				{
 					param.complete(me);
 				}
+				me.removeAttr('x');
+				me.removeAttr('y');
+				me.removeAttr('left');
+				me.removeAttr('top');
+				me.removeAttr('diffx');
+				me.removeAttr('diffy');
+			});
+			me.bind('mouseleave',function(event){
+				var event = event || window.event;
+				_(this).stopevent(event);
+				if (parseInt(me.attr('diffx') || 0) != 0 || parseInt(me.attr('diffy') || 0) != 0 ) {
+					me.find('*').bind('click',function(event){
+						if (_(this).hasClass('_stopevent')) {
+							_this.stopevent(event);
+						}
+					}).addClass('_stopevent');
+				}else{
+					me.find('*').removeClass('_stopevent');
+				}
+				if (typeof param.complete == 'function')
+				{
+					param.complete(me);
+				}
+				_(this).stopevent(event);
+				me.removeAttr('x');
+				me.removeAttr('y');
+				me.removeAttr('left');
+				me.removeAttr('top');
+				me.removeAttr('diffx');
+				me.removeAttr('diffy');
 			});
 		});
 	};
