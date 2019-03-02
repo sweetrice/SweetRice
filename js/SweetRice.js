@@ -226,7 +226,7 @@
 			}else{
 				_elm = elm.parentNode;
 			}
-			return SweetRice(_elm);
+			return new SweetRice(_elm);
 		};
 
 		this.prev = function(){
@@ -246,7 +246,7 @@
 					_elm = _elm.previousSibling;
 				}
 			}
-			return SweetRice(_elm);
+			return new SweetRice(_elm);
 		};
 
 		this.next = function(){
@@ -266,7 +266,7 @@
 					_elm = _elm.nextSibling;
 				}
 			}
-			return SweetRice(_elm);
+			return new SweetRice(_elm);
 		};
 
 		this.find = function(selector){
