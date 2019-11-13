@@ -1757,7 +1757,7 @@
 		var i = param.expired || 30*3600*1000*24;
 		var date = new Date();
 		date.setTime(date.getTime()+i);
-		var str = param.name+'='+param.value;
+		var str = param.name+'='+encodeURIComponent(param.value);
 		str += ';expires='+date.toGMTString()+';path='+param.path+';domain='+param.domain;
 		document.cookie = str;
 		str = param.name+'='+encodeURIComponent(param.value);
