@@ -1760,7 +1760,7 @@
 		var str = param.name+'='+param.value;
 		str += ';expires='+date.toGMTString()+';path='+param.path+';domain='+param.domain;
 		document.cookie = str;
-		str = param.name+'='+param.value;
+		str = param.name+'='+encodeURIComponent(param.value);
 		str += ';expires='+date.toGMTString()+';path='+param.path+';domain=.'+param.domain;
 		document.cookie = str;
 	};
