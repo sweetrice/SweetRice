@@ -1,6 +1,6 @@
 #############################################
 SweetRice - Simple Website Management System
-Version 1.5.0
+Version 1.6.2
 Author:Hiler Liu steelcal@gmail.com
 Home page:http://www.basic-cms.org/
 #############################################
@@ -35,6 +35,12 @@ OR
 Thank you.
 
 SweetRice change log:
+======================================
+Change log V1.6.2 12/05/2019
+======================================
+core update
+	support php7.4
+update SweetRice.js
 ======================================
 Change log V1.6.1 02/13/2018
 ======================================
