@@ -25,9 +25,6 @@
 		return htmlspecialchars($str,ENT_QUOTES);
 	}
 	function clean_quotes($str){
-		if(get_magic_quotes_gpc()){
-			$str = stripslashes($str);
-		}
 		return $str;
 	}
 	if(!function_exists('sqlite_escape_string')){
