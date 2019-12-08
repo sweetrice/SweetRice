@@ -1833,7 +1833,7 @@
 				localStorage.removeItem(i);
 			}
 		}else{
-			localStorage.removeItem(k,v);
+			localStorage.removeItem(k);
 		}
 	}
 
@@ -1944,7 +1944,7 @@
 	Sweetrice.fade_handle = [];
 	Sweetrice.animate_handle = [];
 	Sweetrice.animate_frame_function = [];
-	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','pageSize','scrollSize','ready','dialog','stopevent','randomColor','fromColor'];
+	var _list = ['ajax','ajax_untip','getCookie','setCookie','delCookie','getStorage','setStorage','delStorage','clearStorage','pageSize','scrollSize','ready','dialog','stopevent','randomColor','fromColor','inArray'];
 	for (var i in _list){
 		eval('Sweetrice.'+_list[i]+' = Sweetrice().'+_list[i]+';');
 	}
