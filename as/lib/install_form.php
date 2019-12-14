@@ -21,13 +21,14 @@
 <input type="text" name="author" value="<?php echo $_POST['author'];?>" class="req"></fieldset>
 <fieldset><legend><?php _e('Database Setting');?></legend>
 <div class="row2">
-<div class="form_split">
-<?php _e('Database');?>:</div>
-<div class="form_split"><select name="database_type" class="database_type">
-	<option value="mysql" <?php echo $s_dtype['mysql'];?>>MySQL</option>
-	<option value="sqlite" <?php echo $s_dtype['sqlite'];?>>SQLite</option>
-	<option value="pgsql" <?php echo $s_dtype['pgsql'];?>>PostgreSQL</option>
-</select>
+	<div class="form_split"><?php _e('Database');?>:</div>
+	<div class="form_split">
+		<select name="database_type" class="database_type">
+			<option value="mysql" <?php echo $s_dtype['mysql'];?>>MySQL</option>
+			<option value="sqlite" <?php echo $s_dtype['sqlite'];?>>SQLite</option>
+			<option value="pgsql" <?php echo $s_dtype['pgsql'];?>>PostgreSQL</option>
+		</select>
+	</div>
 </div>
 <div id="database_setting" class="row2" style="display:<?php echo $_POST['database_type']=='sqlite'?'none':'block';?>">
 <div class="form_split"><?php _e('Database Host');?></div>
