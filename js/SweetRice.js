@@ -166,7 +166,7 @@
 			var _elm = [];
 			for (var i in elm )
 			{
-				if (elm[i].replace(/^\s+|\s+$/g, ''))
+				if (elm[i].replace(/\s{2,}/g, ' ').replace(/^\s+|\s+$/g, ''))
 				{
 					_elm.push(elm[i]);
 				}
@@ -183,9 +183,23 @@
 				{
 					for (var i in elms )
 					{
-						var tmp = this.getNode(elms[i]);
-						for (var ti in tmp ){
-							a.push(tmp[ti]);
+						var child_elms = elms[i].split(' '),b;
+						if (child_elms.length == 1) {
+							var tmp = this.getNode(elms[i]);
+							for (var ti in tmp ){
+								a.push(tmp[ti]);
+							}	
+						}else{
+							b = this.getNode(child_elms[0]);
+							var n = 1;
+							while (n < child_elms.length)
+							{
+								b = this.getNode(child_elms[n],b);
+								n += 1;
+							}
+							for (var i in b){
+								a.push(b[i]);
+							}				
 						}
 					}
 				}
