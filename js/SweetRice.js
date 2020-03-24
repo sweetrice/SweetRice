@@ -1460,14 +1460,14 @@
 			me.unbind('mousedown').bind('mousedown',function(event){
 				var event = event || window.event;
 				_(this).stopevent(event);
-				me.attr({'x':event.clientX,'y':event.clientY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)});
+				me.attr({'x':event.clientX,'y':event.clientY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)}).addClass('SweetRice_item_draging');
 				if (typeof param.start == 'function')
 				{
 					param.start(me);
 				}
 			}).unbind('touchstart').bind('touchstart',function(event){
 				var event = event || window.event;
-				me.attr({'x':event.clientX||event.touches[0].pageX,'y':event.clientY||event.touches[0].pageY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)});
+				me.attr({'x':event.clientX||event.touches[0].pageX,'y':event.clientY||event.touches[0].pageY,'left':parseInt(me.position().left),'top':parseInt(me.position().top)}).addClass('SweetRice_item_draging');
 				if (typeof param.start == 'function')
 				{
 					param.start(me);
@@ -1475,7 +1475,7 @@
 			}).bind('touchmove',function(event){
 				var event = event || window.event;
 				_(this).stopevent(event);
-				if (me.attr('x') > 0)
+				if (me.hasClass('SweetRice_item_draging'))
 				{
 					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
 					me.attr({diffx:diffX,diffy:diffY});
@@ -1485,13 +1485,13 @@
 
 						break;
 						case 'x':
-							me.css({left:(parseInt(me.attr('left')) + diffX)+'px'});
+							me.css({left:(parseInt(me.attr('left')) - (parseInt(me.attr('init_left')) > 0 ? parseInt(me.attr('init_left')) :0) + diffX)+'px'});
 						break;
 						case 'y':
-							me.css({top:(parseInt(me.attr('top')) + diffY)+'px'});
+							me.css({top:(parseInt(me.attr('top')) - (parseInt(me.attr('init_top')) > 0 ? parseInt(me.attr('init_top')) :0) + diffY)+'px'});
 						break;
 						default:
-							me.css({left:(parseInt(me.attr('left')) + diffX)+'px',top:(parseInt(me.attr('top')) + diffY)+'px'});
+							me.css({left:(parseInt(me.attr('left')) - (parseInt(me.attr('init_left')) > 0 ? parseInt(me.attr('init_left')) :0) + diffX)+'px',top:(parseInt(me.attr('top')) - (parseInt(me.attr('init_top')) > 0 ? parseInt(me.attr('init_top')) :0) + diffY)+'px'});
 					}
 					if (typeof param.move == 'function')
 					{
@@ -1510,11 +1510,12 @@
 				me.removeAttr('top');
 				me.removeAttr('diffx');
 				me.removeAttr('diffy');
+          		_('.SweetRice_item_draging').removeClass('SweetRice_item_draging');
 			});
 			me.bind('mousemove',function(event){
 				var event = event || window.event;
 				_(this).stopevent(event);
-				if (me.attr('x') > 0)
+				if (me.hasClass('SweetRice_item_draging'))
 				{
 					var diffX = parseInt(event.clientX||event.touches[0].pageX) - parseInt(me.attr('x')),diffY = parseInt(event.clientY||event.touches[0].pageY) - parseInt(me.attr('y'));
 					me.attr({diffx:diffX,diffy:diffY});
@@ -1524,13 +1525,13 @@
 
 						break;
 						case 'x':
-							me.css({left:(parseInt(me.attr('left')) + diffX)+'px'});
+							me.css({left:(parseInt(me.attr('left')) - (parseInt(me.attr('init_left')) > 0 ? parseInt(me.attr('init_left')) :0) + diffX)+'px'});
 						break;
 						case 'y':
-							me.css({top:(parseInt(me.attr('top')) + diffY)+'px'});
+							me.css({top:(parseInt(me.attr('top')) - (parseInt(me.attr('init_top')) > 0 ? parseInt(me.attr('init_top')) :0) + diffY)+'px'});
 						break;
 						default:
-							me.css({left:(parseInt(me.attr('left')) + diffX)+'px',top:(parseInt(me.attr('top')) + diffY)+'px'});
+							me.css({left:(parseInt(me.attr('left')) - (parseInt(me.attr('init_left')) > 0 ? parseInt(me.attr('init_left')) :0) + diffX)+'px',top:(parseInt(me.attr('top')) - (parseInt(me.attr('init_top')) > 0 ? parseInt(me.attr('init_top')) :0) + diffY)+'px'});
 					}
 					if (typeof param.move == 'function')
 					{
@@ -1560,30 +1561,7 @@
 				me.removeAttr('top');
 				me.removeAttr('diffx');
 				me.removeAttr('diffy');
-			});
-			me.bind('mouseleave',function(event){
-				var event = event || window.event;
-				_(this).stopevent(event);
-				if (parseInt(me.attr('diffx') || 0) != 0 || parseInt(me.attr('diffy') || 0) != 0 ) {
-					me.find('*').bind('click',function(event){
-						if (_(this).hasClass('_stopevent')) {
-							_this.stopevent(event);
-						}
-					}).addClass('_stopevent');
-				}else{
-					me.find('*').removeClass('_stopevent');
-				}
-				if (typeof param.complete == 'function')
-				{
-					param.complete(me);
-				}
-				_(this).stopevent(event);
-				me.removeAttr('x');
-				me.removeAttr('y');
-				me.removeAttr('left');
-				me.removeAttr('top');
-				me.removeAttr('diffx');
-				me.removeAttr('diffy');
+          		_('.SweetRice_item_draging').removeClass('SweetRice_item_draging');
 			});
 		});
 	};
