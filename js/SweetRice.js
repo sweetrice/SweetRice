@@ -1303,23 +1303,27 @@
 			}
 			return xmlHttp;
 		}
-		this.ajaxd_response = function(k,fn,header_only){
+		this.ajaxd_response = function(k,fn,fnError,header_only){
 			if (!Sweetrice.ajaxHandle[k]){
 				return ;
 			}
 			var result = new Object();
-			if (Sweetrice.ajaxHandle[k].readyState == 4 && Sweetrice.ajaxHandle[k].status == 200) {
+			if (Sweetrice.ajaxHandle[k].readyState == 4) {
 				clearTimeout(Sweetrice.xmlHttpTimeout[k]);
-				var response = Sweetrice.ajaxHandle[k].responseText;
-				if (response){
-					try {
-						result = eval('(' + response + ')');
-					} catch (e) {
-						result = response;
+				if (Sweetrice.ajaxHandle[k].status == 200) {
+					var response = Sweetrice.ajaxHandle[k].responseText;
+					if (response){
+						try {
+							result = eval('(' + response + ')');
+						} catch (e) {
+							result = response;
+						}
 					}
+					Sweetrice.ajaxHandle[k] = null;
+					return fn(result);					
+				}else{
+					return fnError();
 				}
-				Sweetrice.ajaxHandle[k] = null;
-				return fn(result);
 			}else if(header_only && Sweetrice.ajaxHandle[k].readyState >= 2){
 				var header_data = Sweetrice.ajaxHandle[k].getAllResponseHeaders().split("\r\n"),tmp;
 				for(var i in header_data){
@@ -1343,7 +1347,7 @@
 			}
 		}
 
-		this.ajaxd_post = function(query,url,fn,timeout,fnTimeout){
+		this.ajaxd_post = function(query,url,fn,timeout,fnTimeout,fnError){
 			var k = url;
 			if (Sweetrice.ajaxHandle[k]){
 				Sweetrice.ajaxHandle[k].abort();
@@ -1359,12 +1363,12 @@
 			if (timeout > 0 && typeof fnTimeout == 'function'){
 				Sweetrice.xmlHttpTimeout[k] = setTimeout(function(){_this.ajaxd_timeout(k,fnTimeout);},timeout);
 			}
-			Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn);};
+			Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn,fnError);};
 			Sweetrice.ajaxHandle[k].setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 			Sweetrice.ajaxHandle[k].send(query.substr(1));
 		}
 
-		this.ajaxd_get = function(query,url,fn,timeout,fnTimeout){
+		this.ajaxd_get = function(query,url,fn,timeout,fnTimeout,fnError){
 			var k = url + query;
 			if (url.indexOf('?') == -1){
 				url += '?timeStamp=' + new Date().getTime() + query;
@@ -1380,11 +1384,11 @@
 			if (timeout > 0 && typeof fnTimeout == 'function'){
 				Sweetrice.xmlHttpTimeout[k] = setTimeout(function(){_this.ajaxd_timeout(k,fnTimeout);},timeout);
 			}
-		  Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn);};
+		  Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn,fnError);};
 		  Sweetrice.ajaxHandle[k].send(null);
 		}
 
-		this.ajaxd_head = function(query,url,fn,timeout,fnTimeout){
+		this.ajaxd_head = function(query,url,fn,timeout,fnTimeout,fnError){
 			var k = url + query;
 			if (Sweetrice.ajaxHandle[k]){
 				Sweetrice.ajaxHandle[k].abort();
@@ -1395,7 +1399,7 @@
 			if (timeout > 0 && typeof fnTimeout == 'function'){
 				Sweetrice.xmlHttpTimeout[k] = setTimeout(function(){_this.ajaxd_timeout(k,fnTimeout);},timeout);
 			}
-			Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn,true);};
+			Sweetrice.ajaxHandle[k].onreadystatechange = function(){_this.ajaxd_response(k,fn,fnError,true);};
 			Sweetrice.ajaxHandle[k].send(null);
 		}
 
@@ -1457,10 +1461,10 @@
 			switch (param.type.toUpperCase())
 			{
 				case 'POST':
-					_this.ajaxd_post(query,param.url,param.success,param.timeout,param.fnTimeout);
+					_this.ajaxd_post(query,param.url,param.success,param.timeout,param.fnTimeout,fnError);
 				break;
 				case 'GET':
-					_this.ajaxd_get(query,param.url,param.success,param.timeout,param.fnTimeout);
+					_this.ajaxd_get(query,param.url,param.success,param.timeout,param.fnTimeout,fnError);
 				break;
 			}
 		};
