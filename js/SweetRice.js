@@ -1430,12 +1430,12 @@
 
 		this.ajax = function(param){
 			if (!param.timeout){
-				param.timeout = 60000;
+				param.timeout = 0;
 			}
 			if (typeof param.fnTimeout != 'function')
 			{
 				param.fnTimeout = function(){
-					_.dialog({'content':'Script execute time more than 60 seconds and no response from the server,maybe network problem.'});
+					_.dialog({'content':'Script execute time more than '+parseInt(param.timeout/1000)+' seconds and no response from the server,maybe network problem.'});
 				};
 			}
 			var query = '';
