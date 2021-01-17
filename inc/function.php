@@ -2440,9 +2440,6 @@
 		}
 
 		public function error(){
-			if (!$this->stat()) {
-				return _t('No MySQL Connected');
-			}
 			if (MYSQL_LIB == 'mysqli') {
 				return mysqli_error($this->link);
 			}
@@ -2613,9 +2610,6 @@
 		}
 
 		public function error(){
-			if (!$this->stat()) {
-				return _t('No PostgreSQL Connected');
-			}
 			return pg_last_error($this->link);
 		}
 
@@ -2803,9 +2797,6 @@
 		}
 
 		public function error(){
-			if (!$this->stat()) {
-				return _t('No SQLite Connected');
-			}
 			switch($this->db_setting['sqlite_driver']){
 				case 'pdo_sqlite':
 					$error = $this->link->errorInfo();
