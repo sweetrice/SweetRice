@@ -36,7 +36,7 @@
 			$GLOBALS['db_lib_track']->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
 		$GLOBALS['db_lib_track']->query("DELETE FROM user_agent WHERE time < '".(time()-5184000)."'");
-		$GLOBALS['db_lib_track']->query('vacuum user_agent');
+		$GLOBALS['db_lib_track']->query('vacuum '.$GLOBALS['db_lib_track']->name);
 		$max_month = array();
 		for($i=1; $i<=$d; $i++){
 			$day_start = mktime(0,0,1,$m,$i,$y);
@@ -56,7 +56,10 @@
 			}
 		}
 	}
-	$all_sum = array_sum($max_month);
+	if (is_array($max_month)) {
+		$all_sum = array_sum($max_month);
+	}
+	
 	if($all_sum){
 		foreach($browsers as $key=>$val){
 			$v[$key] = number_format($total_all[$key]*100/$all_sum ,2,'.',' ').'%';
@@ -266,7 +269,7 @@
 <canvas id="myCanvas" width="720" height="340"></canvas>
 <div id="view_chart">
 <?php
-if(count($top_pages)){
+if(is_array($top_pages) && count($top_pages)){
 ?>
 <div><?php echo vsprintf(_t('Top 10 of %s visited page'),array($total_pages));?></div>
 <dl>
@@ -278,7 +281,7 @@ if(count($top_pages)){
 <?php
 	}
 }
-if(count($top_froms)){
+if(is_array($top_froms) && count($top_froms)){
 ?>
 <div><?php echo vsprintf(_t('Top 10 of %s referrer page'),array($total_froms));?></div>
 <dl>
@@ -290,7 +293,7 @@ if(count($top_froms)){
 <?php
 	}
 }
-if(count($top_ips)){
+if(is_array($top_ips) && count($top_ips)){
 ?>
 <div><?php echo vsprintf(_t('Top 10 of %s ip'),array($total_ips));?></div>
 <dl>

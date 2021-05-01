@@ -489,7 +489,7 @@ SweetRice
 	'Website Configuration' => 'Website Configuration',
 	'Site Management' => 'Site Management',
 	'Website Attachment Directory' => 'Website Attachment Directory',
-	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
+	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come later.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come later.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
 	'Modify Post' => 'Modify Post',
 	'Prevew' => 'Prevew',
 	'Remove' => 'Remove',
@@ -626,6 +626,16 @@ SweetRice
 	'Redis Setting' => 'Redis Setting',
 	'Server' => 'Server',
 	'Port' => 'Port',
-	'Form session expired' => 'Form session expired'
+	'Form session expired' => 'Form session expired',
+	'Image' => 'Image',
+	'Image Uploaded' => 'Image Uploaded',
+	'images uploading' => 'images uploading',
+	'Images uploaded successfully,next' => 'Images uploaded successfully,next',
+	'Images has been downloaded,you can edit it now.' => 'Images has been downloaded,you can edit it now.',
+	'Server disallow download,please download it manually and upload' => 'Server disallow download,please download it manually and upload',
+	'Please download it manually and upload.' => 'Please download it manually and upload.',
+	'Upload failed,please check image source.' => 'Upload failed,please check image source.',
+	'Name can not be empty' => 'Name can not be empty',
+	'New images downloading' => 'New images downloading'
 );
 ?>

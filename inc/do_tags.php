@@ -20,7 +20,7 @@
 	}else{
 		$tag_posts = array();
 	}
-	if(!count($tag_posts[$tag])){
+	if(!is_array($tag_posts[$tag]) || !count($tag_posts[$tag])){
 		_404('tags');
 	}
 	$where = " ps.`id` IN(".implode(',',$tag_posts[$tag]).")  AND ps.`in_blog` = '1' AND ip.`item_type` = 'post' ";
@@ -78,7 +78,9 @@
 	}
 	$tag = db_unescape($tag);
 	$title = $tag.' - '.$global_setting['name'];
-	$description = 	vsprintf(TAG_DESCRIPTION,array(ucfirst($tag),rtrim($post_etc,','),$global_setting['name']));
+	if (defined('TAG_DESCRIPTION')) {
+		$description = 	vsprintf(TAG_DESCRIPTION,array(ucfirst($tag),rtrim($post_etc,','),$global_setting['name']));
+	}
 	$keywords = $tag;
 	$inc = THEME_DIR.$page_theme['tags'];
 	$last_modify = pushDate(array($rows,array(array('date'=>filemtime($inc)))));

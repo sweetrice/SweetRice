@@ -207,7 +207,8 @@ code{font-size:12px;line-height:14px;}
 }
 
 #info{
-	height:300px;
+	min-height:300px;
+	max-width: 800px;
 }
 
 .td_content{
@@ -771,6 +772,7 @@ thead tr{
 .w100{width:100px;display:inline-block;}
 .w120{width:120px;display:inline-block;}
 .w80{width:80px;display:inline-block;}
+.preview-image-wrap img{max-width: 100%;margin:auto;display: block;}
 @media (max-width: 960px){
 	#div_center,#div_top,#div_foot{width:98%;min-width:98%;}
 	#admin_left{position:absolute;left:1%;top:0px;z-index:9998;background-color: #4D4D4D;}

@@ -12,7 +12,7 @@
 	case 'insert':
 		$post_data = post_insert();
 		if($post_data['post_id']){
-			if($_POST['done']){
+			if($_POST['save_mode'] != 'update'){
 				if(intval($_POST['id'])<=0){
 					completeInsert('./?type=post&mode=insert','./?type=post');
 				}else{
@@ -116,7 +116,7 @@
 		foreach($rows as $val){
 			$ids[] = $val['id'];
 		}
-		if(count($ids)){
+		if(is_array($ids) && count($ids)){
 			$cmts = db_arrays("SELECT `post_id`, COUNT(*) AS total FROM `".DB_LEFT."_comment` WHERE `post_id` IN(".implode(',',$ids).") GROUP BY `post_id`");
 			foreach($cmts as $val){
 				$cmtRows[$val['post_id']] = $val['total'];

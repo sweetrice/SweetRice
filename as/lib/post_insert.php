@@ -8,13 +8,14 @@
  */
  defined('VALID_INCLUDE') or die();
 ?>
-<form enctype="multipart/form-data" method="post" action="./?type=post&mode=insert">
+<form enctype="multipart/form-data" method="post" id="post-form" action="./?type=post&mode=insert">
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <input type="hidden" name="createTime" value="<?php echo $row['date'];?>"/>
 <input type="hidden" name="views" value="<?php echo $row['views'];?>" >
 <input type="hidden" name="id" value="<?php echo $row['id'];?>" >
+<input type="hidden" name="save_mode" id="save_mode" value="" >
 <fieldset><legend><?php _e('Name');?>:</legend>
-<input type="text" name="name" class="input_text" value="<?php echo $row['name'];?>"> * 
+<input type="text" name="name" id="name" class="input_text" value="<?php echo $row['name'];?>"> * 
 <?php
 	if($row['sys_name']){
 ?>
@@ -45,10 +46,10 @@ echo '<div class="tip">'.SITE_URL.show_link_page($categories[$row['category']]['
 <fieldset><legend><?php _e('Tag');?>:</legend><input type="text" name="tags" class="input_text" value="<?php echo htmlspecialchars($row['tags'],ENT_QUOTES);?>"> * <span class="tip"><?php _e('Split by commas');?></span>
 </fieldset>
 <fieldset><legend><?php _e('Body');?>: </legend> 
-<div class="mg5"><label class="editor_toggle" tid="info" data="visual"><?php _e('Visual');?></label>
-<label class="editor_toggle current_label" data="html" tid="info"><?php _e('HTML');?></label></div>
+<div class="mg5"><label class="editor_toggle button-editor-visual" tid="info" data="visual"><?php _e('Visual');?></label>
+<label class="editor_toggle current_label button-editor-html" data="html" tid="info"><?php _e('HTML');?></label></div>
 <?php include('lib/tinymce.php');?>
-<textarea id="info" name="info">
+<textarea id="info" name="info" rows="40" autocomplete="off">
 <?php echo htmlspecialchars($row['body']);?>
 </textarea>
 </fieldset>
@@ -88,7 +89,7 @@ $s_category[$row['category']] = 'selected';
 <div class="attbody">
 <?php
 $no = 0;
-if(count($att_rows)){
+if(is_array($att_rows) && count($att_rows)){
 	foreach($att_rows AS $att_row){
 		$att_row['file_name'] = getAttachmentUrl($att_row['file_name']);
 		$no +=1;
@@ -121,7 +122,7 @@ if(count($att_rows)){
 	<!--
 	var attNo = <?php echo $no;?>;
 	var attach_media;
-	_().ready(function(){
+	_.ready(function(){
 		_('.att_add').bind('click',function(event){
 			attNo += 1;
 			_('#no').val(attNo);
@@ -152,20 +153,46 @@ if(count($att_rows)){
 	$cfdata = getOption('custom_post_field');
 	include('lib/custom_field.php');
 ?>
-<p><input type="submit" class="input_submit" name="done" value="<?php _e('Done');?>">
+<div><input type="submit" class="input_submit button-save" name="done" value="<?php _e('Done');?>">
 <?php
 	if($row['sys_name']){
-?><input type="submit" value="<?php _e('Update');?>" name="update" class="input_submit">
+?><input type="button" value="<?php _e('Update');?>" name="update" class="input_submit button-update">
 <?php
 	}
-?><input type="button" value="<?php _e('Back');?>" url="./?type=post" class="input_submit back"></p>
+?><input type="button" value="<?php _e('Back');?>" url="./?type=post" class="input_submit back"></div>
+<div class="form-progress-wrap"></div>
 </form>
 </div>
 <div class="div_clear"></div>
 </div>
 <script type="text/javascript">
 <!--
-	_().ready(function(){
+	_.ready(function(){
+		_('.button-editor-visual').click();
+		_('.button-update').click(function(){
+			_('#save_mode').val('update');
+			_('.button-save').click();
+		})
+		_('#post-form').submit(function(event){
+	      if (!_('#name').val()) {
+	        _.stopevent(event);
+	        _.ajax_untip('<?php _e('Name can not be empty');?>')
+	        return ;
+	      }
+	      if (detectImage()) {
+	        _('.form-progress-wrap').html(_('.form-progress-wrap').html()+'<div class="form-progress"><?php _e('New images downloading');?></div>');
+	        toLocalImage();
+	        _.stopevent(event);
+	        return ;
+	      }
+	      var localImage = checkLocalImage();
+	      if (localImage.length > 0) {
+	        _('.form-progress-wrap').html(_('.form-progress-wrap').html()+'<div class="form-progress">'+localImage.length+'<?php _e('images uploading');?></div>');
+	        uploadArticleImage()
+	        _.stopevent(event);
+	        return ;
+	      }
+		})
 		_('.btn_one').bind('click',function(){
 			if(confirm('<?php _e('Are you sure delete it?');?>')) location.href = _(this).attr('url');
 		});

@@ -70,7 +70,7 @@
 <?php 
 if($inc && file_exists('lib/'.$inc)){
 	include('lib/'.$inc);
-}elseif(count($plugin_page)){
+}elseif(is_array($plugin_page) && count($plugin_page)){
 	foreach($plugin_page as $val){
 		if($val && file_exists($val)){
 			include($val);

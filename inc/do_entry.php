@@ -44,7 +44,7 @@
 		}
 	}
 	$top_word = $row['title'];
-	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$row['name'].' '.ENTRY_RSSFEED.'" href="'.show_link_page_xml($row['sys_name']).'" />';
+	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$row['name'].' '.(defined('ENTRY_RSSFEED') ? ENTRY_RSSFEED : '' ).'" href="'.show_link_page_xml($row['sys_name']).'" />';
 	if($row['template']&&$row['template']!='default'&&file_exists($row['template'])){
 		$inc = $row['template'];
 	}else{

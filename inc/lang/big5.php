@@ -489,7 +489,7 @@ SweetRice
 	'Website Configuration' => '網站設置',
 	'Site Management' => '網站管理',
 	'Website Attachment Directory' => '網站附件目錄',
-	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<h1>網站正在建設中,請稍後訪問.</h1><p>如果你是網站管理員,請到網站後台面板 - >全局 - >網站設置</p><p>取消選中關閉站點對應的複選框以開啟網站</p><p>更多幫助請查看<a href="http: //www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
+	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come later.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<h1>網站正在建設中,請稍後訪問.</h1><p>如果你是網站管理員,請到網站後台面板 - >全局 - >網站設置</p><p>取消選中關閉站點對應的複選框以開啟網站</p><p>更多幫助請查看<a href="http: //www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
 	'Modify Post' => '修改文章',
 	'Prevew' => '預覽',
 	'Remove' => '刪除',
@@ -626,6 +626,16 @@ SweetRice
 	'Redis Setting' => 'Redis設置',
 	'Server' => '服務器',
 	'Port' => '端口',
-	'Form session expired' => '表單數據過期'
+	'Form session expired' => '表單數據過期',
+	'Image' => '圖片',
+	'Image Uploaded' => '圖片上傳完成',
+	'images uploading' => '張圖片上傳中',
+	'Images uploaded successfully,next' => '圖片上傳完成，繼續下一步',
+	'Images has been downloaded,you can edit it now.' => '圖片本地化完成，可使用圖片編輯工具了',
+	'Server disallow download,please download it manually and upload' => '服務器拒絕自動下載，請手動下載後上傳。 ',
+	'Please download it manually and upload.' => '請手動截圖或者保存到本地後上傳。 ',
+	'Upload failed,please check image source.' => '圖片本地化失敗，請檢查圖片地址是否正常。 ',
+	'Name can not be empty' => '名稱不能為空',
+	'New images downloading' => '新的圖片下載中'  
 );
 ?>

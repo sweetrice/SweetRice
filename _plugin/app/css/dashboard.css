@@ -1,5 +1,5 @@
 .menu_list{margin:10px 0px 10px 0px;position:relative;}
-.menu_list li{position:absolute;list-style-type:none;}
+.menu_list li{position:static;list-style-type:none;}
 .btn_move{background-color:#e5e5e5 !important;}
 .draging,.draging input{cursor:move !important;}
 .draging .btn_move{background-color:#888 !important;cursor:move !important;}

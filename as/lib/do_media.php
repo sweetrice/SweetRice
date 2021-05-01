@@ -111,17 +111,20 @@ switch($mode){
 			}
 			$d->close();
 			
-		}	
-		krsort($files);
-		foreach($files as $key=>$val){
-			$_files[] = $val;
-			foreach($tmp_data[$key] as $v){
-				$_files[] = $v;
-			}
 		}
-		$files = $_files;
-		$referrer = $_GET['referrer'];
-		$total = count($files);
+		if (is_array($files)) {
+			krsort($files);
+			foreach($files as $key=>$val){
+				$_files[] = $val;
+				foreach($tmp_data[$key] as $v){
+					$_files[] = $v;
+				}
+			}
+			$files = $_files;
+			$referrer = $_GET['referrer'];
+			$total = count($files);
+		}
+
 		$page_limit = page_limit(null,15);
 		$p_link = './?type=media&referrer='.$referrer.'&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
 		$pager = _pager($total,$page_limit,$p_link);

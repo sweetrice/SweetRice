@@ -18,7 +18,7 @@
 </style>
 <fieldset><legend class="toggle" data=".cfbody"><?php _e('Custom Field');?></legend>
 <input type="hidden" id="deletelist" name="deletelist"/>
-<div class="cfbody<?php echo count($cf_rows)?'':' hidden';?>">
+<div class="cfbody<?php echo is_array($cf_rows) && count($cf_rows)?'':' hidden';?>">
 <ol id="cfList">
 <?php
 	$no = 0;
@@ -193,7 +193,7 @@ endforeach;?>
 ?>
 </ol>
 <div class="div_clear"></div>
-<input type="hidden" id="cfno" name="cfno" data="<?php echo intval($no);?>"<?php echo !count($cf_rows)?'':' value="'.intval($no).'"';?>/>
+<input type="hidden" id="cfno" name="cfno" data="<?php echo intval($no);?>"<?php echo !is_array($cf_rows) || !count($cf_rows)?'':' value="'.intval($no).'"';?>/>
 <div class="mg5">
 <div class="form_split">
 <select id="cftype">

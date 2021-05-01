@@ -242,7 +242,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 		$tmp_prefix = explode('.',$files[$i]['name']);
 		$tmp_prefix = '.'.end($tmp_prefix);
 		if(mb_strlen($files[$i]['name'],'UTF-8') > 36){
-			if(count($tmp_prefix)){
+			if($tmp_prefix){
 				$files[$i]['name'] = mb_substr($files[$i]['name'],0,32,'UTF-8').'...'.$tmp_prefix;
 			}
 		}

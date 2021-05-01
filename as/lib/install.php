@@ -112,7 +112,16 @@ switch($action){
 				break;
 				default:
 					$GLOBALS['db_lib'] = new mysql_lib(array('url'=>$_POST['db_url'],'port'=>$_POST['db_port'],'username'=>$_POST['db_username'],'passwd'=>$_POST['db_passwd'],'newlink'=>true));
-					$GLOBALS['db_lib']->query("CREATE DATABASE IF NOT EXISTS `".$_POST['db_name']."` ");
+					$row = $GLOBALS['db_lib']->db_array("SELECT VERSION() AS version ");
+					if ($row['version']) {
+						$row['version'] = explode('-', $row['version']);
+					}
+					if (version_compare($row['version'][0], '5.5.3', '>=')) {
+						$GLOBALS['db_lib']->query("CREATE DATABASE IF NOT EXISTS `".$_POST['db_name']."` DEFAULT CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_unicode_ci' ");
+					}else{
+						$GLOBALS['db_lib']->query("CREATE DATABASE IF NOT EXISTS `".$_POST['db_name']."` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ");
+					}
+					
 					$GLOBALS['db_lib']->query("USE `".$_POST['db_name']."` ");
 					if($GLOBALS['db_lib']->stat()){
 						$sql = file_get_contents('lib/app.sql');
@@ -141,7 +150,7 @@ switch($action){
 					}			
 			}
 			if(!$error_db && !$message){
-				$global_setting = array('name'=>escape_string($_POST['name']) , 'author'=>escape_string($_POST['author']) ,'title'=>escape_string($_POST['title']) , 'keywords'=>escape_string($_POST['keyword']) , 'description'=>escape_string($_POST['description']),'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>$lang,'admin_email'=>$_POST['admin_email']);
+				$global_setting = array('name'=>escape_string($_POST['name']) , 'author'=>escape_string($_POST['author']) ,'title'=>escape_string($_POST['title']) , 'keywords'=>escape_string($_POST['keyword']) , 'description'=>escape_string($_POST['description']),'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come later.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>$lang,'admin_email'=>$_POST['admin_email']);
 				$setting_id = setOption('global_setting',serialize($global_setting));
 				if(!$setting_id){
 					$message .= db_error().'<br />';

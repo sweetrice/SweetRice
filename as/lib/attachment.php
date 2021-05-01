@@ -26,7 +26,7 @@ $no = 0;
 			$classname = 'tr_sigle';
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo getAttachmentUrl($row['file_name']);?>"><span id="filename_<?php echo $no;?>"><?php echo getAttachmentUrl($row['file_name']);?></span></a></td><td class="media_content"><span id="filesize_<?php echo $no;?>"><?php echo filesize2print($row['file_name']);?></span></td><td class="media_content"><span id="downloadtimes_<?php echo $no;?>"><?php echo $row['downloads'];?></span></td><td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td><td>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo getAttachmentUrl($row['file_name']);?>" target="_blank" class="preview-image"><span id="filename_<?php echo $no;?>"><?php echo getAttachmentUrl($row['file_name']);?></span></a></td><td class="media_content"><span id="filesize_<?php echo $no;?>"><?php echo filesize2print($row['file_name']);?></span></td><td class="media_content"><span id="downloadtimes_<?php echo $no;?>"><?php echo $row['downloads'];?></span></td><td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td><td>
 <a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['post_id'];?>"><?php _e('Modify');?></a>
 </td></tr>
 <?php
@@ -43,6 +43,10 @@ $no = 0;
 		_('.btn_sort').bind('click',function(){
 			sortBy(this,'#tbl');
 		});
+		_('.preview-image').click(function(event){
+			_.stopevent(event);
+			_.dialog({'content':'<div class="preview-image-wrap"><img src="'+_(this).attr('href')+'"></div>','layer':1});
+		})
 	});
 //-->
 </script>

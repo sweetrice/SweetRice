@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `%--%_attachment` (
   `date` int(10) NOT NULL,
   `downloads` int(10) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM COLLATE='utf8mb4_unicode_ci' ;
 
 DROP TABLE IF EXISTS `%--%_comment`;
 CREATE TABLE IF NOT EXISTS `%--%_comment` (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `%--%_comment` (
   `ip` varchar(39) NOT NULL default '',
   `reply_date` int(10) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM COLLATE='utf8mb4_unicode_ci' ;
 
 DROP TABLE IF EXISTS `%--%_posts`;
 CREATE TABLE IF NOT EXISTS `%--%_posts` (
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `%--%_posts` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `sys_name` (`sys_name`),
   KEY `date` (`date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;
 
 
 DROP TABLE IF EXISTS `%--%_category`;
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `%--%_category` (
   `template` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `link` (`link`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;
 
 DROP TABLE IF EXISTS `%--%_options`;
 CREATE TABLE IF NOT EXISTS `%--%_options` (
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `%--%_options` (
   `date` int(10) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;
 
 DROP TABLE IF EXISTS `%--%_item_plugin`;
 CREATE TABLE IF NOT EXISTS `%--%_item_plugin` (
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `%--%_item_plugin` (
   `item_type` varchar(255) NOT NULL,
   `plugin` varchar(255) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;
 
 
 DROP TABLE IF EXISTS `%--%_links`;
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `%--%_links`(
   `url` text NOT NULL,
   `plugin` varchar(255) NOT NULL,
   PRIMARY KEY  (`lid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;
 
 
 DROP TABLE IF EXISTS `%--%_item_data`;
@@ -104,4 +104,4 @@ CREATE TABLE IF NOT EXISTS `%--%_item_data` (
 	KEY (`item_type`),
 	KEY (`name`),
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+) ENGINE=MyISAM  COLLATE='utf8mb4_unicode_ci' ;

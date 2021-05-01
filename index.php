@@ -16,7 +16,7 @@
 	}
 	init_lang(INCLUDE_DIR.'lang/'.$lang);
 	$lang = basename($lang,'.php');
-	if(file_exists(THEME_DIR.'lang/'.$lang)){
+	if(defined('THEME_DIR') && file_exists(THEME_DIR.'lang/'.$lang)){
 		init_lang(THEME_DIR.'lang/'.$lang);
 	}
 	$theme = theme();

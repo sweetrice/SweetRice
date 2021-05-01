@@ -488,7 +488,7 @@ SweetRice
 	'Website Configuration' => '网站设置',
 	'Site Management' => '网站管理',
 	'Website Attachment Directory' => '网站附件目录',
-	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<h1>网站正在建设中,请稍后访问.</h1><p>如果你是网站管理员,请到网站后台面板->全局->网站设置</p><p>取消选中关闭站点对应的复选框以开启网站</p><p>更多帮助请查看<a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
+	'<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come later.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>' => '<h1>网站正在建设中,请稍后访问.</h1><p>如果你是网站管理员,请到网站后台面板->全局->网站设置</p><p>取消选中关闭站点对应的复选框以开启网站</p><p>更多帮助请查看<a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>',
 	'Modify Post' => '修改文章',
 	'Prevew' => '预览',
 	'Remove' => '删除',
@@ -625,6 +625,16 @@ SweetRice
 	'Redis Setting' => 'Redis设置',
 	'Server' => '服务器',
 	'Port' => '端口',
-	'Form session expired' => '表单数据过期'
+	'Form session expired' => '表单数据过期',
+	'Image' => '图片',
+	'Image Uploaded' => '图片上传完成',
+	'images uploading' => '张图片上传中',
+	'Images uploaded successfully,next' => '图片上传完成，继续下一步',
+	'Images has been downloaded,you can edit it now.' => '图片本地化完成，可使用图片编辑工具了',
+	'Server disallow download,please download it manually and upload' => '服务器拒绝自动下载，请手动下载后上传。',
+	'Please download it manually and upload.' => '请手动截图或者保存到本地后上传。',
+	'Upload failed,please check image source.' => '图片本地化失败，请检查图片地址是否正常。',
+	'Name can not be empty' => '名称不能为空',
+	'New images downloading' => '新的图片下载中'
 );
 ?>

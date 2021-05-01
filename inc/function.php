@@ -197,7 +197,7 @@
 		}elseif($url){
 			$prefix = $url;
 			$prefix = explode('/',$prefix);
-			if(count($prefix)>=2){
+			if(count($prefix) >= 1 ){
 				$prefix = end($prefix);
 			}
 			if(strpos($prefix,'.')){
@@ -651,7 +651,9 @@
 	}
 
 	function db_error(){
-		return $GLOBALS['db_lib']->error();
+		if (is_object($GLOBALS['db_lib'])) {
+			return $GLOBALS['db_lib']->error();
+		}
 	}
 
 	function db_query($sql,$return_result = false){
@@ -942,6 +944,9 @@
 	}
 
 	function get_page_themes(){
+		if (!defined('THEME_DIR')) {
+			return array();
+		}
 		$theme = file(THEME_DIR.'theme.config');
 		foreach($theme as $key=>$val){
 			if(trim($val)){
@@ -1467,12 +1472,15 @@
 			$tag_posts = array();
 		}
 		foreach($taglist as $val){
+			if (!is_array($tag_posts[$val])) {
+				$tag_posts[$val] = array();
+			}
 			if(!in_array($post_id,$tag_posts[$val])){
 				$tag_posts[$val][] = $post_id;
 			}
 		}
 		foreach($old_tags as $val){
-			if(!in_array($val,$taglist)){
+			if(is_array($taglist) && !in_array($val,$taglist)){
 				$_tag_posts = array();
 				foreach($tag_posts[$val] as $v){
 					if($v != $post_id){
@@ -2431,7 +2439,7 @@
 			$this->db_setting = $db_setting;
 			if (MYSQL_LIB == 'mysqli') {
 				$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
-				$this->connect_error = mysqli_connect_error($this->link);
+				$this->connect_error = mysqli_connect_error();
 			}else{
 				$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
 				mysql_select_db($db_setting['name'],$this->link);
@@ -3026,7 +3034,7 @@
 	}
 
 	function check_form_token($form_name = '',$output_type = null){
-		if ($_POST ) {
+		if ($_POST) {
 			if (!$_POST['_tkv_'.$form_name] || session_get('_form_token_'.$form_name) != $_POST['_tkv_'.$form_name]) {
 				if (!$output_type) {
 					die(_t('Form session expired'));
@@ -3064,4 +3072,21 @@
         }  
         return false;  
     }
+
+    
+ 	function mkdir_p($dirname,$dest_dir = ''){
+ 		if (substr($dirname,0,1) == '/' && !$dest_dir) {
+ 			$dest_dir = '/';
+ 		}
+ 		$dirname = explode('/',$dirname);
+ 		foreach($dirname as $tmp){
+ 			if (!$tmp) {
+ 				continue ;
+ 			}
+ 			$dest_dir .= $tmp.'/'; 
+ 			if (!is_dir($dest_dir)) {
+ 				mkdir($dest_dir);
+ 			}
+ 		}
+ 	}
 ?>

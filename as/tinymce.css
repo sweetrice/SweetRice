@@ -4,6 +4,7 @@ body{
 }
 img {
 	border: 0px;
+	max-width: 100%;
 }
 
 blockquote{
@@ -26,18 +27,17 @@ table td{
 }
 
 h1 {
-	font-size: 16px;margin:0px 0px 15px 0px;
+	margin:0px 0px 15px 0px;
 }
-h2,h3,h4,{	font-size:15px;margin:0px 0px 15px 0px;}
+h2,h3,h4,{margin:0px 0px 15px 0px;}
 h5,h6{
-	font-size: 13px;
 	margin:0px 0px 15px 0px;
 }
 p{
- font-size: 13px;
 	line-height: 1.6em;
 	margin-bottom: 16px;
 	margin-top: 16px;
+	text-align: justify;
 }
 a{
 	color: #707b85;

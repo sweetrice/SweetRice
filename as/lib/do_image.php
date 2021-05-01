@@ -10,71 +10,121 @@
 	if($_GET['mode'] == 'clean'){
 		$_SESSION['imgs'] = array();
 	}
-	if($_GET['mode'] == 'delete'){
-		$img = str_replace(SITE_URL,SITE_HOME,$_POST['img']);
-		if($img && is_file($img)){
-			unlink($img);
-			$tmp = array();
-			foreach($_SESSION['imgs'] as $val){
-				if($val != $_POST['img']){
-					$tmp[] = $val;
-				}
-			}
-			$_SESSION['imgs'] = $tmp;
-			output_json(array('status'=>1,'img'=>$img,'data'=>$_POST['img']));
-		}else{
-			output_json(array('status'=>1,'status_code'=>_t('No image selected')));
-		}
-	}
-	$dest_dir = date('Ymd').'/';
-	$tmp_dir = SITE_HOME.ATTACHMENT_DIR.$dest_dir;
-	if(!is_dir($tmp_dir)){
-		mkdir($tmp_dir);
-	}
-	if(is_array($_FILES['imgs']['name'])){
-		foreach($_FILES['imgs']['name'] as $key=>$val){
-			$tmp = array(
-				'name' => $_FILES['imgs']['name'][$key],
-				'type' => $_FILES['imgs']['type'][$key],
-				'tmp_name' => $_FILES['imgs']['tmp_name'][$key],
-				'error' => $_FILES['imgs']['error'][$key],
-				'size' => $_FILES['imgs']['size'][$key]
-			);
-			
-			if(substr($tmp['name'],-4) == '.zip'){
-				$data = extractZIP($tmp['tmp_name'],$tmp_dir,true);
-				foreach($data as $val){
-					$val = str_replace(SITE_HOME,SITE_URL,$val);
-					if($val && !in_array($val,$_SESSION['imgs'])){
-						$_SESSION['imgs'][] = $val;
+	switch ($_GET['mode']) {
+		case 'delete':
+			$img = str_replace(SITE_URL,SITE_HOME,$_POST['img']);
+			if($img && is_file($img)){
+				unlink($img);
+				$tmp = array();
+				foreach($_SESSION['imgs'] as $val){
+					if($val != $_POST['img']){
+						$tmp[] = $val;
 					}
 				}
+				$_SESSION['imgs'] = $tmp;
+				output_json(array('status'=>1,'img'=>$img,'data'=>$_POST['img']));
 			}else{
-				$upload = upload_($tmp,$tmp_dir,$tmp['name'],null);
-				if($upload && file_exists($tmp_dir.$upload)){
-					if(!in_array(SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
-						$_SESSION['imgs'][] = SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+				output_json(array('status'=>1,'status_code'=>_t('No image selected')));
+			}
+		break;
+		
+		case 'imgload':
+			$imgurl = $_POST['imgurl'];
+			if ($imgurl && preg_match('/^https?:\/\/.+/',$imgurl)) {
+				$imgdata = get_data_from_url($imgurl);  
+				$img = md5($imgdata).'.png';
+				file_put_contents(SITE_HOME.$img, $imgdata);
+				$imageInfo = getimagesize(SITE_HOME.$img);
+				unlink(SITE_HOME.$img);
+				if ($imageInfo) {
+					$prefiex = '';
+				    $prefiex = 'data:' . $imageInfo['mime'] . ';base64,';
+				    $base64 = $prefiex.chunk_split(base64_encode($imgdata));
+				    output_json(array('status'=>1,'imgdata'=>str_replace(array("\r","\n"), array('',''), $base64),'$imageInfo'=>$imageInfo,'$imgdata'=>$imgdata));
+				}
+			}
+			output_json(array('status'=>0,'status_code'=>_t('Please download it manually and upload.')));
+		break;
+		case 'image_upload':
+			$dest_dir = date('Y/m/d/');
+			$tmp_dir = SITE_HOME.ATTACHMENT_DIR.$dest_dir;
+			if(!is_dir($tmp_dir)){
+				mkdir_p($tmp_dir);
+			}
+			$image_type = intval($_POST['image_type']);
+			$exists_image = false;
+			if ($_FILES['file']) {
+				$upload = upload_($_FILES['file'],$tmp_dir,$_FILES['file']['name'],null,true);
+				if ($upload) {
+					preg_match('/\/([a-z0-9]{32})\./', $upload,$match);
+				}
+				if ($match[1]) {
+					$token = $match[1];
+				}
+			}
+			if ($_POST['filedata'] && preg_match('/^data:image\/(.+?);base64,(.+)/',$_POST['filedata'],$match)) {
+				$token = md5($match[2]);
+				$upload = md5($match[2]).'.'.($match[1] == 'svg+xml' ? 'svg' : $match[1]);
+				if (!file_exists($tmp_dir.$upload)) {
+					file_put_contents($tmp_dir.$upload,base64_decode($match[2]));
+				}
+			}
+			if($upload && file_exists($tmp_dir.$upload)){
+				output_json(array('location'=>str_replace(SITE_HOME, SITE_URL, $tmp_dir.$upload),'status_code'=>'文件上传成功','status'=>1));
+			}
+			output_json(array('status_code'=>_t('Upload failed,please check image source.'),'status'=>0));
+		break;
+		default:
+			$dest_dir = date('Y/m/d/');
+			$tmp_dir = SITE_HOME.ATTACHMENT_DIR.$dest_dir;
+			if(!is_dir($tmp_dir)){
+				mkdir_p($tmp_dir);
+			}
+			if(is_array($_FILES['imgs']['name'])){
+				foreach($_FILES['imgs']['name'] as $key=>$val){
+					$tmp = array(
+						'name' => $_FILES['imgs']['name'][$key],
+						'type' => $_FILES['imgs']['type'][$key],
+						'tmp_name' => $_FILES['imgs']['tmp_name'][$key],
+						'error' => $_FILES['imgs']['error'][$key],
+						'size' => $_FILES['imgs']['size'][$key]
+					);
+					
+					if(substr($tmp['name'],-4) == '.zip'){
+						$data = extractZIP($tmp['tmp_name'],$tmp_dir,true);
+						foreach($data as $val){
+							$val = str_replace(SITE_HOME,SITE_URL,$val);
+							if($val && !in_array($val,$_SESSION['imgs'])){
+								$_SESSION['imgs'][] = $val;
+							}
+						}
+					}else{
+						$upload = upload_($tmp,$tmp_dir,$tmp['name'],null);
+						if($upload && file_exists($tmp_dir.$upload)){
+							if(!in_array(SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
+								$_SESSION['imgs'][] = SITE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+							}
+						}
 					}
 				}
-			}
-		}
-		_goto('./?type=image');
-	}elseif($_FILES['imgs']['name']){
-		if(substr($_FILES['imgs']['name'],-4) == '.zip'){
-			$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir,true);
-			foreach($data as $val){
-				$val = str_replace(SITE_DIR,SITE_HOME,$val);
-				if($val && !in_array($val,$_SESSION['imgs'])){
-					$_SESSION['imgs'][] = $val;
+				_goto('./?type=image');
+			}elseif($_FILES['imgs']['name']){
+				if(substr($_FILES['imgs']['name'],-4) == '.zip'){
+					$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir,true);
+					foreach($data as $val){
+						$val = str_replace(SITE_DIR,SITE_HOME,$val);
+						if($val && !in_array($val,$_SESSION['imgs'])){
+							$_SESSION['imgs'][] = $val;
+						}
+					}
+				}else{
+					upload_($_FILES['imgs'],$tmp_dir,$_FILES['imgs']['name'],null);
+					if(!in_array(BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
+						$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
+					}
 				}
+				_goto('./?type=image');
 			}
-		}else{
-			upload_($_FILES['imgs'],$tmp_dir,$_FILES['imgs']['name'],null);
-			if(!in_array(BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload,$_SESSION['imgs'])){
-				$_SESSION['imgs'][] = BASE_URL.ATTACHMENT_DIR.$dest_dir.$upload;
-			}
-		}
-		_goto('./?type=image');
 	}
 	define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
 ?>
