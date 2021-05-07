@@ -609,7 +609,9 @@
  	function init_redis($param = array('server' => '127.0.0.1','port' => 6379,'passwd' => '')){
 		$redis = new Redis();
 		$redis->pconnect($param['server'], $param['port']);
-		$redis->auth($param['passwd']);
+		if ($param['passwd']) {
+			$redis->auth($param['passwd']);
+		}
 		return $redis;
 	}
 
