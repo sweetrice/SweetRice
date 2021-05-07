@@ -475,7 +475,7 @@
 
 	function sweetrice_cached($cache_link,$cache_type){
 		global $global_setting;
-		if(!$global_setting['cache']){return false;}
+		if(!$global_setting['cache'] || $_GET['nocache'] == 1 ){return false;}
 		switch(true){
 			case extension_loaded('redis') && $global_setting['redis_setting']['enable']:
 				return redis_cached($cache_link,$cache_type);
