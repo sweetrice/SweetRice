@@ -621,10 +621,6 @@
 			return ;
 		}
 		$redis = init_redis($global_setting['redis_setting']);
-		$cache_data = $redis->get($cache_link);
-		if ($cache_data) {
-			return ;
-		}
 		if ($global_setting['cache_expired'] > 0) {
 			$redis->setex($cache_link,$global_setting['cache_expired'],data2cache($data,$cache_type));
 		}else{
