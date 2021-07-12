@@ -33,7 +33,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <body>
 <div class="header"><?php _e('SweetRice notice');?></div>
 <div class="content">
-<?php echo $global_setting['close_tip']?$global_setting['close_tip']:_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="https://www.sweetrice.xyz/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>');?>
+<?php echo $global_setting['close_tip']?$global_setting['close_tip']:_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="https://www.sweetrice.xyz/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for SweetRice installed</a></p>');?>
 </div>
 <div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 <script type="text/javascript">

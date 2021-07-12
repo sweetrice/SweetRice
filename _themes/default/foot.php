@@ -11,7 +11,7 @@
 	$s_theme[$theme] = 'selected';
 ?>
 <div id="div_foot">
-<?php _e('Copyright');?> © <a href="<?php echo BASE_URL;?>"><?php echo $global_setting['name'];?></a> Powered By <a href="https://www.sweetrice.xyz">Basic CMS SweetRice</a> 
+<?php _e('Copyright');?> © <a href="<?php echo BASE_URL;?>"><?php echo $global_setting['name'];?></a> Powered By <a href="https://www.sweetrice.xyz">SweetRice</a> 
 <a href="<?php echo show_link_rssfeed();?>"><img src="images/xmlrss.png" alt="<?php echo $global_setting['name'].' '._t('RSSFeed');?>"/></a>
 <select class="change_lang">
 <?php	foreach(getLangTypes() as $key=>$val):?>
