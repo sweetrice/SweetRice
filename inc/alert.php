@@ -9,9 +9,10 @@
  	defined('VALID_INCLUDE') or die();
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<html>
+<head>
+<meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?php _e('SweetRice notice');?></title>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
@@ -32,7 +33,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <div><?php _e('You will be redirected in 3 seconds.');?></div>
 <div><a href="<?php echo $to?$to:$_SERVER['HTTP_REFERER'];?>"><?php _e('If your browser does not redirect automatically,please click here.');?></a></div>
 </div>
-<div id="div_foot">Powered by <a href="http://www.basic-cms.org">Basic-CMS.ORG</a> SweetRice.</div>
+<div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 <script type="text/javascript">
 <!--
 	var to = '<?php echo $to?$to:$_SERVER['HTTP_REFERER'];?>';

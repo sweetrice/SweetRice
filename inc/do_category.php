@@ -42,9 +42,7 @@
 		}
 		exit(json_encode($plist));
 	}
-	if($cat != $categories[$cat_id]['link']){
-		$canonical = BASE_URL.show_link_cat($categories[$cat_id]['link'],'');
-	}
+	$canonical = BASE_URL.show_link_cat($categories[$cat_id]['link'],'');
 	$row_cat = db_array("SELECT `parent_id` FROM `".DB_LEFT."_category` WHERE `id` = '".$cat_id."'");
 	$data = getPosts(array(
 		'table' => " `".DB_LEFT."_posts` as ps LEFT JOIN `".DB_LEFT."_item_plugin` AS ip ON ip.`item_id` = ps.`id`",

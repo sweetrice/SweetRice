@@ -19,7 +19,7 @@
 	'zh-cn' => '为开发者提供的一个基础插件,您可以使用它开始网站的建设',
 	'big5' => '為開發者提供的一個基礎插件,您可以使用它開始網站的建設'
 	);
-	$plugin_config['author'] = 'Basic-cms.org';
-	$plugin_config['contact'] = 'support@basic-cms.org';
-	$plugin_config['home_page'] = 'http://www.basic-cms.org/sweetrice-plugins/App/';
+	$plugin_config['author'] = 'SweetRice.xyz';
+	$plugin_config['contact'] = 'support@SweetRice.xyz';
+	$plugin_config['home_page'] = 'https://www.SweetRice.xyz/sweetrice-plugins/App/';
 ?>

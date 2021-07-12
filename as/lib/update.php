@@ -118,7 +118,7 @@
 	</script>
 <?php
 	elseif($update):
-		_e('Your server does not support zlib or ZZIPlib extension,please <a href="http://www.basic-cms.org/download.html">download SweetRice</a> and upgrade manually.');
+		_e('Your server does not support zlib or ZZIPlib extension,please <a href="https://www.sweetrice.xyz/download.html">download SweetRice</a> and upgrade manually.');
 	endif;
  }
 ?>

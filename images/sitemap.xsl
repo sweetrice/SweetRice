@@ -101,7 +101,7 @@ SweetRice Website Program.
 					</table>
 				</div>
 				<div id="footer">
-					Powered by <a href="http://www.Basic-cms.org">Basic-cms.org</a> SweetRice
+					Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice
 				</div>
 			</body>
 		</html>

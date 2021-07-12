@@ -8,13 +8,13 @@
  */
 	defined('VALID_INCLUDE') or die();
 	function sweetrice_version(){
-		$lastest = trim(get_data_from_url('http://www.basic-cms.org/lastest.html'));
+		$lastest = trim(get_data_from_url('https://www.sweetrice.xyz/lastest.html'));
 		return $lastest;
 	}
 
 	function update_automatically($upgrade_dir){
 		eval("\$str = '<p>"._t('Update')." SweetRice</p>';");
-		$content = get_data_from_url('http://www.basic-cms.org/download/17/');
+		$content = get_data_from_url('https://www.sweetrice.xyz/download/17/');
 		if($content){
 			file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
 			eval("\$str .= '<p>"._t('Download')." SweetRice_core.zip ("._t('File size:')." ".filesize(ROOT_DIR.'SweetRice_core.zip').") "._t('successfully')."</p>';");
@@ -593,7 +593,7 @@
 				}			
 		}
 		if($inited){
-			$setting = serialize(array('name'=>escape_string($global_setting['name']), 'author'=>escape_string($global_setting['author']) ,'title'=>escape_string($global_setting['title']) , 'keywords'=>escape_string($global_setting['keywords']) , 'description'=>escape_string($global_setting['description']) ,  'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="http://www.basic-cms.org/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>'','admin_email'=>''));
+			$setting = serialize(array('name'=>escape_string($global_setting['name']), 'author'=>escape_string($global_setting['author']) ,'title'=>escape_string($global_setting['title']) , 'keywords'=>escape_string($global_setting['keywords']) , 'description'=>escape_string($global_setting['description']) ,  'admin'=>$_POST['admin'] , 'passwd'=>md5($_POST['passwd']),'close'=>1 ,'close_tip'=>_t('<p>Welcome to SweetRice - Thank your for install SweetRice as your website management system.</p><h1>This site is building now , please come late.</h1><p>If you are the webmaster,please go to Dashboard -> General -> Website setting </p><p>and uncheck the checkbox "Site close" to open your website.</p><p>More help at <a href="https://www.sweetrice.xyz/docs/5-things-need-to-be-done-when-SweetRice-installed/">Tip for Basic CMS SweetRice installed</a></p>'),'cache'=>0,'cache_expired'=>0,'user_track'=>0,'url_rewrite'=>0,'logo'=>'','theme'=>'','lang'=>'','admin_email'=>''));
 			$setting_id = $GLOBALS['db_lib_site']->db_insert($site_config['db_left'].'_options',array('id',null),array('name','content','date'),array('global_setting',db_escape($setting),time()),false,$db_type);
 			if(!$setting_id){
 				$message .= $GLOBALS['db_lib_site']->error().'<br />';

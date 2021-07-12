@@ -11,10 +11,10 @@
 	$db_error = db_error();
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
+<meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php _e('SweetRice error report');?></title>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
@@ -48,7 +48,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <div class="clear"></div>
 </div>
 <div id="div_foot">
-Powered By <a href="http://www.basic-cms.org">Basic CMS SweetRice</a>
+Powered By <a href="https://www.sweetrice.xyz">SweetRice</a>
 </select>
 </div>
 <script type="text/javascript">

@@ -19,9 +19,7 @@
 	if(!$row['id']||($row['category'] != 0 && $categories[$row['category']]['link'] != $cateName && $global_setting['url_rewrite'])){
 		_404('entry');
 	}
-	if($row['sys_name'] != $post){
-		$canonical = BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);
-	}
+	$canonical = BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);
 	if($row['allow_comment']){
 		$last_comment = db_array("SELECT `date` FROM `".DB_LEFT."_comment` WHERE `post_id` = '".$row['id']."' ORDER BY `date` DESC ".get_limit_sql(0,1));
 		$comment_total = db_total("SELECT COUNT(*) FROM `".DB_LEFT."_comment` WHERE `post_id` = '".$row['id']."'");

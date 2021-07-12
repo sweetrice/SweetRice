@@ -107,7 +107,7 @@
 				$str = vsprintf(_t('Upgrade SweetRice to %s successfully.'),array(SR_VERSION));
 			break;
 			default:
-				$content = get_data_from_url('http://www.basic-cms.org/download/17/');
+				$content = get_data_from_url('https://www.sweetrice.xyz/download/17/');
 				if($content){
 					file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
 					$str = vsprintf(_t('Download SweetRice_core.zip (File size:%s) successfully'),array(filesize(ROOT_DIR.'SweetRice_core.zip')));

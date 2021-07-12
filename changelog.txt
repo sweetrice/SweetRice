@@ -2,12 +2,12 @@
 SweetRice - Simple Website Management System
 Version 1.7.0
 Author:Hiler Liu steelcal@gmail.com
-Home page:http://www.basic-cms.org/
+Home page:https://www.sweetrice.xyz/
 #############################################
 New web - new SweetRice for both PC & mobile website creator,easy way to follow the new web world.
 
 
-Download : http://www.basic-cms.org/download.html
+Download : https://www.sweetrice.xyz/download.html
 
 System Recommendations
 PHP version 4.3 or higher.
@@ -23,7 +23,7 @@ Installation: just 1-minute install
    6. Login to SweetRice dashboard.
 
 Feedback and comment 
-If you have any suggestions, ideas, comments, or if you found a bug,please mail to support@basic-cms.org or post comment at basic-cms.org.
+If you have any suggestions, ideas, comments, or if you found a bug,please mail to support@sweetrice.xyz or post comment at sweetrice.xyz.
 
 Copyright
 SweetRice is released under the GPL V2.
@@ -320,8 +320,8 @@ upgrade dashboard
  - upgrade language file.
  - use new action icon
  - upgrade cache clean : clean expired cache data or all data.
- - fix bug : cache for sqlite.(report by jonas at http://www.basic-cms.org/comment/release/)
- - fix bug for create subcategory. (report by jonas at http://www.basic-cms.org/comment/release/)
+ - fix bug : cache for sqlite.(report by jonas at https://www.sweetrice.xyz/comment/release/)
+ - fix bug for create subcategory. (report by jonas at https://www.sweetrice.xyz/comment/release/)
 
 upgrade theme
 - update m_list.php and add css.
@@ -511,7 +511,7 @@ fix bug sitting => change mysql server.
 
 ======================================
 Change log V0.2.1 2009-4-15
-add theme allrp which basic-cms.org used.
+add theme allrp which sweetrice.xyz used.
 update dashborad style design
 modify comment form,add url.
 ========================================

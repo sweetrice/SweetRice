@@ -9,10 +9,10 @@
 	defined('VALID_INCLUDE') or die();
 ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
+<meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php _e('HTTP 404 - File not found');?></title>
 <script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
 <style>
@@ -31,7 +31,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <div class="content">
 ):
 <?php echo vsprintf(_t('%s You can Visit <a href="%s">%s</a> Home page'),array($tip_404,BASE_URL,$global_setting['name']));?>
-</div><div id="div_foot">Powered by <a href="http://www.basic-cms.org">Basic-CMS.ORG</a> SweetRice.</div>
+</div><div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 
 <script type="text/javascript">
 <!--
