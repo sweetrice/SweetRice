@@ -996,7 +996,7 @@
 		return $content;
 	}
 
-	function _404($tip_404){
+	function _404($tip_404 = ''){
 		global $global_setting;
 		header('HTTP/1.1 404 Page Not Found');
 		$page_theme = get_page_themes();
@@ -2702,10 +2702,10 @@
 				$this->query($sql);
 				return $_id[1];
 			}else{
-				$_key = '"'.implode('","',$_key).'"';
-				$_val = "'".implode("','",$_val)."'";
+				$_key_query = '"'.implode('","',$_key).'"';
+				$_val_query = "'".implode("','",$_val)."'";
 				if($_id[0]){
-					$sql = "INSERT INTO \"".$table."\"(".$_key.")VALUES(".$_val.") RETURNING ".$_id[0];
+					$sql = "INSERT INTO \"".$table."\"(".$_key_query.")VALUES(".$_val_query.") RETURNING ".$_id[0];
 				}else{
 					$tindex = db_array_nocache("SELECT pg_constraint.conname AS pk_name,pg_attribute.attname AS colname FROM pg_constraint INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid INNER JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = pg_constraint.conkey[1] WHERE pg_class.relname = '".$table."' AND pg_constraint.contype='p'",'ASSOC');
 					if($tindex['colname']){

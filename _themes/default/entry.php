@@ -30,8 +30,9 @@ if($pager_pagebreak){
 <?php	
 	if(count($att_rows)>0):
 	foreach($att_rows as $att_row):
+		$att_row_path = explode('/',$att_row['file_name']);
 ?>
-		<div><span class="attachment" alt="<?php echo $att_row['file_name'];?>" ></span><a href="<?php echo show_link_attachment($att_row['id']);?>" ><?php echo end(explode('/',$att_row['file_name']));?></a> &raquo; <?php echo filesize2print($att_row['file_name']);?> (<?php echo $att_row['downloads'];?>)</div>
+		<div><span class="attachment" alt="<?php echo $att_row['file_name'];?>" ></span><a href="<?php echo show_link_attachment($att_row['id']);?>" ><?php echo end($att_row_path);?></a> &raquo; <?php echo filesize2print($att_row['file_name']);?> (<?php echo $att_row['downloads'];?>)</div>
 		<div class="div_clear"></div>
 <?php
 	endforeach;
