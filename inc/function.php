@@ -21,17 +21,21 @@
 		}
 		return $a;
 	}
+
 	function escape_string($str){
-		return htmlspecialchars($str,ENT_QUOTES);
+		return $str ? htmlspecialchars($str,ENT_QUOTES) : $str;
 	}
+
 	function clean_quotes($str){
 		return $str;
 	}
+
 	if(!function_exists('sqlite_escape_string')){
 		function sqlite_escape_string($str){
 			return str_replace('\'','\'\'',$str);
 		}	
 	}
+
 	function db_escape($str){
 		return $GLOBALS['db_lib']->db_escape($str);
 	}
@@ -39,6 +43,7 @@
 	function db_unescape($str){
 		return $GLOBALS['db_lib']->db_unescape($str);
 	}
+
 	if (!function_exists('htmlspecialchars_decode')) {
 		function htmlspecialchars_decode($str,$quote_style){
 			$_str = array('&amp;','&quot;','&#039;','&lt;','&gt;');
@@ -46,6 +51,11 @@
 			return str_replace($_str,$str_,$str);
 		}
 	}
+
+	function is_url_rewrite(){
+		return defined('URL_REWRITE') && URL_REWRITE;
+	}
+
 	function initPermalinks(){
 		$row = getOption('permalinks_system');
 		if($row['content']){
@@ -125,7 +135,9 @@
 			$redirectList = unserialize($row['content']);
 		}
 		$index_setting = getOption('index_setting');
-		$index_setting = unserialize($index_setting['content']);
+		if ($index_setting) {
+			$index_setting = unserialize($index_setting['content']);
+		}
 		if($index_setting['url'] && $index_setting['url'] == $url){
 			_301(BASE_URL);
 		}
@@ -238,7 +250,7 @@
 	}
 
 	function show_link_ads($adname){
-		if(URL_REWRITE){
+		if(is_url_rewrite()){
 			$permalinks = initPermalinks();
 			return $permalinks['ad'].'/'.$adname.'.js';
 		}else{
@@ -247,7 +259,7 @@
 	}
 
 	function show_link_page($cat_link,$post,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			if($cat_link){
 				return $cat_link.'/'.$post.'/';
 			}else{
@@ -259,7 +271,7 @@
 	}
 	
 	function show_link_pagebreak($cat_link,$post,$pb,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			if($cat_link){
 				return $cat_link.'/'.$post.($pb > 1 || $pb == 'all' ?':'.$pb:'').'/';
 			}else{
@@ -271,7 +283,7 @@
 	}
 
 	function show_link_page_xml($post,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			$permalinks = initPermalinks();
 			return $permalinks['rssfeedPost'].'/'.$post.'.xml';
 		}else{
@@ -282,14 +294,14 @@
 		if(!$category){
 			return 'javascript:void(0);';
 		}
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			return $category.'/'.($p>1?$p.'/':'');
 		}else{
 			return formatUrl('action=category&c='.$category.($p>1?'&p='.$p:''));
 		}
 	}
 	function show_link_cat_xml($category,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			$permalinks = initPermalinks();
 			return $permalinks['rssfeedCat'].'/'.$category.'.xml';
 		}else{
@@ -297,7 +309,7 @@
 		}
 	}
 	function show_link_tag($tag,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			$permalinks = initPermalinks();
 			return $permalinks['tag'].'/'.rawurlencode($tag).'/';
 		}else{
@@ -305,7 +317,7 @@
 		}
 	}
 	function show_link_comment($post,$p=false,$original_url=false){
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			$permalinks = initPermalinks();
 			return $permalinks['comment'].'/'.$post.'/'.($p>1?$p.'/':'');
 		}else{
@@ -314,7 +326,7 @@
 	}
 	function show_link_attachment($fileID,$original_url=false){
 		$permalinks = initPermalinks();
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			return $permalinks['attachment'].'/'.$fileID.'/';
 		}else{
 			return formatUrl('action=attachment&id='.$fileID);
@@ -322,7 +334,7 @@
 	}
 	function show_link_sitemapHtml($original_url=false,$mode = '',$page = 0){
 		$permalinks = initPermalinks();
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			return $permalinks['sitemapHtml'].'/'.($mode?$mode.'/':'').($page?$page.'/':'');
 		}else{
 			return formatUrl('action=sitemap'.($mode ? '&mode='.$mode:'').($page?'&p='.$page:''));
@@ -330,7 +342,7 @@
 	}
 	function show_link_sitemapXml($original_url=false,$mode = '',$page = 0){
 		$permalinks = initPermalinks();
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			return $permalinks['sitemapXml'].($mode?'/'.$mode:'').($page?'/'.$page:'').'.xml';
 		}else{
 			return formatUrl('action=sitemap&type=xml'.($mode ? '&mode='.$mode:'').($page?'&p='.$page:''));
@@ -339,7 +351,7 @@
 
 	function show_link_rssfeed($original_url=false){
 		$permalinks = initPermalinks();
-		if(URL_REWRITE && !$original_url){
+		if(is_url_rewrite() && !$original_url){
 			return $permalinks['rssfeed'].'.xml';
 		}else{
 			return formatUrl('action=rssfeed');
@@ -741,6 +753,64 @@
 		return array('rows'=>$rows,'pager'=>$pager);
 	}
 	
+	function pager_init($query = null){
+		if (!$query) {
+			return null;
+		}
+		if(!$query['pager_function']){
+			$query['pager_function'] = 'pager';
+		}
+		if (!$query['page_limit']) {
+			$query['page_limit'] = 10;
+		}
+		if (!$query['p_link']) {
+			$query['p_link'] = '_';
+		}
+		$total = db_total($query['sql']);
+		if($query['curr_page'] == 'last'){
+			$query['curr_page'] = ceil($total/$query['page_limit']);
+		}
+		$pager = call_user_func_array($query['pager_function'],array($total,$query['page_limit'],$query['p_link'],$query['curr_page'],$query['source_url']));
+		$pager['total'] = $total;
+		if($pager['outPage']){
+			return null;
+		}
+		$pager['limit_sql'] = get_limit_sql($pager['page_start'],$query['page_limit']);
+		return $pager;
+	}
+
+	function db_fetch_quick($query = null){
+		if (!$query) {
+			return null;
+		}
+		$pager_data = array();
+		if (!$query['page_limit']) {
+			$query['page_limit'] = 10;
+		}
+		$pager = array();
+		if (is_array($query['pager_init']) && count($query['pager_init']) > 0) {
+			foreach ($query['pager_init'] as $pager_key => $pager_setting) {
+				$pager_data[$pager_key] = pager_init(array('sql'=>$pager_setting['sql'],'page_limit'=>$pager_setting['page_limit'] > 0 ? $pager_setting['page_limit'] : intval($query['page_limit']),'p_link'=>$pager_setting['p_link'] ? $pager_setting['p_link'] : $query['p_link']));
+				if (!isset($pager['total']) || $pager_data[$pager_key]['total'] < $pager['total']) {
+					$pager = $pager_data[$pager_key];
+				}
+			}
+		}
+		if (is_array($pager_data) && count($pager_data) > 0) {
+			foreach ($pager_data as $pager_key => $sub_pager) {
+				$query['sql'] = str_replace($pager_key,$sub_pager['limit_sql'],$query['sql']);
+			}
+		}
+		$rows = db_arrays($query['sql']);
+		if($query['fetch_one']){
+			return $rows[0];
+		}
+		if($query['debug']){
+			return array('rows'=>$rows,'pager'=>$pager,'sql'=>$query['sql'],'db_error'=>db_error());
+		}
+		return array('rows'=>$rows,'pager'=>$pager);
+	}
+
 	function db_fetchOne($param){
 		$param['fetch_one'] = true;
 		return db_fetch($param);
@@ -827,7 +897,7 @@
 	}
 
 	function _out(){
-		if(!headers_sent()&&extension_loaded('zlib') && strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip')!==false){
+		if(!headers_sent()&&extension_loaded('zlib') && $_SERVER['HTTP_ACCEPT_ENCODING'] && strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip')!==false){
 			ob_start('ob_gzhandler');
 		}else{
 			ob_start();
@@ -1126,7 +1196,7 @@
 
 	function themeLang(){
 		global $global_setting;
-		$lang = preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['lang']);
+		$lang = $_COOKIE['lang'] ? preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['lang']) : false;
 		if (!$lang) {
 			$lang = $global_setting['theme_lang'];
 		}
@@ -1152,7 +1222,7 @@
 
 	function theme(){
 		global $global_setting;
-		$theme = preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['theme']);
+		$theme = $_COOKIE['theme'] ? preg_replace('/[^a-zA-Z\-0-9]/','',$_COOKIE['theme']) : false;
 		if (!$theme) {
 			$theme = $global_setting['theme'];
 		}		
@@ -1200,7 +1270,7 @@
 		$reqs['action'] = 'pluginHook';
 		$reqs['plugin'] = $plugin;
 		ksort($reqs);
-		if(URL_REWRITE && !$source_url){
+		if(is_url_rewrite() && !$source_url){
 			$row = getLink($plugin,$reqs);
 			if($row['url']){
 				return $row['url'];
@@ -1312,38 +1382,38 @@
 		$list_put = '';
 		if($page_total<=10){
 			for($i=1; $i<=$page_total; $i++){
-				$tmp_link = URL_REWRITE && !$source_url?$p_link.$i:$p_link.'&p='.$i;
-				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url?'/':'').'" '.($i==$page?'class="pageCurrent"':'').'>'.$i.'</a> ';
+				$tmp_link = is_url_rewrite() && !$source_url?$p_link.$i:$p_link.'&p='.$i;
+				$list_put .= '<a href="'.$tmp_link.(is_url_rewrite() && !$source_url?'/':'').'" '.($i==$page?'class="pageCurrent"':'').'>'.$i.'</a> ';
 			}
 		}elseif($page == 1){
 			$p_end = 0;
 			for($i=0; $i<($page_last>10?10:$page_last); $i++){
-				$tmp_link = URL_REWRITE && !$source_url?$p_link.($i+1):$p_link.'&p='.($i+1);
-				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&$i>0?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($i+1).'</a> ';
+				$tmp_link = is_url_rewrite() && !$source_url?$p_link.($i+1):$p_link.'&p='.($i+1);
+				$list_put .= '<a href="'.$tmp_link.(is_url_rewrite() && !$source_url&&$i>0?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($i+1).'</a> ';
 				$p_end +=1;
 			}
-			$list_put .= $page_last>=10?('<a href="'.(URL_REWRITE && !$source_url?$p_link.'2':$p_link.'&p=2').(URL_REWRITE && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>'):'';
+			$list_put .= $page_last>=10?('<a href="'.(is_url_rewrite() && !$source_url?$p_link.'2':$p_link.'&p=2').(is_url_rewrite() && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>'):'';
 		}elseif($page == $page_total){
-			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page_total-1):$p_link.'&p='.($page_total-1)).(URL_REWRITE && !$source_url&&$page_total>11?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
+			$list_put .= '<a href="'.(is_url_rewrite() && !$source_url?$p_link.($page_total-1):$p_link.'&p='.($page_total-1)).(is_url_rewrite() && !$source_url&&$page_total>11?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
 			for($i=$page_total-9; $i<=$page_total; $i++){
-				$tmp_link = URL_REWRITE && !$source_url?$p_link.$i:$p_link.'&p='.$i;
-				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url?'/':'').'" '.($i==$page_total?'class="pageCurrent"':'').'>'.$i.'</a> ';
+				$tmp_link = is_url_rewrite() && !$source_url?$p_link.$i:$p_link.'&p='.$i;
+				$list_put .= '<a href="'.$tmp_link.(is_url_rewrite() && !$source_url?'/':'').'" '.($i==$page_total?'class="pageCurrent"':'').'>'.$i.'</a> ';
 			}
 		}elseif($page > 1 && $page < $page_total){
 			$p_end = $page-1;
-			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page-1):$p_link.'&p='.($page-1)).(URL_REWRITE && !$source_url?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
+			$list_put .= '<a href="'.(is_url_rewrite() && !$source_url?$p_link.($page-1):$p_link.'&p='.($page-1)).(is_url_rewrite() && !$source_url?'/':'').'"/>&laquo;'._t('Previous').'</a> ';
 			if($page_last<10){
 				for($i=10-$page_last; $i>0; $i--){
-					$tmp_link = URL_REWRITE && !$source_url?$p_link.($page-$i):$p_link.'&p='.($page-$i);
-					$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&($page-$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page-$i).'</a> ';
+					$tmp_link = is_url_rewrite() && !$source_url?$p_link.($page-$i):$p_link.'&p='.($page-$i);
+					$list_put .= '<a href="'.$tmp_link.(is_url_rewrite() && !$source_url&&($page-$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page-$i).'</a> ';
 				}		
 			}
 			for($i=0; $i<($page_last>10?10:$page_last); $i++){
-				$tmp_link = URL_REWRITE && !$source_url?$p_link.($page+$i):$p_link.'&p='.($page+$i);
-				$list_put .= '<a href="'.$tmp_link.(URL_REWRITE && !$source_url&&($page+$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page+$i).'</a> ';
+				$tmp_link = is_url_rewrite() && !$source_url?$p_link.($page+$i):$p_link.'&p='.($page+$i);
+				$list_put .= '<a href="'.$tmp_link.(is_url_rewrite() && !$source_url&&($page+$i)>1?'/':'').'" '.($i==0?'class="pageCurrent"':'').'>'.($page+$i).'</a> ';
 				$p_end += 1;
 			}
-			$list_put .= '<a href="'.(URL_REWRITE && !$source_url?$p_link.($page+1):$p_link.'&p='.($page+1)).(URL_REWRITE && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>';
+			$list_put .= '<a href="'.(is_url_rewrite() && !$source_url?$p_link.($page+1):$p_link.'&p='.($page+1)).(is_url_rewrite() && !$source_url?'/':'').'">'._t('Next').'&raquo;</a>';
 		}
 		if($page_total>1){
 			$list_put = $list_put?'<div id="PageList">'.$list_put.'</div>':'';
@@ -2741,11 +2811,11 @@
 		public function db_escape($str){
 			if(is_array($str)){
 				foreach($str as $key=>$val){
-					$str[$key] = pg_escape_string($val);
+					$str[$key] = isset($val) ? pg_escape_string($this->link,$val) : $val;
 				}
 				return $str;
 			}
-			return pg_escape_string($str);
+			return isset($str) ? pg_escape_string($this->link,$str) : $str;
 		}
 
 		public function db_unescape($str){
