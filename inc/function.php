@@ -32,7 +32,7 @@
 
 	if(!function_exists('sqlite_escape_string')){
 		function sqlite_escape_string($str = ''){
-			if (!isset($str)) {
+			if (!$str) {
 				return false;
 			}
 			return str_replace('\'','\'\'',$str);
@@ -572,7 +572,7 @@
 			}
 		}
 		dba_close($dba);
-		return isset($cache_data)?$cache_data:false;
+		return !empty($cache_data)?$cache_data:false;
 	}
 
 	function leveldb_cache($cache_link,$data,$cache_type){
@@ -616,7 +616,7 @@
 			$cache_data = cache2data(substr($data,11),$cache_type);
 		}
 		$db->close();
-		return isset($cache_data)?$cache_data:false;
+		return !empty($cache_data)?$cache_data:false;
 	}
 
 	
@@ -653,7 +653,7 @@
 		if ($cache_data) {
 			$cache_data = cache2data($cache_data,$cache_type);
 		}
-		return isset($cache_data)?$cache_data:false;
+		return !empty($cache_data)?$cache_data:false;
 	}
 
 	function db_insert($table,$_id,$_key,$_val){
@@ -729,7 +729,7 @@
 		}
 		if(is_array($where)){
 			$where = " WHERE 1=1 AND ".implode(' AND ',$where)." ";
-		}elseif(isset($where) && trim($where)){
+		}elseif(!empty($where) && trim($where)){
 			$where = " WHERE ".$where." ";
 		}
 		if($pager['page_limit'] && $pager['p_link']){
@@ -793,7 +793,7 @@
 		if (is_array($query['pager_init']) && count($query['pager_init']) > 0) {
 			foreach ($query['pager_init'] as $pager_key => $pager_setting) {
 				$pager_data[$pager_key] = pager_init(array('sql'=>$pager_setting['sql'],'page_limit'=>$pager_setting['page_limit'] > 0 ? $pager_setting['page_limit'] : intval($query['page_limit']),'p_link'=>$pager_setting['p_link'] ? $pager_setting['p_link'] : $query['p_link']));
-				if (!isset($pager['total']) || $pager_data[$pager_key]['total'] < $pager['total']) {
+				if (empty($pager['total']) || $pager_data[$pager_key]['total'] < $pager['total']) {
 					$pager = $pager_data[$pager_key];
 				}
 			}
@@ -913,7 +913,7 @@
 
 	function upload_($f,$dest_dir,$new_file,$old_file,$always_new = false){
 		$file_type = '.php';
-		if(!isset($f) || !$f['name']){
+		if(!!empty($f) || !$f['name']){
 			return $old_file;
 		}
 		if(substr($dest_dir,-1) != '/'){
@@ -988,7 +988,7 @@
 				break;
 			}
 		}
-		if(!isset($is_browser)){
+		if(empty($is_browser)){
 			$user_browser = 'Other';
 		}
 		if($user_from == ''){
@@ -999,7 +999,7 @@
 			$new_track = true;
 		}
 		$db_track = new sqlite_lib(array('name'=>$dbname));
-		if(isset($new_track)){
+		if(!empty($new_track)){
 			$db_track->query("CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
 			$db_track->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
@@ -1241,10 +1241,10 @@
 	function pluginApi($plugin,$apiFunction,$apiReturn=false,$param = array()){
 		$plugin_list = pluginList();
 		if(!$plugin || !$apiFunction || !isPluginInstall($plugin)){return false;}
-			if(is_array($plugin_list) && isset($plugin_list[$plugin]['directory']) && file_exists(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php')){
+			if(is_array($plugin_list) && !empty($plugin_list[$plugin]['directory']) && file_exists(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php')){
 				require_once(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php');
 				eval('$pluginClass = new $plugin();');
-				if(!isset($pluginClass) || !method_exists($pluginClass,$apiFunction)){
+				if(!!empty($pluginClass) || !method_exists($pluginClass,$apiFunction)){
 					return false;
 				}
 				switch($apiReturn){
@@ -1651,7 +1651,7 @@
 		}
 		db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist?$inlist:array(0)).") AND `item_id` = '$item_id' AND `item_type` = '$type'");
 		$cfdata = getOption('custom_'.$type.'_field');
-		if(isset($cfdata)){
+		if(!empty($cfdata)){
 			$cfdata = unserialize($cfdata['content']);
 		}
 		if($data['deletelist'] && is_array($cfdata)){
@@ -2180,13 +2180,13 @@
 		}
 		if(is_array($param['category_ids']) && count($param['category_ids']) > 0){
 			$where .= " AND ps.`category` IN (".implode(',',$param['category_ids']).")";
-		}elseif(isset($param['category_ids'])){
+		}elseif(!empty($param['category_ids'])){
 			$where .= " AND ps.`category` IN (".$param['category_ids'].")";
 		}
-		if(isset($param['tag'])){
+		if(!empty($param['tag'])){
 			$tag_sql = '';
 			$tag_posts = getOption('tag_posts','serialize');
-			if(isset($tag_posts['output'])){
+			if(!empty($tag_posts['output'])){
 				$tag_posts = $tag_posts['output'];
 			}
 			$tag_ids = array();
@@ -2213,7 +2213,7 @@
 				}
 				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
 				$post_sql = substr($post_sql,2);
-			}elseif(isset($param['tag'])){
+			}elseif(!empty($param['tag'])){
 				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
 				$post_sql .= "ps.`title` LIKE '%".db_escape($param['tag'])."%' OR ps.`keyword` LIKE '%".db_escape($param['tag'])."%' OR ps.`body` LIKE '%".db_escape($param['tag'])."%' ";
 			}
@@ -2252,20 +2252,20 @@
 		}
 		if(is_array($param['ex_ids'])){
 			$where .= " AND ps.`id` NOT IN (".implode(',',$param['ex_ids']).")";
-		}elseif(isset($param['ex_ids'])){
+		}elseif(!empty($param['ex_ids'])){
 			$where .= " AND ps.`id` NOT IN (".$param['ex_ids'].")";
 		}
 		
 		if(is_array($param['ex_cids'])){
 			$where .= " AND ps.`category` NOT IN (".implode(',',$param['ex_cids']).")";
-		}elseif(isset($param['ex_cids'])){
+		}elseif(!empty($param['ex_cids'])){
 			$where .= " AND ps.`category` NOT IN (".$param['ex_cids'].")";
 		}
 
 		if(is_array($param['where'])){
 			$param['where'][] = $where;
 			$where = $param['where'];
-		}elseif(isset($param['where']) && $where){
+		}elseif(!empty($param['where']) && $where){
 			$where = $param['where'].' AND '.$where;
 		}
 			
@@ -2302,7 +2302,7 @@
 				$rows[$key] = $val;
 			}
 		}
-		if(isset($param['fetch_one'])){
+		if(!empty($param['fetch_one'])){
 			return $rows[0];
 		}
 		$data['rows'] = $rows;
@@ -2332,11 +2332,11 @@
 		$where = " 1 = 1 ";
 		if(is_array($param['ids']) && count($param['ids']) > 0){
 			$where .= " AND c.`id` IN (".implode(',',$param['ids']).")";
-		}elseif(isset($param['ids'])){
+		}elseif(!empty($param['ids'])){
 			$where .= " AND c.`id` IN (".$param['ids'].")";
 		}
 		
-		if(isset($param['tag'])){
+		if(!empty($param['tag'])){
 			$cf_where = '';
 			$cf_sql = " `item_type` = 'category' ";
 			$cat_sql = '';
@@ -2348,7 +2348,7 @@
 				}
 				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
 				$cat_sql = substr($cat_sql,2);
-			}elseif(isset($param['tag'])){
+			}elseif(!empty($param['tag'])){
 				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
 				$cat_sql .= "c.`title` LIKE '%".db_escape($param['tag'])."%' OR c.`name` LIKE '%".db_escape($param['tag'])."%' OR c.`sort_word` LIKE '%".db_escape($param['tag'])."%' ";
 			}
@@ -2368,20 +2368,20 @@
 		
 		if(is_array($param['ex_ids'])){
 			$where .= " AND c.`id` NOT IN (".implode(',',$param['ex_ids']).")";
-		}elseif(isset($param['ex_ids'])){
+		}elseif(!empty($param['ex_ids'])){
 			$where .= " AND c.`id` NOT IN (".$param['ex_ids'].")";
 		}
 
 		if(is_array($param['ex_pids'])){
 			$where .= " AND c.`parent_id` NOT IN (".implode(',',$param['ex_pids']).")";
-		}elseif(isset($param['ex_pids'])){
+		}elseif(!empty($param['ex_pids'])){
 			$where .= " AND c.`parent_id` NOT IN (".$param['ex_pids'].")";
 		}
 
 		if(is_array($param['where'])){
 			$param['where'][] = $where;
 			$where = $param['where'];
-		}elseif(isset($param['where'])){
+		}elseif(!empty($param['where'])){
 			$where = $param['where']." AND ".$where;
 		}
 		$order = ($param['order']?" ".$param['order']." ":" c.`id` DESC ");
@@ -2727,7 +2727,7 @@
 		}
 
 		public function fetch_array($result,$result_type = null){
-			if (!isset($result)) {
+			if (!!empty($result)) {
 				return array();
 			}
 			return pg_fetch_array($result,null,$this->result_type($result_type));
@@ -2847,11 +2847,11 @@
 		public function db_escape($str){
 			if(is_array($str)){
 				foreach($str as $key=>$val){
-					$str[$key] = isset($val) ? pg_escape_string($this->link,$val) : $val;
+					$str[$key] = !empty($val) ? pg_escape_string($this->link,$val) : $val;
 				}
 				return $str;
 			}
-			return isset($str) ? pg_escape_string($this->link,$str) : $str;
+			return !empty($str) ? pg_escape_string($this->link,$str) : $str;
 		}
 
 		public function db_unescape($str){
@@ -3172,8 +3172,8 @@
     }
    
     function session_get($name){  
-        if(isset($_SESSION[$name])){  
-            if($_SESSION[$name]['expire'] > time()){  
+        if(!empty($_SESSION[$name])){  
+            if(isset($_SESSION[$name]) && $_SESSION[$name]['expire'] > time()){  
                 return $_SESSION[$name]['data'];  
             }else{  
                 unset($_SESSION[$name]);  
