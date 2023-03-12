@@ -1575,7 +1575,7 @@
 		}else{
 			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
 		}
-		if(!isset($without_attachment)){
+		if(!$without_attachment){
 			$attNos = $data['no'];
 			$inlist = array();
 			for($i=1;$i<=$attNos;$i++){
@@ -1589,7 +1589,7 @@
 			}
 		}
 
-		if(!isset($without_custom_field)){
+		if(!$without_custom_field){
 			save_custom_field($data,'post',$post_id);
 		}
 		return array('post_id'=>$post_id,'sys_name'=>$sys_name);

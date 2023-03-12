@@ -36,7 +36,7 @@ Thank you.
 
 SweetRice change log:
 ======================================
-Change log V1.7.0 04/25/2021
+Change log V1.7.0 03/12/2023
 ======================================
 core update
 	support php8.0
