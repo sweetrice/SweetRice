@@ -14,7 +14,7 @@
 	_e('Server do not supports ZIP');
 	else:?>
 <input type="button" value="<?php _e('Pack website');?>" class="input_submit pack_btn"/>
-<?php if(file_exists(ROOT_DIR.$archive_name)):
+<?php if(isset($archive_name) && file_exists(ROOT_DIR.$archive_name)):
 	echo _t('Latest pack at ').date(_t('M d Y H:i'),filemtime(ROOT_DIR.$archive_name)).' '._t('File size').' '.filesize2print(BASE_URL.$archive_name);?>
 	<input type="button" class="btn_clean" value="<?php _e('Delete');?>">
 <?php
@@ -48,7 +48,7 @@
 <script type="text/javascript">
 <!--
 	_.ready(function(){	
-		<?php if(file_exists(ROOT_DIR.$archive_name)):?>
+		<?php if(isset($archive_name) && file_exists(ROOT_DIR.$archive_name)):?>
 			_('.transfer_section').show();
 		<?php endif;?>
 		_('.btn_clean').click(function(){

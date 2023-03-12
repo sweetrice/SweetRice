@@ -33,6 +33,8 @@
 	case 'db_converter':
 		$form_mode = $_GET['form_mode'];
 		$table_list = db_list();
+		$totype = null;
+		$s_totype = array();
 		if($form_mode == 'yes'){
 			$totype = $_POST['totype'];
 			switch($totype){
@@ -55,7 +57,6 @@
 		$inc = 'db_converter.php';
 	break;
 	case 'db_import':
-		$db_file = str_replace('/','',$_GET['db_file']);
 		$form_mode = $_GET['form_mode'];
 		switch(DATABASE_TYPE){
 			case 'pgsql':
@@ -67,7 +68,11 @@
 			default:
 			$db_backup_dir = SITE_HOME.'inc/mysql_backup';
 		}
-		if($db_file && file_exists($db_backup_dir.'/'.$db_file) && $form_mode == 'import'){
+		if (isset($_GET['db_file'])) {
+			$db_file = str_replace('/','',$_GET['db_file']);
+		}
+		$import_error = '';
+		if(isset($db_file) && file_exists($db_backup_dir.'/'.$db_file) && $form_mode == 'import'){
 			$data = include($db_backup_dir.'/'.$db_file);
 			foreach($data as $key=>$val){
 				$val = str_replace('%--%',DB_LEFT,$val);
@@ -111,7 +116,8 @@
 	break;
 	case 'db_optimizer':
 		$form_mode = $_GET['form_mode'];
-		if($form_mode =='yes'){
+		$message = '';
+		if($form_mode == 'yes'){
 			$table_list = explode(',',$_POST['tablelist']);
 			switch(DATABASE_TYPE){
 				case 'sqlite':

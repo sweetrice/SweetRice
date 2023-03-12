@@ -8,7 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
  $lang_types = getLangTypes();
- $s_lang[$global_setting['theme_lang']] = 'selected';
+ $s_lang = array($global_setting['theme_lang'] => 'selected');
 ?>
 <style>
 .row2 dl{clear:both;}
@@ -24,9 +24,9 @@
 <div class="form_split">
 <?php _e('Database');?>:</div>
 <div class="form_split"><select name="site_config[db_type]" class="database_type">
-	<option value="mysql" <?php echo $s_dtype['mysql'];?>>MySQL</option>
-	<option value="sqlite" <?php echo $s_dtype['sqlite'];?>>SQLite</option>
-	<option value="pgsql" <?php echo $s_dtype['pgsql'];?>>PostgreSQL</option>
+	<option value="mysql">MySQL</option>
+	<option value="sqlite">SQLite</option>
+	<option value="pgsql">PostgreSQL</option>
 </select>
 </div></div>
 <div id="database_setting" class="row2" style="display:<?php echo $_POST['database_type']=='sqlite'?'none':'block';?>">

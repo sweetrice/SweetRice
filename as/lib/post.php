@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
- $s_category[$category] = 'selected';
+ $s_category = array($category => 'selected');
 ?>
 <form method="get" action="./">
 <input type="hidden" name="type" value="post"/>
@@ -50,19 +50,16 @@
 $no = 0;
 	foreach($rows AS $row){
 		$no +=1;
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
+<tr id="tr_<?php echo $no;?>">
 <td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['id'];?>"/></td>
-<td class="max50"><a href="<?php echo BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td>
-<td class="media_content"><span id="category_<?php echo $no;?>"><?php echo $categories[$row['category']]['name'];?></span></td>
-<td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td>
-<td><span id="comments_<?php echo $no;?>"><?php echo intval($cmtRows[$row['id']]);?></span></td>
-<td><span id="views_<?php echo $no;?>"><?php echo intval($row['views']);?></span></td><td><?php echo $row['in_blog']?_t('Yes'):_t('No');?></td><td><span id="action_<?php echo $no;?>"></span>
+<td class="max50" data-label="<?php _e('Name');?>"><a href="<?php echo BASE_URL.show_link_page($categories[$row['category']]['link'],$row['sys_name']);?>" target="_blank"><span id="name_<?php echo $no;?>"><?php echo $row['name'];?></span></a></td>
+<td class="media_content" data-label="<?php _e('Category');?>"><span id="category_<?php echo $no;?>"><?php echo $categories[$row['category']]['name'];?></span></td>
+<td class="media_content" data-label="<?php _e('Time');?>"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td>
+<td data-label="<?php _e('Comments');?>"><span id="comments_<?php echo $no;?>"><?php echo intval($cmtRows[$row['id']]);?></span></td>
+<td data-label="<?php _e('Views');?>"><span id="views_<?php echo $no;?>"><?php echo intval($row['views']);?></span></td>
+<td data-label="<?php _e('Publish');?>"><?php echo $row['in_blog']?_t('Yes'):_t('No');?></td>
+<td data-label="<?php _e('Admin');?>" class="td_admin"><span id="action_<?php echo $no;?>"></span>
 <a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['id'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
 <a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['id'];?>"><?php _e('Modify');?></a> 
 </td></tr>

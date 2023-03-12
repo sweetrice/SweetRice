@@ -14,20 +14,24 @@
 </form>
 <div id="tbl">
 <table>
-<thead><tr><th class="max50"><a href="javascript:void(0);" class="btn_sort" data="filename"><?php _e('Filename');?></a></th><th class="media_content"><a href="javascript:void(0);" class="btn_sort" data="filesize"><?php _e('File size');?></a></th><th class="media_content"><a href="javascript:void(0);"  class="btn_sort" data="downloadtimes" stt="0"><?php _e('Download times');?></a></th><th class="media_content"><a href="javascript:void(0);"  class="btn_sort" data="date"><?php _e('Upload Time');?></a></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
+<thead>
+	<tr>
+		<th class="max50"><a href="javascript:void(0);" class="btn_sort" data="filename"><?php _e('Filename');?></a></th>
+		<th><a href="javascript:void(0);" class="btn_sort" data="filesize"><?php _e('File size');?></a></th>
+		<th><a href="javascript:void(0);"  class="btn_sort" data="downloadtimes" stt="0"><?php _e('Download times');?></a></th><th><a href="javascript:void(0);"  class="btn_sort" data="date"><?php _e('Upload Time');?></a></th>
+		<th class="td_admin"><?php _e('Admin');?></th></tr></thead>
 <tbody>
 <?php
 $no = 0;
 	foreach($rows as $row){
 		$no +=1;
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname = 'tr_sigle';
-		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo getAttachmentUrl($row['file_name']);?>" target="_blank" class="preview-image"><span id="filename_<?php echo $no;?>"><?php echo getAttachmentUrl($row['file_name']);?></span></a></td><td class="media_content"><span id="filesize_<?php echo $no;?>"><?php echo filesize2print($row['file_name']);?></span></td><td class="media_content"><span id="downloadtimes_<?php echo $no;?>"><?php echo $row['downloads'];?></span></td><td class="media_content"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td><td>
-<a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['post_id'];?>"><?php _e('Modify');?></a>
+<tr id="tr_<?php echo $no;?>">
+	<td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo getAttachmentUrl($row['file_name']);?>" target="_blank" class="preview-image"><span id="filename_<?php echo $no;?>"><?php echo getAttachmentUrl($row['file_name']);?></span></a></td>
+	<td data-label="<?php _e('File size');?>"><span id="filesize_<?php echo $no;?>"><?php echo filesize2print($row['file_name']);?></span></td>
+	<td data-label="<?php _e('Download times');?>"><span id="downloadtimes_<?php echo $no;?>"><?php echo $row['downloads'];?></span></td>
+	<td data-label="<?php _e('Upload Time');?>"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td>
+	<td class="td_admin" data-label="<?php _e('Admin');?>"><a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['post_id'];?>"><?php _e('Modify');?></a>
 </td></tr>
 <?php
 	}

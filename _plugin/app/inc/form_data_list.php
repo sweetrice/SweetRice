@@ -26,7 +26,9 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Form Name');?></th>
+	<tr>
+		<th class="data_no"><input type="checkbox" class="checkall"/></th>
+		<th class="max50"><?php _e('Form Name');?></th>
 	<?php if($form_id > 0):?>
 	<?php foreach($this_form['fields'] as $field):?>
 		<th><?php echo $field['name'];?></th>
@@ -34,27 +36,23 @@
 	<?php else:?>
 		<th><?php _e('Data');?></th>
 	<?php endif;?>
-	<th style="width:130px;"><?php _e('Date');?></th><th style="width:30px;"><?php _e('Admin');?></th></tr>
+	<th style="width:130px;" class="td_admin"><?php _e('Date');?></th><th style="width:30px;"><?php _e('Admin');?></th></tr>
 </thead>
 <tbody>
 <?php
 	foreach($data['rows'] AS $key => $row ){
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
 		$fields = unserialize($row['fields']);
 		$form_data = unserialize($row['data']);
 ?>
-<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['form_id']))?>" target="_blank"><?php echo $row['name'];?></a></td>
-
+<tr>
+	<td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td>
+	<td data-label="<?php _e('Form Name');?>"><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['form_id']))?>" target="_blank"><?php echo $row['name'];?></a></td>
 	<?php if($form_id > 0):?>
 	<?php foreach($this_form['fields'] as $field):?>
-		<td><?php echo $form_data[$field['name']];?></td>
+		<td data-label="<?php echo $field['name'];?>"><?php echo $form_data[$field['name']];?></td>
 	<?php endforeach;?>
 	<?php else:?>
-<td class="form_data">
+<td class="form_data" data-label="<?php _e('Data');?>">
 <div class="toggle_data">---</div>
 <div class="formdata">
 <?php foreach($fields as $val):
@@ -91,7 +89,8 @@ if($val['type'] == 'file'){
 <?php
 endforeach;?></td>
 	<?php endif;?>
-<td><?php echo date('M d Y H:i',$row['date']);?></td><td>
+<td data-label="<?php _e('Date');?>"><?php echo date('M d Y H:i',$row['date']);?></td>
+<td data-label="<?php _e('Admin');?>">
 <a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a>
 </td></tr>
 <?php

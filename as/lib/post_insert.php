@@ -7,6 +7,7 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
+$s_category = array($row['category'] => 'selected');
 ?>
 <form enctype="multipart/form-data" method="post" id="post-form" action="./?type=post&mode=insert">
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
@@ -43,21 +44,20 @@ echo '<div class="tip">'.SITE_URL.show_link_page($categories[$row['category']]['
 <div><input type="text" name="description" class="input_text meta" value="<?php echo $row['description']?$row['description']:_t('Description');?>" data="<?php _e('Description');?>"> * <span class="tip"><?php _e('Description of Page');?></span>
 </div>
 </fieldset>
-<fieldset><legend><?php _e('Tag');?>:</legend><input type="text" name="tags" class="input_text" value="<?php echo htmlspecialchars($row['tags'],ENT_QUOTES);?>"> * <span class="tip"><?php _e('Split by commas');?></span>
+<fieldset><legend><?php _e('Tag');?>:</legend><input type="text" name="tags" class="input_text" value="<?php echo htmlspecialchars(isset($row['tags']) ? $row['tags'] : '',ENT_QUOTES);?>"> * <span class="tip"><?php _e('Split by commas');?></span>
 </fieldset>
 <fieldset><legend><?php _e('Body');?>: </legend> 
 <div class="mg5"><label class="editor_toggle button-editor-visual" tid="info" data="visual"><?php _e('Visual');?></label>
 <label class="editor_toggle current_label button-editor-html" data="html" tid="info"><?php _e('HTML');?></label></div>
 <?php include('lib/tinymce.php');?>
 <textarea id="info" name="info" rows="40" autocomplete="off">
-<?php echo htmlspecialchars($row['body']);?>
+<?php echo htmlspecialchars(isset($row['body']) ? $row['body'] : '');?>
 </textarea>
 </fieldset>
 <fieldset><legend><?php _e('Category');?>:</legend>
 <select name="category">
 <option value="0"> -- <?php _e('Uncategory');?> -- </option>
 <?php
-$s_category[$row['category']] = 'selected';
 	foreach($subCategory as $val){
 		$_prefix = '';
 		for($i=0; $i<$val['level']; $i++){

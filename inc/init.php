@@ -13,11 +13,11 @@
 	if(file_exists(INCLUDE_DIR.'setting.php')){
 		include(INCLUDE_DIR.'setting.php');
 	}
-	if(!$dashboard_dir){
+	if(!isset($dashboard_dir)){
 		$dashboard_dir = 'as';
 	}
 	define('DASHBOARD_DIR',$dashboard_dir);
-	$http = $_SERVER['SERVER_PORT'] == 443?'https://':'http://';
+	$http = is_https() ? 'https://' : 'http://';
 	define('BASE_URL',str_replace('\\','',$http.$_SERVER['HTTP_HOST'].str_replace('//','/',dirname(str_replace('/'.DASHBOARD_DIR,'',$_SERVER['PHP_SELF'])).'/')));
 	define('BASE_DIR',str_replace('\\','',str_replace('//','/',dirname(str_replace('/'.DASHBOARD_DIR,'',$_SERVER['PHP_SELF'])).'/')));
 	unset($http);
@@ -80,6 +80,8 @@
 			define('LINKS_UPDATE',$links['date']);
 		}
 		$categories_data = getOption('categories');
+		$categoriesByLink = array();
+		$categories = array();
 		define('CATEGORIES_UPDATE',$categories_data['date']);
 		if($categories_data['content']){
 			$categories_data = unserialize($categories_data['content']);
@@ -97,7 +99,7 @@
 		$permalinks = initPermalinks();
 		if(SITE_HOME != ROOT_DIR && file_exists(SITE_HOME.'inc/site_config.php')){
 			include(SITE_HOME.'inc/site_config.php');
-			if($attachment_dir){
+			if(isset($attachment_dir)){
 				if(!is_dir(SITE_HOME.$attachment_dir)){
 					mkdir(SITE_HOME.$attachment_dir);
 				}
@@ -111,4 +113,16 @@
 	}
 	$_POST = do_data($_POST);
 	$_GET = do_data($_GET,'strict');
+
+	
+	function is_https() {
+	    if ( !empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
+	        return true;
+	    } elseif ( isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ) {
+	        return true;
+	    } elseif ( !empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
+	        return true;
+	    }
+	    return false;
+	}
 ?>

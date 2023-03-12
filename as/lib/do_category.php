@@ -28,10 +28,14 @@
 				$template = get_template(SITE_HOME.'_themes/default/','Category');
 			}
 			$id = intval($_GET['id']);
+			$s_parent = array();
 			if($id > 0){
 				$row = getCategories(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
-				$cf_rows = $row['custom_field'];
 				$top_word = _t('Modify Category');
+				if (is_array($row)) {
+					$cf_rows = $row['custom_field'];
+					$s_parent = array($row['parent_id'] => 'selected="selected"');
+				}
 			}else{
 				$top_word = _t('Create Category');
 			}
@@ -40,6 +44,7 @@
 		}
 	break;
 	case 'bulk':
+		$ids = array();
 		$plist = $_POST['plist'];
 		foreach($plist as $val){
 			$val = intval($val);

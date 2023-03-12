@@ -33,7 +33,7 @@
 				output_json(array('status'=>0,'status_code'=>_t('No theme selected')));
 			}
 			if($global_setting['theme'] == $theme || (!$global_setting['theme'] && $theme == 'default')){
-				output_json(array('status'=>0,'status_code'=>$app_name._t(' is using,please change system theme before delete.')));
+				output_json(array('status'=>0,'status_code'=>$theme._t(' is using,please change system theme before delete.')));
 			}
 			if(is_dir(SITE_HOME.'_themes/'.$theme)){
 				un_(SITE_HOME.'_themes/'.$theme,true);
@@ -67,7 +67,7 @@
 				$contents = clean_quotes($_POST['contents']);
 				file_put_contents(SITE_HOME.$themes[$page],$contents);
 				$data = getOption($themes[$page].'.bak');
-				$data = unserialize($data['content']);
+				$data = is_string($data['content']) ? unserialize($data['content']) : array();
 				$data[time()] = $_POST['contents'];
 				setOption($themes[$page].'.bak',serialize($data));
 			}
@@ -78,6 +78,7 @@
 			$tb = $_POST['tb'];
 			$page = $_GET['page'];
 			$data = getOption($themes[$page].'.bak');
+			$bak_list = array();
 			if($data['content']){
 				$data = unserialize($data['content']);
 			}

@@ -11,9 +11,10 @@
 	$app_links = $myApp->app_links();
 	$url = $_POST['url'];
 	$lids = $_POST['lids'];
+	$str = '';
+	$data = array();
 	foreach($url as $key=>$val){
 		if($val){
-			$data = null;
 			$data['id'] = $lids[$key];
 			$data['url'] = $val;
 			$data['reqs'] = $app_links[$key];

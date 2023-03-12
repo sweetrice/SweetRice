@@ -15,7 +15,7 @@
 		case 'get':
 			$email = $_POST['email'];
 			if($email == $global_setting['admin_email'] && $email){
-				$rand_code = md5(time());
+				$rand_code = md5(strval(time())); 
 				$content = serialize(array('rand_code'=>$rand_code,'ip'=>$_SERVER['REMOTE_ADDR'],'date'=>time()));
 				setOption('getpassword',$content);
 				$mail_text = vsprintf(_t('
@@ -40,7 +40,7 @@ if this is not your request,just remove the email.<br />
 Goodluck!<br />
 SweetRice
 				'),array($global_setting['author'],BASE_URL,DASHBOARD_DIR,$rand_code,BASE_URL,DASHBOARD_DIR,$rand_code));
-				$result = my_post($global_setting['admin_email'],_t('Please reset your password.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],_t('SweetRice Dashboard'),$global_setting['name'].md5(time()),'UTF-8');
+				$result = my_post($global_setting['admin_email'],_t('Please reset your password.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],_t('SweetRice Dashboard'),$global_setting['name'].md5(strval(time())),'UTF-8');
 				output_json(array('status'=>$result,'msg'=>$result?_t('Please visit your email,and reset your passowrd.'):_t('Notice email sent failed')));
 			}else{
 				output_json(array('status'=>0,'msg'=>_t('Wrong email.')));
@@ -67,6 +67,7 @@ SweetRice
 				$content = unserialize($row['content']);
 			}
 			$rand_code = $content['rand_code'];
+			$data = array();
 			if($_POST['p1'] == $_POST['p2'] && $_POST['p1'] && $global_setting['admin_email'] == $_POST['email'] && $global_setting['admin_email'] && $rand_code == $_POST['r']){
 				$row = getOption('global_setting');
 				if($row['content']){
@@ -98,7 +99,7 @@ Your password has been reset succesfully,please login your dashboard and manage 
 Goodluck!<br />
 SweetRice	
 				'),array($global_setting['author'],BASE_URL,DASHBOARD_DIR,BASE_URL,DASHBOARD_DIR));
-				$result = my_post($global_setting['admin_email'],_t('Your password has been reset succesfully.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],_t('SweetRice Dashboard'),$global_setting['name'].md5(time())	,'UTF-8');
+				$result = my_post($global_setting['admin_email'],_t('Your password has been reset succesfully.'),$mail_text,$mail_html,'noreply@'.$_SERVER['HTTP_HOST'],_t('SweetRice Dashboard'),$global_setting['name'].md5(strval(time())),'UTF-8');
 				output_json(array('status'=>$result,'msg'=> $result ? _t('Your password has been reset succesfully.'):_t('Notice email sent failed')));
 			}else{			
 				output_json(array('status'=>0,'msg'=>_t('Invalid password or Email.')));

@@ -7,8 +7,9 @@
  * @since 0.7.0
  */
  defined('VALID_INCLUDE') or die();
- $mode = $_GET['mode'];
- $cache_dir = SITE_HOME.'inc/cache/';
+	$mode = $_GET['mode'];
+	$cache_dir = SITE_HOME.'inc/cache/';
+	$no = 0;
 	if(file_exists($cache_dir)){
 		switch(true){
 			case extension_loaded('leveldb'):
@@ -18,7 +19,7 @@
 					$db = new LevelDb($cache_dir.'leveldb');
 					$it = new LevelDBIterator($db);
 					foreach($it as $key => $value) {
-						if(time()-substr($value,0,10) > $global_setting['cache_expired']){
+						if(time() - intval(substr($value,0,10)) > $global_setting['cache_expired']){
 							$db->delete($key);
 						}
 					}
@@ -32,7 +33,7 @@
 					$key = dba_firstkey($dba); 
 					while($key != NULL) 
 					{
-						if(time()-substr(dba_fetch($key, $dba),0,10) > $global_setting['cache_expired']){
+						if(time() - intval(substr(dba_fetch($key, $dba),0,10)) > $global_setting['cache_expired']){
 							dba_delete($key,$dba);
 						}
 						$key = dba_nextkey($dba);
@@ -42,10 +43,9 @@
 			break;
 			default:	
 				clearstatcache();
-				$no = 0;
 				$d = dir($cache_dir);
 				while (false !== ($entry = $d->read())) {
-					if($entry!='.'&&$entry!='..'&&((time()-filemtime($cache_dir.$entry)>$cache_expired&&$cache_expired>0)||$mode=='full')){
+					if( $entry != '.' && $entry != '..' && (( time() - filemtime($cache_dir.$entry) > $cache_expired && $cache_expired > 0 ) || $mode == 'full' )){
 						if(!is_dir($cache_dir.$entry)){
 							unlink($cache_dir.$entry);
 							$no += 1;

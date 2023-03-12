@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
 	defined('VALID_INCLUDE') or die();
-	if(file_exists(THEME_DIR.$page_theme['head'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['head'])){
 		include(THEME_DIR.$page_theme['head']);		
 	}
 ?>
@@ -38,13 +38,13 @@ endforeach;
 <?php echo $data['pager']['list_put'];?>
 </div>
 <?php	
-	if(file_exists(THEME_DIR.$page_theme['sidebar'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['sidebar'])){
 		include(THEME_DIR.$page_theme['sidebar']);
 	}
 ?>
 <div class="div_clear"></div></div>
 <?php	
-	if(file_exists(THEME_DIR.$page_theme['foot'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['foot'])){
 		include(THEME_DIR.$page_theme['foot']);		
 	}
 ?>

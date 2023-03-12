@@ -17,7 +17,7 @@
 <fieldset><legend><strong><?php _e('Request');?>:</strong></legend>
 <?php
 $no = 0;
-$reqs = unserialize($row['request']);
+$reqs = isset($row['request']) ? unserialize($row['request']) : array();
 if(is_array($reqs)){
 	foreach($reqs AS $key=>$val){
 		$no +=1;

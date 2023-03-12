@@ -13,7 +13,7 @@
 <p><label class="editor_toggle" tid="content" data="visual"><?php _e('Visual');?></label>
 <label class="editor_toggle current_label" data="html" tid="content"><?php _e('HTML');?></label></p>
 <?php include('lib/tinymce.php');?>
-<textarea name="content" id="content" class="link"><?php echo htmlspecialchars($row['content']);?></textarea>
+<textarea name="content" id="content" class="link"><?php echo isset($row['content']) ? htmlspecialchars($row['content']):'';?></textarea>
 </fieldset>
 <input type="submit" class="input_submit" value="<?php _e('Done');?>"/>
 </form>

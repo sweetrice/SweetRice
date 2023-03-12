@@ -11,18 +11,13 @@
 <strong><?php _e('You can edit ads code and put it to template,or you can directly edit template <a href="./?type=theme">here</a>');?></strong>
 <form method="post" id="bulk_form" action="./?type=ad&mode=bulk">
 <div>
-<ul class="ads">
+<ul class="ads toggle-list">
 <?php
 $no = 0;
 	foreach($ads as $val){
 		$no +=1;
-		if($classname=='tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
 ?>
-<li class="<?php echo $classname;?>" id="li_<?php echo $no;?>">
+<li id="li_<?php echo $no;?>">
 <div class="ads_list">
 <h3><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $val;?>"/> <?php echo $val;?></h3>
 <div class="ads_content">

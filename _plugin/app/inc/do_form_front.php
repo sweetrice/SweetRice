@@ -27,6 +27,7 @@
 		if(!is_dir($dest_dir)){
 			mkdir($dest_dir);
 		}
+		$field_data = array();
 		foreach($fields as $field){
 			if($field['type'] == 'multi_file'){
 				if(is_array($_FILES[$field['name']]['name'])){
@@ -74,13 +75,13 @@
 	$id = intval($_GET['id']);
 	if($id > 0){
 		$row = db_array("SELECT * FROM `".ADB."_app_form` WHERE `id` = '$id'");
+		$title = _t('Please complete form').' '.$row['name'];
+		if(!$row['template'] || !file_exists($row['template'])){
+			$inc = THEME_DIR.'form.php';
+		}else{
+			$inc = $row['template'];
+		}
 	}else{
 		_404();
-	}
-	$title = _t('Please complete form').' '.$row['name'];
-	if(!$row['template'] || !file_exists($row['template'])){
-		$inc = THEME_DIR.'form.php';
-	}else{
-		$inc = $row['template'];
 	}
 ?>

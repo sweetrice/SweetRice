@@ -7,6 +7,12 @@
  * @since 0.5.4
  */
  	defined('VALID_INCLUDE') or die();
+ 	if (!is_array($s_lang)) {
+ 		$s_lang = array();
+ 	}
+ 	if (!is_array($s_theme)) {
+ 		$s_theme = array();
+ 	}
 	$s_lang[basename($lang,'.php')] = 'selected';
 	$s_theme[$theme] = 'selected';
 ?>

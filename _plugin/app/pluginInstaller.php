@@ -9,6 +9,7 @@
 	defined('VALID_INCLUDE') or die();
 	class pluginInstaller
 	{
+		private $pluginConfig = array();
 		function __construct($pluginConfig = array()){
 			$this->pluginConfig = $pluginConfig;
 		}

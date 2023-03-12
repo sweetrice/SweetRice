@@ -36,7 +36,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 <script type="text/javascript">
 <!--
-	var to = '<?php echo $to?$to:$_SERVER['HTTP_REFERER'];?>';
+	var to = '<?php echo isset($to) ? $to : $_SERVER['HTTP_REFERER'];?>';
 	_().ready(function(){
 		setTimeout(function(){
 				location.href = to;

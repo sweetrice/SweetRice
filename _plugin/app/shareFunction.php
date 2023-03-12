@@ -63,6 +63,7 @@
 		}
 
 		function app_nav(){
+			$menu_data = array();
 			$_menu_data = db_arrays("SELECT * FROM `".ADB."_app_menus`");
 			foreach($_menu_data as $val){
 				$menu_data[$val['id']] = $val;

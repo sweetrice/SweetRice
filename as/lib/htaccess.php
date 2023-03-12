@@ -13,7 +13,7 @@
 		$contents = '';
 	}
 ?>
-<form method="post" action="./?type=htaccess&mode=save">
+<form method="post" action="./?type=htaccess&mode=save" id="pform">
 <fieldset><legend><?php _e('Edit .htaccess');?> - <?php _e('this setting only available for Apache server');?></legend>
 <textarea id="content" class="link"><?php echo $contents;?></textarea>
 <div class="tip"><?php _e('Tips: please don\'t modify "RewriteBase %--%",it will be automatically set to the real path.');?></div>
@@ -25,7 +25,7 @@
 		_('.btn_submit').bind('click',function(){
 			_.ajax({
 				type:'POST',
-				data:{content:_('#content').val()},
+				data:{content:_('#content').val(),_tkv_:_('#_tkv_').attr('value')},
 				url:'./?type=htaccess&mode=save',
 				success:function(result){
 					if (result.status != 1){

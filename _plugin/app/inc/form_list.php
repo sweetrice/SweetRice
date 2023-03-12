@@ -20,22 +20,29 @@
 <input type="hidden" name="returnUrl" value="<?php echo $returnUrl;?>"/>
 <table>
 <thead>
-	<tr><th class="data_no"><input type="checkbox" class="checkall"/></th><th class="max50"><?php _e('Name');?></th><th><?php _e('Method');?></th><th class="media_content"><?php _e('Form Action');?></th><th style="width:40%;" class="media_content"><?php _e('Fields');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr>
+	<tr>
+		<th class="data_no"><input type="checkbox" class="checkall"/></th>
+		<th class="max50"><?php _e('Name');?></th>
+		<th><?php _e('Method');?></th>
+		<th><?php _e('Form Action');?></th>
+		<th><?php _e('Fields');?></th>
+		<th class="td_admin"><?php _e('Admin');?></th>
+	</tr>
 </thead>
 <tbody>
 <?php
 	foreach($data['rows'] AS $row ){
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
 		$fields = unserialize($row['fields']);
 ?>
-<tr class="<?php echo $classname;?>"><td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td><td class="max50"><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['id']))?>" target="_blank"><?php echo $row['name'];?></a></td><td><?php echo $row['method'];?></td><td class="media_content"><?php echo $row['action'];?></td><td class="media_content"><?php foreach($fields as $val):
+<tr>
+	<td><input type="checkbox" name="plist[]" value="<?php echo $row['id'];?>" class="ck_item"/></td>
+	<td class="max50" data-label="<?php _e('Name');?>"><a href="<?php echo BASE_URL.pluginHookUrl(THIS_APP,array('app_mode'=>'form','id'=>$row['id']))?>" target="_blank"><?php echo $row['name'];?></a></td>
+	<td data-label="<?php _e('Method');?>"><?php echo $row['method'];?></td>
+	<td data-label="<?php _e('Form Action');?>"><?php echo $row['action'];?></td>
+	<td data-label="<?php _e('Fields');?>"><?php foreach($fields as $val):
 echo $val['tip'].'['.$val['type'].($val['option']?' '._t('Options').':'.$val['option']:'').'] '.($val['required']?_t('Required'):_t('Optional')).($val['select_multiple']?' '._t('Multiple'):'').'<br />';
-endforeach;?></td><td>
-<a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a> <a title="<?php _e('Modify');?>" class="action_modify" href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'form','mode'=>'insert','id'=>$row['id']));?>"><?php _e('Modify');?></a> 
+endforeach;?></td>
+	<td data-label="<?php _e('Admin');?>" class="td_admin"><a title="<?php _e('Delete');?>" class="action_delete" href="javascript:void(0);"><?php _e('Delete');?></a> <a title="<?php _e('Modify');?>" class="action_modify" href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>'form','mode'=>'insert','id'=>$row['id']));?>"><?php _e('Modify');?></a> 
 </td></tr>
 <?php
 	}

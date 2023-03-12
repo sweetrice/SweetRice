@@ -50,7 +50,7 @@
 				}elseif(!$_POST['submit']){
 					$copyfailed = true;
 				}
-				if($copyfailed){
+				if(isset($copyfailed)){
 					$str = _t('Update SweetRice files failed');
 				}else{
 					$str = _t('Update SweetRice files successfully');
@@ -120,14 +120,18 @@
 		$top_word = _t('Update SweetRice');
 	}elseif($mode == 'automatically'){
 		$curr_ = '1'.str_replace('.','',SR_VERSION);
-		if (SR_VERSION >= 1150) {
-			output_json(array('status'=>1,'status_code'=>$str));
+		if (SR_VERSION <= 1150) {
+			output_json(array('status'=>1));
 		}
 		$str = update_automatically('SweetRice_upgrade');
 		output_json(array('status'=>1,'status_code'=>$str));
 	}else{
+		$update = false;
 		$lastest_ = sweetrice_version();
 		$current_ = SR_VERSION;
+		$last_ = '';
+		$curr_ = '';
+		$str = '';
 		if($current_){
 			$str = vsprintf(_t('Current version : %s'),array($current_));
 			$last_ = '1'.str_replace('.','',$lastest_);
@@ -136,7 +140,7 @@
 			$str .= ' '.vsprintf(_t('Lastest version : %s'),array($lastest_));
 			$curr_ = '1'.str_replace('.','',$current_);
 		}
-		if($last_-$curr_>0){
+		if( intval($last_) - intval($curr_) > 0 ){
 			$update = true;
 			file_put_contents('../inc/lastest_update.txt',$lastest_);
 		}

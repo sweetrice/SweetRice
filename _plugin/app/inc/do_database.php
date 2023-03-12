@@ -10,6 +10,7 @@
 	$mode = $_GET['mode'];
 	switch($mode){
 		case 'bulk':
+			$ids = array();
 			$plist = $_POST['plist'];
 			foreach($plist as $val){
 				$val = intval($val);
@@ -37,9 +38,11 @@
 			}
 			
 			$location = parse_url($_SERVER['HTTP_REFERER']);
-			preg_match('/&p=([0-9]+)/',$location['query'],$matches);
-			if($_SESSION['database_list_p'] != $matches[1] && $matches[1]){
-				$_SESSION['database_list_p'] = $matches[1];
+			if ( $location && $location['query'] ) {
+				preg_match('/&p=([0-9]+)/',$location['query'],$matches);
+				if(is_array($matches) && $_SESSION['database_list_p'] != $matches[1] && $matches[1]){
+					$_SESSION['database_list_p'] = $matches[1];
+				}
 			}
 			$returnUrl = pluginDashboardUrl(THIS_APP,array('app_mode'=>'database')).($_SESSION['database_list_p']?'&p='.$_SESSION['database_list_p']:'');
 			$app_inc = 'database_insert.php';
@@ -47,7 +50,7 @@
 		default:
 			$where = " ";
 			$url_search = '';
-			if($_GET['keyword']){
+			if(isset($_GET['keyword'])){
 				$where .= " `content` LIKE '%".db_escape($_GET['keyword'])."%' ";
 				$url_search .= '&keyword='.$_GET['keyword'];
 			}

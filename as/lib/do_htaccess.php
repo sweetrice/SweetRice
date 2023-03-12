@@ -17,7 +17,7 @@
 		if('apache2handler' == php_sapi_name() && strpos($str,'mod_rewrite')!==false){
 			$support_htaccess = true;
 		}
-		if(!$support_htaccess){
+		if(!isset($support_htaccess)){
 			output_json(array('status'=>0,'status_code'=>_t('Server does not supports .Htaccess.')));
 		}
 		$contents = $_POST['content'];

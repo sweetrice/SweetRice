@@ -249,8 +249,7 @@ function editorEnable(id){
 	autosave_ask_before_unload:false,
 	automatic_uploads:false,
 	inline_styles:true,
-	toolbar1: 'bold | italic | underline | strikethrough | bullist | numlist | blockquote | hr | link | unlink | alignleft | aligncenter | alignright | alignjustify | searchreplace | outdent | indent | rtl | UploadImage',
-	toolbar2: ' media | inserttime | anchor | removeformat | formatselect | forecolor | backcolor | undo | redo | fontselect | fontsizeselect | pagebreak | fullscreen | preview',
+	toolbar: 'bold italic underline strikethrough | bullist numlist | blockquote | hr | link  unlink | alignleft aligncenter alignright alignjustify | searchreplace | outdent indent rtl | UploadImage media | inserttime anchor | removeformat formatselect | forecolor backcolor | undo redo | fontselect fontsizeselect | pagebreak | fullscreen preview',
 	font_formats: "Andale Mono=andale mono,times;"+
 	    "Arial=arial,helvetica,sans-serif;"+
 	    "Arial Black=arial black,avant garde;"+

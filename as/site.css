@@ -120,6 +120,9 @@ table th{
 table td{
 	padding:5px;
 }
+table td:last-of-type(){
+	font-size: 0;
+}
 option{
 	padding:2px;
 	margin:2px;
@@ -372,16 +375,23 @@ animation-direction:alternate;
 thead tr{
 	background-color:#ccc;
 }
-.tr_sigle{
+tr:nth-child(odd){
 	background-color:#F8F8F3;
 }
-.tr_double{
+tr:nth-child(even){
 	background-color:#F1F1F1;
 }
-.td_admin{
-	width:50px;
+tr:nth-child(odd):hover,tr:nth-child(even):hover,{
+	background-color:#E0E8F1;
 }
-.tr_sigle:hover,.tr_double:hover,{
+
+.toggle-list:nth-child(odd){
+	background-color:#F8F8F3;
+}
+.toggle-list:nth-child(even){
+	background-color:#F1F1F1;
+}
+.toggle-list:nth-child(odd):hover,.toggle-list:nth-child(even):hover,{
 	background-color:#E0E8F1;
 }
 .sortNo{
@@ -467,26 +477,31 @@ thead tr{
 }
 .action_close{
 	background:url("../images/action_icon.png") no-repeat scroll -120px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
 	width:20px;
 	cursor: pointer;
+	text-align: left;
 }
 .action_modify{
 	background:url("../images/action_icon.png") no-repeat scroll 0 -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
 	width:20px;
 	margin:2px;
 	cursor: pointer;
+	text-align: left;
 }
 .folder{
 	background:url("../images/action_icon.png") no-repeat scroll -59px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	width:20px;
@@ -494,7 +509,8 @@ thead tr{
 }
 .article{
 	background:url("../images/action_icon.png") no-repeat scroll -40px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	width:20px;
@@ -502,7 +518,8 @@ thead tr{
 }
 .rssfeed{
 	background:url("../images/action_icon.png") no-repeat scroll -140px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
@@ -511,32 +528,38 @@ thead tr{
 }
 .action_save{
 	background:url("../images/action_icon.png") no-repeat scroll -158px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
 	width:20px;
 	margin:2px;
 	cursor: pointer;
+	text-align: left;
 }
 .action_delete{
 	background:url("../images/action_icon.png") no-repeat scroll -18px -2px transparent;
-	float:left;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
 	width:20px;
 	margin:2px;
 	cursor: pointer;
+	text-align: left;
 }
 .action_enlarge{
 	background:url("../images/action_icon.png") no-repeat -99px -2px transparent;
-	float:right;
+	display: inline-block;
+  	vertical-align: middle;
 	height:20px;
 	overflow:hidden;
 	text-indent:-9999px;
 	width:20px;
 	cursor: pointer;
+	text-align: left;
 }
 #menuBar{
 	cursor: move;
@@ -814,4 +837,40 @@ thead tr{
 }
 @media (max-width: 320px){
 	.template_list li{width:100%;margin:10px 0px;}
+}
+@media screen and (min-width: 35.5em) {
+	.td_admin{
+		width: 50px;
+	}
+	tbody .td_admin{
+		font-size: 0;
+	}
+}
+@media screen and (max-width: 35.5em) {
+    table {
+        border: 0;
+    }
+    table thead {
+        display: none;
+    }
+    table tr {
+        margin-bottom: 10px;
+        display: block;
+        border-bottom: 2px solid #ddd;
+    }
+    table td {
+        display: block;
+        text-align: right;
+        font-size: 13px;
+        border-bottom: 1px dotted #ccc;
+        max-width: 100% !important;
+    }
+    table td:last-child {
+        border-bottom: 0;
+    }
+    table td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
 }

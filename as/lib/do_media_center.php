@@ -27,7 +27,7 @@ switch($mode){
 		}else{
 			output_json(array('status'=>'0','id'=>$f,'no'=>$no,'status_code'=>_t('Not exists or not empty.')));
 		}
-		if($do_delete){
+		if(isset($do_delete)){
 			output_json(array('status'=>'1','id'=>js_unescape($_POST['file']),'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Media'),js_unescape($_POST['file'])))));
 		}else{
 			output_json(array('status'=>'0','id'=>js_unescape($_POST['file']),'no'=>$no,'status_code'=>_t('Failed').$f));
@@ -43,10 +43,11 @@ switch($mode){
 	break;
 	case 'bulk':
 		$plist = $_POST['plist'];
+		$dlist = array();
 		foreach($plist as $val){
 			$tmp = $val;
 			$val = MEDIA_DIR.$val;
-			if(is_file($val)&&substr($val,0,STRLEN_MEDIA_DIR)==MEDIA_DIR){
+			if(is_file($val) && substr($val,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
 				@unlink($val);
 				$dlist[] = $tmp;
 			}
@@ -82,10 +83,10 @@ switch($mode){
 	break;
 	default:
 		$_dir = MEDIA_DIR.$_GET['dir'];
-		if($_dir && file_exists($_dir) && substr($_dir,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
+		if(file_exists($_dir) && substr($_dir,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
 			$_open_dir = $_dir;
 			$tmp = explode('/',substr($_dir,0,-1));
-			if(count($tmp)){
+			if(count($tmp) > 0){
 				$parent = str_replace(end($tmp).'/','',$_dir);
 				$parent = substr($parent,STRLEN_MEDIA_DIR);
 			}
@@ -94,17 +95,18 @@ switch($mode){
 		}
 		$open_dir = substr($_open_dir,STRLEN_MEDIA_DIR);
 		$keyword = $_GET['keyword'];
+		$files = array();
+		$tmp_list = array();
+		$tmp_data = array();
 		if(is_dir($_open_dir)){
-			$tmp_list = array();
-			$tmp_data = array();
 			$d = dir($_open_dir);
 			while (false !== ($entry = $d->read())) {
 			 if($entry != '.' && $entry != '..'){
-				 if($keyword){
+				 if(isset($keyword)){
 					 if(strpos($entry,$keyword) !== false){
 						$tmp = array('name'=>$entry,'type'=>(is_dir($_open_dir.$entry)?'dir':sr_file_type($_open_dir.$entry)),'date'=>filemtime($_open_dir.$entry),'link'=>$open_dir.$entry);
 						if(!in_array(filemtime($_open_dir.$entry),$tmp_list)){
-							$files[filemtime($_open_dir.$entry)]  = $tmp;
+							$files[filemtime($_open_dir.$entry)] = $tmp;
 							$tmp_list[] = filemtime($_open_dir.$entry);
 						}else{
 							$tmp_data[filemtime($_open_dir.$entry)][] = $tmp;
@@ -123,14 +125,20 @@ switch($mode){
 			}
 			$d->close();
 		}
-		krsort($files);
-		foreach($files as $key=>$val){
-			$_files[] = $val;
-			foreach($tmp_data[$key] as $v){
-				$_files[] = $v;
+		if (count($files) > 0) {
+			krsort($files);
+			$_files = array();
+			foreach($files as $key=>$val){
+				$_files[] = $val;
+				if (!is_array($tmp_data[$key])) {
+					continue ;
+				}
+				foreach($tmp_data[$key] as $v){
+					$_files[] = $v;
+				}
 			}
+			$files = $_files;
 		}
-		$files = $_files;
 		$total = count($files);
 		$page_limit = page_limit();
 		$p_link = './?type=media_center&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');

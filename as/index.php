@@ -27,6 +27,7 @@
 	$lang_data = array();
 	init_lang(INCLUDE_DIR.'lang/'.$global_setting['lang']);
 	$inc = null;
+	$plugin_page = array();
 	switch($type){
 		case 'signin':
 			dashboardSignin();
@@ -62,6 +63,7 @@
 			}
 	}
 	include('lib/head.php');
+	$bgnav = array();
 	$bgnav[$type] = 'class="currency_nav"';
 ?>
 <div id="div_center">

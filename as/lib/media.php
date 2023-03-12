@@ -205,7 +205,7 @@ max-height:420px;
 </head>
 <body>
 <div class="form_split">
-<span class="folder"></span> <a href="./?type=media<?php echo $parent?'&dir='.$parent:'';?>&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a>
+<span class="folder"></span> <a href="./?type=media<?php echo isset($parent) ? '&dir='.$parent:'';?>&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a>
 </div>
 <div class="form_split">
 <form method="get" action="./">
@@ -222,12 +222,7 @@ max-height:420px;
 <?php
 $no = 0;
 for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
-	if($files[$i]){
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
+	if(is_array($files[$i])){
 	 $no +=1;
 ?>
 <li id="tr_<?php echo $no;?>" class="<?php echo $files[$i]['type'] == 'dir' ? 'isdir':'isfile';?>">
@@ -258,7 +253,6 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 	}
 ?>
 <a title="<?php _e('Delete');?>" class="action_delete dellist img_delete" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php _e('Delete');?></a></li>
-
 <?php
 	}
 }
@@ -267,7 +261,6 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 </div>
 <div class="clear"></div>
 <?php echo $pager['list_put'];?>
-
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
 <input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_');?>">
 <div class="form_split">

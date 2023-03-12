@@ -16,11 +16,11 @@
 		output_json(array('status'=>1));
 	}
  }elseif($mode == 'delete'){
-		$host = $_POST['host'];
-		if($host && rmSite($host)){
-			output_json(array('status'=>'1','status_code'=>vsprintf(_t('%s (%s) has been update successfully.'),array(_t('Sites'),$host))));
-		}
-		output_json(array('status'=>0,'status_code'=>_t('Sorry,some error happened')));
+	$host = $_POST['host'];
+	if($host && rmSite($host)){
+		output_json(array('status'=>'1','status_code'=>vsprintf(_t('%s (%s) has been update successfully.'),array(_t('Sites'),$host))));
+	}
+	output_json(array('status'=>0,'status_code'=>_t('Sorry,some error happened')));
  }elseif($mode == 'insert'){
 	$themes = getThemeTypes();
 	$top_word = _t('Site Management');

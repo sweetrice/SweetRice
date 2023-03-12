@@ -14,27 +14,27 @@ switch($mode){
 	case 'delete':
 		$no = $_POST['no'];
 		$f = MEDIA_DIR.js_unescape($_POST['file']);
-		if(is_dir($f)&&substr($f,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
+		if(is_dir($f) && substr($f,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
 			if(@rmdir($f)){
 				$do_delete = true;
 			}else{
 			output_json(array('status'=>'0','id'=>$f,'no'=>$no,'status_code'=>_t('Not exists or not empty.')));
 		}
-		}elseif(is_file($f)&&substr($f,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
+		}elseif( is_file($f) && substr($f,0,STRLEN_MEDIA_DIR) == MEDIA_DIR){
 			if(@unlink($f)){
 				$do_delete = true;
 			}
 		}else{
 			output_json(array('status'=>'0','id'=>$f,'no'=>$no,'status_code'=>_t('Not exists or not empty.')));
 		}
-		if($do_delete){
+		if( isset($do_delete) ){
 			output_json(array('status'=>'1','id'=>js_unescape($_POST['file']),'no'=>$no,'status_code'=>vsprintf(_t('%s (%s) has been delete successfully.'),array(_t('Media'),js_unescape($_POST['file'])))));
 		}else{
 			output_json(array('status'=>'0','id'=>js_unescape($_POST['file']),'no'=>$no,'status_code'=>_t('Failed')));
 		}
 	break;
 	case 'mkdir':
-		$parent_dir = file_exists(MEDIA_DIR.$_POST['parent_dir'])?MEDIA_DIR.$_POST['parent_dir']:MEDIA_DIR;
+		$parent_dir = isset($_POST['parent_dir']) && file_exists(MEDIA_DIR.$_POST['parent_dir']) ? MEDIA_DIR.$_POST['parent_dir']:MEDIA_DIR;
 		$referrer = $_POST['referrer'];
 		$new_dir = $_POST['new_dir'];
 		if(!is_dir($parent_dir.$new_dir)){
@@ -44,7 +44,8 @@ switch($mode){
 	break;
 	case 'upload':
 		$_POST['dir_name'] = str_replace('../','',$_POST['dir_name']);
-		$dest_dir = file_exists(MEDIA_DIR.$_POST['dir_name'])?MEDIA_DIR.$_POST['dir_name']:MEDIA_DIR;		if(is_array($_FILES['upload']['name'])){
+		$dest_dir = file_exists(MEDIA_DIR.$_POST['dir_name'])?MEDIA_DIR.$_POST['dir_name']:MEDIA_DIR;		
+		if(is_array($_FILES['upload']['name'])){
 			foreach($_FILES['upload']['name'] as $key=>$val){
 				$tmp = array(
 					'name' => $_FILES['upload']['name'][$key],
@@ -82,6 +83,7 @@ switch($mode){
 		}
 		$open_dir = substr($_open_dir,STRLEN_MEDIA_DIR);
 		$keyword = $_GET['keyword'];
+		$files = array();
 		if(is_dir($_open_dir)){
 			$tmp_list = array();
 			$tmp_data = array();
@@ -112,7 +114,8 @@ switch($mode){
 			$d->close();
 			
 		}
-		if (is_array($files)) {
+		if (is_array($files) && is_array($tmp_data)) {
+			$_files = array();
 			krsort($files);
 			foreach($files as $key=>$val){
 				$_files[] = $val;
@@ -121,13 +124,12 @@ switch($mode){
 				}
 			}
 			$files = $_files;
-			$referrer = $_GET['referrer'];
 			$total = count($files);
+			$referrer = $_GET['referrer'];
+			$page_limit = page_limit(null,15);
+			$p_link = './?type=media&referrer='.$referrer.'&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
+			$pager = _pager($total,$page_limit,$p_link);
 		}
-
-		$page_limit = page_limit(null,15);
-		$p_link = './?type=media&referrer='.$referrer.'&dir='.$open_dir.'&'.($keyword?'keyword='.$keyword.'&':'');
-		$pager = _pager($total,$page_limit,$p_link);
 		define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
 		include('lib/media.php');
 		exit();

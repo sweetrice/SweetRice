@@ -33,13 +33,16 @@
 				$row = getPosts(array('ids'=>$id,'custom_field'=>true,'fetch_one'=>true));
 				$att_rows = db_arrays("SELECT * FROM `".DB_LEFT."_attachment` WHERE `post_id` = '$id'");
 				$cf_rows = $row['custom_field'];
-				$row['body'] = toggle_attachment($row['body'],'dashboard');
+				if (isset($row['body'])) {
+					$row['body'] = toggle_attachment($row['body'],'dashboard');
+				}
 				$top_word = _t('Modify Post');
 			}else{
 				$top_word = _t('Create Post');
+				$row = array();
 			}
 			$referer = parse_url($_SERVER['HTTP_REFERER']);
-			preg_match('/&p=([0-9]+)/',$referer['query'],$matches);
+			preg_match('/&p=([0-9]+)/',isset($referer['query']) ? $referer['query'] : '',$matches);
 			if($_SESSION['post_list_p']!=$matches[1]&&$matches[1]){
 				$_SESSION['post_list_p'] = $matches[1];
 			}
@@ -51,6 +54,7 @@
 	case 'bulk':
 		$paction = $_POST['paction'];
 		$plist = $_POST['plist'];
+		$ids = array();
 		foreach($plist as $val){
 			$val = intval($val);
 			if($val>0){
@@ -66,7 +70,8 @@
 				break;
 				case 'pmodify':
 					$pcat = $_POST['pcat'];
-					if($pcat!='no'){
+					$sql = '';
+					if($pcat != 'no'){
 						$sql = "`category` = '".intval($pcat)."',";
 					}
 					$in_blog = intval($_POST['in_blog']);
@@ -116,6 +121,7 @@
 		foreach($rows as $val){
 			$ids[] = $val['id'];
 		}
+		$cmtRows = array();
 		if(is_array($ids) && count($ids)){
 			$cmts = db_arrays("SELECT `post_id`, COUNT(*) AS total FROM `".DB_LEFT."_comment` WHERE `post_id` IN(".implode(',',$ids).") GROUP BY `post_id`");
 			foreach($cmts as $val){

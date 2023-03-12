@@ -8,6 +8,7 @@
  */
  defined('VALID_INCLUDE') or die();
 	function sql2data($table){
+		$tabledump = array();
 		$bk_table = '%--%'.substr($table,strlen(DB_LEFT));
 		$tabledump[] = "DROP TABLE IF EXISTS `$bk_table`;";
 		$create = $GLOBALS['db_lib']->fetch_row($GLOBALS['db_lib']->query("SHOW CREATE TABLE `$table`"));

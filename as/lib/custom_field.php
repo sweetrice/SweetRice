@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
  defined('VALID_INCLUDE') or die();
- $cfdata = unserialize($cfdata['content']);
+ $cfdata = is_string($cfdata['content']) ? unserialize($cfdata['content']) : array();
 ?>
 <style>
 #cfList select{
@@ -208,7 +208,7 @@ endforeach;?>
 </div>
 <div class="form_split">
 <input type="button" value="<?php _e('Add Custom Field');?>" class="cf_add"></div>
-<div class="form_split"><input type="button" value="<?php echo _e('Clean Custom Field');?>" class="cf_clean"> <div class="tip"><?php _e('One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field');?>
+<div class="form_split"><input type="button" value="<?php _e('Clean Custom Field');?>" class="cf_clean"> <div class="tip"><?php _e('One name & one value,these data will be listed by function get_custom_field,if you choose "save to field list",new item form will show this field');?>
 </div>
 </div></div>
 </div>

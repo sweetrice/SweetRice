@@ -6,6 +6,7 @@
  * @Plugin App
  * @since 1.4.2
  */
+	$plugin_config = array();
 	$plugin_config['name'] = 'App';
 	$plugin_config['version'] = '1.0';
 	$plugin_config['install_sql'] = 'install.sql';

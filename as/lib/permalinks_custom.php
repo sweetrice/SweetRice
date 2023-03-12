@@ -17,17 +17,21 @@
 <?php echo $pager['list_put'];?>
 <form method="post" id="bulk_form" action="./?type=permalinks&mode=custom&submode=bulk">
 <table>
-<thead><tr><th class="data_no"><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Request');?></th><th><?php _e('Plugin');?></th><th class="td_admin"><?php _e('Admin');?></th></tr></thead>
+<thead>
+	<tr>
+		<th class="data_no"><input type="checkbox" id="checkall"/></th>
+		<th class="max50"><?php _e('URL');?></th>
+		<th><?php _e('Request');?></th>
+		<th><?php _e('Plugin');?></th>
+		<th class="td_admin"><?php _e('Admin');?></th>
+	</tr>
+</thead>
+<tbody>
 <?php
 $no = 0;
 	foreach($rows as $row){
 		$no +=1;
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
-		$reqs = unserialize($row['request']);
+		$reqs = isset($row['request']) ? unserialize($row['request']) : array();
 		if($reqs){
 			$original_url = BASE_URL.'?';
 			foreach($reqs as $key=>$val){
@@ -38,19 +42,21 @@ $no = 0;
 			$original_url = BASE_URL.$row['url'];
 		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
+<tr id="tr_<?php echo $no;?>">
 <td><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span>
-<input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['lid'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.$row['url'];?>"><?php echo BASE_URL.$row['url'];?></a>
-</td><td class="media_content"><a href="<?php echo $original_url;?>"><?php echo $original_url;?></a></td>
-<td><?php echo $row['plugin'];?></td>
-<td class="td_admin">
-<span id="action_<?php echo $no;?>"></span>
-<a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['lid'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
+<input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $row['lid'];?>"/></td>
+<td class="max50" data-label="<?php _e('URL');?>"><a href="<?php echo BASE_URL.$row['url'];?>"><?php echo BASE_URL.$row['url'];?></a>
+</td>
+<td data-label="<?php _e('Request');?>"><a href="<?php echo $original_url;?>"><?php echo $original_url;?></a></td>
+<td data-label="<?php _e('Plugin');?>"><?php echo $row['plugin'] ? $row['plugin'] : '&nbsp;';?></td>
+<td class="td_admin" data-label="<?php _e('Admin');?>"><span id="action_<?php echo $no;?>"></span><a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $row['lid'];?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a> 
 <a title="<?php _e('Modify');?>" class="action_modify" href="./?type=permalinks&mode=custom&submode=insert&id=<?php echo $row['lid'];?>"><?php _e('Modify');?></a> 
-</td></tr>
+</td>
+</tr>
 <?php
 	}
 ?>
+</tbody>
 </table>
 <input type="submit" value=" <?php _e('Bulk Delete');?> " class="btn_submit">  <input type="button" value="<?php _e('Create');?>" class="back" url="./?type=permalinks&mode=custom&submode=insert">
 </form>

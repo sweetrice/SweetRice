@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
 	defined('VALID_INCLUDE') or die();
-	if(file_exists(THEME_DIR.$page_theme['head'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['head'])){
 		include(THEME_DIR.$page_theme['head']);		
 	}
 ?>
@@ -17,7 +17,7 @@
 	<div id="nav"><a href="<?php echo BASE_URL;?>"><?php _e('Home');?></a> &raquo; <a href="<?php echo show_link_cat($categories[$cat_id]['link'],'');?>"><?php echo $categories[$cat_id]['name'];?></a> <?php _e('Parent');?> <a href="<?php echo $categories[$row_cat['parent_id']]?show_link_cat($categories[$row_cat['parent_id']]['link'],''):BASE_URL;?>"><?php echo $categories[$row_cat['parent_id']]?$categories[$row_cat['parent_id']]['name']:_t('Main');?></a></div>
 	<div id="posts">
 <?php	
-	if(count($rows)==0):
+	if(count($rows) == 0 ):
 		echo '<div align="center">'._t('No Entry').'</div>';
 	else:
 		foreach($rows as $row):
@@ -40,13 +40,13 @@
 <script type="text/javascript" src="js/pins.js"></script>
  </div>
 <?php	
-	if(file_exists(THEME_DIR.$page_theme['sidebar'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['sidebar'])){
 		include(THEME_DIR.$page_theme['sidebar']);		
 	}
 ?>
 <div class="div_clear"></div></div>
 <?php		
-	if(file_exists(THEME_DIR.$page_theme['foot'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['foot'])){
 		include(THEME_DIR.$page_theme['foot']);		
 	}
 ?>

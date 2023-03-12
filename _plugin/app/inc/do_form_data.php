@@ -11,6 +11,7 @@
 	switch($mode){
 		case 'bulk':
 			$plist = $_POST['plist'];
+			$ids = array();
 			foreach($plist as $val){
 				$val = intval($val);
 				if($val>0){
@@ -27,6 +28,8 @@
 			$form_id = intval($_GET['form_id']);
 			$forms = db_arrays("SELECT * FROM `".ADB."_app_form`");
 			$where = " 1=1 ";
+			$search_url = '';
+			$this_form = array();
 			if($form_id > 0){
 				$where .= " AND afd.`form_id` = '$form_id'";
 				$search_url = '&form_id='.$form_id;
@@ -44,6 +47,14 @@
 				'order' => 'afd.date DESC',
 				'pager' => array('p_link'=>pluginDashboardUrl(THIS_APP,array('app_mode'=>'form_data')).$search_url.'&','page_limit'=>page_limit(null,10),'pager_function'=>'_pager')
 			));
+			$location = parse_url($_SERVER['HTTP_REFERER']);
+			if ( $location && $location['query'] ) {
+				preg_match('/&p=([0-9]+)/',$location['query'],$matches);
+				if(is_array($matches) && $_SESSION['form_data_p'] != $matches[1] && $matches[1]){
+					$_SESSION['form_data_p'] = $matches[1];
+				}
+			}
+			$returnUrl = pluginDashboardUrl(THIS_APP,array('app_mode'=>'form_data')).($_SESSION['form_data_p']?'&p='.$_SESSION['form_data_p']:'');
 			$app_inc = 'form_data_list.php';
 	}
 ?>

@@ -14,6 +14,7 @@
 		switch($submode){
 			case 'save':
 				$alias = array('attachment','rssfeed','rssfeedCat','rssfeedPost','sitemapXml','sitemapHtml','comment','tag','ad');
+				$permalinks = array();
 				foreach($alias as $key=>$val){
 					$tmp = preg_replace('/[^\w_\-]+/','',$_POST[$val.'_alias']);
 					if($key == 'attachment'){
@@ -55,6 +56,7 @@
 			break;
 			case 'bulk':
 				$plist = $_POST['plist'];
+				$ids = array();
 				foreach($plist as $val){
 					$val = intval($val);
 					if($val > 0){
@@ -73,6 +75,7 @@
 			break;
 			default:
 				$search = db_escape($_GET['search']);
+				$where = '';
 				if($search){
 					$where .= "`url` LIKE '%$search%'";
 				}

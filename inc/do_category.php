@@ -20,6 +20,7 @@
 	$page_limit = $global_setting['nums_setting']['postCategory'];
 	$m = $_GET['m'];
 	if($m == 'pins'){
+		$plist = array();
 		$pins_num = $global_setting['nums_setting']['postPins'];
 		$p = max(1,intval($_GET['p']));
 		$moreNum = max(1,intval($_GET['moreNum']));
@@ -61,7 +62,7 @@
 	$description = 	$categories[$cat_id]['description'];
 	$keywords = $categories[$cat_id]['keyword'];
 	$top_word = $categories[$cat_id]['sort_word'];
-	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$categories[$cat_id]['name'].' '.CATEGORY_RSSFEED.'" href="'.show_link_cat_xml($categories[$cat_id]['link']).'" />';			
+	$rssfeed = '<link rel="alternate" type="application/rss+xml" title="'.$categories[$cat_id]['name'].' '.( defined('CATEGORY_RSSFEED') ? CATEGORY_RSSFEED : '').'" href="'.show_link_cat_xml($categories[$cat_id]['link']).'" />';			
 	if($categories[$cat_id]['template']&&$categories[$cat_id]['template']!='default'&&file_exists($categories[$cat_id]['template'])){
 		$inc = $categories[$cat_id]['template'];
 	}else{

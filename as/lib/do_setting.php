@@ -87,10 +87,13 @@
 	default:
 		define('UPLOAD_MAX_FILESIZE',ini_get('upload_max_filesize'));
 		$themes = getThemeTypes();
+		$s_theme = array();
 		$s_theme[$global_setting['theme']] = 'selected';
 		$lang = getLangTypes(INCLUDE_DIR.'lang/');
 		$lang_types = getLangTypes();
+		$s_lang = array();
 		$s_lang[$global_setting['theme_lang']] = 'selected';
+		$dashboard_lang = array();
 		$dashboard_lang[$global_setting['lang']] = 'selected';
 		$top_word = _t('General Setting');
 		$cf_rows = db_arrays("SELECT * FROM `".DB_LEFT."_item_data` WHERE `item_id` = 1 AND `item_type` = 'setting'");

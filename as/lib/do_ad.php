@@ -32,6 +32,7 @@
 			mkdir($ads_dir);
 		}
 		$adk = $_GET['adk'];
+		$adv = '';
 		if(file_exists($ads_dir.$adk.'.php')){
 			$adv = file_get_contents($ads_dir.$adk.'.php');
 		}

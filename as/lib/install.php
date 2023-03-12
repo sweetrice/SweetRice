@@ -26,6 +26,7 @@ switch($action){
 		$main_page = 'license.php';
 	break;
 	case 'install':
+		$message = '';
 		if(!is_writable(INCLUDE_DIR)){
 			$message .= SITE_URL._t('inc is not writable').'<br />';
 		}
@@ -43,6 +44,8 @@ switch($action){
 			$database_type = $_POST['database_type'];
 			define('DATABASE_TYPE',$database_type);
 			define('DB_LEFT',$_POST['db_left']);
+			$error_db = false;
+			$message = '';
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					if($_POST['db_name']){
@@ -79,7 +82,7 @@ switch($action){
 						$db_str .= '$db_left = \''.$_POST['db_left'].'\';'."\n";
 						$db_str .= '$db_name = \''.$_POST['db_name'].'\';'."\n";
 						$db_str .= "?>";
-						file_put_contents('../inc/db.php',$db_str);
+						file_put_contents(INCLUDE_DIR.'db.php',$db_str);
 					}
 				break;
 				case 'pgsql':
@@ -104,7 +107,7 @@ switch($action){
 						$db_str .= '$db_username = \''.$_POST['db_username'].'\';'."\n";
 						$db_str .= '$db_passwd = \''.$_POST['db_passwd'].'\';'."\n";
 						$db_str .= "?>";
-						file_put_contents('../inc/db.php',$db_str);
+						file_put_contents(INCLUDE_DIR.'db.php',$db_str);
 					}else{
 						$error_db = true;
 						$message = _t('Database error');
@@ -143,7 +146,7 @@ switch($action){
 						$db_str .= '$db_username = \''.$_POST['db_username'].'\';'."\n";
 						$db_str .= '$db_passwd = \''.$_POST['db_passwd'].'\';'."\n";
 						$db_str .= "?>";
-						file_put_contents('../inc/db.php',$db_str);
+						file_put_contents(INCLUDE_DIR.'db.php',$db_str);
 					}else{
 						$error_db = true;
 						$message = _t('Database error');
@@ -179,7 +182,7 @@ switch($action){
 	break;
 	default:
 		$langs = getLangTypes(INCLUDE_DIR.'lang/');
-		$s_lang[$lang] = 'selected';
+		$s_lang = array($lang => 'selected');
 		$main_page = 'information.php'; 
 	}
 	$top_height = in_array($_COOKIE['top_height'],array('small','normal'))?$_COOKIE['top_height']:'';

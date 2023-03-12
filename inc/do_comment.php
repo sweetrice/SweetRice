@@ -24,6 +24,7 @@
 		$page_limit = $global_setting['nums_setting']['commentList'];
 		$m = $_GET['m'];
 		if($m == 'pins'){
+			$plist = array();
 			$pins_num = $global_setting['nums_setting']['commentPins'];
 			$p = max(1,intval($_GET['p']));
 			$moreNum = max(1,intval($_GET['moreNum']));

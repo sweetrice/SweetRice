@@ -13,22 +13,22 @@
 	}
 
 	function update_automatically($upgrade_dir){
-		eval("\$str = '<p>"._t('Update')." SweetRice</p>';");
+		$str = '<p>'._t('Update').' SweetRice</p>';
 		$content = get_data_from_url('https://www.sweetrice.xyz/download/17/');
 		if($content){
 			file_put_contents(ROOT_DIR.'SweetRice_core.zip',$content);
-			eval("\$str .= '<p>"._t('Download')." SweetRice_core.zip ("._t('File size:')." ".filesize(ROOT_DIR.'SweetRice_core.zip').") "._t('successfully')."</p>';");
+			$str .= '<p>'._t('Download').' SweetRice_core.zip ('._t('File size:').' '.filesize(ROOT_DIR.'SweetRice_core.zip').') '._t('successfully').'</p>';
 		}else{
-			eval("\$str .= '<p>"._t('Update failed - cannot connect update server.')."</p>';");
+			$str .= '<p>'._t('Update failed - cannot connect update server.').'</p>';
 			return $str;
 		}
 		if(!file_exists(ROOT_DIR.$upgrade_dir)){
 			mkdir(ROOT_DIR.$upgrade_dir);
 		}
 		if(extractZIP(ROOT_DIR.'SweetRice_core.zip',ROOT_DIR.$upgrade_dir.'/')){
-			eval("\$str .= '<p>"._t('Extract')." SweetRice_core.zip "._t('successfully')."</p>';");
+			$str .= '<p>'._t('Extract').' SweetRice_core.zip '._t('successfully').'</p>';
 		}else{
-			eval("\$str .= '<p>"._t('Extract').". SweetRice_core.zip "._t('Failed')."</p>';");
+			$str .= '<p>'._t('Extract').'. SweetRice_core.zip '._t('Failed').'</p>';
 			return $str;
 		}
 		$sweetrice_files = sweetrice_files(ROOT_DIR.$upgrade_dir.'/');
@@ -40,36 +40,36 @@
 			}
 			if(is_dir($val)){
 				if(!is_dir($target_entry)&&!mkdir($target_entry)){
-					eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
+					$str .= '<p>'._t('Update').' SweetRice '._t('Files').' '._t('Aborted').'</p>';
 					return $str;
 				}
 			}else{
 				if(is_file($target_entry)){
 					if(md5_file($val) != md5_file($target_entry)&&!copy($val,$target_entry)){
-						eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
+						$str .= '<p>'._t('Update').' SweetRice '._t('Files').' '._t('Aborted').'</p>';
 						return $str;
 					}
 				}else{
 					if(!copy($val,$target_entry)){
-						eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('Aborted')."</p>';");
+						$str .= '<p>'._t('Update').' SweetRice '._t('Files').' '._t('Aborted').'</p>';
 						return $str;
 					}
 				}
 			}
 		}
-		eval("\$str .= '<p>"._t('Update')." SweetRice "._t('Files')." "._t('successfully')."</p>';");
+		$str .= '<p>'._t('Update').' SweetRice '._t('Files').' '._t('successfully').'</p>';
 		if(file_exists(ROOT_DIR.$upgrade_dir.'/upgrade_db.php')){
 			if(!file_exists(ROOT_DIR.'upgrade_db.php')){
 				copy(ROOT_DIR.$upgrade_dir.'/upgrade_db.php',ROOT_DIR.'/upgrade_db.php');
 			}
 			$upgrade_db = get_data_from_url(BASE_URL.'upgrade_db.php');
 			if($upgrade_db == 'Successfully'){
-				eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('successfully')."</p>';");
+				$str .= '<p>'._t('Database').' '._t('Upgrade').' '._t('successfully').'</p>';
 				if(file_exists(ROOT_DIR.'upgrade_db.php')){
 					unlink(ROOT_DIR.'upgrade_db.php');
 				}
 			}else{
-				eval("\$str .= '<p>"._t('Database')." "._t('Upgrade')." "._t('Failed')." </p><p>$upgrade_db</p>';");
+				$str .= '<p>'._t('Database').' '._t('Upgrade').' '._t('Failed').' </p><p>'.$upgrade_db.'</p>';
 			}
 		}
 		if(file_exists(ROOT_DIR.'inc/lastest_update.txt')){
@@ -80,12 +80,12 @@
 			file_put_contents(ROOT_DIR.'inc/lastest.txt',$lastest);
 		}
 		if(un_(ROOT_DIR.$upgrade_dir.'/')&&unlink(ROOT_DIR.'SweetRice_core.zip')){
-			eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('successfully')."</p>';");
+			$str .= '<p>'._t('Clean').' '._t('temporary').' '._t('Files').' '._t('successfully').'</p>';
 		}else{
-			eval("\$str .= '<p>"._t('Clean')." "._t('temporary')." "._t('Files')." "._t('Failed')."</p>';");
+			$str .= '<p>'._t('Clean').' '._t('temporary').' '._t('Files').' '._t('Failed').'</p>';
 			return $str;
 		}
-		eval("\$str .= '<p>"._t('Upgrade')." SweetRice to $lastest "._t('successfully')."</p>';");
+		$str .= '<p>'._t('Upgrade').' SweetRice to '.$lastest.' '._t('successfully').'</p>';
 		return $str;
 	}
 	function un_($_dir,$_rmdir = true){
@@ -133,60 +133,36 @@
 		return true;
 	}
 
-	function extractZIP($file_name,$dest_dir,$format_filename = false){
+	function extractZIP($file_name = '',$dest_dir = '',$format_filename = false){
+		if (!file_exists($file_name)) {
+			return array();
+		}
 		if(substr($dest_dir,-1) != '/'){
 			$dest_dir .= '/';
 		}
 		$data = array();
-		if((extension_loaded('zlib')||extension_loaded('ZZIPlib')) && 1>1){
-			$zip = zip_open($file_name);
-			if (is_resource($zip)){
-				while ($zip_entry = zip_read($zip)) {
-					if (zip_entry_open($zip, $zip_entry, 'r')) {
-						$buf = zip_entry_read($zip_entry, zip_entry_filesize($zip_entry));
-						if(substr(zip_entry_name($zip_entry),-1)=='/'){
-							if(!file_exists($dest_dir.zip_entry_name($zip_entry))){
-								mkdir($dest_dir.zip_entry_name($zip_entry));
-							}
-						}else{
-							if ($format_filename) {
-								$tmp_name = filter_file_name(zip_entry_name($zip_entry));
-							}else{
-								$tmp_name = zip_entry_name($zip_entry);
-							}
-							$handle = fopen($dest_dir.$tmp_name,'wb');
-							fwrite($handle,$buf);
-							fclose($handle);
-							$data[] = $dest_dir.$tmp_name;
-						}
-						zip_entry_close($zip_entry);
-					}
+		$zip = new ZipArchive();
+		if ($zip->open($file_name) === TRUE) {
+			$temp_dir = 'temp'.time().rand(1000,9999);
+			$zip->extractTo($dest_dir.$temp_dir.'/');
+			$zip->close();
+			$_data = sweetrice_files($dest_dir.$temp_dir.'/');
+			foreach($_data as $val){
+				if ($format_filename) {
+					$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
+				}else{
+					$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
 				}
-				zip_close($zip);
+				rename($val,$dest_dir.$tmp_name);
+				$data[] = $dest_dir.$tmp_name;
 			}
-		}else{
-			$zip = new ZipArchive();
-			if ($zip->open($file_name) === TRUE) {
-				$temp_dir = 'temp'.time().rand(1000,9999);
-				$zip->extractTo($dest_dir.$temp_dir.'/');
-				$zip->close();
-				$_data = sweetrice_files($dest_dir.$temp_dir.'/');
-				foreach($_data as $val){
-					if ($format_filename) {
-						$tmp_name = filter_file_name(substr($val,strlen($dest_dir.$temp_dir.'/')));
-					}else{
-						$tmp_name = substr($val,strlen($dest_dir.$temp_dir.'/'));
-					}
-					rename($val,$dest_dir.$tmp_name);
-					$data[] = $dest_dir.$tmp_name;
-				}
-				rmdir($dest_dir.$temp_dir);
-			}
+			rmdir($dest_dir.$temp_dir);
 		}
-		return count($data)?$data:false;
+		return count($data)?$data:array();
 	}
 
 	function get_template($theme_dir,$type){
+		$templates = array();
 		$theme_config = file($theme_dir.'theme.config');
 		foreach($theme_config as $val){
 			if(trim($val)){
@@ -212,6 +188,7 @@
 
 	function get_AllTemplate($theme_dir){
 		$theme_config = file($theme_dir.'theme.config');
+		$templates = array();
 		foreach($theme_config as $val){
 			if(trim($val)){
 				$tmp = explode('|',$val);
@@ -221,7 +198,7 @@
 		$d = dir($theme_dir);
 		while (false !== ($entry = $d->read())) {
 			 if($entry!='.'&&$entry!='..'&&$entry!='theme.config'&&!is_dir($theme_dir.$entry)&&!$templates[$theme_dir.$entry]){
-				$str = file_get_contents($theme_dir.$entry,null,null,0,200);
+				$str = file_get_contents($theme_dir.$entry,false,null,0,200);
 				$is_template = preg_match('/\s\*\s*[\sa-zA-Z0-9\-\_]*Template\s*(Name)?:(.+)/i',$str,$matches);
 				if($is_template){
 					$templates[substr($theme_dir,strlen(SITE_HOME)).$entry] = trim($matches[2]);
@@ -239,7 +216,7 @@
 		if(is_array($exts)){
 			$file_ext = strtoupper(end($exts));
 		}
-		if($filetypes[$file_ext]){
+		if(isset($file_ext) && $filetypes[$file_ext]){
 			return $filetypes[$file_ext];
 		}else{
 			return 'application/octet-streams';
@@ -270,8 +247,8 @@
 	exit();
 	}
 	function sweetrice_files($_dir){
-		if (!is_dir($_dir)) {
-			return ;
+		if (!isset($_dir) || !is_dir($_dir)) {
+			return array();
 		}
 		if(substr($_dir,-1) != '/'){
 			$_dir .= '/';
@@ -279,12 +256,15 @@
 		$filelist = array();
 		$d = dir($_dir);
 		while (false !== ($entry = $d->read())) {
-		if($entry!='.'&&$entry!='..'){
-			$filelist[] = $_dir.$entry;
-			if(is_dir($_dir.$entry)){
-				$filelist = array_merge ($filelist,sweetrice_files($_dir.$entry.'/'));
+			if($entry!='.'&&$entry!='..'){
+				$filelist[] = $_dir.$entry;
+				if(is_dir($_dir.$entry)){
+					$the_filelist = sweetrice_files($_dir.$entry.'/');
+					if (is_array($the_filelist) && count($the_filelist) > 0) {
+						$filelist = array_merge( $filelist , $the_filelist );
+					}
+				}
 			}
-		}
 		}
 		$d->close();
 		return $filelist;
@@ -318,11 +298,11 @@
 		if($_COOKIE['admin'] == $global_setting['admin'] && $_COOKIE['passwd'] == $global_setting['passwd']){
 			return true;
 		}
-		if(!$data){
+		if((!is_array($data) || count($data) == 0) && count($_POST) > 0){
 			$data = $_POST;
 		}
-		if($data['user'] == $global_setting['admin'] && md5($data['passwd']) == $global_setting['passwd'] ){
-			$login_expired = null;
+		if(is_array($data) && $data['user'] == $global_setting['admin'] && md5($data['passwd']) == $global_setting['passwd'] ){
+			$login_expired = 0;
 			if($data['rememberme']){
 				$login_expired = time()+31536000;
 			}
@@ -335,9 +315,9 @@
 
 	function signin_as_member_plugin(){
 		$orow = getOption('pluginWithDashboard');
-		if($orow['content']){
+		if(is_array($orow) && $orow['content']){
 			$orow = unserialize($orow['content']);
-			if($orow['plugin']){
+			if(isset($orow['plugin'])){
 				$pluginCookie = $orow['pluginCookie'];
 				$pluginSession = $orow['pluginSession'];
 				if(!$pluginSession && !$pluginCookie){
@@ -493,6 +473,8 @@
 			}
 		}
 		$db_type = $site_config['db_type'];
+		$message = '';
+		$error_db = false;
 		switch($db_type){
 			case 'sqlite':
 				if($site_config['db_name']){
@@ -609,7 +591,7 @@
 			$GLOBALS['db_lib_site']->close();
 			return array('inited'=>true);
 		}
-		return array('inited'=>$inited,'error_db'=>$error_db?_t('Database Error'):'','message'=>$message);
+		return array('inited'=>$inited,'error_db'=>$error_db ? _t('Database Error'):'','message'=>$message);
 	}
 
 	function rmSite($host){
@@ -646,57 +628,61 @@
 <ul>
   <li <?php echo $type?'':' class="currency_nav"';?>><a href="./"><?php _e('Dashboard');?></a><br /><?php echo vsprintf(_t('Current version : %s'),array(SR_VERSION));?></li>
 <?php
- foreach(dashboard_acts() as $key=>$val):
-	if(!dashboard_role($key,$val['mustBase'])){continue;}
+$dashboard_acts = dashboard_acts();
+foreach($dashboard_acts as $key => $val):
+	if(isset($val['mustBase']) && !dashboard_role($key,$val['mustBase'])){continue;}
 	switch($val['type']):
 		case 1:
 ?>
 <li <?php echo $bgnav[$key];?>>
 <div><?php echo $val['title'];?>
 <div class="hidden_ pl10">
-<?php $cCount = count($val['child']);
+<?php $cCount = isset($val['child']) ? count($val['child']) : 0;
+if ($cCount > 0) {
 foreach($val['child'] as $v):
-	if($v['mustBase'] && BASE_URL != SITE_URL){continue;}
-$str = null;
-foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<?php if($cCount>2)echo '<p>';?>
-<a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a> 
-<?php if($cCount>2)echo '</p>';?>
-<?php endforeach;?>
-</div></div>
+	if(isset($v['mustBase']) && $v['mustBase'] && BASE_URL != SITE_URL){continue;}
+	$str = '';
+	foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
+	<?php if( $cCount > 2 ) echo '<p>';?>
+	<a href="./?<?php echo substr($str,1);?>"<?php echo isset($v['ncr']) ? ' class="ncr '.($_GET['type'] == $v['request']['type'] && isset($v['request']['mode']) && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a> 
+	<?php if( $cCount > 2 ) echo '</p>';?>
+	<?php endforeach;
+}?>
+</div>
+</div>
 </li>
 <?php
 		break;
 		case 2:
 ?>
-<li <?php foreach($val['child'] as $v){echo $bgnav[$v['request']['type']];}?>>
+<li <?php if(is_array($val['child']) && count($val['child']) > 0){foreach($val['child'] as $v){echo $bgnav[$v['request']['type']];}}?>>
 <div><?php echo $val['title'];?>
 <div class="hidden_ pl10">
-<?php foreach($val['child'] as $v):if(!dashboard_role($v['request']['type'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
-<?php endforeach;?>
+<?php if(is_array($val['child']) && count($val['child']) > 0){foreach($val['child'] as $v):if(isset($v['mustBase']) && !dashboard_role($v['request']['type'],$v['mustBase'])){continue;}$str='';foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo isset($v['ncr']) ? ' class="ncr '.($_GET['type'] == $v['request']['type'] && isset($v['request']['mode']) && $_GET['mode'] == $v['request']['mode']?'menu_child_nav_curr':'').'"':($_GET['type'] == $v['request']['type'] && $_GET['mode'] == $v['request']['mode']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
+<?php endforeach;}?>
 </div></div>
 </li>
 <?php
 		break;
 		case 3:
-			foreach($val['request'] as $kk=>$vv){$str=null;$str .= '&'.$kk.'='.$vv;}
+			foreach($val['request'] as $kk=>$vv){$str='';$str .= '&'.$kk.'='.$vv;}
 ?>
-<li <?php echo $bgnav[$key];?>><a href="./?<?php echo substr($str,1);?>"<?php echo $val['ncr']?' class="ncr"':'';?>><?php echo $val['title'];?></a></li>
+<li <?php echo $bgnav[$key];?>><a href="./?<?php echo substr($str,1);?>"<?php echo isset($val['ncr']) ? ' class="ncr"':'';?>><?php echo $val['title'];?></a></li>
 <?php
 		break;
 		case 5:
 ?>
-<li <?php echo $bgnav['plugins']?$bgnav['plugins']:$bgnav['plugin'];?>>
+<li <?php echo $bgnav['plugins'] ? $bgnav['plugins'] : $bgnav['plugin'];?>>
 <div>
-<a href="./?type=<?php echo $key;?>"<?php echo $val['ncr']?' class="ncr"':'';?>><?php echo $val['title'];?></a>
+<a href="./?type=<?php echo $key;?>"<?php echo isset($val['ncr']) ?' class="ncr"':'';?>><?php echo $val['title'];?></a>
 <div class="hidden_ pl10">
-<?php foreach($val['child'] as $v):if(!dashboard_role($v['name'],$v['mustBase'])){continue;}$str=null;foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
-<p><a href="./?<?php echo substr($str,1);?>"<?php echo $v['ncr']?' class="ncr '.($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?'menu_child_nav_curr':'').'"':($_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
-<?php if($_GET['plugin'] == $v['request']['plugin']):?>
+<?php foreach($val['child'] as $v):if(isset($v['mustBase']) && !dashboard_role($v['name'],$v['mustBase'])){continue;}$str='';foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
+<p><a href="./?<?php echo substr($str,1);?>"<?php echo isset($v['ncr']) ? ' class="ncr '.(isset($v['request']['plugin']) && $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] ? 'menu_child_nav_curr':'').'"':($_GET['type'] == 'plugin' && isset($v['request']['plugin']) && $_GET['plugin'] == $v['request']['plugin']?' class="menu_child_nav_curr"':'');?>><?php echo $v['title'];?></a></p>
+<?php if(isset($v['request']['plugin']) && $_GET['plugin'] == $v['request']['plugin']):?>
 <ul class="menu_child_nav">
 <?php foreach(pluginApi($v['request']['plugin'],'app_navs') as $app_nav):?>
-<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] && $_GET['app_mode'] == $app_nav['app_mode']?' class="menu_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
+<li><a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$app_nav['app_mode']));?>" <?php echo isset($v['request']['plugin']) && $_GET['type'] == 'plugin' && $_GET['plugin'] == $v['request']['plugin'] && $_GET['app_mode'] == $app_nav['app_mode']?' class="menu_child_nav_curr"':'';?>><?php echo $app_nav['name'];?></a></li>
 <?php endforeach;?>
 </ul>
 <?php endif;?>
@@ -724,11 +710,13 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 		}
 		$plugin_directory = $plugin_list[$plugin]['directory'];
 		$optionRow = getOption('plugin_installed');
-		$plugin_installed = unserialize($optionRow['content']);
-		if($plugin_installed[$plugin]){
-			return array('status'=>0,'status_code'=>_t('Plugin already exists.'));
+		if (is_string($optionRow['content'])) {
+			$plugin_installed = unserialize($optionRow['content']);
+			if($plugin_installed[$plugin]){
+				return array('status'=>0,'status_code'=>_t('Plugin already exists.'));
+			}
 		}
-		if(file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php')){
+		if(isset($plugin_directory) && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php')){
 			include_once(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php');
 			if(class_exists('pluginInstaller')){
 				$pluginInstaller = new pluginInstaller($plugin_list[$plugin]);
@@ -737,8 +725,11 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 		if(is_object($pluginInstaller) && method_exists($pluginInstaller,'beforeInstall')){
 			$pluginInstaller->beforeInstall();
 		}
-		if($plugin_directory && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php')){
+		if(isset($plugin_directory) && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php')){
 			include(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php');
+			if (!is_array($plugin_config)) {
+				return array('status'=>0);
+			}
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					if($plugin_config['install_sqlite']){
@@ -768,6 +759,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 						$sql = explode(';',$sql);
 					}		
 			}
+			$message = '';
 			if($sql){
 				foreach($sql as $key=>$val){
 					if(trim($val)){
@@ -797,7 +789,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 			alert(_t('Invalid plugin - missing plugin name'),'./?type=plugins');
 		}
 		$plugin_directory = $plugin_list[$plugin]['directory'];
-		if(file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php')){
+		if(isset($plugin_directory) && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php')){
 			include_once(SITE_HOME.'_plugin/'.$plugin_directory.'/pluginInstaller.php');
 			if(class_exists('pluginInstaller')){
 				$pluginInstaller = new pluginInstaller($plugin_list[$plugin]);
@@ -824,8 +816,11 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 				break;
 			}
 		}
-		if($plugin_directory && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php')){
+		if(isset($plugin_directory) && file_exists(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php')){
 			include(SITE_HOME.'_plugin/'.$plugin_directory.'/plugin_config.php');
+			if (!is_array($plugin_config)) {
+				return array('status'=>0);
+			}
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					if($plugin_config['deinstall_sqlite']){
@@ -848,6 +843,7 @@ foreach($v['request'] as $kk=>$vv){$str .= '&'.$kk.'='.$vv;}?>
 						$sql = explode(';',$sql);
 					}
 			}
+			$message = '';
 			if($sql){
 				foreach($sql as $key=>$val){
 					if(trim($val)){

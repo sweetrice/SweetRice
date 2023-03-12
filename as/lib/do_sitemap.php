@@ -67,7 +67,7 @@
 						}
 						$original_url = substr($original_url,0,-1);			
 					}else{
-						$original_url = $row['url'];
+						$original_url = $val['url'];
 					}
 					if(URL_REWRITE){
 						$lList[] = array('url'=>$val['url'],'link_body'=>$val['url'],'original_url'=>$original_url);
@@ -97,7 +97,7 @@
 		}
 		$top_word = _t('Sitemap Management');
 		$index_setting = getOption('index_setting');
-		$index_setting = unserialize($index_setting['content']);
+		$index_setting = is_string($index_setting['content']) ? unserialize($index_setting['content']) : array();
 		$inc = 'sitemap.php';
  }
  ?>

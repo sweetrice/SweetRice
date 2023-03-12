@@ -9,6 +9,7 @@
  defined('VALID_INCLUDE') or die();
 	 function sql2data($table){
 		$bk_table = '%--%'.substr($table,strlen(DB_LEFT));
+		$tabledump = array();
 		$tabledump[] = "DROP TABLE IF EXISTS `$bk_table`;";
 		$create = db_array("select * from sqlite_master WHERE type = 'table' and name = '$table'");
 		$tabledump[] = str_replace($table,$bk_table,$create['sql']).";";

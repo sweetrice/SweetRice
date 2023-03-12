@@ -42,7 +42,7 @@
 					}
 					$original_url = substr($original_url,0,-1);			
 				}else{
-					$original_url = $row['url'];
+					$original_url = $val['url'];
 				}
 				if(URL_REWRITE){
 					$lList[] = array('url'=>$val['url'],'link_body'=>$val['url'],'original_url'=>$original_url);
@@ -51,13 +51,14 @@
 				}
 			}
 			$rows = db_arrays("SELECT `sys_name`,`category`,`name` FROM `".DB_LEFT."_posts` WHERE `in_blog` = '1' ORDER by `id` DESC");
-			foreach($rows as $key=>$row){
+			foreach($rows as $key => $row){
 				$lList[] = array('url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name']),'link_body'=>$row['name'],'original_url'=>show_link_page($categories[$row['category']]['link'],$row['sys_name'],true));
 			}
 			output_json(array('status'=>1,'data'=>$lList));
 		break;
 		default:
 			$id = intval($_GET['id']);
+			$row = array();
 			if($id > 0){
 				$row = db_array("SELECT * FROM `".ADB."_app_menus` WHERE `id` = '$id'");
 			}

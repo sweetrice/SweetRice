@@ -31,7 +31,10 @@
 	}
 
 	if(!function_exists('sqlite_escape_string')){
-		function sqlite_escape_string($str){
+		function sqlite_escape_string($str = ''){
+			if (!isset($str)) {
+				return false;
+			}
 			return str_replace('\'','\'\'',$str);
 		}	
 	}
@@ -61,6 +64,7 @@
 		if($row['content']){
 			$permalinks = unserialize($row['content']);
 		}else{
+			$permalinks = array();
 			$permalinks['attachment'] = 'download';
 			$permalinks['rssfeed'] = 'rssfeed';
 			$permalinks['rssfeedCat'] = 'cat_rssfeed';
@@ -75,15 +79,18 @@
 	}
 
 	function initlinks($url){
-		if(!$url){return false;}
+		if(!$url){return array();}
 		$row = db_array_nocache("SELECT * FROM `".DB_LEFT."_links` WHERE `url` = '$url'");
+		if (!$row['request']) {
+			return array();
+		}
 		return unserialize($row['request']);
 	}
 
 	function parseUrl($url){
 		$row = getOption('parseList');
 		if(!$row['content']){
-			return false;
+			return array();
 		}
 		$parseList = unserialize($row['content']);
 		foreach($parseList as $key=>$val){
@@ -108,8 +115,9 @@
 		}
 		$redirectList = unserialize($row['content']);
 		foreach($redirectList as $key=>$val){
-			if(preg_match($key,$url,$matches)||$key==$url){
+			if(preg_match($key,$url,$matches) || $key == $url){
 				preg_match_all('/(\$[1-9])+/',$val,$data);
+				$ndata = array();
 				foreach($data[1] as $k=>$v){
 					$ndata[$k] = $matches[$k+1];
 				}
@@ -129,11 +137,6 @@
 		$permalinks = initPermalinks();
 		$load_dir = str_replace('//','/',dirname($_SERVER['PHP_SELF']).'/');
 		$url = substr(preg_replace("/(\?.*)?$/",'',$_SERVER['REQUEST_URI']),strlen($load_dir));
-		$redirectList = array();
-		$row = getOption('redirectList');
-		if($row['content']){
-			$redirectList = unserialize($row['content']);
-		}
 		$index_setting = getOption('index_setting');
 		if ($index_setting) {
 			$index_setting = unserialize($index_setting['content']);
@@ -243,6 +246,7 @@
 	function formatUrl($str){
 		parse_str($str,$reqs);
 		ksort($reqs);
+		$output = '';
 		foreach($reqs as $key=>$val){
 			$output .= '&'.$key.'='.$val;
 		}
@@ -258,7 +262,7 @@
 		}
 	}
 
-	function show_link_page($cat_link,$post,$original_url=false){
+	function show_link_page($cat_link = '',$post = '',$original_url=false){
 		if(is_url_rewrite() && !$original_url){
 			if($cat_link){
 				return $cat_link.'/'.$post.'/';
@@ -270,7 +274,7 @@
 		}
 	}
 	
-	function show_link_pagebreak($cat_link,$post,$pb,$original_url=false){
+	function show_link_pagebreak($cat_link = '',$post = '',$pb = '',$original_url=false){
 		if(is_url_rewrite() && !$original_url){
 			if($cat_link){
 				return $cat_link.'/'.$post.($pb > 1 || $pb == 'all' ?':'.$pb:'').'/';
@@ -358,7 +362,8 @@
 		}
 	}
 
-	function postPreview($content){
+	function postPreview($content = ''){
+		$previewContent = mb_substr(strip_tags($content),0,300,'UTF-8');
 		preg_match_all("/(<p[^>]*>([^<]+)<\/p>).*/",$content,$matchs);
 		foreach($matchs[1] as $key=>$val){
 			if($val !='<p>&nbsp;</p>' && $val!='<p></p>'){
@@ -366,9 +371,6 @@
 				$previewContent = $out[1];
 				break;
 			}
-		}
-		if(!$previewContent){
-			$previewContent = mb_substr(strip_tags($content),0,300,'UTF-8');
 		}
 		return $previewContent;
 	}
@@ -414,7 +416,7 @@
 			$mime_boundary = md5(time());
 		}
 		$attach_content = '';
-		if(count($attachments)){
+		if(count($attachments) > 0){
 			foreach($attachments as $val){
 				if(!file_exists($val)){
 					continue;
@@ -565,7 +567,7 @@
 		$dba = dba_open(SITE_HOME.'inc/cache/cache.db', 'r', 'db4');
 		if(dba_exists($cache_link,$dba)){
 			$data = dba_fetch($cache_link,$dba);
-			if(time()-substr($data,0,10) <= $global_setting['cache_expired'] || $global_setting['cache_expired']==0){				
+			if(time() - intval(substr($data,0,10)) <= $global_setting['cache_expired'] || $global_setting['cache_expired']==0){				
 				$cache_data = cache2data(substr($data,11),$cache_type);
 			}
 		}
@@ -610,7 +612,7 @@
 		}
 		$cache_data = false;
 		$data = $db->get($cache_link);
-		if(time()-substr($data,0,10) <= $global_setting['cache_expired'] || $global_setting['cache_expired']==0){				
+		if(time()-intval(substr($data,0,10)) <= $global_setting['cache_expired'] || $global_setting['cache_expired']==0){				
 			$cache_data = cache2data(substr($data,11),$cache_type);
 		}
 		$db->close();
@@ -666,7 +668,7 @@
 		}
 	}
 
-	function db_query($sql,$return_result = false){
+	function db_query($sql = '',$return_result = false){
 		if ($return_result) {
 			return $GLOBALS['db_lib']->query($sql);
 		}
@@ -674,7 +676,7 @@
 		return db_error();
 	}
 
-	function db_arrays($sql,$type = 'ASSOC'){
+	function db_arrays($sql = '',$type = 'ASSOC'){
 		$cache_link = 'db_arrays_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_arrays');
 		if($cache_data){
@@ -686,7 +688,7 @@
 		}
 	}
 
-	function db_array($sql,$type = 'ASSOC'){
+	function db_array($sql = '',$type = 'ASSOC'){
 		$cache_link = 'db_array_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_array');
 		if($cache_data){
@@ -698,7 +700,7 @@
 		}
 	}
 
-	function db_total($sql){
+	function db_total($sql = ''){
 		$cache_link = 'db_total_'.md5($sql);
 		$cache_data = sweetrice_cached($cache_link,'db_total');
 		if($cache_data){
@@ -710,7 +712,7 @@
 		}
 	}
 
-	function db_fetch($query){
+	function db_fetch($query = array()){
 		$table = $query['table'];
 		$where = $query['where'];
 		$pager = $query['pager'];
@@ -727,7 +729,7 @@
 		}
 		if(is_array($where)){
 			$where = " WHERE 1=1 AND ".implode(' AND ',$where)." ";
-		}elseif(trim($where)){
+		}elseif(isset($where) && trim($where)){
 			$where = " WHERE ".$where." ";
 		}
 		if($pager['page_limit'] && $pager['p_link']){
@@ -820,6 +822,7 @@
 		if(!$row){
 			$row = array();
 		}
+		$rows = array();
 		foreach($row as $key=>$val){
 			$tmp = explode('.',str_replace('"','',$key));
 			if(count($tmp) > 1){
@@ -910,14 +913,15 @@
 
 	function upload_($f,$dest_dir,$new_file,$old_file,$always_new = false){
 		$file_type = '.php';
-		if(!$f['name']){
+		if(!isset($f) || !$f['name']){
 			return $old_file;
 		}
 		if(substr($dest_dir,-1) != '/'){
 			$dest_dir .= '/';
 		}
 		$tmp = explode('.',$f['name']);
-		if(count($tmp)){
+		$fileext = '';
+		if(count($tmp) > 0){
 			$fileext = '.'.end($tmp);
 		}
 		if(preg_match("/[^a-zA-Z0-9_\-\.\s]+/",$new_file)){
@@ -984,10 +988,10 @@
 				break;
 			}
 		}
-		if(!$is_browser){
+		if(!isset($is_browser)){
 			$user_browser = 'Other';
 		}
-		if($user_from==''){
+		if($user_from == ''){
 			$user_from = 'Directly access';
 		}
 		$dbname = SITE_HOME.'inc/user_track.db';
@@ -995,7 +999,7 @@
 			$new_track = true;
 		}
 		$db_track = new sqlite_lib(array('name'=>$dbname));
-		if($new_track){
+		if(isset($new_track)){
 			$db_track->query("CREATE TABLE user_agent (id INTEGER PRIMARY KEY ,ip varchar(39) ,user_from varchar(255) ,this_page varchar(255),user_browser varchar(255),time integer)");
 			$db_track->query("CREATE TABLE agent_month (id INTEGER PRIMARY KEY ,user_browser varchar(255),record_date date,total int(10),UNIQUE(user_browser,record_date))");
 		}
@@ -1016,6 +1020,7 @@
 			return array();
 		}
 		$theme = file(THEME_DIR.'theme.config');
+		$page_theme = array();
 		foreach($theme as $key=>$val){
 			if(trim($val)){
 				$tmp = explode('|',$val);
@@ -1100,6 +1105,7 @@
 			$lang_dir = LANG_DIR;
 		}
 		$d = dir($lang_dir);
+		$lang_types = array();
 		while (false !== ($entry = $d->read())) {
 			 if($entry!='.'&&$entry!='..'&&!is_dir($lang_dir.$entry)){
 				 preg_match("/\* (.+) language file/",file_get_contents($lang_dir.$entry),$matches);
@@ -1111,6 +1117,7 @@
 	}
 	
 	function getThemeTypes(){
+		$themes = array();
 		if(is_dir(SITE_HOME.'_themes/')){
 			$d = dir(SITE_HOME.'_themes/');
 			while (false !== ($entry = $d->read())) {
@@ -1118,9 +1125,9 @@
 						$themes[$entry] = $entry;
 					}
 				}
-			$d->close();
-			return $themes;			
+			$d->close();		
 		}
+		return $themes;	
 	}
 
 	function _403(){
@@ -1159,9 +1166,9 @@
 		}
 	}
 
-	function outputHeader($last_modify,$etag='',$ExpiresDate=0){
+	function outputHeader($last_modify = 0,$etag='',$ExpiresDate=0){
 		global $global_setting;
-		$last_access = $_SERVER['HTTP_IF_MODIFIED_SINCE']?strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']):0;
+		$last_access = $_SERVER['HTTP_IF_MODIFIED_SINCE'] ? strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']):0;
 		$last_etag = $_SERVER['HTTP_IF_NONE_MATCH'];
 		$Expires = $last_modify + $ExpiresDate;
 		$Expires = $Expires > time()?$Expires:time();
@@ -1233,11 +1240,11 @@
 
 	function pluginApi($plugin,$apiFunction,$apiReturn=false,$param = array()){
 		$plugin_list = pluginList();
-		if(!$plugin||!$apiFunction||!isPluginInstall($plugin)){return false;}
-			if(file_exists(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php')){
+		if(!$plugin || !$apiFunction || !isPluginInstall($plugin)){return false;}
+			if(is_array($plugin_list) && isset($plugin_list[$plugin]['directory']) && file_exists(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php')){
 				require_once(SITE_HOME.'_plugin/'.$plugin_list[$plugin]['directory'].'/shareFunction.php');
 				eval('$pluginClass = new $plugin();');
-				if(!method_exists ($pluginClass,$apiFunction)){
+				if(!isset($pluginClass) || !method_exists($pluginClass,$apiFunction)){
 					return false;
 				}
 				switch($apiReturn){
@@ -1270,9 +1277,10 @@
 		$reqs['action'] = 'pluginHook';
 		$reqs['plugin'] = $plugin;
 		ksort($reqs);
+		$str = '';
 		if(is_url_rewrite() && !$source_url){
 			$row = getLink($plugin,$reqs);
-			if($row['url']){
+			if(is_array($row) && $row['url']){
 				return $row['url'];
 			}
 		}
@@ -1286,6 +1294,7 @@
 			$args['type'] = 'plugin';
 			$args['plugin'] = $plugin;
 			ksort($args);
+			$str = '';
 			foreach($args as $key=>$val){
 				$str .= '&'.$key.'='.$val;
 			}
@@ -1423,19 +1432,19 @@
 		return array('page_start'=>$page_start,'list_put'=>$list_put,'outPage'=>$outPage,'page'=>$page,'page_total'=>$page_total);
 	}
 
-	function pager_pagebreak($page_total,$post,$curr_page = 1,$source_url = false){
+	function pager_pagebreak($page_total,$post = array(),$curr_page = 1,$source_url = false){
 		global $categories;
 		$page = intval($_GET['p']);
 		if($page == 0){
-			$page = $curr_page > 0?$curr_page:1;
+			$page = $curr_page > 0 ? $curr_page : 1;
 		}
-		
+		$page_limit = 10;
 		if($page > $page_total && $page_total){
 			$outPage = true;
 		}else{
 			$outPage = false;
 		}
-		$page_start = ($page-1)*$page_limit;
+		$page_start = ($page-1) * $page_limit;
 		$page_last = $page_total - $page;
 		
 		$list_put = '';
@@ -1479,18 +1488,20 @@
 
 	function generate_slug($salt = ''){
 		$tmp = explode(' ', microtime());
-		return $salt.base_convert($tmp[1],10,36).base_convert($tmp[0]*1000000,10,36);
+		return $salt.base_convert($tmp[1],10,36).base_convert(strval(intval($tmp[0]) * 1000000),10,36);
 	}
 
 //API for Post insert
 	function post_insert($data=array(),$without_attachment=false,$without_custome_field=false){
+		global $categories;
 		if(!$data){
 			$data = $_POST;
 		}
 		$id = intval($data['id']);
+		$old_tags = array();
 		if($id > 0){
 			$row = getPosts(array('ids'=>$id,'fetch_one'=>true));
-			if($row['tags']){
+			if(is_array($row) && $row['tags']){
 				$old_tags = explode(',',$row['tags']);
 			}
 		}
@@ -1564,7 +1575,7 @@
 		}else{
 			db_insert(DB_LEFT.'_item_plugin',array('id',''),array('item_id','item_type','plugin'),array($post_id,'post',$data['plugin']));
 		}
-		if(!$without_attachment){
+		if(!isset($without_attachment)){
 			$attNos = $data['no'];
 			$inlist = array();
 			for($i=1;$i<=$attNos;$i++){
@@ -1578,7 +1589,7 @@
 			}
 		}
 
-		if(!$without_custom_field){
+		if(!isset($without_custom_field)){
 			save_custom_field($data,'post',$post_id);
 		}
 		return array('post_id'=>$post_id,'sys_name'=>$sys_name);
@@ -1640,10 +1651,11 @@
 		}
 		db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `id` NOT IN (".implode(',',$inlist?$inlist:array(0)).") AND `item_id` = '$item_id' AND `item_type` = '$type'");
 		$cfdata = getOption('custom_'.$type.'_field');
-		if($cfdata){
+		if(isset($cfdata)){
 			$cfdata = unserialize($cfdata['content']);
 		}
-		if($data['deletelist']){
+		if($data['deletelist'] && is_array($cfdata)){
+			$_cfdata = array();
 			$deletelist = explode(',',rtrim($data['deletelist'],','));
 			foreach($cfdata as $key=>$val){
 				if(!in_array($key,$deletelist)){
@@ -1662,8 +1674,8 @@
 		setOption('custom_'.$type.'_field',serialize($cfdata));
 	}
 
-	function get_custom_field($param){
-		if(!$param['item_id'] || !$param['item_type']){
+	function get_custom_field($param = array()){
+		if(!is_array($param) || !$param['item_id'] || !$param['item_type']){
 			return false;
 		}
 		$data = array();
@@ -1714,9 +1726,9 @@
 				setcookie('cemail',$email,time()+31536000);
 				setcookie('cwebsite',$website,time()+31536000);
 			}else{
-				setcookie('cname',null,time()-60);
-				setcookie('cemail',null,time()-60);
-				setcookie('cwebsite',null,time()-60);
+				setcookie('cname','',time()-60);
+				setcookie('cemail','',time()-60);
+				setcookie('cwebsite','',time()-60);
 			}
 			unset($_SESSION['hashcode']);
 			if($id>0){
@@ -1765,7 +1777,8 @@
 		if(!is_array($row)){
 			return ;
 		}
-		$tags = explode(',',$row['tags']);	
+		$tags = explode(',',$row['tags']);
+		$tag_str = '';
 		foreach($tags as $key=>$val){
 			if(trim($val)){
 				$tag_str .= '<a href="'.show_link_tag($val).'">'.$val.'</a> ';
@@ -1803,7 +1816,7 @@
 	function pluginList(){
 		$plugin_installed = array();
 		$row = getOption('plugin_installed');
-		if($row['content']){
+		if(is_array($row) && $row['content']){
 			$plugin_installed = unserialize($row['content']);
 		}
 		$plugin_list = array();
@@ -1812,7 +1825,7 @@
 			while (false !== ($entry = $d->read())){
 				if($entry !='.' && $entry !='..' && file_exists(SITE_HOME.'_plugin/'.$entry.'/plugin_config.php')){
 					include(SITE_HOME.'_plugin/'.$entry.'/plugin_config.php');
-					$plugin_config['installed'] = $plugin_installed[$plugin_config['name']]?true:false;
+					$plugin_config['installed'] = $plugin_installed[$plugin_config['name']] ? true : false;
 					$plugin_config['directory'] = $entry;
 					$plugin_list[$plugin_config['name']] = $plugin_config;		
 				}
@@ -1865,7 +1878,7 @@
 
 	function curl_exec_follow($ch,$maxredirect) {
 	    $mr = max(5,intval($maxredirect));
-	    if (ini_get('open_basedir') == '' && ini_get('safe_mode' == 'Off')) {
+	    if (ini_get('open_basedir') == '' && ini_get('safe_mode') == 'Off') {
 	        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $mr > 0);
 	        curl_setopt($ch, CURLOPT_MAXREDIRS, $mr);
 	    } else {
@@ -1913,6 +1926,7 @@
 		$urls = explode('/',$url);
 		$url_str = substr($url,strlen($urls[0]));
 		$fp = fsockopen($urls[0], 80, $errno, $errstr, 120);
+		$data = '';
 		if (!$fp) {
 				echo "$errstr ($errno)<br />\n";
 		} else {
@@ -1927,7 +1941,7 @@
 		}
 		if(preg_match("|HTTP/1.1\s302.*\n|i", $data)||preg_match("|HTTP/1.1\s301.*\n|i", $data)){
 			preg_match('/Location:(.*?)\n/i', $data, $matches);
-    $newurl = trim(array_pop($matches));
+    		$newurl = trim(array_pop($matches));
 			return fsockopen_follow($newurl,$mr,$cr);
 		}else{
 			preg_match("/\r\n\r\n(.+)/is", $data, $out);
@@ -1939,7 +1953,7 @@
 	function alert($str,$to=false){
 		ob_end_clean();
 		$page_theme = get_page_themes();
-		if($page_theme['alert']){
+		if(is_array($page_theme) && $page_theme['alert']){
 			include(THEME_DIR.$page_theme['alert']);
 		}else{
 			include(INCLUDE_DIR.'alert.php');
@@ -1972,7 +1986,7 @@
 		}
 		ob_end_clean();
 		$page_theme = get_page_themes();
-		if($page_theme['error_report']){
+		if(is_array($page_theme) && $page_theme['error_report']){
 			include(THEME_DIR.$page_theme['error_report']);
 		}else{
 			include(INCLUDE_DIR.'error_report.php');
@@ -1994,7 +2008,7 @@
 		}
 		ob_end_clean();
 		$page_theme = get_page_themes();
-		if($page_theme['error_report']){
+		if(is_array($page_theme) && $page_theme['error_report']){
 			include(THEME_DIR.$page_theme['error_report']);
 		}else{
 			include(INCLUDE_DIR.'error_report.php');
@@ -2074,6 +2088,7 @@
 	}
 	
 	function pluginChild(){
+		$pluginChild = array();
 		foreach(pluginList() as $key=>$val){
 			if($val['installed']){
 				$pluginChild[] = array('name'=>'dashboard/'.$key,'title'=>$key,'request'=>array('type'=>'plugin','plugin'=>$key));
@@ -2083,6 +2098,7 @@
 	}
 
 	function dashboard_actions(){
+		$actions = array();
 		$dashboard_acts = dashboard_acts();
 		foreach($dashboard_acts as $key=>$val){
 			switch($val['type']){
@@ -2130,15 +2146,16 @@
 		return $data;
 	}
 
-	function getTagLists($limit=100){
+	function getTagLists($limit = 100){
 		return db_arrays("SELECT `tags` FROM `".DB_LEFT."_posts` WHERE `tags` !='' AND `in_blog` = 1 ".get_limit_sql(0,$limit));
 	}
 
-	function getCommentByPosts($post_ids){
+	function getCommentByPosts($post_ids = array(0)){
 		if(is_array($post_ids)){
 			$post_ids = implode(',',$post_ids);
 		}
-		$rows = db_arrays("SELECT * FROM `".DB_LEFT."_comment` WHERE `post_id` IN ($post_id) ");
+		$rows = db_arrays("SELECT * FROM `".DB_LEFT."_comment` WHERE `post_id` IN ($post_ids) ");
+		$data = array();
 		foreach($rows as $key=>$val){
 			$data[$val['post_id']] = $val;
 		}
@@ -2156,7 +2173,7 @@
 			default:
 				$where = " 1=1 ";	
 		}
-		if(is_array($param['ids']) && count($param['ids'])){
+		if(is_array($param['ids']) && count($param['ids']) > 0){
 			$where .= " AND ps.`id` IN (".implode(',',$param['ids']).")";
 		}elseif($param['ids']){
 			$where .= " AND ps.`id` IN (".$param['ids'].")";
@@ -2166,13 +2183,11 @@
 		}elseif(isset($param['category_ids'])){
 			$where .= " AND ps.`category` IN (".$param['category_ids'].")";
 		}
-		if($param['tag']){
+		if(isset($param['tag'])){
 			$tag_sql = '';
 			$tag_posts = getOption('tag_posts','serialize');
-			if($tag_posts['output']){
+			if(isset($tag_posts['output'])){
 				$tag_posts = $tag_posts['output'];
-			}else{
-				$tag_posts = array();
 			}
 			$tag_ids = array();
 			if(is_array($param['tag'])){
@@ -2198,7 +2213,7 @@
 				}
 				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
 				$post_sql = substr($post_sql,2);
-			}else{
+			}elseif(isset($param['tag'])){
 				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
 				$post_sql .= "ps.`title` LIKE '%".db_escape($param['tag'])."%' OR ps.`keyword` LIKE '%".db_escape($param['tag'])."%' OR ps.`body` LIKE '%".db_escape($param['tag'])."%' ";
 			}
@@ -2206,13 +2221,15 @@
 				'table' => DB_LEFT.'_item_data',
 				'where' => $cf_sql
 			));
+			$cf_ids = array();
 			foreach($data['rows'] as $val){
 				$cf_ids[] = $val['item_id'];
 			}
-			if(count($cf_ids)){
+			if(count($cf_ids) > 0){
 				$cf_where = " ps.`id` IN(".implode(',',$cf_ids).")";
 			}
 			$where .= " AND (";
+			$left_or = false;
 			if($tag_sql){
 				$where .= " ".$tag_sql." ";
 				$left_or = true;
@@ -2235,20 +2252,20 @@
 		}
 		if(is_array($param['ex_ids'])){
 			$where .= " AND ps.`id` NOT IN (".implode(',',$param['ex_ids']).")";
-		}elseif($param['ex_ids']){
+		}elseif(isset($param['ex_ids'])){
 			$where .= " AND ps.`id` NOT IN (".$param['ex_ids'].")";
 		}
 		
 		if(is_array($param['ex_cids'])){
 			$where .= " AND ps.`category` NOT IN (".implode(',',$param['ex_cids']).")";
-		}elseif($param['ex_cids']){
+		}elseif(isset($param['ex_cids'])){
 			$where .= " AND ps.`category` NOT IN (".$param['ex_cids'].")";
 		}
 
 		if(is_array($param['where'])){
 			$param['where'][] = $where;
 			$where = $param['where'];
-		}elseif($param['where'] && $where){
+		}elseif(isset($param['where']) && $where){
 			$where = $param['where'].' AND '.$where;
 		}
 			
@@ -2270,6 +2287,8 @@
 			'debug' => $param['debug']
 		));
 		$rows = $data['rows'];
+		$ids = array();
+		$cfdata = array();
 		if($param['custom_field'] && count($rows)){
 			foreach($rows as $val){
 				$ids[] = $val['id'];
@@ -2283,7 +2302,7 @@
 				$rows[$key] = $val;
 			}
 		}
-		if($param['fetch_one']){
+		if(isset($param['fetch_one'])){
 			return $rows[0];
 		}
 		$data['rows'] = $rows;
@@ -2297,10 +2316,11 @@
 
 	function removePosts($param = array()){
 		$data = getPosts($param);
+		$pids = array();
 		foreach($data['rows'] as $val){
 			$pids[] = $val['id'];
 		}
-		if(count($pids)){
+		if(count($pids) > 0){
 			db_query("DELETE FROM `".DB_LEFT."_posts` WHERE `id` IN (".implode(',',$pids).")");
 			db_query("DELETE FROM `".DB_LEFT."_item_plugin` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'post'");
 			db_query("DELETE FROM `".DB_LEFT."_item_data` WHERE `item_id` IN (".implode(',',$pids).") AND `item_type` = 'post'");
@@ -2312,11 +2332,11 @@
 		$where = " 1 = 1 ";
 		if(is_array($param['ids']) && count($param['ids']) > 0){
 			$where .= " AND c.`id` IN (".implode(',',$param['ids']).")";
-		}elseif($param['ids']){
+		}elseif(isset($param['ids'])){
 			$where .= " AND c.`id` IN (".$param['ids'].")";
 		}
 		
-		if($param['tag']){
+		if(isset($param['tag'])){
 			$cf_where = '';
 			$cf_sql = " `item_type` = 'category' ";
 			$cat_sql = '';
@@ -2327,8 +2347,8 @@
 					$cat_sql .= "OR c.`title` LIKE '%".db_escape($val)."%' OR c.`name` LIKE '%".db_escape($val)."%' OR c.`sort_word` LIKE '%".db_escape($val)."%' ";
 				}
 				$cf_sql .= " AND (".substr($cf_sql_str,2).")";
-				$cat_sql = substr($post_sql,2);
-			}else{
+				$cat_sql = substr($cat_sql,2);
+			}elseif(isset($param['tag'])){
 				$cf_sql .= " AND `value` LIKE '%".db_escape($param['tag'])."%'";
 				$cat_sql .= "c.`title` LIKE '%".db_escape($param['tag'])."%' OR c.`name` LIKE '%".db_escape($param['tag'])."%' OR c.`sort_word` LIKE '%".db_escape($param['tag'])."%' ";
 			}
@@ -2336,6 +2356,7 @@
 				'table' => DB_LEFT.'_item_data',
 				'where' => $cf_sql
 			));
+			$cf_ids = array();
 			foreach($data['rows'] as $val){
 				$cf_ids[] = $val['item_id'];
 			}
@@ -2347,20 +2368,20 @@
 		
 		if(is_array($param['ex_ids'])){
 			$where .= " AND c.`id` NOT IN (".implode(',',$param['ex_ids']).")";
-		}elseif($param['ex_ids']){
+		}elseif(isset($param['ex_ids'])){
 			$where .= " AND c.`id` NOT IN (".$param['ex_ids'].")";
 		}
 
 		if(is_array($param['ex_pids'])){
 			$where .= " AND c.`parent_id` NOT IN (".implode(',',$param['ex_pids']).")";
-		}elseif($param['ex_pids']){
+		}elseif(isset($param['ex_pids'])){
 			$where .= " AND c.`parent_id` NOT IN (".$param['ex_pids'].")";
 		}
 
 		if(is_array($param['where'])){
 			$param['where'][] = $where;
 			$where = $param['where'];
-		}elseif($param['where']){
+		}elseif(isset($param['where'])){
 			$where = $param['where']." AND ".$where;
 		}
 		$order = ($param['order']?" ".$param['order']." ":" c.`id` DESC ");
@@ -2382,7 +2403,9 @@
 		));
 
 		$rows = $data['rows'];
-		if($param['custom_field'] && count($rows)){
+		$ids = array();
+		$cfdata = array();
+		if(is_array($rows) && $param['custom_field'] && count($rows) > 0){
 			foreach($rows as $val){
 				$ids[] = $val['id'];
 			}
@@ -2409,6 +2432,7 @@
 
 	function removeCategories($param = array()){
 		$data = getCategories($param);
+		$pids = array();
 		foreach($data['rows'] as $val){
 			$pids[] = $val['id'];
 		}
@@ -2419,24 +2443,26 @@
 			db_query("UPDATE `".DB_LEFT."_posts` SET `category` = '0' WHERE `category` IN (".implode(',',$pids).")");
 		}
 		$rows = db_arrays_nocache("SELECT * FROM `".DB_LEFT."_category`");
-		setOption('categories',serialize($rows));
+		if (is_array($rows)) {
+			setOption('categories',serialize($rows));
+		}
 	}
 
-	function initNumsSetting($setting){
-		$setting['postCategories'] = $setting['postCategories']?$setting['postCategories']:10;
-		$setting['postUnCategories'] = $setting['postUnCategories']?$setting['postUnCategories']:10;
-		$setting['tags'] = $setting['tags']?$setting['tags']:100;
-		$setting['postCategory'] = $setting['postCategory']?$setting['postCategory']:15;
-		$setting['postHome'] = $setting['postHome']?$setting['postHome']:15;
-		$setting['postPins'] = $setting['postPins']?$setting['postPins']:12;
-		$setting['postTag'] = $setting['postTag']?$setting['postTag']:10;
-		$setting['postRelated'] = $setting['postRelated']?$setting['postRelated']:10;
-		$setting['postRssfeed'] = $setting['postRssfeed']?$setting['postRssfeed']:50;
-		$setting['commentList'] = $setting['commentList']?$setting['commentList']:15;
-		$setting['commentPins'] = $setting['commentPins']?$setting['commentPins']:12;
-		$setting['category_link_per_page'] = $setting['category_link_per_page']?$setting['category_link_per_page']:50;
-		$setting['post_link_per_page'] = $setting['post_link_per_page']?$setting['post_link_per_page']:50;
-		$setting['custom_link_per_page'] = $setting['custom_link_per_page']?$setting['custom_link_per_page']:50;
+	function initNumsSetting($setting = array()){
+		$setting['postCategories'] = $setting['postCategories'] ? $setting['postCategories'] : 10;
+		$setting['postUnCategories'] = $setting['postUnCategories'] ? $setting['postUnCategories'] : 10;
+		$setting['tags'] = $setting['tags'] ? $setting['tags'] : 100;
+		$setting['postCategory'] = $setting['postCategory'] ? $setting['postCategory'] : 15;
+		$setting['postHome'] = $setting['postHome'] ? $setting['postHome'] : 15;
+		$setting['postPins'] = $setting['postPins'] ? $setting['postPins'] : 12;
+		$setting['postTag'] = $setting['postTag'] ? $setting['postTag'] : 10;
+		$setting['postRelated'] = $setting['postRelated'] ? $setting['postRelated'] : 10;
+		$setting['postRssfeed'] = $setting['postRssfeed'] ? $setting['postRssfeed'] : 50;
+		$setting['commentList'] = $setting['commentList'] ? $setting['commentList'] : 15;
+		$setting['commentPins'] = $setting['commentPins'] ? $setting['commentPins'] : 12;
+		$setting['category_link_per_page'] = $setting['category_link_per_page'] ? $setting['category_link_per_page'] : 50;
+		$setting['post_link_per_page'] = $setting['post_link_per_page'] ? $setting['post_link_per_page'] : 50;
+		$setting['custom_link_per_page'] = $setting['custom_link_per_page'] ? $setting['custom_link_per_page'] : 50;
 		return $setting;
 	}
 
@@ -2460,7 +2486,7 @@
 		echo _t($text);
 	}
 
-	function toggle_attachment($content,$type = 'front'){
+	function toggle_attachment($content = '',$type = 'front'){
 		$relative_link = array('src="'.ATTACHMENT_DIR,'data="'.ATTACHMENT_DIR,'value="'.ATTACHMENT_DIR);
 		$absolute_link = array('src="'.BASE_URL.ATTACHMENT_DIR,'data="'.BASE_URL.ATTACHMENT_DIR,'value="'.BASE_URL.ATTACHMENT_DIR);
 		if($type == 'front'){
@@ -2500,18 +2526,20 @@
 	}
 
 	class mysql_lib{
+		public $db_setting = array();
+		public $link = null;
+		public $connect_error = null;
 		public function __construct($db_setting = false){
-			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['username']) {
-				return false;
-			}
-			$this->db_setting = $db_setting;
-			if (MYSQL_LIB == 'mysqli') {
-				$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
-				$this->connect_error = mysqli_connect_error();
-			}else{
-				$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
-				mysql_select_db($db_setting['name'],$this->link);
-				$this->connect_error = $this->error();
+			if ($db_setting['url'] && $db_setting['port'] && $db_setting['username']) {
+				$this->db_setting = $db_setting;
+				if (MYSQL_LIB == 'mysqli') {
+					$this->link = mysqli_connect($db_setting['url'],$db_setting['username'],$db_setting['passwd'],$db_setting['name'],$db_setting['port']);
+					$this->connect_error = mysqli_connect_error();
+				}elseif(function_exists('mysql_connect')){
+					$this->link = mysql_connect($db_setting['url'].($db_setting['port']?':'.$db_setting['port']:''),$db_setting['username'],$db_setting['passwd'],$db_setting['newlink']);
+					mysql_select_db($db_setting['name'],$this->link);
+					$this->connect_error = $this->error();
+				}				
 			}
 		}
 
@@ -2606,7 +2634,7 @@
 			$res = $this->query($sql);
 			$row = $this->fetch_row($res);
 			$this->free_result($res);
-			return $row[0];
+			return is_array($row) ? $row[0] : 0;
 		}
 
 		public function db_array($sql,$result_type = null){		
@@ -2618,7 +2646,8 @@
 
 		public function db_arrays($sql,$result_type = null){		
 			$res = $this->query($sql);
-			while($row = $this->fetch_array($res,null,$this->result_type($result_type))){
+			$rows = array();
+			while($row = $this->fetch_array($res,$this->result_type($result_type))){
 				$rows[] = $row;
 			}
 			$this->free_result($res);
@@ -2664,6 +2693,7 @@
 
 		public function db_list(){
 			$table_array = db_arrays_nocache("SHOW TABLES",'BOTH');
+			$table_list = array();
 			foreach($table_array as $val){
 				$val = current($val);
 				if(substr($val,0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
@@ -2676,13 +2706,15 @@
 
 
 	class pgsql_lib{
+		public $db_setting = array();
+		public $link = null;
+		public $connect_error = null;
 		public function __construct($db_setting = false){
-			if (!$db_setting['url'] || !$db_setting['port'] || !$db_setting['name'] || !$db_setting['username']) {
-				return false;
+			if ($db_setting['url'] && $db_setting['port'] && $db_setting['name'] && $db_setting['username']) {
+				$this->db_setting = $db_setting;
+				$this->link = pg_connect('host='.$db_setting['url'].' port='.$db_setting['port'].' dbname='.$db_setting['name'].' user='.$db_setting['username'].' password='.$db_setting['passwd']);
+				$this->connect_error = pg_last_error($this->link);
 			}
-			$this->db_setting = $db_setting;
-			$this->link = pg_connect('host='.$db_setting['url'].' port='.$db_setting['port'].' dbname='.$db_setting['name'].' user='.$db_setting['username'].' password='.$db_setting['passwd']);
-			$this->connect_error = pg_last_error($this->link);
 		}
 
 		public function error(){
@@ -2695,6 +2727,9 @@
 		}
 
 		public function fetch_array($result,$result_type = null){
+			if (!isset($result)) {
+				return array();
+			}
 			return pg_fetch_array($result,null,$this->result_type($result_type));
 		}
 
@@ -2741,6 +2776,10 @@
 
 		public function db_arrays($sql,$result_type = null){
 			$res = $this->query($sql);
+			if (!$res) {
+				return array();
+			}
+			$rows = array();
 			while($row = $this->fetch_array($res,$this->result_type($result_type))){
 				$rows[] = $row;
 			}
@@ -2766,9 +2805,6 @@
 					$_val = "'".implode("','",$_val)."'";
 					$sql = "INSERT INTO \"".$table."\"(\"".$_id[0]."\",".$_key.")VALUES('".$_id[1]."',".$_val.")";	
 				}
-				if (!$db_conn) {
-					$db_conn = $GLOBALS['pgsql_lib'];
-				}
 				$this->query($sql);
 				return $_id[1];
 			}else{
@@ -2781,7 +2817,7 @@
 					if($tindex['colname']){
 						$n_key = array_flip($_key);
 						$nindex = $n_key[$tindex['colname']];
-						$total = db_total_nocache("SELECT COUNT(*) FROM \"$table\" WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'",$database_type);
+						$total = db_total_nocache("SELECT COUNT(*) FROM \"$table\" WHERE \"".$tindex['colname']."\" = '".$_val[$nindex]."'");
 						if($total){
 							$_sql = " SET ";
 							for($i=0; $i<count($_key); $i++){
@@ -2830,6 +2866,7 @@
 
 		public function db_list(){
 			$table_array = db_arrays_nocache("SELECT `tablename` FROM `pg_tables`  WHERE `tablename` LIKE '".DB_LEFT."_%' ;");
+			$table_list = array();
 			foreach($table_array as $val){
 				$val = current($val);
 				if(substr($val,0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){
@@ -2841,35 +2878,37 @@
 	}
 
 	class sqlite_lib{
+		public $db_setting = array();
+		public $link = null;
+		public $connect_error = null;
 		public function __construct($db_setting = false){
-			if (!$db_setting['name']) {
-				return false;
-			}
-			if (!$db_setting['sqlite_driver']) {
-				if(extension_loaded('pdo_sqlite')){
-					$db_setting['sqlite_driver'] = 'pdo_sqlite';
-				}elseif(class_exists('SQLite3')){
-					$db_setting['sqlite_driver'] = 'sqlite3';
-				}elseif(function_exists('sqlite_open')){
-					$db_setting['sqlite_driver'] = 'sqlite';
-				}
-			}
-			$this->db_setting = $db_setting;
-			switch($this->db_setting['sqlite_driver']){
-				case 'pdo_sqlite':
-					if(!is_file($db_setting['name'])){
-						touch($db_setting['name']);
+			if ($db_setting['name']) {
+				if (!$db_setting['sqlite_driver']) {
+					if(extension_loaded('pdo_sqlite')){
+						$db_setting['sqlite_driver'] = 'pdo_sqlite';
+					}elseif(class_exists('SQLite3')){
+						$db_setting['sqlite_driver'] = 'sqlite3';
+					}elseif(function_exists('sqlite_open')){
+						$db_setting['sqlite_driver'] = 'sqlite';
 					}
-					$this->link = new PDO('sqlite:'.$db_setting['name']);
-				break;
-				case 'sqlite3':
-					$this->link = new SQLite3($db_setting['name']);
-				break;
-				case 'sqlite':
-					$this->link = sqlite_open($db_setting['name']);
-				break;
+				}
+				$this->db_setting = $db_setting;
+				switch($this->db_setting['sqlite_driver']){
+					case 'pdo_sqlite':
+						if(!is_file($db_setting['name'])){
+							touch($db_setting['name']);
+						}
+						$this->link = new PDO('sqlite:'.$db_setting['name']);
+					break;
+					case 'sqlite3':
+						$this->link = new SQLite3($db_setting['name']);
+					break;
+					case 'sqlite':
+						$this->link = sqlite_open($db_setting['name']);
+					break;
+				}
+				$this->connect_error = $this->error();
 			}
-			$this->connect_error = $this->error();
 		}
 
 		public function error(){
@@ -2911,7 +2950,7 @@
 					}
 				break;
 				case 'sqlite':
-					sqlite_query($this->link,$sql,null,$error);
+					sqlite_query($this->link,$sql,0,$error);
 					if($error){
 						return $error;
 					}else{
@@ -2936,7 +2975,7 @@
 					$this->link = null;
 				break;
 				case 'sqlite3':
-					return $this->link->colse();
+					return $this->link->close();
 				break;
 				case 'sqlite':
 					return sqlite_close($this->link);
@@ -2945,7 +2984,7 @@
 		}
 
 		public function result_type($type = null){
-			return $type == 'BOTH' ? SQLITE_BOTH : SQLITE_ASSOC;
+			return $type == 'BOTH' ? SQLITE3_BOTH : SQLITE3_ASSOC;
 		}
 
 		public function db_total($sql){
@@ -2984,6 +3023,7 @@
 		}
 
 		public function db_arrays($sql,$result_type = null){
+			$rows = array();
 			switch($this->db_setting['sqlite_driver']){
 				case 'pdo_sqlite':
 					foreach($this->link->query($sql)->fetchAll() AS $row){
@@ -3062,6 +3102,7 @@
 		}
 
 		public function db_list(){
+			$table_list = array();
 			$table_array = db_arrays_nocache("select name from sqlite_master where name LIKE '".DB_LEFT.'_'."%' AND name NOT LIKE 'sqlite_%'",'BOTH');
 			foreach($table_array as $val){
 				if(substr($val[0],0,(strlen(DB_LEFT)+1)) == DB_LEFT.'_'){

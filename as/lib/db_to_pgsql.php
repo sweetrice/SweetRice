@@ -55,6 +55,7 @@
 					}
 				}
 			}
+			$db_error = null;
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					foreach($tablelist as $val){
@@ -77,7 +78,7 @@
 								if($tp=='INTEGER'||strtolower(substr($tp,0,3))=='int'||strtolower(substr($tp,0,7))=='tinyint'){
 									$str .= $comma."'".intval($row[$fl])."'";
 								}elseif(is_string($row[$fl])){
-									$str .= $comma."'".pg_escape_string($row[$fl])."'";
+									$str .= $comma."'".$GLOBALS['to_db_lib']->db_escape($row[$fl])."'";
 								}else{
 									$str .= $comma."'".$row[$fl]."'";
 								}	

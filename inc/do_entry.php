@@ -48,5 +48,5 @@
 	}else{
 		$inc = THEME_DIR.$page_theme['entry'];
 	}
-	$last_modify = max($row['date'],$last_comment['date'],filemtime($inc));
+	$last_modify = max($row['date'],is_array($last_comment) ? $last_comment['date'] : 0,filemtime($inc));
 ?>

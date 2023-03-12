@@ -18,7 +18,7 @@ function number_code(){
 	return chr(rand(48,57));
 }
 function rand_code($im,$color, $font){
-	$codes = null;
+	$codes = '';
 	$x = rand(0,5);
 	$y = rand(18,25);
 	$r = rand(0,45);
@@ -69,7 +69,7 @@ imageline($im,rand(0,5),rand(0,8),rand(90,100),rand(20,30),$black);
 imageline($im,rand(0,5),rand(8,18),rand(90,100),rand(0,8),$black);
 imageline($im,rand(0,5),rand(20,30),rand(90,100),rand(8,18),$black);
 $font = '../inc/font/captcha.ttf';
-$code = rand_code($im,$black, $font);
+$code = rand_code($im,$black,$font);
 $_SESSION["hashcode"] = md5(str_replace(' ','',$code));
 imagepng($im);
 imagedestroy($im);

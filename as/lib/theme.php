@@ -24,7 +24,7 @@
 </select></p>
 </div>
 <?php
-	if($page && $themes[$page]){
+	if(isset($page) && $themes[$page]){
 		$data = getOption($themes[$page].'.bak');
 		if($data['content']){
 			$bak_list = unserialize($data['content']);
@@ -45,7 +45,7 @@
 	<input type="submit" class="input_submit" value=" <?php _e('Done');?> "/> * <span class="tip"><?php _e('Please backup before modify');?></span> <?php if(!$from_bak):?><input type="button" value="<?php _e('Delete');?>" class="btn_delete" data="<?php echo $page;?>"><?php endif;?>
 </form>
 <?php
-if(count($bak_list)){
+if(is_array($bak_list) && count($bak_list)){
 	?>
 	<form method="post" action="./?type=theme&mode=clean_backup&page=<?php echo $page;?>">
 	<fieldset><legend><?php _e('Template History');?></legend>

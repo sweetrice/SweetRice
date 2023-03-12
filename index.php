@@ -24,11 +24,11 @@
 	define('THEME_URL',SITE_URL.($theme?'_themes/'.$theme.'/':'_themes/default/'));
 	$action = $_GET['action'];
 	$page_theme = get_page_themes();
-	if($global_setting['close']){
-		include($page_theme['close']?THEME_DIR.$page_theme['close']:INCLUDE_DIR.'close_tip.php');
+	if(is_array($page_theme) && $global_setting['close']){
+		include($page_theme['close'] ? THEME_DIR.$page_theme['close'] : INCLUDE_DIR.'close_tip.php');
 		exit();
 	}
-	if($page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
+	if(is_array($page_theme) && $page_theme['template_helper'] && is_file(THEME_DIR.$page_theme['template_helper'])){
 		include(THEME_DIR.$page_theme['template_helper']);		
 	}
 	$inc = $last_modify = null;

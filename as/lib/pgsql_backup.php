@@ -11,8 +11,8 @@
 		$tabledump = array();
 		$serial_field = '';
 		$bk_table = '%--%'.substr($table,strlen(DB_LEFT));
-		$tabledump [] = "DROP TABLE IF EXISTS \"$bk_table\" CASCADE;";
-		$createsql .= "CREATE TABLE \"$bk_table\" (";
+		$tabledump[] = "DROP TABLE IF EXISTS \"$bk_table\" CASCADE;";
+		$createsql = "CREATE TABLE \"$bk_table\" (";
 		$rows = db_arrays("SELECT attnum,attname , typname , atttypmod-4 , attnotnull ,atthasdef ,adsrc AS def FROM pg_attribute, pg_class, pg_type, pg_attrdef WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum>0 AND pg_class.oid=adrelid AND adnum=attnum AND atthasdef='t' AND lower(relname)='$table' UNION SELECT attnum,attname , typname , atttypmod-4 , attnotnull , atthasdef ,'' AS def FROM pg_attribute, pg_class, pg_type WHERE pg_class.oid=attrelid AND pg_type.oid=atttypid AND attnum > 0 AND atthasdef='f' AND lower(relname)='$table' order by attnum"); 
 		foreach($rows as $r){
 			if(preg_match('/nextval\(\''.$table.'_.+_seq\'::regclass\).*/',$r['def'])){
@@ -45,7 +45,7 @@
 		$rows = db_arrays("SELECT * FROM $table");
 		foreach($rows as $r){
 			foreach($r as $key=>$val){
-				$r[$key] = pg_escape_string($val);
+				$r[$key] = db_escape($val);
 			}
 			$sql = "INSERT INTO \"$bk_table\" VALUES ('";
 			$sql .= implode("','",$r);

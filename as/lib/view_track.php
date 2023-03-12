@@ -59,7 +59,11 @@
 	if (is_array($max_month)) {
 		$all_sum = array_sum($max_month);
 	}
-	
+	$bs = '';
+	$bgs = '';
+	$rb = '';
+	$tb = '';
+	$dba = '';
 	if($all_sum){
 		foreach($browsers as $key=>$val){
 			$v[$key] = number_format($total_all[$key]*100/$all_sum ,2,'.',' ').'%';

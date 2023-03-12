@@ -17,20 +17,29 @@
 <input type="hidden" id="submode" name="submode"/>
 <div id="tbl">
 <table>
-<thead><tr><th class="data_no"><input type="checkbox" id="checkall"/></th><th class="max50"><?php _e('URL');?></th><th class="media_content"><?php _e('Original URL');?></th><th style="width:30px;"><?php _e('Show');?></th><th style="width:60px;"><?php _e('Admin');?></th></tr></thead>
+<thead>
+	<tr>
+		<th class="data_no"><input type="checkbox" id="checkall"/></th>
+		<th><?php _e('URL');?></th>
+		<th><?php _e('Original URL');?></th>
+		<th><?php _e('Show');?></th>
+		<th><?php _e('Admin');?></th>
+	</tr>
+</thead>
 <tbody>
 <?php
 $no = 0;
 if(is_array($lList)){
 	foreach($lList as $val){
 		$no +=1;
-		if($classname == 'tr_sigle'){
-			$classname = 'tr_double';
-		}else{
-			$classname='tr_sigle';
-		}
 ?>
-<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>"><td><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $val['url'];?>"/></td><td class="max50"><a href="<?php echo BASE_URL.$val['url'];?>" target="_blank"><?php echo $val['link_body'];?></a></td><td class="media_content"> <?php echo SITE_URL.$val['original_url'];?></td><td><?php echo in_array($val['url'],$hList)?_t('No'):_t('Yes');?></td><td><?php if($index_setting['req'] != $val['original_url']):?><a href="javascript:void(0);" class="ha" url="<?php echo $val['url'];?>" ourl="<?php echo $val['original_url'];?>"><?php _e('Homepage');?></a><?php else:?><?php _e('Is Index');?> <a href="javascript:void(0);" class="restore_index"><?php _e('Cancel');?></a><?php endif;?></td></tr>
+<tr class="<?php echo $classname;?>" id="tr_<?php echo $no;?>">
+	<td><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $val['url'];?>"/></td>
+	<td class="max50" data-label="<?php _e('URL');?>"><a href="<?php echo BASE_URL.$val['url'];?>" target="_blank"><?php echo $val['link_body'];?></a></td>
+	<td data-label="<?php _e('Original URL');?>"><?php echo SITE_URL.$val['original_url'];?></td>
+	<td data-label="<?php _e('Show');?>"><?php echo in_array($val['url'],$hList)?_t('No'):_t('Yes');?></td>
+	<td data-label="<?php _e('Admin');?>"><?php if($index_setting['req'] != $val['original_url']):?><a href="javascript:void(0);" class="ha" url="<?php echo $val['url'];?>" ourl="<?php echo $val['original_url'];?>"><?php _e('Homepage');?></a><?php else:?><?php _e('Is Index');?> <a href="javascript:void(0);" class="restore_index"><?php _e('Cancel');?></a><?php endif;?></td>
+</tr>
 <?php
 		}
 }

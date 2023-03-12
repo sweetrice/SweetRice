@@ -7,7 +7,7 @@
  * @since 0.5.4
  */
 	defined('VALID_INCLUDE') or die();
-	if(file_exists(THEME_DIR.$page_theme['head'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['head'])){
 		include(THEME_DIR.$page_theme['head']);		
 	}
 ?>
@@ -28,7 +28,7 @@ if($pager_pagebreak){
 ?>
 </div>
 <?php	
-	if(count($att_rows)>0):
+	if(count($att_rows) > 0):
 	foreach($att_rows as $att_row):
 		$att_row_path = explode('/',$att_row['file_name']);
 ?>
@@ -80,13 +80,13 @@ if($pager_pagebreak){
 <?php endif;?>
 </div>
 <?php	
-	if(file_exists(THEME_DIR.$page_theme['sidebar'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['sidebar'])){
 		include(THEME_DIR.$page_theme['sidebar']);		
 	}
 ?>
 <div class="div_clear"></div></div>
 <?php		
-	if(file_exists(THEME_DIR.$page_theme['foot'])){
+	if(is_array($page_theme) && file_exists(THEME_DIR.$page_theme['foot'])){
 		include(THEME_DIR.$page_theme['foot']);		
 	}
 ?>

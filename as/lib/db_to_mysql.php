@@ -56,6 +56,7 @@
 						}
 					}	
 			}
+			$db_error = null;
 			switch(DATABASE_TYPE){
 				case 'sqlite':
 					foreach($tablelist as $val){

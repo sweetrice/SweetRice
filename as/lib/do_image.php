@@ -27,7 +27,6 @@
 				output_json(array('status'=>1,'status_code'=>_t('No image selected')));
 			}
 		break;
-		
 		case 'imgload':
 			$imgurl = $_POST['imgurl'];
 			if ($imgurl && preg_match('/^https?:\/\/.+/',$imgurl)) {
@@ -69,7 +68,7 @@
 					file_put_contents($tmp_dir.$upload,base64_decode($match[2]));
 				}
 			}
-			if($upload && file_exists($tmp_dir.$upload)){
+			if(isset($upload) && file_exists($tmp_dir.$upload)){
 				output_json(array('location'=>str_replace(SITE_HOME, SITE_URL, $tmp_dir.$upload),'status_code'=>'文件上传成功','status'=>1));
 			}
 			output_json(array('status_code'=>_t('Upload failed,please check image source.'),'status'=>0));
@@ -112,7 +111,7 @@
 				if(substr($_FILES['imgs']['name'],-4) == '.zip'){
 					$data = extractZIP($_FILES['imgs']['tmp_name'],$tmp_dir,true);
 					foreach($data as $val){
-						$val = str_replace(SITE_DIR,SITE_HOME,$val);
+						$val = str_replace(BASE_DIR,SITE_HOME,$val);
 						if($val && !in_array($val,$_SESSION['imgs'])){
 							$_SESSION['imgs'][] = $val;
 						}

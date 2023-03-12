@@ -33,7 +33,7 @@
 				$old_size = filesize($target_entry);
 			}elseif(!is_file($target_entry)){
 				$tmp = true;
-				$old_size = _e('0(does not exists)');
+				$old_size = _t('0(does not exists)');
 			}
 			$str_size = _t('File size : ').$old_size.' => '.$new_size;
 		}else{

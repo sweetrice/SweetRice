@@ -7,14 +7,14 @@
  * @since 1.2.1
  */
  	defined('VALID_INCLUDE') or die();
-		$ads = array();
-		$ads_dir = SITE_HOME.'inc/ads/';
-		$d = dir($ads_dir);
-			while (false !== ($entry = $d->read())) {
-			 if($entry!='.'&&$entry!='..'){
-				$ads[str_replace('.php','',$entry)] = $entry;
-			 }		
-		}
+	$ads = array();
+	$ads_dir = SITE_HOME.'inc/ads/';
+	$d = dir($ads_dir);
+		while (false !== ($entry = $d->read())) {
+		 if($entry!='.'&&$entry!='..'){
+			$ads[str_replace('.php','',$entry)] = $entry;
+		 }		
+	}
 	$adname = $_GET['adname'];
 	if(!$ads[$adname]) die();
 	outputHeader(filemtime(SITE_HOME.'inc/ads/'.$ads[$adname]));

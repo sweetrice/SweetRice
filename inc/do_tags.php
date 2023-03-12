@@ -32,6 +32,7 @@
 	$page_limit = $global_setting['nums_setting']['postTag'];
 	$m = $_GET['m'];
 	if($m=='pins'){
+		$plist = array();
 		$pins_num = $global_setting['nums_setting']['postPins'];
 		$p = max(1,intval($_GET['p']));
 		$moreNum = max(1,intval($_GET['moreNum']));
@@ -70,6 +71,7 @@
 	$rows = $data['rows'];
 	$pager = $data['pager'];
 	$no = 0;
+	$post_etc = '';
 	foreach($rows as $row){
 		$no += 1;
 		if($no < 3 ){

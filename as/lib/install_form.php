@@ -24,9 +24,9 @@
 	<div class="form_split"><?php _e('Database');?>:</div>
 	<div class="form_split">
 		<select name="database_type" class="database_type">
-			<option value="mysql" <?php echo $s_dtype['mysql'];?>>MySQL</option>
-			<option value="sqlite" <?php echo $s_dtype['sqlite'];?>>SQLite</option>
-			<option value="pgsql" <?php echo $s_dtype['pgsql'];?>>PostgreSQL</option>
+			<option value="mysql">MySQL</option>
+			<option value="sqlite">SQLite</option>
+			<option value="pgsql">PostgreSQL</option>
 		</select>
 	</div>
 </div>
