@@ -6,13 +6,13 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
-	include('lib/head.php');
+defined('VALID_INCLUDE') or die();
+include 'lib/head.php';
 ?>
 <div id="div_center">
 <div class="sign_form">
 <h2><?php _e('Please reset your password.');?></h2>
-		<input type="hidden" name="r" value="<?php echo $r;?>"/>
+		<input type="hidden" name="r" value="<?php echo $r; ?>"/>
 		<fieldset><legend><?php _e('Admin Email');?></legend>
 		<input type="text" id="email" name="email"/></fieldset>
 		<fieldset><legend><?php _e('Password');?></legend>
@@ -27,7 +27,7 @@
 	_().ready(function(){
 		_('.submit_btn').bind('click',function()  {
 			var query = new Object();
-			query.r = '<?php echo $r;?>';
+			query.r = '<?php echo $r; ?>';
 			query.email = _('#email').val();
 			if (!query.email){
 				_('#email').addClass('required').run('focus');
@@ -69,5 +69,5 @@
 //-->
 </script>
 <?php
-	include('lib/foot.php');	
+include 'lib/foot.php';
 ?>

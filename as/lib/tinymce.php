@@ -6,7 +6,7 @@
  * @Dashboard core
  * @since 0.6.4
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <input type="hidden" id="tmp_media" />
 <script type="text/javascript" src="../_plugin/tinymce/tinymce.min.js"></script>
@@ -38,7 +38,7 @@
 		content = content.replace(/<[a-z]+>\s*<\/[a-z]+>/ig,'');
 		content = content.replace(/<p>&nbsp;<\/p>/ig,'');
 		content = content.replace(/<p><\/p>/ig,'');
-		return content; 
+		return content;
 	}
 	function getImageBase64(img, ext) {
 	    var canvas = document.createElement("canvas");
@@ -52,7 +52,7 @@
 	}
 	function checkLocalImage(){
 	    var tmp_content = tinyMCE.activeEditor.getContent();
-	    var content_imgs = tmp_content.match(/src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']);?>)[^\"]+"/g),imgs = [],tmp_img = '';
+	    var content_imgs = tmp_content.match(/src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']); ?>)[^\"]+"/g),imgs = [],tmp_img = '';
 	    if (!content_imgs) {return [];}
 	    for(i in content_imgs){
 	      tmp_img = content_imgs[i].replace('src="','').replace('"','');
@@ -99,7 +99,7 @@
 
   function detectImage(){
     var tmp_content = tinyMCE.activeEditor.getContent();
-    var content_imgs = tmp_content.match(/<img src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']);?>)[^\"]+"/g),imgs = [],tmp_img = '';
+    var content_imgs = tmp_content.match(/<img src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']); ?>)[^\"]+"/g),imgs = [],tmp_img = '';
     if (!content_imgs) {return false;}
     for(i in content_imgs){
       tmp_img = content_imgs[i].replace('<img src="','').replace('"','');
@@ -145,7 +145,7 @@ function readImageFromUrl(imgurl,imgs){
           }
         }
       });
-      
+
     }
     img.src = imgurl;
 }
@@ -156,19 +156,19 @@ function readImageFromLocal(imgurl,imgs){
 	var img = new Image();
     img.crossOrigin = 'Anonymous';
     img.onload = function () {
-	    var reader = new FileReader(); 
-	    reader.readAsDataURL(this); 
+	    var reader = new FileReader();
+	    reader.readAsDataURL(this);
 	    reader.onload = function(e){
-	  		var tmp_content = tinyMCE.activeEditor.getContent();	
+	  		var tmp_content = tinyMCE.activeEditor.getContent();
 	        var tmp_img_content = tmp_content.replace(imgurl,this.result)
 	        tinyMCE.activeEditor.setContent(tmp_img_content);
 	        if (imgs.length > 1) {
 	          toLocalImage()
 	        }
-	    }    	
+	    }
     }
     img.onerror = function(errorMsg) {
-  		var tmp_content = tinyMCE.activeEditor.getContent();	
+  		var tmp_content = tinyMCE.activeEditor.getContent();
         var tmp_img_content = tmp_content.replace(imgurl,'data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgc3R5bGU9IndpZHRoOiAxZW07aGVpZ2h0OiAxZW07dmVydGljYWwtYWxpZ246IG1pZGRsZTtmaWxsOiBjdXJyZW50Q29sb3I7b3ZlcmZsb3c6IGhpZGRlbjsiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBwLWlkPSIxNTY0Ij48cGF0aCBkPSJNNjM3LjIxNiA0MzUuODRhNDIuNzg0IDQyLjc4NCAwIDEgMC04NS41NTItMC4wMTYgNDIuNzg0IDQyLjc4NCAwIDAgMCA4NS41NTIgMHogbTQ4IDBhOTAuNzg0IDkwLjc4NCAwIDEgMS0xODEuNTUyIDAgOTAuNzg0IDkwLjc4NCAwIDAgMSAxODEuNTUyIDB6TTI5OS43OTIgNjc0Ljk3NmwtMTEuNzYtMTAuODQ4YTE2IDE2IDAgMCAxLTAuODk2LTIyLjYwOGwxMjguMzUyLTEzOS4wNzJhMTYgMTYgMCAwIDEgMjMuMDcyLTAuNDQ4bDExMy44MDggMTEzLjkyIDcwLjg5Ni02NC43NTJhMTYgMTYgMCAwIDEgMjIuMTc2IDAuNTc2bDg4LjQgODkuNTUyYTE2IDE2IDAgMCAxLTAuMTYgMjIuNjRsLTExLjM2IDExLjIzMmExNiAxNiAwIDAgMS0yMi42NC0wLjE2bC02Ni43NjgtNjcuNjMyLTcwLjc2OCA2NC42MjRhMTYgMTYgMCAwIDEtMjIuMTEyLTAuNTEybC0xMTEuODcyLTExMi0xMDUuNzYgMTE0LjU3NmExNiAxNiAwIDAgMS0yMi42MDggMC45MTJ6TTI0MCA3MzQuNjA4aDUzMC43ODRWMzA0SDI0MHY0MzAuNjA4ek04MTguNzg0IDI3MnY0OTQuNjA4YTE2IDE2IDAgMCAxLTE2IDE2SDIwOGExNiAxNiAwIDAgMS0xNi0xNlYyNzJhMTYgMTYgMCAwIDEgMTYtMTZoNTk0Ljc4NGExNiAxNiAwIDAgMSAxNiAxNnoiIHAtaWQ9IjE1NjUiIGRhdGEtc3BtLWFuY2hvci1pZD0iYTMxM3guNzc4MTA2OS4xOTk4OTEwNDE5LmkwIj48L3BhdGg+PC9zdmc+')
         tinyMCE.activeEditor.setContent(tmp_img_content);
         if (imgs.length > 1) {
@@ -180,7 +180,7 @@ function readImageFromLocal(imgurl,imgs){
 
 function toLocalImage(){
   var tmp_content = tinyMCE.activeEditor.getContent();
-  var content_imgs = tmp_content.match(/<img\s.*src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']);?>)[^\"]+"/g),imgs = [],tmp_img = '';
+  var content_imgs = tmp_content.match(/<img\s.*src="(?!https?:\/\/<?php echo str_replace('.', '\.', $_SERVER['HTTP_HOST']); ?>)[^\"]+"/g),imgs = [],tmp_img = '';
   if (!content_imgs) {return [];}
   for(var i in content_imgs){
     tmp_img = content_imgs[i].match(/\ssrc="([^"]+)"/);
@@ -274,19 +274,19 @@ function editorEnable(id){
 		args.content = clean_body(args.content)+'<p></p>';
 	},
 	<?php
-	switch($global_setting['lang']):
-		case 'zh-cn.php':
-	?>
+switch ($global_setting['lang']):
+case 'zh-cn.php':
+    ?>
 		language : 'zh_CN',
 	<?php
-		break;
-		case 'big5.php':
-	?>
+break;
+case 'big5.php':
+    ?>
 		language : 'zh_TW',
 	<?php
-		break;
-	endswitch;
-	?>
+break;
+    endswitch;
+    ?>
 	// Example content CSS (should be your site CSS)
 	content_css : 'tinymce.css'
 });

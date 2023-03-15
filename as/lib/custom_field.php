@@ -6,8 +6,8 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
- $cfdata = is_string($cfdata['content']) ? unserialize($cfdata['content']) : array();
+defined('VALID_INCLUDE') or die();
+$cfdata = is_string($cfdata['content']) ? unserialize($cfdata['content']) : array();
 ?>
 <style>
 #cfList select{
@@ -18,182 +18,182 @@
 </style>
 <fieldset><legend class="toggle" data=".cfbody"><?php _e('Custom Field');?></legend>
 <input type="hidden" id="deletelist" name="deletelist"/>
-<div class="cfbody<?php echo is_array($cf_rows) && count($cf_rows)?'':' hidden';?>">
+<div class="cfbody<?php echo is_array($cf_rows) && count($cf_rows) ? '' : ' hidden'; ?>">
 <ol id="cfList">
 <?php
-	$no = 0;
-	$cflist = array();
-	foreach($cf_rows as $val){
-		$no += 1;
-		if($cfdata[$val['name']]){
-			$cflist[$val['name']] = true;
-		}
-?>
-<li id="cf_<?php echo $no;?>">
-<fieldset><legend><?php _e('Name');?> 
-<?php if(!$savelist_none):?>
-<?php if($cfdata[$val['name']]):?>
-<?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name'];?>" class="df_list"> 
-<?php else:?>
-<?php _e('Save to list');?> <input type="checkbox" data="<?php echo $val['name'];?>" name="savelist[<?php echo $no;?>]">
+$no     = 0;
+$cflist = array();
+foreach ($cf_rows as $val) {
+    $no += 1;
+    if ($cfdata[$val['name']]) {
+        $cflist[$val['name']] = true;
+    }
+    ?>
+<li id="cf_<?php echo $no; ?>">
+<fieldset><legend><?php _e('Name');?>
+<?php if (!$savelist_none): ?>
+<?php if ($cfdata[$val['name']]): ?>
+<?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name']; ?>" class="df_list">
+<?php else: ?>
+<?php _e('Save to list');?> <input type="checkbox" data="<?php echo $val['name']; ?>" name="savelist[<?php echo $no; ?>]">
 <?php endif;?> <?php endif;?></legend>
-<div class="mb10"> <input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text">
-<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"></div>
-<input type="hidden" name="cfid[<?php echo $no;?>]" value="<?php echo $val['id'];?>">
-<?php if(($val['data_type'] == 'radio' && !$cfdata[$val['name']]['options']) || ($val['data_type'] == 'select' && !$cfdata[$val['name']]['options'])):?>
-<input type="hidden" name="cftype[<?php echo $no;?>]" value="text">
-<?php else:?>
-<input type="hidden" name="cftype[<?php echo $no;?>]" value="<?php echo $val['data_type'];?>">
+<div class="mb10"> <input type="text" name="cfname[<?php echo $no; ?>]" value="<?php echo $val['name']; ?>" class="input_text">
+<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no; ?>"></div>
+<input type="hidden" name="cfid[<?php echo $no; ?>]" value="<?php echo $val['id']; ?>">
+<?php if (($val['data_type'] == 'radio' && !$cfdata[$val['name']]['options']) || ($val['data_type'] == 'select' && !$cfdata[$val['name']]['options'])): ?>
+<input type="hidden" name="cftype[<?php echo $no; ?>]" value="text">
+<?php else: ?>
+<input type="hidden" name="cftype[<?php echo $no; ?>]" value="<?php echo $val['data_type']; ?>">
 <?php endif;?>
-<input type="hidden" name="cfoption[<?php echo $no;?>]" value="<?php echo $cfdata[$val['name']]['options'];?>">
-<?php switch($val['data_type']){
-	case 'password':
-?>
-<input type="password" name="cfvalue[<?php echo $no;?>]" value="<?php echo $val['value'];?>" class="input_text"/>
+<input type="hidden" name="cfoption[<?php echo $no; ?>]" value="<?php echo $cfdata[$val['name']]['options']; ?>">
+<?php switch ($val['data_type']) {
+        case 'password':
+            ?>
+<input type="password" name="cfvalue[<?php echo $no; ?>]" value="<?php echo $val['value']; ?>" class="input_text"/>
 <?php
-	break;
-	case 'text':
-?>
-<textarea name="cfvalue[<?php echo $no;?>]"><?php echo $val['value'];?></textarea>
+break;
+        case 'text':
+            ?>
+<textarea name="cfvalue[<?php echo $no; ?>]"><?php echo $val['value']; ?></textarea>
 <?php
-	break;
-	case 'checkbox':
-?>
-<input type="checkbox" value="1" name="cfvalue[<?php echo $no;?>]" <?php echo $val['value']?'checked':'';?>>
+break;
+        case 'checkbox':
+            ?>
+<input type="checkbox" value="1" name="cfvalue[<?php echo $no; ?>]" <?php echo $val['value'] ? 'checked' : ''; ?>>
 <?php
-	break;
-	case 'radio':
-		if($cfdata[$val['name']]['options']){
-		$options = explode(',',$cfdata[$val['name']]['options']);
-		foreach($options as $option):
-?>
-<input type="radio" name="cfvalue[<?php echo $no;?>]" <?php echo $val['value'] == $option?'checked':'';?> value="<?php echo $option;?>"> <?php echo $option;?> 
+break;
+        case 'radio':
+            if ($cfdata[$val['name']]['options']) {
+                $options = explode(',', $cfdata[$val['name']]['options']);
+                foreach ($options as $option):
+                ?>
+<input type="radio" name="cfvalue[<?php echo $no; ?>]" <?php echo $val['value'] == $option ? 'checked' : ''; ?> value="<?php echo $option; ?>"> <?php echo $option; ?>
 <?php
-		endforeach;
-		}else{
-?>
-<textarea name="cfvalue[<?php echo $no;?>]"><?php echo $val['value'];?></textarea>
+endforeach;
+            } else {
+                ?>
+<textarea name="cfvalue[<?php echo $no; ?>]"><?php echo $val['value']; ?></textarea>
 <?php
-		}
-	break;
-	case 'select':
-		if($cfdata[$val['name']]['options']){
-		$options = explode(',',$cfdata[$val['name']]['options']);
-		$val['value'] = unserialize($val['value']);
-?>
-<select name="cfvalue[<?php echo $no;?>][]" multiple>
-<?php foreach($options as $option):if($option):?>
-	<option value="<?php echo $option;?>" <?php echo in_array($option,$val['value'])?'selected':'';?>><?php echo $option;?></option>
-<?php endif;
-endforeach;?>
+}
+            break;
+        case 'select':
+            if ($cfdata[$val['name']]['options']) {
+                $options      = explode(',', $cfdata[$val['name']]['options']);
+                $val['value'] = unserialize($val['value']);
+                ?>
+<select name="cfvalue[<?php echo $no; ?>][]" multiple>
+<?php foreach ($options as $option): if ($option): ?>
+		<option value="<?php echo $option; ?>" <?php echo in_array($option, $val['value']) ? 'selected' : ''; ?>><?php echo $option; ?></option>
+	<?php endif;
+                endforeach;?>
 </select>
 <?php
-	}else{
-?>
-<textarea name="cfvalue[<?php echo $no;?>]"><?php echo $val['value'];?></textarea>
+} else {
+                ?>
+<textarea name="cfvalue[<?php echo $no; ?>]"><?php echo $val['value']; ?></textarea>
 <?php
-	}
-	break;
-	case 'file':
-?>
-<textarea name="cfvalue[<?php echo $no;?>]" id="cfvalue[<?php echo $no;?>]"><?php echo getAttachmentUrl($val['value']);?></textarea> <a href="<?php echo getAttachmentUrl($val['value']);?>" target="_blank"><?php echo getAttachmentUrl($val['value']);?></a> <input type="button" value="<?php _e('Attach File');?>" class="replaceFile" data="<?php echo $no;?>">
+}
+            break;
+        case 'file':
+            ?>
+<textarea name="cfvalue[<?php echo $no; ?>]" id="cfvalue[<?php echo $no; ?>]"><?php echo getAttachmentUrl($val['value']); ?></textarea> <a href="<?php echo getAttachmentUrl($val['value']); ?>" target="_blank"><?php echo getAttachmentUrl($val['value']); ?></a> <input type="button" value="<?php _e('Attach File');?>" class="replaceFile" data="<?php echo $no; ?>">
 <?php
-	break;
-	case 'html':
-?>
-<textarea name="cfvalue[<?php echo $no;?>]" id="cfvalue[<?php echo $no;?>]"><?php echo toggle_attachment($val['value'],'dashboard');?></textarea>
+break;
+        case 'html':
+            ?>
+<textarea name="cfvalue[<?php echo $no; ?>]" id="cfvalue[<?php echo $no; ?>]"><?php echo toggle_attachment($val['value'], 'dashboard'); ?></textarea>
 <script type="text/javascript">
 <!--
-	editorEnable('cfvalue[<?php echo $no;?>]');
+	editorEnable('cfvalue[<?php echo $no; ?>]');
 //-->
 </script>
 <?php
-	break;
-}?>
+break;
+    }?>
 </fieldset></li>
 <?php
-	}
-	if(is_array($cfdata) && count($cfdata) > count($cflist)){
-?>
-<?php if(count($cf_rows)):?>
+}
+if (is_array($cfdata) && count($cfdata) > count($cflist)) {
+    ?>
+<?php if (count($cf_rows)): ?>
 <input type="button" value="<?php _e('>>>>>>>>>>>> More <<<<<<<<<<<<');?>" class="more_btn" data=".more_cf">
 <?php endif;?>
-<div class="more_cf<?php echo count($cf_rows)?' hidden':'';?>">
+<div class="more_cf<?php echo count($cf_rows) ? ' hidden' : ''; ?>">
 <?php
-		foreach($cfdata as $key=>$val){
-			if($cflist[$key]){
-				continue;
-			}
-			$no += 1;
-?>
-<li id="cf_<?php echo $no;?>">
-<fieldset><legend><?php _e('Name');?> 
-<?php if(!$savelist_none):?><?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name'];?>" class="df_list"> <?php endif;?></legend>
-<div class="mb10"><input type="text" name="cfname[<?php echo $no;?>]" value="<?php echo $val['name'];?>" class="input_text"> 
-<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no;?>"></div>
-<input type="hidden" name="cftype[<?php echo $no;?>]" value="<?php echo $val['type'];?>">
-<input type="hidden" name="cfoption[<?php echo $no;?>]" value="<?php echo $val['options'];?>">
-<?php switch($val['type']){
-	case 'text':
-?>
-<textarea name="cfvalue[<?php echo $no;?>]"></textarea>
+foreach ($cfdata as $key => $val) {
+        if ($cflist[$key]) {
+            continue;
+        }
+        $no += 1;
+        ?>
+<li id="cf_<?php echo $no; ?>">
+<fieldset><legend><?php _e('Name');?>
+<?php if (!$savelist_none): ?><?php _e('Delete from list');?> <input type="checkbox" data="<?php echo $val['name']; ?>" class="df_list"> <?php endif;?></legend>
+<div class="mb10"><input type="text" name="cfname[<?php echo $no; ?>]" value="<?php echo $val['name']; ?>" class="input_text">
+<input type="button" value="<?php _e('Delete');?>" class="cf_del" data="<?php echo $no; ?>"></div>
+<input type="hidden" name="cftype[<?php echo $no; ?>]" value="<?php echo $val['type']; ?>">
+<input type="hidden" name="cfoption[<?php echo $no; ?>]" value="<?php echo $val['options']; ?>">
+<?php switch ($val['type']) {
+            case 'text':
+                ?>
+<textarea name="cfvalue[<?php echo $no; ?>]"></textarea>
 <?php
-	break;
-	case 'password':
-?>
-<input type="password" name="cfvalue[<?php echo $no;?>]" class="input_text"/>
+break;
+            case 'password':
+                ?>
+<input type="password" name="cfvalue[<?php echo $no; ?>]" class="input_text"/>
 <?php
-	break;
-	case 'checkbox':
-?>
-<input type="checkbox" value="1" name="cfvalue[<?php echo $no;?>]">
+break;
+            case 'checkbox':
+                ?>
+<input type="checkbox" value="1" name="cfvalue[<?php echo $no; ?>]">
 <?php
-	break;
-	case 'radio':
-		$options = explode(',',$val['options']);
-		foreach($options as $option):
-?>
-<input type="radio" name="cfvalue[<?php echo $no;?>]" value="<?php echo $option;?>"> <?php echo $option;?> 
+break;
+            case 'radio':
+                $options = explode(',', $val['options']);
+                foreach ($options as $option):
+                ?>
+<input type="radio" name="cfvalue[<?php echo $no; ?>]" value="<?php echo $option; ?>"> <?php echo $option; ?>
 <?php
-		endforeach;
-	break;
-	case 'select':
-		$options = explode(',',$val['options']);
-?>
-<select name="cfvalue[<?php echo $no;?>][]" multiple>
-<?php foreach($options as $option):if($option):?>
-	<option value="<?php echo $option;?>"><?php echo $option;?></option>
-<?php endif;endforeach;?>
+endforeach;
+                break;
+            case 'select':
+                $options = explode(',', $val['options']);
+                ?>
+<select name="cfvalue[<?php echo $no; ?>][]" multiple>
+<?php foreach ($options as $option): if ($option): ?>
+		<option value="<?php echo $option; ?>"><?php echo $option; ?></option>
+	<?php endif;endforeach;?>
 </select>
 <?php
-	break;
-	case 'file':
-?>
-<textarea id="cfvalue[<?php echo $no;?>]" name="cfvalue[<?php echo $no;?>]"></textarea> <input type="button" value="<?php _e('Attach File');?>" class="replaceFile" data="<?php echo $no;?>">
+break;
+            case 'file':
+                ?>
+<textarea id="cfvalue[<?php echo $no; ?>]" name="cfvalue[<?php echo $no; ?>]"></textarea> <input type="button" value="<?php _e('Attach File');?>" class="replaceFile" data="<?php echo $no; ?>">
 <?php
-	break;
-	case 'html':
-?>
-<textarea name="cfvalue[<?php echo $no;?>]" id="cfvalue[<?php echo $no;?>]"></textarea>
+break;
+            case 'html':
+                ?>
+<textarea name="cfvalue[<?php echo $no; ?>]" id="cfvalue[<?php echo $no; ?>]"></textarea>
 <script type="text/javascript">
 <!--
-	editorEnable('cfvalue[<?php echo $no;?>]');
+	editorEnable('cfvalue[<?php echo $no; ?>]');
 //-->
 </script>
 <?php
-	break;
-}?>
+break;
+        }?>
 </fieldset></li>
 <?php
-		}
-?>
+}
+    ?>
 </div>
 <?php
-	}
+}
 ?>
 </ol>
 <div class="div_clear"></div>
-<input type="hidden" id="cfno" name="cfno" data="<?php echo intval($no);?>"<?php echo !is_array($cf_rows) || !count($cf_rows)?'':' value="'.intval($no).'"';?>/>
+<input type="hidden" id="cfno" name="cfno" data="<?php echo intval($no); ?>"<?php echo !is_array($cf_rows) || !count($cf_rows) ? '' : ' value="' . intval($no) . '"'; ?>/>
 <div class="mg5">
 <div class="form_split">
 <select id="cftype">
@@ -204,7 +204,7 @@ endforeach;?>
 	<option value="select"><?php _e('List');?></option>
 	<option value="html"><?php _e('HTML');?></option>
 	<option value="file"><?php _e('Files');?></option>
-</select> 
+</select>
 </div>
 <div class="form_split">
 <input type="button" value="<?php _e('Add Custom Field');?>" class="cf_add"></div>
@@ -215,7 +215,7 @@ endforeach;?>
 </fieldset>
 <script type="text/javascript">
 <!--
-	var cfno = <?php echo intval($no);?>,attach_media;
+	var cfno = <?php echo intval($no); ?>,attach_media;
 	_().ready(function(){
 		_('.df_list').bind('click',function(){
 			if (_(this).prop('checked'))
@@ -284,7 +284,7 @@ endforeach;?>
 							value_html += '<input type="radio"  value="'+opts[i]+'" name="cfvalue['+cfno+']"/> '+opts[i]+' ';
 						}
 					}
-						
+
 				break;
 				case 'select':
 					var cfoption = window.prompt('<?php _e('Please input options,split by commas');?>');
@@ -302,7 +302,7 @@ endforeach;?>
 						}
 					}
 					value_html = '<select name="cfvalue['+cfno+'][]" multiple>'+value_html+'</select>';
-						
+
 				break;
 				case 'file':
 						value_html = '<textarea name="cfvalue['+cfno+']" id="cfvalue['+cfno+']"></textarea> <input type="button" value="<?php _e('Attach File');?>" class="replaceFile" data="'+cfno+'">';
@@ -311,7 +311,7 @@ endforeach;?>
 					value_html = '<textarea name="cfvalue['+cfno+']" id="cfvalue['+cfno+']"></textarea>';
 				break;
 			}
-			_(new_rule).attr('id','cf_'+cfno).html('<fieldset><legend><?php _e('Name');?> <?php if(!$savelist_none):?> <input type="button" value="<?php _e('Delete');?>" class="cf_del" id="cf_'+cfno+'" data="'+cfno+'"><input type="hidden" name="cftype['+cfno+']" value="'+_('#cftype').val()+'"><input type="hidden" name="cfoption['+cfno+']" value="'+cfoption+'"> <?php _e('Save to list');?> <input type="checkbox" value="1" name="savelist['+cfno+']"><?php endif;?></legend><div class="mb10"><input type="text" name="cfname['+cfno+']" class="input_text"></div>' + value_html + '</fieldset>');
+			_(new_rule).attr('id','cf_'+cfno).html('<fieldset><legend><?php _e('Name');?> <?php if (!$savelist_none): ?> <input type="button" value="<?php _e('Delete');?>" class="cf_del" id="cf_'+cfno+'" data="'+cfno+'"><input type="hidden" name="cftype['+cfno+']" value="'+_('#cftype').val()+'"><input type="hidden" name="cfoption['+cfno+']" value="'+cfoption+'"> <?php _e('Save to list');?> <input type="checkbox" value="1" name="savelist['+cfno+']"><?php endif;?></legend><div class="mb10"><input type="text" name="cfname['+cfno+']" class="input_text"></div>' + value_html + '</fieldset>');
 			_('#cfList').append(new_rule);
 			_('.cf_del').unbind('click').bind('click',function(){
 				var no = _(this).attr('data');
@@ -335,7 +335,7 @@ endforeach;?>
 			var no = _(this).attr('data');
 			_('#cf_'+no).remove();
 		});
-		
+
 		_('.replaceFile').bind('click',function(event){
 			attach_media = _('#cfvalue['+_(this).attr('data')+']');
 			_.dialog({'content':'<iframe id="media_body" src="./?type=media&referrer=attachment"></iframe>','title':'Choose file','name':'media','width':800,'height':500,'layer':true});

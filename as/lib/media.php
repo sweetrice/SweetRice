@@ -6,14 +6,14 @@
  * @Dashboard core
  * @since 0.6.4
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><?php _e('Dashboard');?></title>
-<meta id="_tkv_" value="<?php echo session_get('_form_token_');?>">
+<meta id="_tkv_" value="<?php echo session_get('_form_token_'); ?>">
 <style>
 *{
 	margin:0;
@@ -121,9 +121,9 @@ fieldset label:hover{
 textarea{
 	border:1px #999999 solid;
 	background-color:#fafafa;
-	-webkit-box-shadow: 3px 3px 15px #ccc;    
-	-moz-box-shadow: 3px 3px 15px #ccc;    
-	box-shadow: 3px 3px 15px #ccc; 
+	-webkit-box-shadow: 3px 3px 15px #ccc;
+	-moz-box-shadow: 3px 3px 15px #ccc;
+	box-shadow: 3px 3px 15px #ccc;
 	border-radius:5px;
 	padding:1%;
 	margin:5px 0px;
@@ -200,19 +200,19 @@ max-height:420px;
 	.mw180{max-width:180px;}
 }
 </style>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>js/SweetRice.js"></script>
 <script type="text/javascript" src="js/function.js"></script>
 </head>
 <body>
 <div class="form_split">
-<span class="folder"></span> <a href="./?type=media<?php echo isset($parent) ? '&dir='.$parent:'';?>&referrer=<?php echo $referrer;?>"><?php _e('Parent');?></a>
+<span class="folder"></span> <a href="./?type=media<?php echo isset($parent) ? '&dir=' . $parent : ''; ?>&referrer=<?php echo $referrer; ?>"><?php _e('Parent');?></a>
 </div>
 <div class="form_split">
 <form method="get" action="./">
 <input type="hidden" name="type" value="media" />
-<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php _e('Search');?> <a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
-	<input type="text" name="keyword" value="<?php echo $keyword;?>" placeholder="<?php _e('Keywords');?>" class="mw160"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
+<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
+<?php _e('Search');?> <a href="./?type=media&referrer=<?php echo $referrer; ?>&dir=<?php echo $open_dir; ?>"><?php echo $open_dir; ?></a>:<input type="hidden" name="dir" value="<?php echo $open_dir; ?>"/>
+	<input type="text" name="keyword" value="<?php echo $keyword; ?>" placeholder="<?php _e('Keywords');?>" class="mw160"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
 </div>
 <div class="clear"></div>
@@ -221,59 +221,59 @@ max-height:420px;
 <ul>
 <?php
 $no = 0;
-for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
-	if(is_array($files[$i])){
-	 $no +=1;
-?>
-<li id="tr_<?php echo $no;?>" class="<?php echo $files[$i]['type'] == 'dir' ? 'isdir':'isfile';?>">
+for ($i = $pager['page_start']; $i < $pager['page_start'] + $page_limit; $i++) {
+    if (is_array($files[$i])) {
+        $no += 1;
+        ?>
+<li id="tr_<?php echo $no; ?>" class="<?php echo $files[$i]['type'] == 'dir' ? 'isdir' : 'isfile'; ?>">
 <?php
-	if($files[$i]['type']=='dir'){
-?>
+if ($files[$i]['type'] == 'dir') {
+            ?>
 <div>
-<a href="./?type=media&referrer=<?php echo $referrer;?>&dir=<?php echo $files[$i]['link'].'/';?>"><span title="<?php echo $files[$i]['name'];?>"><?php echo $files[$i]['name'];?></span></a></div>
+<a href="./?type=media&referrer=<?php echo $referrer; ?>&dir=<?php echo $files[$i]['link'] . '/'; ?>"><span title="<?php echo $files[$i]['name']; ?>"><?php echo $files[$i]['name']; ?></span></a></div>
 <?php
-	}else{
-		$tmp_prefix = '';
-		$tmp_prefix = explode('.',$files[$i]['name']);
-		$tmp_prefix = '.'.end($tmp_prefix);
-		if(mb_strlen($files[$i]['name'],'UTF-8') > 36){
-			if($tmp_prefix){
-				$files[$i]['name'] = mb_substr($files[$i]['name'],0,32,'UTF-8').'...'.$tmp_prefix;
-			}
-		}
-		if(in_array(strtolower($tmp_prefix),array('.jpg','.png','.gif','.jpeg','.bmp'))){
-?>
-<img src="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" class="<?php echo $referrer == 'attachment'?'attlist':'medialist';?>" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>">
+} else {
+            $tmp_prefix = '';
+            $tmp_prefix = explode('.', $files[$i]['name']);
+            $tmp_prefix = '.' . end($tmp_prefix);
+            if (mb_strlen($files[$i]['name'], 'UTF-8') > 36) {
+                if ($tmp_prefix) {
+                    $files[$i]['name'] = mb_substr($files[$i]['name'], 0, 32, 'UTF-8') . '...' . $tmp_prefix;
+                }
+            }
+            if (in_array(strtolower($tmp_prefix), array('.jpg', '.png', '.gif', '.jpeg', '.bmp'))) {
+                ?>
+<img src="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>" class="<?php echo $referrer == 'attachment' ? 'attlist' : 'medialist'; ?>" link="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>" title="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>" mtype="<?php echo $files[$i]['type']; ?>">
 <?php
-		}else{
-?><div>
-<a href="javascript:void(0);" class="<?php echo $referrer == 'attachment'?'attlist':'medialist';?>" link="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" title="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>" mtype="<?php echo $files[$i]['type'];?>"><?php echo $files[$i]['name'];?></a></div>
+} else {
+                ?><div>
+<a href="javascript:void(0);" class="<?php echo $referrer == 'attachment' ? 'attlist' : 'medialist'; ?>" link="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>" title="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>" mtype="<?php echo $files[$i]['type']; ?>"><?php echo $files[$i]['name']; ?></a></div>
 <?php
-		}
-	}
-?>
-<a title="<?php _e('Delete');?>" class="action_delete dellist img_delete" link="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>"><?php _e('Delete');?></a></li>
+}
+        }
+        ?>
+<a title="<?php _e('Delete');?>" class="action_delete dellist img_delete" link="<?php echo $files[$i]['link'] ?>" no="<?php echo $no; ?>"><?php _e('Delete');?></a></li>
 <?php
-	}
+}
 }
 ?>
 </ul>
 </div>
 <div class="clear"></div>
-<?php echo $pager['list_put'];?>
+<?php echo $pager['list_put']; ?>
 <form method="post" action="./?type=media&mode=upload" enctype="multipart/form-data" >
-<input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_');?>">
+<input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_'); ?>">
 <div class="form_split">
-<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
-	<input type="file" name="upload[]" id="upload" class="mw180" title="<?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?>" multiple></div>
+<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR, '', $open_dir); ?>"/>
+	<input type="file" name="upload[]" id="upload" class="mw180" title="<?php echo _t('Max upload file size'), ':', UPLOAD_MAX_FILESIZE; ?>" multiple></div>
 	<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></div>
 </form>
 
 <div class="form_split">
 <form method="post" action="./?type=media&mode=mkdir">
-<input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_');?>">
-<input type="hidden" name="referrer" value="<?php echo $referrer;?>" />
-<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+<input type="hidden" name="_tkv_" value="<?php echo session_get('_form_token_'); ?>">
+<input type="hidden" name="referrer" value="<?php echo $referrer; ?>" />
+<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo str_replace(MEDIA_DIR, '', $open_dir); ?>"/>
 	<input type="text" name="new_dir" class="new_dir mw120"/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/>
 </form>
 </div>
@@ -322,7 +322,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 						}
 					}
 				});
-			}else{ 
+			}else{
 				return false;
 			}
 		});

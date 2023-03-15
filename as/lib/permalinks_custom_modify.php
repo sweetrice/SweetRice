@@ -6,39 +6,39 @@
  * @Dashboard core
  * @since 1.3.2
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <form method="post" action="./?type=permalinks&mode=custom&submode=save" id="pform">
-<input type="hidden" name="id" value="<?php echo $row['lid'];?>"/>
-<input type="hidden" name="plugin" value="<?php echo $row['plugin'];?>"/>
+<input type="hidden" name="id" value="<?php echo $row['lid']; ?>"/>
+<input type="hidden" name="plugin" value="<?php echo $row['plugin']; ?>"/>
 <fieldset><legend><strong><?php _e('URL');?>:</strong></legend>
-<input type="text" name="url" class="input_text" value="<?php echo $row['url'];?>"/> <div class="tip"><?php _e('Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.');?></div>
+<input type="text" name="url" class="input_text" value="<?php echo $row['url']; ?>"/> <div class="tip"><?php _e('Without host name,just input directory or page name ,example: /custom_dir/custom_page.html /custom_dir/custom_page/ etc.');?></div>
 </fieldset>
 <fieldset><legend><strong><?php _e('Request');?>:</strong></legend>
 <?php
-$no = 0;
+$no   = 0;
 $reqs = isset($row['request']) ? unserialize($row['request']) : array();
-if(is_array($reqs)){
-	foreach($reqs AS $key=>$val){
-		$no +=1;
-?>
-<div class="att_list" id="req_<?php echo $no;?>">
+if (is_array($reqs)) {
+    foreach ($reqs as $key => $val) {
+        $no += 1;
+        ?>
+<div class="att_list" id="req_<?php echo $no; ?>">
 <li>
-<div class="form_split"><?php _e('Keys');?> <input type="text" name="keys[]" value="<?php echo $key;?>"/></div> 
-<div class="form_split"><?php _e('Vals');?> <input type="text" name="vals[]" value="<?php echo $val;?>"/></div> <div class="form_split"><input type="button" value="<?php _e('Remove parameter');?>" class="btn_del" data="<?php echo $no;?>"></div>
+<div class="form_split"><?php _e('Keys');?> <input type="text" name="keys[]" value="<?php echo $key; ?>"/></div>
+<div class="form_split"><?php _e('Vals');?> <input type="text" name="vals[]" value="<?php echo $val; ?>"/></div> <div class="form_split"><input type="button" value="<?php _e('Remove parameter');?>" class="btn_del" data="<?php echo $no; ?>"></div>
 </li>
 </div>
 <?php
-	}
+}
 }
 ?>
-<input type="hidden" id="no" name="no" value="<?php echo $no;?>"  >
+<input type="hidden" id="no" name="no" value="<?php echo $no; ?>"  >
 <div id="multi_request"></div>
 <input type="button" value="<?php _e('Add parameter');?>" class="btn_add">
 </fieldset>
 <script type="text/javascript">
 	<!--
-	var reqNo = <?php echo $no;?>;
+	var reqNo = <?php echo $no; ?>;
 	var currentNo = 0;
 	//-->
 	</script>

@@ -6,14 +6,14 @@
  * @Dashboard core
  * @since 0.6.4
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <form method="get" action="./">
 <input type="hidden" name="type" value="media_center" />
-<?php _e('Search');?> <a href="./?type=media_center&dir=<?php echo $open_dir;?>"><?php echo $open_dir;?></a> <input type="hidden" name="dir" value="<?php echo $open_dir;?>"/>
-	<input type="text" name="keyword" value="<?php echo escape_string($keyword);?>" placeholder="<?php _e('Keywords');?>" class="mw180"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
+<?php _e('Search');?> <a href="./?type=media_center&dir=<?php echo $open_dir; ?>"><?php echo $open_dir; ?></a> <input type="hidden" name="dir" value="<?php echo $open_dir; ?>"/>
+	<input type="text" name="keyword" value="<?php echo escape_string($keyword); ?>" placeholder="<?php _e('Keywords');?>" class="mw180"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
-<p><span class="folder" ></span><a href="./?type=media_center<?php echo $parent?'&dir='.$parent:'';?>"><?php _e('Parent');?></a></p>
+<p><span class="folder" ></span><a href="./?type=media_center<?php echo $parent ? '&dir=' . $parent : ''; ?>"><?php _e('Parent');?></a></p>
 <span id="deleteTip"></span>
 <form method="post" id="bulk_form" action="./?type=media_center&mode=bulk">
 <div id="tbl">
@@ -29,58 +29,58 @@
 <tbody>
 <?php
 $no = 0;
-for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
-	if($files[$i]){
-		$no +=1;
-?>
-<tr id="tr_<?php echo $no;?>" data-label="<?php _e('Name');?>">
-	<td data-label="<?php _e('Name');?>"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span>
+for ($i = $pager['page_start']; $i < $pager['page_start'] + $page_limit; $i++) {
+    if ($files[$i]) {
+        $no += 1;
+        ?>
+<tr id="tr_<?php echo $no; ?>" data-label="<?php _e('Name');?>">
+	<td data-label="<?php _e('Name');?>"><span class="sortNo" id="sortNo_<?php echo $no; ?>"><?php echo $no; ?></span>
 <?php
-	if($files[$i]['type']=='dir'){
-?>
-<span class="folder" ></span><a href="./?type=media_center&dir=<?php echo $files[$i]['link'].'/';?>"><span id="name_<?php echo $no;?>"><?php echo $files[$i]['name'];?></span></a>
+if ($files[$i]['type'] == 'dir') {
+            ?>
+<span class="folder" ></span><a href="./?type=media_center&dir=<?php echo $files[$i]['link'] . '/'; ?>"><span id="name_<?php echo $no; ?>"><?php echo $files[$i]['name']; ?></span></a>
 <?php
-	}else{
-?>
-<span class="article" ></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $files[$i]['link'];?>"/> 
+} else {
+            ?>
+<span class="article" ></span><input type="checkbox" name="plist[]" class="ck_item" value="<?php echo $files[$i]['link']; ?>"/>
 <?php
-	if(substr($files[$i]['type'],0,5)=='image'){
-?>
-<a href="javascript:void(0);" class="attimage" data="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>"><span id="name_<?php echo $no;?>"><?php echo $files[$i]['name'];?></span></a>
+if (substr($files[$i]['type'], 0, 5) == 'image') {
+                ?>
+<a href="javascript:void(0);" class="attimage" data="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>"><span id="name_<?php echo $no; ?>"><?php echo $files[$i]['name']; ?></span></a>
 <?php
-	}else{
-?>
-<a href="<?php echo BASE_URL.substr(MEDIA_DIR.$files[$i]['link'],strlen(SITE_HOME));?>"><span id="name_<?php echo $no;?>"><?php echo $files[$i]['name'];?></span></a>
+} else {
+                ?>
+<a href="<?php echo BASE_URL . substr(MEDIA_DIR . $files[$i]['link'], strlen(SITE_HOME)); ?>"><span id="name_<?php echo $no; ?>"><?php echo $files[$i]['name']; ?></span></a>
 <?php
-	}	
-	}	
-?>
+}
+        }
+        ?>
 </td>
-<td data-label="<?php _e('File Type');?>"><span id="filetype_<?php echo $no;?>"><?php echo $files[$i]['type']=='dir'?_t('Directory'):$files[$i]['type'];?></span></td>
+<td data-label="<?php _e('File Type');?>"><span id="filetype_<?php echo $no; ?>"><?php echo $files[$i]['type'] == 'dir' ? _t('Directory') : $files[$i]['type']; ?></span></td>
 <td data-label="<?php _e('Date');?>">
-<span id="date_<?php echo $no;?>" class="sortNo"><?php echo $files[$i]['date'];?></span><?php echo date(_t('M d Y H:i'),$files[$i]['date']);?></td>
-<td class="td_admin" data-label="<?php _e('Admin');?>"><span id="action_<?php echo $no;?>"></span><a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $files[$i]['link']?>" no="<?php echo $no;?>" href="javascript:void(0);"><?php _e('Delete');?></a></td>
+<span id="date_<?php echo $no; ?>" class="sortNo"><?php echo $files[$i]['date']; ?></span><?php echo date(_t('M d Y H:i'), $files[$i]['date']); ?></td>
+<td class="td_admin" data-label="<?php _e('Admin');?>"><span id="action_<?php echo $no; ?>"></span><a title="<?php _e('Delete');?>" class="action_delete" data="<?php echo $files[$i]['link'] ?>" no="<?php echo $no; ?>" href="javascript:void(0);"><?php _e('Delete');?></a></td>
 </tr>
 <?php
-	}
+}
 }
 ?>
 </tbody>
 </table>
 </div>
 <input type="submit" value=" <?php _e('Bulk Delete');?>"></form>
-<?php echo $pager['list_put'];?>
+<?php echo $pager['list_put']; ?>
 <div id="upload_form">
 <form method="post" action="./?type=media_center&mode=mkdir">
-<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo $open_dir;?>"/>
+<?php _e('New Directory');?> : <input type="hidden" name="parent_dir" value="<?php echo $open_dir; ?>"/>
 	<input type="text" name="new_dir" /> <input type="submit" value="<?php _e('Done');?>"/>
 </form>
 <form method="post" action="./?type=media_center&mode=upload" enctype="multipart/form-data" >
 <div class="form_split">
-<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR,'',$open_dir);?>"/>
+<?php _e('Upload');?> : <input type="hidden" name="dir_name" value="<?php echo str_replace(MEDIA_DIR, '', $open_dir); ?>"/>
 	<input type="file" name="upload[]" multiple>
 </div>
-<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>"/> <span class="tip"><?php echo _t('Max upload file size'),':',UPLOAD_MAX_FILESIZE;?></span></div>
+<div class="form_split"><?php _e('Extract zip archive?');?> <input type="checkbox" name="unzip" value="1" /> <input type="submit" value="<?php _e('Done');?>"/> <span class="tip"><?php echo _t('Max upload file size'), ':', UPLOAD_MAX_FILESIZE; ?></span></div>
 </form>
 </div>
 </div>
@@ -93,7 +93,7 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 <!--
 	_().ready(function(){
 		_('.action_delete').bind('click',function(){
-			if(!confirm('<?php _e('Are you sure delete it?');?>')) return; 
+			if(!confirm('<?php _e('Are you sure delete it?');?>')) return;
 			var _this = this;
 			_.ajax({
 				'type':'post',
@@ -117,16 +117,16 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 			_('.attimage').unbind('click').bind('click',function(){
 				if (!_(this).attr('data')){
 					return false;
-				}	
+				}
 				_.dialog({'content':'<div style="width:22px;margin:auto;"><img src="../images/loading.gif"></div>','name':'media','width':300,'layer':true});
 				psrc = _(this).attr('data');
 				image.src = psrc;
 				return false;
 			});
 		});
-		
+
 		_('#bulk_form').bind('submit',function(event){
-		var no = 0;   
+		var no = 0;
 		_('.ck_item').each(function(){
 			if (_(this).prop('checked')){
 				no += 1;
@@ -155,6 +155,6 @@ for($i=$pager['page_start']; $i<$pager['page_start']+$page_limit; $i++){
 	});
 </script>
 <?php
-	include('lib/foot.php');	
-	exit();
+include 'lib/foot.php';
+exit();
 ?>

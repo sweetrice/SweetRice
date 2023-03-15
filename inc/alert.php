@@ -6,7 +6,7 @@
  * @Default template
  * @since 1.3.2
  */
- 	defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 <title><?php _e('SweetRice notice');?></title>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
 body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
@@ -29,14 +29,14 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <body>
 <div class="header"><?php _e('SweetRice notice');?></div>
 <div class="content">
-<h1><?php echo $str;?></h1>
+<h1><?php echo $str; ?></h1>
 <div><?php _e('You will be redirected in 3 seconds.');?></div>
-<div><a href="<?php echo $to?$to:$_SERVER['HTTP_REFERER'];?>"><?php _e('If your browser does not redirect automatically,please click here.');?></a></div>
+<div><a href="<?php echo $to ? $to : $_SERVER['HTTP_REFERER']; ?>"><?php _e('If your browser does not redirect automatically,please click here.');?></a></div>
 </div>
 <div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 <script type="text/javascript">
 <!--
-	var to = '<?php echo isset($to) ? $to : $_SERVER['HTTP_REFERER'];?>';
+	var to = '<?php echo isset($to) ? $to : $_SERVER['HTTP_REFERER']; ?>';
 	_().ready(function(){
 		setTimeout(function(){
 				location.href = to;
@@ -50,4 +50,4 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 </script>
 </body>
 </html>
-<?php if($to){exit();}?>
+<?php if ($to) {exit();}?>

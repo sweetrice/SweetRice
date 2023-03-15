@@ -6,17 +6,17 @@
  * @Plugin App
  * @since 1.4.2
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <div class="plugin_nav">
-<a href="<?php echo pluginDashboardUrl(THIS_APP);?>" navorder="0" <?php echo !$_GET['app_mode'] ?'title="'._t('Home').'"':'';?>><?php _e('Home');?></a>
-<?php foreach($myApp->app_navs() as $key=>$nav):
-	if(!$nav['name']){
-		continue;
-	}
-?>
-<a href="<?php echo pluginDashboardUrl(THIS_APP,array('app_mode'=>$nav['app_mode']));?>" <?php echo $_GET['app_mode'] == $nav['app_mode']?'title="'.$nav['name'].'"':'';?> navorder="<?php echo $key+1;?>"><?php echo $nav['name'];?></a>
-<?php endforeach;?>
+<a href="<?php echo pluginDashboardUrl(THIS_APP); ?>" navorder="0" <?php echo !$_GET['app_mode'] ? 'title="' . _t('Home') . '"' : ''; ?>><?php _e('Home');?></a>
+<?php foreach ($myApp->app_navs() as $key => $nav):
+    if (!$nav['name']) {
+        continue;
+    }
+    ?>
+	<a href="<?php echo pluginDashboardUrl(THIS_APP, array('app_mode' => $nav['app_mode'])); ?>" <?php echo $_GET['app_mode'] == $nav['app_mode'] ? 'title="' . $nav['name'] . '"' : ''; ?> navorder="<?php echo $key + 1; ?>"><?php echo $nav['name']; ?></a>
+	<?php endforeach;?>
 <div class="nav_line">
 <span class="curr_line"></span>
 </div>

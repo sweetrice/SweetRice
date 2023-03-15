@@ -6,7 +6,7 @@
  * @Default template
  * @since 0.5.4
  */
-	defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <!DOCTYPE html>
 <html>
@@ -14,7 +14,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 <title><?php _e('HTTP 404 - File not found');?></title>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
 body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
@@ -30,7 +30,7 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <div class="header"><?php _e('HTTP 404 - File not found');?></div>
 <div class="content">
 ):
-<?php echo vsprintf(_t('%s You can Visit <a href="%s">%s</a> Home page'),array($tip_404,BASE_URL,$global_setting['name']));?>
+<?php echo vsprintf(_t('%s You can Visit <a href="%s">%s</a> Home page'), array($tip_404, BASE_URL, $global_setting['name'])); ?>
 </div><div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice.xyz</a> SweetRice.</div>
 
 <script type="text/javascript">

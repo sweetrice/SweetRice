@@ -6,24 +6,24 @@
  * @Dashboard core
  * @since 0.5.5
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
-<div class="tip"><?php _e('Please select table to backup,current database is');?> <b><?php echo DATABASE_TYPE;?></b></div>
+<div class="tip"><?php _e('Please select table to backup,current database is');?> <b><?php echo DATABASE_TYPE; ?></b></div>
 <?php
-	if($message){
-?>
-<p id="convert_error"><?php echo $message;?></p>
+if ($message) {
+    ?>
+<p id="convert_error"><?php echo $message; ?></p>
 <?php
-	}
+}
 ?>
 <div id="table_list">
 <ul>
 <?php
-	foreach($table_list as $val){
-?>
-<li><input type="checkbox" name="tablelist[]" class="ck_item" value="<?php echo $val;?>" <?php echo substr($val,0,strlen(DB_LEFT)) == DB_LEFT ?'checked':'';?>/> <?php echo $val;?></li>
+foreach ($table_list as $val) {
+    ?>
+<li><input type="checkbox" name="tablelist[]" class="ck_item" value="<?php echo $val; ?>" <?php echo substr($val, 0, strlen(DB_LEFT)) == DB_LEFT ? 'checked' : ''; ?>/> <?php echo $val; ?></li>
 <?php
-	}
+}
 ?>
 <li><input type="checkbox" id="checkall" checked/> <input type="submit" value="<?php _e('Done');?>" class="input_submit"/></li>
 </ul>

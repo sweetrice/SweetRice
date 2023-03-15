@@ -6,18 +6,18 @@
  * @Dashboard core
  * @since 0.6.0
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
-<div class="tip"><?php _e('Enter SQL and execute it online,please backup database first.');?> <b><?php echo DATABASE_TYPE;?></b></div>
+<div class="tip"><?php _e('Enter SQL and execute it online,please backup database first.');?> <b><?php echo DATABASE_TYPE; ?></b></div>
 <?php
-	if($message){
-?>
-<div class="tip" id="convert_error"><?php echo $message;?></div>
+if ($message) {
+    ?>
+<div class="tip" id="convert_error"><?php echo $message; ?></div>
 <?php
-	}
+}
 ?>
 <fieldset><legend><?php _e('SQL Content');?></legend>
-<textarea id="sql_content" class="input_textarea"><?php echo $sql_content;?></textarea>
+<textarea id="sql_content" class="input_textarea"><?php echo $sql_content; ?></textarea>
 </fieldset>
 	<input type="button" value="<?php _e('Done');?>" class="input_submit"/>
 <script type="text/javascript">

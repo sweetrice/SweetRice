@@ -6,28 +6,32 @@
  * @Plugin App
  * @since 1.4.2
  */
-	defined('VALID_INCLUDE') or die();
-	class pluginInstaller
-	{
-		private $pluginConfig = array();
-		function __construct($pluginConfig = array()){
-			$this->pluginConfig = $pluginConfig;
-		}
+defined('VALID_INCLUDE') or die();
+class pluginInstaller
+{
+    private $pluginConfig = array();
+    public function __construct($pluginConfig = array())
+    {
+        $this->pluginConfig = $pluginConfig;
+    }
 
-		function beforeInstall(){
-		
-		}
+    public function beforeInstall()
+    {
 
-		function afterInstall(){
-			
-		}
-		
-		function beforeDeInstall(){
+    }
 
-		}
+    public function afterInstall()
+    {
 
-		function afterDeInstall(){
-			
-		}	
-	}
-?>
+    }
+
+    public function beforeDeInstall()
+    {
+
+    }
+
+    public function afterDeInstall()
+    {
+
+    }
+}

@@ -6,28 +6,28 @@
  * @Default template
  * @since 0.5.4
  */
-	defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <span id="action_tip"></span>
-<input type="hidden" id="postID" value="<?php echo $row['id'];?>" />
+<input type="hidden" id="postID" value="<?php echo $row['id']; ?>" />
 <div id="comment_body">
-<fieldset><legend><?php _e('Your name');?> 
-<input type="text" id="name" value="<?php echo do_data($_COOKIE['cname'],'strict');?>"/> * 
-<input type="checkbox" id="remember" value="1" <?php echo do_data($_COOKIE['cname'],'strict')?'checked':''?>/> <?php _e('Remember Me');?> </legend>
+<fieldset><legend><?php _e('Your name');?>
+<input type="text" id="name" value="<?php echo do_data($_COOKIE['cname'], 'strict'); ?>"/> *
+<input type="checkbox" id="remember" value="1" <?php echo do_data($_COOKIE['cname'], 'strict') ? 'checked' : '' ?>/> <?php _e('Remember Me');?> </legend>
 <?php
-	if($user_info['email']){
-?>
-<input type="hidden" id="email" value="<?php echo $user_info['email'];?>"/>
+if ($user_info['email']) {
+    ?>
+<input type="hidden" id="email" value="<?php echo $user_info['email']; ?>"/>
 <?php
-	}else{
-?>
-<label><?php _e('Your Email');?> <input type="text" id="email" value="<?php echo $_COOKIE['cemail'];?>"/> *</label>
+} else {
+    ?>
+<label><?php _e('Your Email');?> <input type="text" id="email" value="<?php echo $_COOKIE['cemail']; ?>"/> *</label>
 <?php
-	}
+}
 ?>
-<label><?php _e('Your Website');?> <input type="text" id="website" value="<?php echo do_data($_COOKIE['cwebsite'],'strict')?do_data($_COOKIE['cwebsite'],'strict'):'http://';?>"></label>
+<label><?php _e('Your Website');?> <input type="text" id="website" value="<?php echo do_data($_COOKIE['cwebsite'], 'strict') ? do_data($_COOKIE['cwebsite'], 'strict') : 'http://'; ?>"></label>
 <div><textarea id="info" class="comment_text"></textarea></div>
-<div><?php _e('Verification Code');?> 
+<div><?php _e('Verification Code');?>
 <input type="text" id="code" size="6" maxlength="5"/> * <img id="captcha" src="images/captcha.png" align="absmiddle" title="Click to get"/> <input type="button" class="comment_button" value=" <?php _e('Leave Comment');?> "/></div>
 </fieldset>
 </div>

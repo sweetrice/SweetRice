@@ -6,8 +6,8 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
-	include('./lib/head.php');
+defined('VALID_INCLUDE') or die();
+include './lib/head.php';
 ?>
 <div id="div_center">
 <div class="sign_form">
@@ -45,5 +45,5 @@
 //-->
 </script>
 <?php
-	include('lib/foot.php');	
+include 'lib/foot.php';
 ?>

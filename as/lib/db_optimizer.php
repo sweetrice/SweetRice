@@ -6,17 +6,17 @@
  * @Dashboard core
  * @since 0.6.0
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
-<div class="tip"><?php _e('Please select table to optimizer,current database is');?> <b><?php echo DATABASE_TYPE;?></b></div>
+<div class="tip"><?php _e('Please select table to optimizer,current database is');?> <b><?php echo DATABASE_TYPE; ?></b></div>
 <div id="table_list">
 <ul>
 <?php
-	foreach($table_list as $val){
-?>
-<li><input type="checkbox" name="tablelist[]" class="ck_item" value="<?php echo $val;?>" checked/> <?php echo $val;?></li>
+foreach ($table_list as $val) {
+    ?>
+<li><input type="checkbox" name="tablelist[]" class="ck_item" value="<?php echo $val; ?>" checked/> <?php echo $val; ?></li>
 <?php
-	}
+}
 ?>
 </ul>
 </div>

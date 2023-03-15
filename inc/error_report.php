@@ -6,9 +6,9 @@
  * @Default template
  * @since 1.3.2
  */
- 	defined('VALID_INCLUDE') or die();
-	$etypes = array(1=>'E_ERROR', 2=>'E_WARNING', 4=>'E_PARSE', 8=>'E_NOTICE', 16=>'E_CORE_ERROR', 32=>'E_CORE_WARNING',64=>'E_COMPILE_ERROR',128=>'E_COMPILE_WARNING',256=>'E_USER_ERROR',512=>'E_USER_WARNING',1024=>'E_USER_NOTICE',6143=>'E_ALL',2048=>'E_STRICT',4096=>'E_RECOVERABLE_ERROR');
-	$db_error = db_error();
+defined('VALID_INCLUDE') or die();
+$etypes   = array(1 => 'E_ERROR', 2 => 'E_WARNING', 4 => 'E_PARSE', 8 => 'E_NOTICE', 16 => 'E_CORE_ERROR', 32 => 'E_CORE_WARNING', 64 => 'E_COMPILE_ERROR', 128 => 'E_COMPILE_WARNING', 256 => 'E_USER_ERROR', 512 => 'E_USER_WARNING', 1024 => 'E_USER_NOTICE', 6143 => 'E_ALL', 2048 => 'E_STRICT', 4096 => 'E_RECOVERABLE_ERROR');
+$db_error = db_error();
 ?>
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,7 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=0" name="viewport" id="viewport"/>
 <title><?php _e('SweetRice error report');?></title>
-<script type="text/javascript" src="<?php echo BASE_URL;?>js/SweetRice.js"></script>
+<script type="text/javascript" src="<?php echo BASE_URL; ?>js/SweetRice.js"></script>
 <style>
 *{margin:0;}
 body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
@@ -31,19 +31,19 @@ body{font-family:"Microsoft YaHei",Verdana,Georgia,arial,sans-serif;}
 <body>
 <div class="header"><?php _e('SweetRice error report');?></div>
 <div class="content">
-<?php if($db_error):?>
-<fieldset><legend><?php _e('Database');?></legend><?php echo db_error();?></fieldset>
+<?php if ($db_error): ?>
+<fieldset><legend><?php _e('Database');?></legend><?php echo db_error(); ?></fieldset>
 <?php endif;?>
 <?php
-	if(is_array($errors)){
-		foreach($errors as $key=>$val){
-			if(in_array($key,array('file','line','message'))){
-?>
-<fieldset><legend><?php _e(ucfirst($key));?></legend><?php echo $key=='file'?substr($val,strlen(ROOT_DIR)-1):$val;?></fieldset>
+if (is_array($errors)) {
+    foreach ($errors as $key => $val) {
+        if (in_array($key, array('file', 'line', 'message'))) {
+            ?>
+<fieldset><legend><?php _e(ucfirst($key));?></legend><?php echo $key == 'file' ? substr($val, strlen(ROOT_DIR) - 1) : $val; ?></fieldset>
 <?php
-			}
-		}
-	}
+}
+    }
+}
 ?>
 <div class="clear"></div>
 </div>

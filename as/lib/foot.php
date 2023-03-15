@@ -6,9 +6,9 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
-<div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice</a> &copy; <?php echo date('Y');?> <div class="btn_bgcolor"></div></div>
+<div id="div_foot">Powered by <a href="https://www.sweetrice.xyz">SweetRice</a> &copy; <?php echo date('Y'); ?> <div class="btn_bgcolor"></div></div>
 <script type="text/javascript">
 <!--
 	_.ready(function(){

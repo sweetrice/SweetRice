@@ -6,25 +6,25 @@
  * @Dashboard core
  * @since 1.4.2
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <div class="tip"><?php _e('Transfer your website data to new hosting by FTP or download data file then upload them to new hosting manually,you may modify inc/db.php to change database setting to new hosting');?></div>
 <fieldset class="pack_section"><legend><?php _e('Pack website');?></legend>
-	<?php if(!extension_loaded('zlib') && !extension_loaded('ZZIPlib')):
-	_e('Server do not supports ZIP');
-	else:?>
+	<?php if (!extension_loaded('zlib') && !extension_loaded('ZZIPlib')):
+    _e('Server do not supports ZIP');
+else: ?>
 <input type="button" value="<?php _e('Pack website');?>" class="input_submit pack_btn"/>
-<?php if(isset($archive_name) && file_exists(ROOT_DIR.$archive_name)):
-	echo _t('Latest pack at ').date(_t('M d Y H:i'),filemtime(ROOT_DIR.$archive_name)).' '._t('File size').' '.filesize2print(BASE_URL.$archive_name);?>
-	<input type="button" class="btn_clean" value="<?php _e('Delete');?>">
-<?php
-	endif;
+<?php if (isset($archive_name) && file_exists(ROOT_DIR . $archive_name)):
+    echo _t('Latest pack at ') . date(_t('M d Y H:i'), filemtime(ROOT_DIR . $archive_name)) . ' ' . _t('File size') . ' ' . filesize2print(BASE_URL . $archive_name);?>
+		<input type="button" class="btn_clean" value="<?php _e('Delete');?>">
+	<?php
+endif;
 ?>
 	<?php endif;?>
 </fieldset>
 <div class="transfer_section">
 <fieldset><legend><?php _e('Transfer Type');?></legend>
-	<?php _e('Manually');?> <input type="radio" name="transfer_type" value="download" class="options"/> 
+	<?php _e('Manually');?> <input type="radio" name="transfer_type" value="download" class="options"/>
 	<?php _e('Online');?> <input type="radio" name="transfer_type" value="online" class="options"/>
 </fieldset>
 <fieldset class="server_setting"><legend><?php _e('FTP Server');?></legend>
@@ -47,8 +47,8 @@
 </div>
 <script type="text/javascript">
 <!--
-	_.ready(function(){	
-		<?php if(isset($archive_name) && file_exists(ROOT_DIR.$archive_name)):?>
+	_.ready(function(){
+		<?php if (isset($archive_name) && file_exists(ROOT_DIR . $archive_name)): ?>
 			_('.transfer_section').show();
 		<?php endif;?>
 		_('.btn_clean').click(function(){
@@ -144,7 +144,7 @@
 							case 'online':
 								alert('<?php _e('Transfer completed,enjoy new hosting');?>');
 							break;
-						}	
+						}
 					}else{
 						_.ajax_untip(result['status_code']);
 					}

@@ -6,16 +6,16 @@
  * @Dashboard core
  * @since 1.0.0
  */
- defined('VALID_INCLUDE') or die();
-	if(file_exists('../inc/htaccess.txt')){
-		$contents = file_get_contents('../inc/htaccess.txt');
-	}else{
-		$contents = '';
-	}
+defined('VALID_INCLUDE') or die();
+if (file_exists('../inc/htaccess.txt')) {
+    $contents = file_get_contents('../inc/htaccess.txt');
+} else {
+    $contents = '';
+}
 ?>
 <form method="post" action="./?type=htaccess&mode=save" id="pform">
 <fieldset><legend><?php _e('Edit .htaccess');?> - <?php _e('this setting only available for Apache server');?></legend>
-<textarea id="content" class="link"><?php echo $contents;?></textarea>
+<textarea id="content" class="link"><?php echo $contents; ?></textarea>
 <div class="tip"><?php _e('Tips: please don\'t modify "RewriteBase %--%",it will be automatically set to the real path.');?></div>
 </fieldset>
 <input type="button" class="btn_submit" value="<?php _e('Done');?>"/>

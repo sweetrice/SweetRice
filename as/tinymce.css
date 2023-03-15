@@ -1,50 +1,50 @@
-body{
-	font-family:"Microsoft YaHei","lucida grande",tahoma,verdana,arial,sans-serif;
-	background-color:#fff !important;
+body {
+    font-family: "Microsoft YaHei", "lucida grande", tahoma, verdana, arial, sans-serif;
+    background-color: #fff !important;
 }
 img {
-	border: 0px;
-	max-width: 100%;
+    border: 0px;
+    max-width: 100%;
 }
-
-blockquote{
+blockquote {
     background-color: #FCFCFC;
     border-left: 3px solid #CCCCCC;
     margin: 10px;
     padding: 10px;
 }
-ul,ol{
-	margin:20px 0px 10px 20px;
+ul, ol {
+    margin: 20px 0px 10px 20px;
 }
 ul li, ol li {
     line-height: 1.6em;
 }
-table{
-	width:100%;
+table {
+    width: 100%;
 }
-table td{
-	padding:5px;
+table td {
+    padding: 5px;
 }
-
 h1 {
-	margin:0px 0px 15px 0px;
+    margin: 0px 0px 15px 0px;
 }
-h2,h3,h4,{margin:0px 0px 15px 0px;}
-h5,h6{
-	margin:0px 0px 15px 0px;
+h2, h3, h4, {
+    margin: 0px 0px 15px 0px;
 }
-p{
-	line-height: 1.6em;
-	margin-bottom: 16px;
-	margin-top: 16px;
-	text-align: justify;
+h5, h6 {
+    margin: 0px 0px 15px 0px;
 }
-a{
-	color: #707b85;
-	text-decoration: none;
-	font-weight: bold;
+p {
+    line-height: 1.6em;
+    margin-bottom: 16px;
+    margin-top: 16px;
+    text-align: justify;
 }
-a:hover{
-	color: #000000;
-	text-decoration: underline;
+a {
+    color: #707b85;
+    text-decoration: none;
+    font-weight: bold;
+}
+a:hover {
+    color: #000000;
+    text-decoration: underline;
 }

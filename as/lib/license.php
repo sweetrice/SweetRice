@@ -6,13 +6,13 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
-?>	
+defined('VALID_INCLUDE') or die();
+?>
 <div id="license">
 <?php
 $content = file_get_contents('lib/license.txt');
-preg_match("/\<lang=\"".str_replace('.php','',$lang)."\"\>([\s\S]+?)\<\/lang\>/u",$content,$matches);
-	echo nl2br($matches[1]);
+preg_match("/\<lang=\"" . str_replace('.php', '', $lang) . "\"\>([\s\S]+?)\<\/lang\>/u", $content, $matches);
+echo nl2br($matches[1]);
 ?>
 </div>
 <p>

@@ -6,13 +6,13 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
-	include('./lib/head.php');
+defined('VALID_INCLUDE') or die();
+include './lib/head.php';
 ?>
 <div id="div_center">
 <div class="sign_form">
 <h2><?php _e('Please login');?></h2>
-	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUEST_URI'];?>"/>
+	<input type="hidden" id="returnUrl" value="<?php echo $_SERVER['REQUEST_URI']; ?>"/>
 	<fieldset><legend><?php _e('Account');?></legend>
 	<input type="text" id="user"/></fieldset>
 	<fieldset><legend><?php _e('Password');?></legend>
@@ -39,7 +39,7 @@
 				dashboardSignin();
 			}
 		});
-		
+
 		_('#rememberme').bind('keydown',function(event){
 			event = event || window.event;
 			if(event.keyCode==13 && _('#user').val() && _('#passwd').val()){
@@ -87,5 +87,5 @@ function dashboardSignin(){
 //-->
 </script>
 <?php
-	include('lib/foot.php');	
+include 'lib/foot.php';
 ?>

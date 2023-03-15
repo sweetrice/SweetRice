@@ -6,11 +6,11 @@
  * @Dashboard core
  * @since 0.5.4
  */
- defined('VALID_INCLUDE') or die();
+defined('VALID_INCLUDE') or die();
 ?>
 <form method="get" action="./">
 <input type="hidden" name="type" value="attachment"/>
-	<input type="text" name="search" value="<?php echo escape_string($_GET['search']);?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
+	<input type="text" name="search" value="<?php echo escape_string($_GET['search']); ?>" placeholder="<?php _e('Keywords');?>"/> <input type="submit" value="<?php _e('Search');?>" class="input_submit"/>
 </form>
 <div id="tbl">
 <table>
@@ -23,23 +23,23 @@
 <tbody>
 <?php
 $no = 0;
-	foreach($rows as $row){
-		$no +=1;
-?>
-<tr id="tr_<?php echo $no;?>">
-	<td class="max50"><span class="sortNo" id="sortNo_<?php echo $no;?>"><?php echo $no;?></span><a href="<?php echo getAttachmentUrl($row['file_name']);?>" target="_blank" class="preview-image"><span id="filename_<?php echo $no;?>"><?php echo getAttachmentUrl($row['file_name']);?></span></a></td>
-	<td data-label="<?php _e('File size');?>"><span id="filesize_<?php echo $no;?>"><?php echo filesize2print($row['file_name']);?></span></td>
-	<td data-label="<?php _e('Download times');?>"><span id="downloadtimes_<?php echo $no;?>"><?php echo $row['downloads'];?></span></td>
-	<td data-label="<?php _e('Upload Time');?>"><span id="date_<?php echo $no;?>" class="sortNo"><?php echo $row['date'];?></span><?php echo date(_t('M d Y H:i'),$row['date']);?></td>
-	<td class="td_admin" data-label="<?php _e('Admin');?>"><a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['post_id'];?>"><?php _e('Modify');?></a>
+foreach ($rows as $row) {
+    $no += 1;
+    ?>
+<tr id="tr_<?php echo $no; ?>">
+	<td class="max50"><span class="sortNo" id="sortNo_<?php echo $no; ?>"><?php echo $no; ?></span><a href="<?php echo getAttachmentUrl($row['file_name']); ?>" target="_blank" class="preview-image"><span id="filename_<?php echo $no; ?>"><?php echo getAttachmentUrl($row['file_name']); ?></span></a></td>
+	<td data-label="<?php _e('File size');?>"><span id="filesize_<?php echo $no; ?>"><?php echo filesize2print($row['file_name']); ?></span></td>
+	<td data-label="<?php _e('Download times');?>"><span id="downloadtimes_<?php echo $no; ?>"><?php echo $row['downloads']; ?></span></td>
+	<td data-label="<?php _e('Upload Time');?>"><span id="date_<?php echo $no; ?>" class="sortNo"><?php echo $row['date']; ?></span><?php echo date(_t('M d Y H:i'), $row['date']); ?></td>
+	<td class="td_admin" data-label="<?php _e('Admin');?>"><a title="<?php _e('Modify');?>" class="action_modify" href="./?type=post&mode=insert&id=<?php echo $row['post_id']; ?>"><?php _e('Modify');?></a>
 </td></tr>
 <?php
-	}
+}
 ?>
 </tbody>
 </table>
 </div>
-<?php echo $pager['list_put'];?>
+<?php echo $pager['list_put']; ?>
 <script type="text/javascript" src="js/BodySort.js"></script>
 <script type="text/javascript">
 <!--
